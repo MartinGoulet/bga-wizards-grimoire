@@ -13,32 +13,32 @@
 $gameinfos = array(
 
     // Name of the game in English (will serve as the basis for translation) 
-    'game_name' => "My Great Game",
+    'game_name' => "Wizards of the Grimoire",
 
     // Game designer (or game designers, separated by commas)
-    'designer' => 'John Doe',
+    'designer' => 'Cole Banning, Joe Banning',
 
     // Game artist (or game artists, separated by commas)
-    'artist' => 'Jane Doe',
+    'artist' => 'Luciano Javier Carreira, Raqsonu Duhu, Pedro Krüger, Gabriel Lopes, Anderton Oliveira, João Vagner',
 
     // Year of FIRST publication of this game. Can be negative.
-    'year' => 2000,
+    'year' => 2022,
 
     // Game publisher (use empty string if there is no publisher)
-    'publisher' => 'My Publishing Company',
+    'publisher' => 'Grimoire Games',
 
     // Url of game publisher website
-    'publisher_website' => 'http://www.mypublishingcompany.com/',
+    'publisher_website' => 'https://wizardsofthegrimoire.com/',
 
     // Board Game Geek ID of the publisher
-    'publisher_bgg_id' => 1234,
+    'publisher_bgg_id' => 9791,
 
     // Board game geek ID of the game
     'bgg_id' => 340541,
 
 
     // Players configuration that can be played (ex: 2 to 4 players)
-    'players' => array(2, 3, 4),
+    'players' => array(2),
 
     // Suggest players to play with this number of players. Must be null if there is no such advice, or if there is only one possible player configuration.
     // NB: the automatic lobby will try first the lowest number of players if this is not specified. So you _have to_ specify this parameter if the lowest player number is not compatible with the default options.
