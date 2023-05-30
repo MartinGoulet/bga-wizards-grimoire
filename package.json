@@ -4,6 +4,8 @@
   "description": "",
   "main": "wizardsgrimoire.js",
   "dependencies": {
+    "bga-cards": "github:thoun/bga-cards#2.0.1",
+    "bga-zoom": "github:thoun/bga-zoom#0.1.0"
   },
   "devDependencies": {
     "bga-studio-mg": "^0.1.5",

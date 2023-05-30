@@ -1,6 +1,5 @@
 const isDebug =
-   window.location.host == "studio.boardgamearena.com" ||
-   window.location.hash.indexOf("debug") > -1;
+   window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 const log = isDebug ? console.log.bind(window.console) : function () {};
 
 interface WizardsGrimoire
@@ -21,17 +20,15 @@ interface WizardsGrimoire
 }
 
 class WizardsGrimoire
-   implements
-      ebg.core.gamegui,
-      BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas>
+   implements ebg.core.gamegui, BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas>
 {
    public readonly gamedatas: WizardsGrimoireGamedatas;
-   public readonly notifications_manager: NotificationManager =
-      new NotificationManager(this);
+   public notifManager: NotificationManager = new NotificationManager(this);
+   public spellsManager: SpellCardManager = new SpellCardManager(this);
+   public manasManager: ManaCardManager = new ManaCardManager(this);
+   public tableCenter: TableCenter;
 
-   constructor() {
-      log("Constructor");
-   }
+   constructor() {}
 
    /*
         setup:
@@ -48,9 +45,36 @@ class WizardsGrimoire
    public setup(gamedatas: WizardsGrimoireGamedatas) {
       log(gamedatas);
 
+      this.notifManager = new NotificationManager(this);
+      this.spellsManager = new SpellCardManager(this);
+      this.manasManager = new ManaCardManager(this);
+      this.tableCenter = new TableCenter(this);
+
       // Setting up player boards
       for (let player_id in gamedatas.players) {
       }
+
+      const hand = document.getElementById("current-player-table");
+
+      const stock = new LineStock(this.manasManager, hand, { center: true });
+
+      stock.onCardClick = (card: ManaCard) => {
+         this.tableCenter.manaDiscard.addCard(card, {
+            fromStock: stock
+         });
+      };
+
+      this.tableCenter.manaDeck.onCardClick = (card: ManaCard) => {
+         let cardNumber = this.tableCenter.manaDeck.getCardNumber();
+         this.tableCenter.manaDeck.setCardNumber(cardNumber, { id: getCardId() } as ManaCard);
+         const topCard = this.tableCenter.manaDeck.getTopCard();
+         topCard.type = "" + (Math.floor(Math.random() * 4) + 1);
+         stock.addCard(topCard, { fromStock: this.tableCenter.manaDeck });
+      };
+
+      this.addActionButton("btnShuffle", "Shuffle", () => {
+         this.tableCenter.manaDeck.shuffle();
+      });
 
       this.setupNotifications();
    }
@@ -79,12 +103,7 @@ class WizardsGrimoire
    public takeAction(action: string, data?: any) {
       data = data || {};
       data.lock = true;
-      (this as any).ajaxcall(
-         `/wizardsgrimoire/wizardsgrimoire/${action}.html`,
-         data,
-         this,
-         () => {}
-      );
+      (this as any).ajaxcall(`/wizardsgrimoire/wizardsgrimoire/${action}.html`, data, this, () => {});
    }
 
    public addActionButtonRed(id: string, label: string, action: () => void) {
@@ -105,7 +124,7 @@ class WizardsGrimoire
     */
    setupNotifications() {
       log("notifications subscriptions setup");
-      this.notifications_manager.setup();
+      this.notifManager.setup();
    }
 
    ///////////////////////////////////////////////////
@@ -126,4 +145,9 @@ class WizardsGrimoire
       }
       return this.inherited(arguments);
    }
+}
+
+let cardId = 200000;
+function getCardId() {
+   return cardId++;
 }

@@ -1,3 +1,33 @@
-#wg-board {
-    display: flex;
+@import 'cards';
+@import "../node_modules/bga-zoom/bga-zoom";
+@import "../node_modules/bga-cards/bga-cards";
+@import 'table-center';
+
+#tables-and-center {
+   position: relative;
+   display: flex;
+   justify-content: center;
+   gap: 20px;
+   flex-direction: column;
+   align-items: center;
+
+   &.double-column {
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: start;
+
+      #current-player-table {
+         display: none;
+      }
+   }
+
+   #tables {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      flex-direction: column;
+   }
 }

@@ -15,10 +15,29 @@
         "node_modules/bga-studio-mg/core.d.ts",
         "node_modules/bga-studio-mg/stock.d.ts",
         "node_modules/bga-studio-mg/counter.d.ts",
+
+        "node_modules/bga-zoom/src/zoom-manager.ts",
+        "node_modules/bga-animations/src/animations.ts",
+        "node_modules/bga-animations/src/animations/attach-with-animation.ts",
+        "node_modules/bga-animations/src/animations/cumulated-animations.ts",
+        "node_modules/bga-animations/src/animations/slide-animation.ts",
+        "node_modules/bga-animations/src/animations/slide-to-animation.ts",
+        "node_modules/bga-animations/src/animations-utils.ts",
+        "node_modules/bga-animations/src/animation-manager.ts",
+        "node_modules/bga-cards/src/animations.ts",
+        "node_modules/bga-cards/src/stocks/card-stock.ts",
+        "node_modules/bga-cards/src/stocks/hand-stock.ts",
+        "node_modules/bga-cards/src/stocks/deck.ts",
+        "node_modules/bga-cards/src/stocks/line-stock.ts",
+        
+        "node_modules/bga-cards/src/card-manager.ts",
+
         "src/define.ts",
         "src/wizards-grimoire.d.ts",
         "src/wizards-grimoire.ts",
         
-        "src/notification-manager.ts"
+        "src/notification-manager.ts",
+        "src/cards-manager.ts",
+        "src/table-center.ts"
     ]
 }

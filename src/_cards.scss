@@ -1,0 +1,53 @@
+#current-player-table {
+   .wg-card {
+      --width: calc(142px * 0.66);
+      --height: calc(198px * 0.66);
+   }
+}
+
+.wg-card {
+   width: var(--width);
+   height: var(--height);
+   position: relative;
+
+   .card-side {
+      border-radius: 5px;
+   }
+
+   .wg-card-spell-front {
+      background: url("img/spell-front.jpg");
+      background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+
+      @for $row from 0 through 6 {
+         @for $col from 0 through 9 {
+            &[data-type="#{($row * 10) + ($col + 1)}"] {
+               background-position: ($col * -100%) ($row * -100%);
+            }
+         }
+      }
+   }
+
+   .wg-card-spell-back {
+      background: url("img/spell-back.jpg");
+      background-size: var(--width) var(--height);
+      background-position: 100% 0%;
+   }
+
+   .wg-card-mana-front {
+      background: url("img/mana-front.jpg");
+      background-size: calc(var(--width) * 4) var(--height);
+      text-align: center;
+
+      @for $col from 0 through 3 {
+         &[data-type="#{($col + 1)}"] {
+            background-position: ($col * -100%) (0%);
+         }
+      }
+   }
+
+   .wg-card-mana-back {
+      background: url("img/mana-back.jpg");
+      background-size: var(--width) var(--height);
+      background-position: 100% 0%;
+   }
+}
