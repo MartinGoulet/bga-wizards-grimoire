@@ -1,0 +1,17 @@
+{
+  "name": "bga-wizards-grimoire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wizardsgrimoire.js",
+  "dependencies": {
+    "bga-studio-mg": "^0.1.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
