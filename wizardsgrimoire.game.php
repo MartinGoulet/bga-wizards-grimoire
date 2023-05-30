@@ -17,11 +17,35 @@
  *
  */
 
+$swdNamespaceAutoload = function ($class) {
+    $classParts = explode('\\', $class);
+    if ($classParts[0] == 'DiceThrone') {
+        array_shift($classParts);
+        $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        } else {
+            var_dump('Cannot find file : ' . $file);
+        }
+    }
+};
+spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
+require_once('modules/php/constants.inc.php');
 
 
 class WizardsGrimoire extends Table {
+
+    /** @var WizardsGrimoire */
+    public static $instance = null;
+
+    /** @var Deck */
+    public $deck_spells;
+
+    /** @var Deck */
+    public $deck_manas;
+
     function __construct() {
         // Your global variables labels:
         //  Here, you can assign labels to global variables you are using for this game.
@@ -39,6 +63,19 @@ class WizardsGrimoire extends Table {
             //    "my_second_game_variant" => 101,
             //      ...
         ));
+
+        self::$instance = $this;
+
+        $this->deck_spells = self::getNew("module.common.deck");
+        $this->deck_spells->init("spells");
+
+        $this->deck_manas = self::getNew("module.common.deck");
+        $this->deck_manas->init("manas");
+        $this->deck_manas->autoreshuffle = true;
+    }
+
+    public static function get() {
+        return self::$instance;
     }
 
     protected function getGameName() {
@@ -85,6 +122,19 @@ class WizardsGrimoire extends Table {
 
         // TODO: setup the initial game situation here
 
+        $cards = [];
+        foreach ($this->card_types as $id => $card) {
+            $cards[] = ['type' => $id, 'type_arg' => 0, 'nbr' => 1];
+        }
+        $this->deck_spells->createCards($cards);
+        $this->deck_spells->shuffle('deck');
+
+        $cards = [];
+        foreach($this->mana_cards as $number => $count) {
+            $cards[] = ['type' => $number, 'type_arg' => 0, 'nbr' => intval($count)];
+        }
+        $this->deck_manas->createCards($cards);
+        $this->deck_manas->shuffle('deck');
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -112,6 +162,9 @@ class WizardsGrimoire extends Table {
         $result['players'] = self::getCollectionFromDb($sql);
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
+
+        $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
+        $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
 
         return $result;
     }
