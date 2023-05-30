@@ -1,0 +1,6 @@
+.vscode
+.DS_Store
+.prettierrc
+.eslintrc
+img
+node_modules
