@@ -4,13 +4,16 @@
   "description": "",
   "main": "wizardsgrimoire.js",
   "dependencies": {
-    "bga-studio-mg": "^0.1.5"
   },
   "devDependencies": {
+    "bga-studio-mg": "^0.1.5",
+    "sass": "^1.62.1",
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ts": "tsc",
+    "build:scss": "sass --no-source-map src/wizards-grimoire.scss wizardsgrimoire.css"
   },
   "author": "",
   "license": "ISC"
