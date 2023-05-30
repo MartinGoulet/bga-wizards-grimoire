@@ -1,4 +1,5 @@
 <?php
+
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -23,22 +24,19 @@
  * Note: if the HTML of your game interface is always the same, you don't have to place anything here.
  *
  */
-  
-require_once( APP_BASE_PATH."view/common/game.view.php" );
-  
-class view_wizardsgrimoire_wizardsgrimoire extends game_view
-{
-    protected function getGameName()
-    {
+
+require_once(APP_BASE_PATH . "view/common/game.view.php");
+
+class view_wizardsgrimoire_wizardsgrimoire extends game_view {
+    protected function getGameName() {
         // Used for translations and stuff. Please do not modify.
         return "wizardsgrimoire";
     }
-    
-  	function build_page( $viewArgs )
-  	{		
-  	    // Get players & players number
+
+    function build_page($viewArgs) {
+        // Get players & players number
         $players = $this->game->loadPlayersBasicInfos();
-        $players_nbr = count( $players );
+        $players_nbr = count($players);
 
         /*********** Place your code below:  ************/
 
@@ -57,7 +55,7 @@ class view_wizardsgrimoire_wizardsgrimoire extends game_view
         $this->tpl['MY_VARIABLE_ELEMENT'] = self::raw( $some_html_code );
         
         */
-        
+
         /*
         
         // Example: display a specific HTML block for each player in this game.
@@ -82,5 +80,5 @@ class view_wizardsgrimoire_wizardsgrimoire extends game_view
 
 
         /*********** Do not change anything below this line  ************/
-  	}
+    }
 }

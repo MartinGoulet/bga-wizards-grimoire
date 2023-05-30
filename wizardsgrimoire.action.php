@@ -1,4 +1,5 @@
 <?php
+
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -20,29 +21,24 @@
  * this.ajaxcall( "/wizardsgrimoire/wizardsgrimoire/myAction.html", ...)
  *
  */
-  
-  
-  class action_wizardsgrimoire extends APP_GameAction
-  { 
-    // Constructor: please do not modify
-   	public function __default()
-  	{
-  	    if( self::isArg( 'notifwindow') )
-  	    {
-            $this->view = "common_notifwindow";
-  	        $this->viewArgs['table'] = self::getArg( "table", AT_posint, true );
-  	    }
-  	    else
-  	    {
-            $this->view = "wizardsgrimoire_wizardsgrimoire";
-            self::trace( "Complete reinitialization of board game" );
-      }
-  	} 
-  	
-  	// TODO: defines your action entry points there
 
 
-    /*
+class action_wizardsgrimoire extends APP_GameAction {
+  // Constructor: please do not modify
+  public function __default() {
+    if (self::isArg('notifwindow')) {
+      $this->view = "common_notifwindow";
+      $this->viewArgs['table'] = self::getArg("table", AT_posint, true);
+    } else {
+      $this->view = "wizardsgrimoire_wizardsgrimoire";
+      self::trace("Complete reinitialization of board game");
+    }
+  }
+
+  // TODO: defines your action entry points there
+
+
+  /*
     
     Example:
   	
@@ -62,7 +58,4 @@
     }
     
     */
-
-  }
-  
-
+}

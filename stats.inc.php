@@ -52,11 +52,13 @@ $stats_type = array(
     // Statistics global to table
     "table" => array(
 
-        "turns_number" => array("id"=> 10,
-                    "name" => totranslate("Number of turns"),
-                    "type" => "int" ),
+        "turns_number" => array(
+            "id" => 10,
+            "name" => totranslate("Number of turns"),
+            "type" => "int"
+        ),
 
-/*
+        /*
         Examples:
 
 
@@ -67,17 +69,19 @@ $stats_type = array(
         "table_teststat2" => array(   "id"=> 11,
                                 "name" => totranslate("table test stat 2"), 
                                 "type" => "float" )
-*/  
+*/
     ),
-    
+
     // Statistics existing for each player
     "player" => array(
 
-        "turns_number" => array("id"=> 10,
-                    "name" => totranslate("Number of turns"),
-                    "type" => "int" ),
-    
-/*
+        "turns_number" => array(
+            "id" => 10,
+            "name" => totranslate("Number of turns"),
+            "type" => "int"
+        ),
+
+        /*
         Examples:    
         
         
@@ -89,7 +93,7 @@ $stats_type = array(
                                 "name" => totranslate("player test stat 2"), 
                                 "type" => "float" )
 
-*/    
+*/
     )
 
 );
