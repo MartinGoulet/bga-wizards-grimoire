@@ -19,7 +19,7 @@ $gameinfos = array(
     'designer' => 'Cole Banning, Joe Banning',
 
     // Game artist (or game artists, separated by commas)
-    'artist' => 'Luciano Javier Carreira, Raqsonu Duhu, Pedro Krüger, Gabriel Lopes, Anderton Oliveira, João Vagner',
+    'artist' => 'Luciano Javier Carreira, Raqsonu Duhu, Pedro Krüger',
 
     // Year of FIRST publication of this game. Can be negative.
     'year' => 2022,
