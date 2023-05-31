@@ -72,9 +72,14 @@ class WizardsGrimoire
          stock.addCard(topCard, { fromStock: this.tableCenter.manaDeck });
       };
 
-      this.addActionButton("btnShuffle", "Shuffle", () => {
-         this.tableCenter.manaDeck.shuffle();
-      });
+      this.tableCenter.spellDeck.onCardClick = (card: ManaCard) => {
+         let cardNumber = this.tableCenter.spellDeck.getCardNumber();
+         this.tableCenter.spellDeck.setCardNumber(cardNumber, { id: getCardId() } as ManaCard);
+         const topCard = this.tableCenter.spellDeck.getTopCard();
+         topCard.location_arg = (topCard.id % 10) + 1;
+         topCard.type = "" + (Math.floor(Math.random() * 70) + 1);
+         this.tableCenter.spellPool.addCard(topCard, { fromStock: this.tableCenter.spellDeck });
+      };
 
       this.setupNotifications();
    }

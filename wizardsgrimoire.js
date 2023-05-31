@@ -926,41 +926,6 @@ var CardStock = (function () {
     };
     return CardStock;
 }());
-var HandStock = (function (_super) {
-    __extends(HandStock, _super);
-    function HandStock(manager, element, settings) {
-        var _a, _b, _c, _d;
-        var _this = _super.call(this, manager, element, settings) || this;
-        _this.manager = manager;
-        _this.element = element;
-        element.classList.add('hand-stock');
-        element.style.setProperty('--card-overlap', (_a = settings.cardOverlap) !== null && _a !== void 0 ? _a : '60px');
-        element.style.setProperty('--card-shift', (_b = settings.cardShift) !== null && _b !== void 0 ? _b : '15px');
-        element.style.setProperty('--card-inclination', "".concat((_c = settings.inclination) !== null && _c !== void 0 ? _c : 12, "deg"));
-        _this.inclination = (_d = settings.inclination) !== null && _d !== void 0 ? _d : 4;
-        return _this;
-    }
-    HandStock.prototype.addCard = function (card, animation, settings) {
-        var promise = _super.prototype.addCard.call(this, card, animation, settings);
-        this.updateAngles();
-        return promise;
-    };
-    HandStock.prototype.cardRemoved = function (card) {
-        _super.prototype.cardRemoved.call(this, card);
-        this.updateAngles();
-    };
-    HandStock.prototype.updateAngles = function () {
-        var _this = this;
-        var middle = (this.cards.length - 1) / 2;
-        this.cards.forEach(function (card, index) {
-            var middleIndex = index - middle;
-            var cardElement = _this.getCardElement(card);
-            cardElement.style.setProperty('--hand-stock-middle-index', "".concat(middleIndex));
-            cardElement.style.setProperty('--hand-stock-middle-index-abs', "".concat(Math.abs(middleIndex)));
-        });
-    };
-    return HandStock;
-}(CardStock));
 var SlideAndBackAnimation = (function (_super) {
     __extends(SlideAndBackAnimation, _super);
     function SlideAndBackAnimation(manager, element, tempElement) {
@@ -1138,6 +1103,103 @@ var LineStock = (function (_super) {
     }
     return LineStock;
 }(CardStock));
+var SlotStock = (function (_super) {
+    __extends(SlotStock, _super);
+    function SlotStock(manager, element, settings) {
+        var _a, _b;
+        var _this = _super.call(this, manager, element, settings) || this;
+        _this.manager = manager;
+        _this.element = element;
+        _this.slotsIds = [];
+        _this.slots = [];
+        element.classList.add('slot-stock');
+        _this.mapCardToSlot = settings.mapCardToSlot;
+        _this.slotsIds = (_a = settings.slotsIds) !== null && _a !== void 0 ? _a : [];
+        _this.slotClasses = (_b = settings.slotClasses) !== null && _b !== void 0 ? _b : [];
+        _this.slotsIds.forEach(function (slotId) {
+            _this.createSlot(slotId);
+        });
+        return _this;
+    }
+    SlotStock.prototype.createSlot = function (slotId) {
+        var _a;
+        this.slots[slotId] = document.createElement("div");
+        this.slots[slotId].dataset.slotId = slotId;
+        this.element.appendChild(this.slots[slotId]);
+        (_a = this.slots[slotId].classList).add.apply(_a, __spreadArray(['slot'], this.slotClasses, true));
+    };
+    SlotStock.prototype.addCard = function (card, animation, settings) {
+        var _a, _b;
+        var slotId = (_a = settings === null || settings === void 0 ? void 0 : settings.slot) !== null && _a !== void 0 ? _a : (_b = this.mapCardToSlot) === null || _b === void 0 ? void 0 : _b.call(this, card);
+        if (slotId === undefined) {
+            throw new Error("Impossible to add card to slot : no SlotId. Add slotId to settings or set mapCardToSlot to SlotCard constructor.");
+        }
+        if (!this.slots[slotId]) {
+            throw new Error("Impossible to add card to slot \"".concat(slotId, "\" : slot \"").concat(slotId, "\" doesn't exists."));
+        }
+        var newSettings = __assign(__assign({}, settings), { forceToElement: this.slots[slotId] });
+        return _super.prototype.addCard.call(this, card, animation, newSettings);
+    };
+    SlotStock.prototype.setSlotsIds = function (slotsIds) {
+        var _this = this;
+        if (slotsIds.length == this.slotsIds.length && slotsIds.every(function (slotId, index) { return _this.slotsIds[index] === slotId; })) {
+            return;
+        }
+        this.removeAll();
+        this.element.innerHTML = '';
+        this.slotsIds = slotsIds !== null && slotsIds !== void 0 ? slotsIds : [];
+        this.slotsIds.forEach(function (slotId) {
+            _this.createSlot(slotId);
+        });
+    };
+    SlotStock.prototype.canAddCard = function (card, settings) {
+        var _a, _b;
+        if (!this.contains(card)) {
+            return true;
+        }
+        else {
+            var currentCardSlot = this.getCardElement(card).closest('.slot').dataset.slotId;
+            var slotId = (_a = settings === null || settings === void 0 ? void 0 : settings.slot) !== null && _a !== void 0 ? _a : (_b = this.mapCardToSlot) === null || _b === void 0 ? void 0 : _b.call(this, card);
+            return currentCardSlot != slotId;
+        }
+    };
+    SlotStock.prototype.swapCards = function (cards, settings) {
+        var _this = this;
+        if (!this.mapCardToSlot) {
+            throw new Error('You need to define SlotStock.mapCardToSlot to use SlotStock.swapCards');
+        }
+        var promises = [];
+        var elements = cards.map(function (card) { return _this.manager.getCardElement(card); });
+        var elementsRects = elements.map(function (element) { return element.getBoundingClientRect(); });
+        var cssPositions = elements.map(function (element) { return element.style.position; });
+        elements.forEach(function (element) { return element.style.position = 'absolute'; });
+        cards.forEach(function (card, index) {
+            var _a, _b;
+            var cardElement = elements[index];
+            var promise;
+            var slotId = (_a = _this.mapCardToSlot) === null || _a === void 0 ? void 0 : _a.call(_this, card);
+            _this.slots[slotId].appendChild(cardElement);
+            cardElement.style.position = cssPositions[index];
+            var cardIndex = _this.cards.findIndex(function (c) { return _this.manager.getId(c) == _this.manager.getId(card); });
+            if (cardIndex !== -1) {
+                _this.cards.splice(cardIndex, 1, card);
+            }
+            if ((_b = settings === null || settings === void 0 ? void 0 : settings.updateInformations) !== null && _b !== void 0 ? _b : true) {
+                _this.manager.updateCardInformations(card);
+            }
+            _this.removeSelectionClassesFromElement(cardElement);
+            promise = _this.animationFromElement(cardElement, elementsRects[index], {});
+            if (!promise) {
+                console.warn("CardStock.animationFromElement didn't return a Promise");
+                promise = Promise.resolve(false);
+            }
+            promise.then(function () { var _a; return _this.setSelectableCard(card, (_a = settings === null || settings === void 0 ? void 0 : settings.selectable) !== null && _a !== void 0 ? _a : true); });
+            promises.push(promise);
+        });
+        return Promise.all(promises);
+    };
+    return SlotStock;
+}(LineStock));
 var CardManager = (function () {
     function CardManager(game, settings) {
         var _a;
@@ -1299,9 +1361,14 @@ var WizardsGrimoire = (function () {
             topCard.type = "" + (Math.floor(Math.random() * 4) + 1);
             stock.addCard(topCard, { fromStock: _this.tableCenter.manaDeck });
         };
-        this.addActionButton("btnShuffle", "Shuffle", function () {
-            _this.tableCenter.manaDeck.shuffle();
-        });
+        this.tableCenter.spellDeck.onCardClick = function (card) {
+            var cardNumber = _this.tableCenter.spellDeck.getCardNumber();
+            _this.tableCenter.spellDeck.setCardNumber(cardNumber, { id: getCardId() });
+            var topCard = _this.tableCenter.spellDeck.getTopCard();
+            topCard.location_arg = (topCard.id % 10) + 1;
+            topCard.type = "" + (Math.floor(Math.random() * 70) + 1);
+            _this.tableCenter.spellPool.addCard(topCard, { fromStock: _this.tableCenter.spellDeck });
+        };
         this.setupNotifications();
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) { };
@@ -1415,6 +1482,8 @@ var ManaCardManager = (function (_super) {
     }
     return ManaCardManager;
 }(CardManager));
+var EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
+var TEN_CARDS_SLOT = [1, 6, 2, 7, 3, 8, 4, 9, 5, 10];
 var TableCenter = (function () {
     function TableCenter(game) {
         this.game = game;
@@ -1435,6 +1504,12 @@ var TableCenter = (function () {
             cardNumber: 60,
             topCard: { id: 100001 },
             counter: {}
+        });
+        this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
+            slotsIds: TEN_CARDS_SLOT,
+            slotClasses: ["wg-spell-slot"],
+            mapCardToSlot: function (card) { return card.location_arg; },
+            direction: "column"
         });
     }
     return TableCenter;

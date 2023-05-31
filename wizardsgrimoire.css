@@ -551,6 +551,18 @@ body > .card {
   --bga-cards-deck-counter-size: 25px;
 }
 
+.wg-spell-slot {
+  width: 100px;
+  height: 140px;
+  border-radius: 5px;
+  border: 1px solid darkslategray;
+}
+
+#spell-pool {
+  max-height: 400px;
+  align-content: center;
+}
+
 #tables-and-center {
   position: relative;
   display: flex;
