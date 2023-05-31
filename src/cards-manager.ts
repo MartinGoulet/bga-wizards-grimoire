@@ -1,8 +1,5 @@
-// const card_width: number = 142;
-// const card_height: number = 198;
-
-const card_width: number = 100;
-const card_height: number = 140;
+const card_width: number = 120;
+const card_height: number = 168;
 
 class SpellCardManager extends CardManager<SpellCard> {
    constructor(public game: WizardsGrimoire) {

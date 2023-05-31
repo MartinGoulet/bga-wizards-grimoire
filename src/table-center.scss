@@ -19,14 +19,22 @@
    }
 }
 
-.wg-spell-slot {
-   width: 100px;
-   height: 140px;
-   border-radius: 5px;
-   border: 1px solid darkslategray;
-}
-
 #spell-pool {
    max-height: 400px;
    align-content: center;
+   --width: 120px;
+   --height: 168px;
+
+   .wg-spell-slot {
+      width: var(--width);
+      height: var(--height);
+      border-radius: 5px;
+      border: 1px solid darkslategray;
+   }
+}
+
+@media only screen and (min-width: 1560px) {
+   #spell-pool {
+         flex-direction: row;
+   }
 }

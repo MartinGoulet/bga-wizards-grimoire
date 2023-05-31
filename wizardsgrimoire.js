@@ -1339,7 +1339,6 @@ var WizardsGrimoire = (function () {
         this.manasManager = new ManaCardManager(this);
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
-        var _this = this;
         log(gamedatas);
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
@@ -1347,28 +1346,9 @@ var WizardsGrimoire = (function () {
         this.tableCenter = new TableCenter(this);
         for (var player_id in gamedatas.players) {
         }
+        this.tableCenter.spellPool.addCards(gamedatas.slot_cards);
         var hand = document.getElementById("current-player-table");
         var stock = new LineStock(this.manasManager, hand, { center: true });
-        stock.onCardClick = function (card) {
-            _this.tableCenter.manaDiscard.addCard(card, {
-                fromStock: stock
-            });
-        };
-        this.tableCenter.manaDeck.onCardClick = function (card) {
-            var cardNumber = _this.tableCenter.manaDeck.getCardNumber();
-            _this.tableCenter.manaDeck.setCardNumber(cardNumber, { id: getCardId() });
-            var topCard = _this.tableCenter.manaDeck.getTopCard();
-            topCard.type = "" + (Math.floor(Math.random() * 4) + 1);
-            stock.addCard(topCard, { fromStock: _this.tableCenter.manaDeck });
-        };
-        this.tableCenter.spellDeck.onCardClick = function (card) {
-            var cardNumber = _this.tableCenter.spellDeck.getCardNumber();
-            _this.tableCenter.spellDeck.setCardNumber(cardNumber, { id: getCardId() });
-            var topCard = _this.tableCenter.spellDeck.getTopCard();
-            topCard.location_arg = (topCard.id % 10) + 1;
-            topCard.type = "" + (Math.floor(Math.random() * 70) + 1);
-            _this.tableCenter.spellPool.addCard(topCard, { fromStock: _this.tableCenter.spellDeck });
-        };
         this.setupNotifications();
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) { };
@@ -1426,8 +1406,8 @@ var NotificationManager = (function () {
     };
     return NotificationManager;
 }());
-var card_width = 100;
-var card_height = 140;
+var card_width = 120;
+var card_height = 168;
 var SpellCardManager = (function (_super) {
     __extends(SpellCardManager, _super);
     function SpellCardManager(game) {
@@ -1506,7 +1486,7 @@ var TableCenter = (function () {
             counter: {}
         });
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
-            slotsIds: TEN_CARDS_SLOT,
+            slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
             mapCardToSlot: function (card) { return card.location_arg; },
             direction: "column"
