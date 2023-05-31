@@ -56,12 +56,14 @@ class WizardsGrimoire extends Table {
         parent::__construct();
 
         self::initGameStateLabels(array(
+            WG_VAR_SLOT_COUNT => 10,
             //    "my_first_global_variable" => 10,
             //    "my_second_global_variable" => 11,
             //      ...
             //    "my_first_game_variant" => 100,
             //    "my_second_game_variant" => 101,
             //      ...
+            WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
         ));
 
         self::$instance = $this;
@@ -121,20 +123,41 @@ class WizardsGrimoire extends Table {
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
 
         // TODO: setup the initial game situation here
+        $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
+        $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
+        self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
+
+        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty) {
+            if ($gameOptionDifficulty == WG_DIFFICULTY_BEGINNER) {
+                return $card_type['icon'] == WG_ICON_BEGINNER;
+            } elseif ($gameOptionDifficulty == WG_DIFFICULTY_NORMAL) {
+                return $card_type['icon'] == WG_ICON_BEGINNER
+                    || $card_type['icon'] == WG_ICON_INTERMEDIATE;
+            } else {
+                return true;
+            }
+        });
 
         $cards = [];
-        foreach ($this->card_types as $id => $card) {
+        foreach ($cards_types as $id => $card) {
             $cards[] = ['type' => $id, 'type_arg' => 0, 'nbr' => 1];
         }
         $this->deck_spells->createCards($cards);
         $this->deck_spells->shuffle('deck');
 
         $cards = [];
-        foreach($this->mana_cards as $number => $count) {
+        foreach ($this->mana_cards as $number => $count) {
             $cards[] = ['type' => $number, 'type_arg' => 0, 'nbr' => intval($count)];
         }
         $this->deck_manas->createCards($cards);
         $this->deck_manas->shuffle('deck');
+
+
+        for ($i = 1; $i <= $slot_count; $i++) {
+            $this->deck_spells->pickCardForLocation('deck', "slot", $i);
+        }
+
+
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -162,6 +185,9 @@ class WizardsGrimoire extends Table {
         $result['players'] = self::getCollectionFromDb($sql);
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
+
+        $result['slot_count'] = intval(self::getGameStateValue(WG_VAR_SLOT_COUNT));
+        $result['slot_cards'] = array_values($this->deck_spells->getCardsInLocation('slot'));
 
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");

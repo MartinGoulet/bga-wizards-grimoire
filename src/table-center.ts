@@ -32,7 +32,7 @@ class TableCenter {
       });
 
       this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
-         slotsIds: TEN_CARDS_SLOT,
+         slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
          slotClasses: ["wg-spell-slot"],
          mapCardToSlot: (card) => card.location_arg,
          direction: "column"

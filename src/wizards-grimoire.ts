@@ -54,32 +54,11 @@ class WizardsGrimoire
       for (let player_id in gamedatas.players) {
       }
 
+      this.tableCenter.spellPool.addCards(gamedatas.slot_cards);
+
       const hand = document.getElementById("current-player-table");
 
       const stock = new LineStock(this.manasManager, hand, { center: true });
-
-      stock.onCardClick = (card: ManaCard) => {
-         this.tableCenter.manaDiscard.addCard(card, {
-            fromStock: stock
-         });
-      };
-
-      this.tableCenter.manaDeck.onCardClick = (card: ManaCard) => {
-         let cardNumber = this.tableCenter.manaDeck.getCardNumber();
-         this.tableCenter.manaDeck.setCardNumber(cardNumber, { id: getCardId() } as ManaCard);
-         const topCard = this.tableCenter.manaDeck.getTopCard();
-         topCard.type = "" + (Math.floor(Math.random() * 4) + 1);
-         stock.addCard(topCard, { fromStock: this.tableCenter.manaDeck });
-      };
-
-      this.tableCenter.spellDeck.onCardClick = (card: ManaCard) => {
-         let cardNumber = this.tableCenter.spellDeck.getCardNumber();
-         this.tableCenter.spellDeck.setCardNumber(cardNumber, { id: getCardId() } as ManaCard);
-         const topCard = this.tableCenter.spellDeck.getTopCard();
-         topCard.location_arg = (topCard.id % 10) + 1;
-         topCard.type = "" + (Math.floor(Math.random() * 70) + 1);
-         this.tableCenter.spellPool.addCard(topCard, { fromStock: this.tableCenter.spellDeck });
-      };
 
       this.setupNotifications();
    }

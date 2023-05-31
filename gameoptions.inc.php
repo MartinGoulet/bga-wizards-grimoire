@@ -24,9 +24,36 @@
  *
  */
 
-$game_options = array(
+require_once("modules/php/constants.inc.php");
 
-    /*
+$game_options = [
+    WG_GAME_OPTION_DIFFICULTY_ID => [
+        'name' => totranslate('Difficulty'),
+        'default' => WG_DIFFICULTY_NORMAL,
+        'values' => [
+            WG_DIFFICULTY_BEGINNER => [
+                'name' => totranslate('Beginner'),
+                'tmdisplay' => totranslate('Beginner'),
+                'description' => totranslate('Spell pool of 8 cards, only cards with 1 star')
+            ],
+            WG_DIFFICULTY_NORMAL => [
+                'name' => totranslate('Normal'),
+                'tmdisplay' => totranslate('Normal'),
+                'description' => totranslate('Spell pool of 10 cards, only cards with 1 or 2 stars')
+            ],
+            WG_DIFFICULTY_ADVANCED => [
+                'name' => totranslate('Advanced'),
+                'tmdisplay' => totranslate('Advanced'),
+                'description' => totranslate('Spell pool of 10 cards, all cards are available')
+            ],
+        ]
+    ]
+];
+
+
+
+/*array(
+
     
     // note: game variant ID should start at 100 (ie: 100, 101, 102, ...). The maximum is 199.
     100 => array(
@@ -51,4 +78,4 @@ $game_options = array(
                 'default' => 1
             ),
 
-    */);
+    );*/

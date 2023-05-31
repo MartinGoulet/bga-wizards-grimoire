@@ -2,7 +2,10 @@ interface WizardsGrimoirePlayerData extends BgaPlayer {
    // Add Player data
 }
 
-interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerData> {}
+interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerData> {
+   slot_count: 8 | 10;
+   slot_cards: SpellCard[];
+}
 
 interface Card {
    id: number;

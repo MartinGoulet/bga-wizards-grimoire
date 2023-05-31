@@ -1,6 +1,20 @@
 <?php
 
 /*
+ * Game options 
+ */
+define('WG_GAME_OPTION_DIFFICULTY_ID', 100);
+define('WG_GAME_OPTION_DIFFICULTY', 'gameOptionDifficulty');
+define('WG_DIFFICULTY_BEGINNER', 1);
+define('WG_DIFFICULTY_NORMAL', 2);
+define('WG_DIFFICULTY_ADVANCED', 3);
+
+/*
+ * Game variables
+ */
+define('WG_VAR_SLOT_COUNT', 'slot_count');
+
+/*
  * State constants
  */
 define('ST_BGA_GAME_SETUP', 1);
