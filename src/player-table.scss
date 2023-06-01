@@ -1,0 +1,43 @@
+.player-table {
+   padding-top: 20px;
+
+   .spell-repertoire {
+      --width: 110px;
+      --height: 154px;
+
+      .wg-spell-slot {
+         width: var(--width);
+         height: var(--height);
+         border-radius: 5px;
+         border: 1px solid darkslategray;
+      }
+   }
+
+   .wg-title {
+      position: absolute;
+      margin: -36px 0 0 0;
+      border: 3px solid var(--color);
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-weight: 600;
+      color: var(--color);
+      background-color: white;
+   }
+
+   .mana-cooldown {
+      display: flex;
+      min-height: 160px;
+      gap: 8px;
+      margin-top: 10px;
+
+      .mana-deck.deck {
+         display: inline-block;
+         width: 110px;
+         height: 154px;
+         border-radius: 5px;
+         border: 1px solid blue;
+         --width: 110px !important;
+         --height: 154px !important;
+      }
+   }
+}

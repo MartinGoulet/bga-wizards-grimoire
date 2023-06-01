@@ -1,7 +1,8 @@
-@import 'cards';
+@import "cards";
 @import "../node_modules/bga-zoom/bga-zoom";
 @import "../node_modules/bga-cards/bga-cards";
-@import 'table-center';
+@import "table-center";
+@import "player-table";
 
 #tables-and-center {
    position: relative;
@@ -29,5 +30,16 @@
       flex-wrap: wrap;
       gap: 10px;
       flex-direction: column;
+   }
+}
+
+.deck {
+   &[data-empty="true"] {
+      border: 1px solid black;
+      border-radius: 5px;
+   }
+
+   .bga-cards_deck-counter {
+      --bga-cards-deck-counter-size: 25px;
    }
 }

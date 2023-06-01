@@ -12,21 +12,21 @@ class TableCenter {
 
    constructor(private game: WizardsGrimoire) {
       this.spellDeck = new Deck(game.spellsManager, document.getElementById("spell-deck"), {
-         cardNumber: 60,
+         cardNumber: game.gamedatas.spells.deck_count,
          topCard: { id: 100000 } as SpellCard, //hidden
          counter: {}
       });
       this.spellDiscard = new Deck(game.spellsManager, document.getElementById("spell-discard"), {
-         cardNumber: 0,
+         cardNumber: game.gamedatas.spells.discard_count,
          counter: {}
       });
 
       this.manaDiscard = new Deck(game.manasManager, document.getElementById("mana-discard"), {
-         cardNumber: 0,
+         cardNumber: game.gamedatas.manas.discard_count,
          counter: {}
       });
       this.manaDeck = new Deck(game.manasManager, document.getElementById("mana-deck"), {
-         cardNumber: 60,
+         cardNumber: game.gamedatas.manas.deck_count,
          topCard: { id: 100001 } as SpellCard, //hidden
          counter: {}
       });
@@ -37,5 +37,7 @@ class TableCenter {
          mapCardToSlot: (card) => card.location_arg,
          direction: "column"
       });
+
+      this.spellPool.addCards(game.gamedatas.slot_cards);
    }
 }

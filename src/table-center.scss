@@ -6,17 +6,6 @@
 #table-center {
    display: flex;
    gap: 20px;
-
-   .deck {
-      &[data-empty="true"] {
-         border: 1px solid black;
-         border-radius: 5px;
-      }
-
-      .bga-cards_deck-counter {
-         --bga-cards-deck-counter-size: 25px;
-      }
-   }
 }
 
 #spell-pool {

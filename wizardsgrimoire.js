@@ -1087,6 +1087,51 @@ var Deck = (function (_super) {
     };
     return Deck;
 }(CardStock));
+var AllVisibleDeck = (function (_super) {
+    __extends(AllVisibleDeck, _super);
+    function AllVisibleDeck(manager, element, settings) {
+        var _a;
+        var _this = _super.call(this, manager, element, settings) || this;
+        _this.manager = manager;
+        _this.element = element;
+        element.classList.add('all-visible-deck');
+        var cardWidth = _this.manager.getCardWidth();
+        var cardHeight = _this.manager.getCardHeight();
+        if (cardWidth && cardHeight) {
+            _this.element.style.setProperty('--width', "".concat(cardWidth, "px"));
+            _this.element.style.setProperty('--height', "".concat(cardHeight, "px"));
+        }
+        else {
+            throw new Error("You need to set cardWidth and cardHeight in the card manager to use Deck.");
+        }
+        element.style.setProperty('--shift', (_a = settings.shift) !== null && _a !== void 0 ? _a : '3px');
+        return _this;
+    }
+    AllVisibleDeck.prototype.addCard = function (card, animation, settings) {
+        var promise;
+        var order = this.cards.length;
+        promise = _super.prototype.addCard.call(this, card, animation, settings);
+        var cardId = this.manager.getId(card);
+        var cardDiv = document.getElementById(cardId);
+        cardDiv.style.setProperty('--order', '' + order);
+        this.element.style.setProperty('--tile-count', '' + this.cards.length);
+        return promise;
+    };
+    AllVisibleDeck.prototype.setOpened = function (opened) {
+        this.element.classList.toggle('opened', opened);
+    };
+    AllVisibleDeck.prototype.cardRemoved = function (card) {
+        var _this = this;
+        _super.prototype.cardRemoved.call(this, card);
+        this.cards.forEach(function (c, index) {
+            var cardId = _this.manager.getId(c);
+            var cardDiv = document.getElementById(cardId);
+            cardDiv.style.setProperty('--order', '' + index);
+        });
+        this.element.style.setProperty('--tile-count', '' + this.cards.length);
+    };
+    return AllVisibleDeck;
+}(CardStock));
 var LineStock = (function (_super) {
     __extends(LineStock, _super);
     function LineStock(manager, element, settings) {
@@ -1337,6 +1382,7 @@ var WizardsGrimoire = (function () {
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
         this.manasManager = new ManaCardManager(this);
+        this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
         log(gamedatas);
@@ -1346,14 +1392,23 @@ var WizardsGrimoire = (function () {
         this.tableCenter = new TableCenter(this);
         for (var player_id in gamedatas.players) {
         }
-        this.tableCenter.spellPool.addCards(gamedatas.slot_cards);
-        var hand = document.getElementById("current-player-table");
-        var stock = new LineStock(this.manasManager, hand, { center: true });
+        this.createPlayerTables(gamedatas);
         this.setupNotifications();
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) { };
     WizardsGrimoire.prototype.onLeavingState = function (stateName) { };
     WizardsGrimoire.prototype.onUpdateActionButtons = function (stateName, args) { };
+    WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
+        var _this = this;
+        gamedatas.playerorder.forEach(function (player_id) {
+            var player = gamedatas.players[Number(player_id)];
+            var table = new PlayerTable(_this, player);
+            _this.playersTables.push(table);
+        });
+    };
+    WizardsGrimoire.prototype.getPlayerId = function () {
+        return Number(this.player_id);
+    };
     WizardsGrimoire.prototype.takeAction = function (action, data) {
         data = data || {};
         data.lock = true;
@@ -1462,26 +1517,52 @@ var ManaCardManager = (function (_super) {
     }
     return ManaCardManager;
 }(CardManager));
+var PlayerTable = (function () {
+    function PlayerTable(game, player) {
+        this.game = game;
+        this.mana_cooldown = [];
+        this.player_id = Number(player.id);
+        this.current_player = this.player_id == this.game.getPlayerId();
+        var pId = player.id, pName = player.name, pColor = player.color;
+        var pCurrent = this.current_player.toString();
+        var html = "\n            <div id=\"player-table-".concat(pId, "\" class=\"player-table whiteblock\" data-color=\"").concat(pColor, "\" style=\"--color: #").concat(pColor, "\">\n                <span class=\"wg-title\">").concat(pName, "</span>\n                <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-current-player=\"").concat(pCurrent, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                    <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                </div>\n            <div>");
+        dojo.place(html, this.current_player ? "current-player-table" : "tables");
+        this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
+            slotsIds: [1, 2, 3, 4, 5, 6],
+            slotClasses: ["wg-spell-slot"],
+            mapCardToSlot: function (card) { return card.location_arg; }
+        });
+        for (var index = 1; index <= 6; index++) {
+            var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
+            var deck = new Deck(game.manasManager, divDeck, {
+                cardNumber: 0,
+                counter: {}
+            });
+            this.mana_cooldown.push(deck);
+        }
+    }
+    return PlayerTable;
+}());
 var EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
 var TEN_CARDS_SLOT = [1, 6, 2, 7, 3, 8, 4, 9, 5, 10];
 var TableCenter = (function () {
     function TableCenter(game) {
         this.game = game;
         this.spellDeck = new Deck(game.spellsManager, document.getElementById("spell-deck"), {
-            cardNumber: 60,
+            cardNumber: game.gamedatas.spells.deck_count,
             topCard: { id: 100000 },
             counter: {}
         });
         this.spellDiscard = new Deck(game.spellsManager, document.getElementById("spell-discard"), {
-            cardNumber: 0,
+            cardNumber: game.gamedatas.spells.discard_count,
             counter: {}
         });
         this.manaDiscard = new Deck(game.manasManager, document.getElementById("mana-discard"), {
-            cardNumber: 0,
+            cardNumber: game.gamedatas.manas.discard_count,
             counter: {}
         });
         this.manaDeck = new Deck(game.manasManager, document.getElementById("mana-deck"), {
-            cardNumber: 60,
+            cardNumber: game.gamedatas.manas.deck_count,
             topCard: { id: 100001 },
             counter: {}
         });
@@ -1491,6 +1572,7 @@ var TableCenter = (function () {
             mapCardToSlot: function (card) { return card.location_arg; },
             direction: "column"
         });
+        this.spellPool.addCards(game.gamedatas.slot_cards);
     }
     return TableCenter;
 }());

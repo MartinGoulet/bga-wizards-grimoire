@@ -38,6 +38,7 @@
         
         "src/notification-manager.ts",
         "src/cards-manager.ts",
+        "src/player-table.ts",
         "src/table-center.ts"
     ]
 }

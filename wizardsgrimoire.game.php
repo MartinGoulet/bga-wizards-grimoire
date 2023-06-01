@@ -189,6 +189,16 @@ class WizardsGrimoire extends Table {
         $result['slot_count'] = intval(self::getGameStateValue(WG_VAR_SLOT_COUNT));
         $result['slot_cards'] = array_values($this->deck_spells->getCardsInLocation('slot'));
 
+        $result['spells'] = [
+            'deck_count' => intval($this->deck_spells->countCardInLocation('deck')),
+            'discard_count' => intval($this->deck_spells->countCardInLocation('discard')),
+        ];
+
+        $result['manas'] = [
+            'deck_count' => intval($this->deck_manas->countCardInLocation('deck')),
+            'discard_count' => intval($this->deck_manas->countCardInLocation('discard')),
+        ];
+
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
 

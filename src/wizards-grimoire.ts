@@ -27,6 +27,7 @@ class WizardsGrimoire
    public spellsManager: SpellCardManager = new SpellCardManager(this);
    public manasManager: ManaCardManager = new ManaCardManager(this);
    public tableCenter: TableCenter;
+   public playersTables: PlayerTable[] = [];
 
    constructor() {}
 
@@ -54,11 +55,7 @@ class WizardsGrimoire
       for (let player_id in gamedatas.players) {
       }
 
-      this.tableCenter.spellPool.addCards(gamedatas.slot_cards);
-
-      const hand = document.getElementById("current-player-table");
-
-      const stock = new LineStock(this.manasManager, hand, { center: true });
+      this.createPlayerTables(gamedatas);
 
       this.setupNotifications();
    }
@@ -83,6 +80,18 @@ class WizardsGrimoire
 
    ///////////////////////////////////////////////////
    //// Utilities
+
+   private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
+      gamedatas.playerorder.forEach((player_id) => {
+         const player = gamedatas.players[Number(player_id)];
+         const table = new PlayerTable(this, player);
+         this.playersTables.push(table);
+      });
+   }
+
+   public getPlayerId(): number {
+      return Number(this.player_id);
+   }
 
    public takeAction(action: string, data?: any) {
       data = data || {};
