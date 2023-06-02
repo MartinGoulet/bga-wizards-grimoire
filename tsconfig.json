@@ -29,17 +29,25 @@
         "node_modules/bga-cards/src/stocks/deck.ts",
         "node_modules/bga-cards/src/stocks/line-stock.ts",
         "node_modules/bga-cards/src/stocks/slot-stock.ts",
-        
         "node_modules/bga-cards/src/card-manager.ts",
 
-        "src/define.ts",
         "src/wizards-grimoire.d.ts",
         "src/wizards-grimoire.ts",
         
-        "src/managers/notification.ts",
+        "src/managers/action.ts",
         "src/managers/cards.ts",
+        "src/managers/notification.ts",
         "src/managers/state.ts",
+
         "src/player-table.ts",
-        "src/table-center.ts"
+        "src/table-center.ts",
+
+        "src/states/cast-spell.ts",
+        "src/states/choose-new-spell.ts",
+        "src/states/basic-attack.ts",
+
+        "src/states/cast-spell-with-mana.ts",
+
+        "src/define.ts"
     ]
 }

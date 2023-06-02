@@ -16,7 +16,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
 }
 
 interface PlayerBoardInfo {
-   manas: { [position: number]: number };
+   manas: { [position: number]: ManaCard[] };
    spells: SpellCard[];
    hand?: ManaCard[];
 }
@@ -36,6 +36,7 @@ interface CardType {
    activation: "instant" | "delayed" | "ongoing";
    cost: number;
    icon: "+" | "++" | "scroll";
+   js_actions?: string[] | string;
 }
 
 interface SpellCard extends Card {
@@ -82,4 +83,10 @@ interface NotifDrawManaCardsArgs {
 interface NotifSpellCoolDownArgs {
    player_id: number;
    mana_cards_discard: { pos: number | ManaCard };
+}
+
+interface NotifHealthChangedArgs {
+   player_id: number;
+   life_remaining: number;
+   damage: number;
 }

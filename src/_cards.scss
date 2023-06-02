@@ -95,6 +95,10 @@
    animation: pulseSelectable 1.5s infinite alternate;
 }
 
+.wg-selected .front {
+   box-shadow: inset 0 0 6px 5px #00ffff !important;
+}
+
 @keyframes pulseSelectable {
    0% {
       box-shadow: inset 0 0 3px 5px #00ffff;

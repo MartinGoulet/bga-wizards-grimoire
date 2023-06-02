@@ -2,7 +2,7 @@ class PlayerTable {
    public player_id: number;
 
    public spell_repertoire: SlotStock<SpellCard>;
-   public mana_cooldown: Deck<ManaCard>[] = [];
+   public mana_cooldown: { [pos: number]: Deck<ManaCard> } = {};
    public hand: LineStock<ManaCard>;
 
    private current_player: boolean;
@@ -47,14 +47,14 @@ class PlayerTable {
             cardNumber: 0,
             counter: {}
          });
-         this.mana_cooldown.push(deck);
+         this.mana_cooldown[index] = deck;
       }
 
       const board: PlayerBoardInfo = game.gamedatas.player_board[pId];
       this.spell_repertoire.addCards(board.spells);
 
       Object.keys(board.manas).forEach((pos: string) => {
-         this.mana_cooldown[Number(pos) - 1].setCardNumber(board.manas[pos]);
+         this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
       });
 
       if (pCurrent) {

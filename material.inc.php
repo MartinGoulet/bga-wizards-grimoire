@@ -208,6 +208,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
+    "class" => "VileLaughter",
   ],
   24 => [
     "name" => clienttranslate("Doom drop"),

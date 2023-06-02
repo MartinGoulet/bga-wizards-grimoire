@@ -54,6 +54,9 @@ class WizardsGrimoire extends Table {
     /** @var Deck */
     public $deck_manas;
 
+    public $card_types;
+    public $mana_cards;
+
     function __construct() {
         // Your global variables labels:
         //  Here, you can assign labels to global variables you are using for this game.
@@ -217,7 +220,7 @@ class WizardsGrimoire extends Table {
             ];
             for ($i=1; $i <= 6; $i++) { 
                 $result['player_board'][$player_id]['manas'][$i] =
-                    intval($this->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $i)));
+                    $this->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $i), null, 'location_arg');
             }
         }
         $result['player_board'][$player_id]['hand'] =
@@ -253,7 +256,6 @@ class WizardsGrimoire extends Table {
     /*
         In this space, you can put any utility methods useful for your game logic
     */
-
 
 
     //////////////////////////////////////////////////////////////////////////////

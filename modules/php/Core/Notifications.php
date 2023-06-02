@@ -31,6 +31,19 @@ class Notifications {
         ]);
     }
 
+    public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {
+        $message = clienttranslate('${player_name} received ${damage} damages from ${card_name}');
+
+        self::notifyAll('onHealthChanged', $message, [
+            "player_id" => $player_id,
+            "player_name" => self::getPlayerName($player_id),
+            "life_remaining" => $life_remaining,
+            "damage" => $damage,
+            "card_name" => $card_name,
+            "i18n" => ["card_name"],
+        ]);
+    }
+
     static function refillSpell($player_id, $card) {
         $msg = clienttranslate('$${card_name} is added to the spell repertoire.');
         self::notifyAll('onRefillSpell', $msg, [

@@ -127,7 +127,8 @@ $castSpellsStates = [
         "type" => "activeplayer",
         "possibleactions" => ["castSpell", "pass"],
         "transitions" => [
-            "" => ST_BASIC_ATTACK
+            "cast" => ST_CAST_SPELL,
+            "pass" => ST_BASIC_ATTACK
         ]
     ],
 ];
@@ -140,7 +141,8 @@ $basicAttackStates = [
         "type" => "activeplayer",
         "possibleactions" => ["basicAttack", "pass"],
         "transitions" => [
-            "" => ST_SPELL_COOL_DOWN
+            "attack" => ST_NEXT_PLAYER,
+            "pass" => ST_NEXT_PLAYER
         ]
     ],
 

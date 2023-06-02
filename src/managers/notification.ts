@@ -8,6 +8,7 @@ class NotificationManager {
       this.subscribeEvent("onRefillSpell", 500);
       this.subscribeEvent("onDrawManaCards", 1000);
       this.subscribeEvent("onSpellCoolDown", 1000);
+      this.subscribeEvent("onHealthChanged", 500);
 
       this.game.notifqueue.setIgnoreNotificationCheck(
          "message",
@@ -26,22 +27,28 @@ class NotificationManager {
       }
    }
 
-   private notif_onChooseSpell(args: INotification<NotifChooseSpellArgs>) {
-      const { player_id, card } = args.args;
+   private notif_onChooseSpell(notif: INotification<NotifChooseSpellArgs>) {
+      const { player_id, card } = notif.args;
       log("onChooseSpell", card);
       this.game.getPlayerTable(player_id).onChooseSpell(card);
    }
-   private notif_onRefillSpell(args: INotification<NotifRefillSpellArgs>) {
-      const { card } = args.args;
+   private notif_onRefillSpell(notif: INotification<NotifRefillSpellArgs>) {
+      const { card } = notif.args;
       log("onRefillSpell", card);
       this.game.tableCenter.onRefillSpell(card);
    }
 
-   private notif_onDrawManaCards(args: INotification<NotifDrawManaCardsArgs>) {
-      const { player_id, cards } = args.args;
+   private notif_onDrawManaCards(notif: INotification<NotifDrawManaCardsArgs>) {
+      const { player_id, cards } = notif.args;
       log("onDrawManaCards", cards);
       this.game.getPlayerTable(player_id).onDrawManaCard(cards);
    }
 
-   private notif_onSpellCoolDown(args: INotification<NotifSpellCoolDownArgs>) {}
+   private notif_onSpellCoolDown(notif: INotification<NotifSpellCoolDownArgs>) {}
+
+   private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {
+      log("notif_onHealthChanged", notif.args);
+      const { player_id, life_remaining } = notif.args;
+      this.game.scoreCtrl[player_id].toValue(life_remaining);
+   }
 }

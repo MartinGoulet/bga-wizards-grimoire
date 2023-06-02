@@ -1327,9 +1327,6 @@ var CardManager = (function () {
     };
     return CardManager;
 }());
-define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
-    return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());
-});
 var isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
@@ -1337,6 +1334,7 @@ var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
         this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
         this.playersTables = [];
+        this.isRestoreMode = false;
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
         log(gamedatas);
@@ -1344,6 +1342,7 @@ var WizardsGrimoire = (function () {
         this.spellsManager = new SpellCardManager(this);
         this.manasManager = new ManaCardManager(this);
         this.stateManager = new StateManager(this);
+        this.actionManager = new ActionManager(this);
         this.tableCenter = new TableCenter(this);
         for (var player_id in gamedatas.players) {
         }
@@ -1372,6 +1371,24 @@ var WizardsGrimoire = (function () {
         this.addActionButton(id, label, action);
         this.disableButton(id);
     };
+    WizardsGrimoire.prototype.addActionButtonClientCancel = function () {
+        var _this = this;
+        var handleCancel = function (evt) {
+            dojo.stopEvent(evt);
+            _this.restoreGameState();
+        };
+        this.addActionButtonGray("btnCancelAction", _("Cancel"), handleCancel);
+    };
+    WizardsGrimoire.prototype.addActionButtonPass = function () {
+        var _this = this;
+        var handlePass = function () {
+            _this.takeAction("pass");
+        };
+        this.addActionButtonRed("btn_pass", _("Pass"), handlePass);
+    };
+    WizardsGrimoire.prototype.addActionButtonGray = function (id, label, action) {
+        this.addActionButton(id, label, action, null, null, "gray");
+    };
     WizardsGrimoire.prototype.addActionButtonRed = function (id, label, action) {
         this.addActionButton(id, label, action, null, null, "red");
     };
@@ -1382,6 +1399,15 @@ var WizardsGrimoire = (function () {
             var table = new PlayerTable(_this, player);
             _this.playersTables.push(table);
         });
+    };
+    WizardsGrimoire.prototype.toggleButtonEnable = function (id, enabled, color) {
+        if (color === void 0) { color = "blue"; }
+        if (enabled) {
+            this.enableButton(id, color);
+        }
+        else {
+            this.disableButton(id);
+        }
     };
     WizardsGrimoire.prototype.disableButton = function (id) {
         var el = document.getElementById(id);
@@ -1408,13 +1434,37 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.getPlayerTable = function (playerId) {
         return this.playersTables.find(function (playerTable) { return playerTable.player_id === playerId; });
     };
+    WizardsGrimoire.prototype.markCardAsSelected = function (card) {
+        var div = this.spellsManager.getCardElement(card);
+        div.classList.add("wg-selected");
+    };
+    WizardsGrimoire.prototype.restoreGameState = function () {
+        log("restoreGameState");
+        this.isRestoreMode = true;
+        this.actionManager.reset();
+        this.clearSelection();
+        this.restoreServerGameState();
+        this.isRestoreMode = false;
+    };
+    WizardsGrimoire.prototype.clearSelection = function () {
+        log("clearSelection");
+        this.tableCenter.spellPool.unselectAll();
+        this.playersTables.forEach(function (table) {
+            table.spell_repertoire.unselectAll();
+        });
+        document.querySelectorAll(".wg-selected").forEach(function (node) {
+            node.classList.remove("wg-selected");
+        });
+    };
     WizardsGrimoire.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
     };
-    WizardsGrimoire.prototype.takeAction = function (action, data) {
+    WizardsGrimoire.prototype.takeAction = function (action, data, onSuccess, onComplete) {
         data = data || {};
         data.lock = true;
-        this.ajaxcall("/wizardsgrimoire/wizardsgrimoire/".concat(action, ".html"), data, this, function () { });
+        onSuccess = onSuccess !== null && onSuccess !== void 0 ? onSuccess : function (result) { };
+        onComplete = onComplete !== null && onComplete !== void 0 ? onComplete : function (is_error) { };
+        this.ajaxcall("/wizardsgrimoire/wizardsgrimoire/".concat(action, ".html"), data, this, onSuccess, onComplete);
     };
     WizardsGrimoire.prototype.setupNotifications = function () {
         log("notifications subscriptions setup");
@@ -1446,47 +1496,82 @@ var cardId = 200000;
 function getCardId() {
     return cardId++;
 }
-var ANIMATION_MS = 1500;
-var NotificationManager = (function () {
-    function NotificationManager(game) {
+var ActionManager = (function () {
+    function ActionManager(game) {
         this.game = game;
+        this.actions = [];
+        this.actions_args = [];
     }
-    NotificationManager.prototype.setup = function () {
+    ActionManager.prototype.setup = function (card, takeAction, newAction) {
+        if (takeAction === void 0) { takeAction = "castSpell"; }
+        if (newAction === void 0) { newAction = "actionCastMana"; }
+        log("actionmanager.reset");
+        this.reset();
+        this.current_card = card;
+        this.take_action = takeAction;
+        this.actions.push(newAction);
+    };
+    ActionManager.prototype.reset = function () {
+        log("actionmanager.reset");
+        this.current_card = null;
+        this.take_action = null;
+        this.actions = [];
+        this.actions_args = [];
+    };
+    ActionManager.prototype.addAction = function (card) {
         var _this = this;
-        this.subscribeEvent("onChooseSpell", 500);
-        this.subscribeEvent("onRefillSpell", 500);
-        this.subscribeEvent("onDrawManaCards", 1000);
-        this.subscribeEvent("onSpellCoolDown", 1000);
-        this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
+        log("actionmanager.addAction", card);
+        this.current_card = card;
+        var js_actions = this.game.getCardType(card).js_actions;
+        if (!js_actions) {
+            log("actionmanager.addAction no js_Actions");
+        }
+        else if (Array.isArray(js_actions)) {
+            js_actions.forEach(function (action) { return _this.actions.push(action); });
+        }
+        else if (typeof js_actions === "string") {
+            this.actions.push(js_actions);
+        }
+        log("actionmanager.actions values", this.actions);
     };
-    NotificationManager.prototype.subscribeEvent = function (eventName, time) {
-        try {
-            dojo.subscribe(eventName, this, "notif_" + eventName);
-            if (time) {
-                this.game.notifqueue.setSynchronous(eventName, time);
+    ActionManager.prototype.addArgument = function (arg) {
+        log("actionmanager.addArgument", arg);
+        this.actions_args.push(arg);
+    };
+    ActionManager.prototype.activateNextAction = function () {
+        var _this = this;
+        if (this.actions.length > 0) {
+            var nextAction = this.actions.shift();
+            this[nextAction]();
+            return;
+        }
+        var card_type = this.game.getCardType(this.current_card);
+        log("actionmanager.activateNextAction", this.current_card, card_type, this.actions_args);
+        var handleError = function (is_error) {
+            is_error ? _this.game.restoreGameState() : _this.game.clearSelection();
+        };
+        var data = {
+            card_id: this.current_card.id,
+            args: this.actions_args.join(";")
+        };
+        this.game.takeAction(this.take_action, data, null, handleError);
+    };
+    ActionManager.prototype.actionCastMana = function () {
+        var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost;
+        var msg = _("${you} must pay ${nbr} mana card");
+        msg = msg.replace("${nbr}", cost.toString());
+        this.game.setClientState(states.client.castSpellWithMana, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                card: this.current_card
             }
-        }
-        catch (_a) {
-            console.error("NotificationManager::subscribeEvent", eventName);
-        }
+        });
     };
-    NotificationManager.prototype.notif_onChooseSpell = function (args) {
-        var _a = args.args, player_id = _a.player_id, card = _a.card;
-        log("onChooseSpell", card);
-        this.game.getPlayerTable(player_id).onChooseSpell(card);
+    ActionManager.prototype.replaceWithArg = function (msg, args) {
+        msg = this.game.format_string_recursive(msg, args);
+        return dojo.string.substitute(msg, args);
     };
-    NotificationManager.prototype.notif_onRefillSpell = function (args) {
-        var card = args.args.card;
-        log("onRefillSpell", card);
-        this.game.tableCenter.onRefillSpell(card);
-    };
-    NotificationManager.prototype.notif_onDrawManaCards = function (args) {
-        var _a = args.args, player_id = _a.player_id, cards = _a.cards;
-        log("onDrawManaCards", cards);
-        this.game.getPlayerTable(player_id).onDrawManaCard(cards);
-    };
-    NotificationManager.prototype.notif_onSpellCoolDown = function (args) { };
-    return NotificationManager;
+    return ActionManager;
 }());
 var card_width = 120;
 var card_height = 168;
@@ -1574,13 +1659,74 @@ var ManaCardManager = (function (_super) {
     }
     return ManaCardManager;
 }(CardManager));
+var ANIMATION_MS = 1500;
+var NotificationManager = (function () {
+    function NotificationManager(game) {
+        this.game = game;
+    }
+    NotificationManager.prototype.setup = function () {
+        var _this = this;
+        this.subscribeEvent("onChooseSpell", 500);
+        this.subscribeEvent("onRefillSpell", 500);
+        this.subscribeEvent("onDrawManaCards", 1000);
+        this.subscribeEvent("onSpellCoolDown", 1000);
+        this.subscribeEvent("onHealthChanged", 500);
+        this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
+    };
+    NotificationManager.prototype.subscribeEvent = function (eventName, time) {
+        try {
+            dojo.subscribe(eventName, this, "notif_" + eventName);
+            if (time) {
+                this.game.notifqueue.setSynchronous(eventName, time);
+            }
+        }
+        catch (_a) {
+            console.error("NotificationManager::subscribeEvent", eventName);
+        }
+    };
+    NotificationManager.prototype.notif_onChooseSpell = function (notif) {
+        var _a = notif.args, player_id = _a.player_id, card = _a.card;
+        log("onChooseSpell", card);
+        this.game.getPlayerTable(player_id).onChooseSpell(card);
+    };
+    NotificationManager.prototype.notif_onRefillSpell = function (notif) {
+        var card = notif.args.card;
+        log("onRefillSpell", card);
+        this.game.tableCenter.onRefillSpell(card);
+    };
+    NotificationManager.prototype.notif_onDrawManaCards = function (notif) {
+        var _a = notif.args, player_id = _a.player_id, cards = _a.cards;
+        log("onDrawManaCards", cards);
+        this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+    };
+    NotificationManager.prototype.notif_onSpellCoolDown = function (notif) { };
+    NotificationManager.prototype.notif_onHealthChanged = function (notif) {
+        log("notif_onHealthChanged", notif.args);
+        var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining;
+        this.game.scoreCtrl[player_id].toValue(life_remaining);
+    };
+    return NotificationManager;
+}());
+var states = {
+    client: {
+        castSpellWithMana: "client_castSpellWithMana"
+    },
+    server: {
+        castSpell: "castSpell",
+        chooseNewSpell: "chooseNewSpell",
+        basicAttack: "basicAttack"
+    }
+};
 var StateManager = (function () {
     function StateManager(game) {
+        var _a;
         this.game = game;
-        this.states = {
-            chooseNewSpell: new ChooseNewSpellStates(game),
-            castSpell: new CastSpellStates(game)
-        };
+        this.states = (_a = {},
+            _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
+            _a[states.server.basicAttack] = new BasicAttackStates(game),
+            _a[states.server.castSpell] = new CastSpellStates(game),
+            _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
+            _a);
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
         log("Entering state: " + stateName);
@@ -1607,81 +1753,12 @@ var StateManager = (function () {
     };
     return StateManager;
 }());
-var ChooseNewSpellStates = (function () {
-    function ChooseNewSpellStates(game) {
-        this.game = game;
-    }
-    ChooseNewSpellStates.prototype.onEnteringState = function (args) {
-        var _this = this;
-        if (!this.game.isCurrentPlayerActive())
-            return;
-        var spellPool = this.game.tableCenter.spellPool;
-        spellPool.setSelectionMode("single");
-        spellPool.onSelectionChange = function (selection, lastChange) {
-            if (selection && selection.length === 1) {
-                _this.game.enableButton("btn_confirm", "blue");
-            }
-            else {
-                _this.game.disableButton("btn_confirm");
-            }
-        };
-    };
-    ChooseNewSpellStates.prototype.onLeavingState = function () {
-        this.game.tableCenter.spellPool.setSelectionMode("none");
-        this.game.tableCenter.spellPool.onSelectionChange = null;
-    };
-    ChooseNewSpellStates.prototype.onUpdateActionButtons = function (args) {
-        var _this = this;
-        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), function () {
-            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
-            _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
-        });
-    };
-    return ChooseNewSpellStates;
-}());
-var CastSpellStates = (function () {
-    function CastSpellStates(game) {
-        this.game = game;
-    }
-    CastSpellStates.prototype.onEnteringState = function (args) {
-        var _this = this;
-        if (!this.game.isCurrentPlayerActive())
-            return;
-        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var repertoire = player_table.spell_repertoire;
-        repertoire.setSelectionMode("single");
-        repertoire.onSelectionChange = function (selection, lastChange) {
-            if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
-                _this.game.enableButton("btn_cast", "blue");
-            }
-            else {
-                _this.game.disableButton("btn_cast");
-            }
-        };
-    };
-    CastSpellStates.prototype.onLeavingState = function () {
-        var repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
-        repertoire.setSelectionMode("none");
-        repertoire.onSelectionChange = null;
-    };
-    CastSpellStates.prototype.onUpdateActionButtons = function (args) {
-        var _this = this;
-        this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), function () {
-            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
-            _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
-        });
-        this.game.addActionButtonRed("btn_pass", _("Pass"), function () {
-            _this.game.takeAction("pass");
-        });
-    };
-    return CastSpellStates;
-}());
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
         var _this = this;
         var _a;
         this.game = game;
-        this.mana_cooldown = [];
+        this.mana_cooldown = {};
         this.player_id = Number(player.id);
         this.current_player = this.player_id == this.game.getPlayerId();
         var pId = player.id, pName = player.name, pColor = player.color;
@@ -1699,12 +1776,12 @@ var PlayerTable = (function () {
                 cardNumber: 0,
                 counter: {}
             });
-            this.mana_cooldown.push(deck);
+            this.mana_cooldown[index] = deck;
         }
         var board = game.gamedatas.player_board[pId];
         this.spell_repertoire.addCards(board.spells);
         Object.keys(board.manas).forEach(function (pos) {
-            _this.mana_cooldown[Number(pos) - 1].setCardNumber(board.manas[pos]);
+            _this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
         });
         if (pCurrent) {
             this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
@@ -1788,3 +1865,184 @@ var TableCenter = (function () {
     };
     return TableCenter;
 }());
+var CastSpellStates = (function () {
+    function CastSpellStates(game) {
+        this.game = game;
+    }
+    CastSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var repertoire = player_table.spell_repertoire;
+        repertoire.setSelectionMode("single");
+        repertoire.onSelectionChange = function (selection, lastChange) {
+            if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
+                _this.game.enableButton("btn_cast", "blue");
+            }
+            else {
+                _this.game.disableButton("btn_cast");
+            }
+        };
+    };
+    CastSpellStates.prototype.onLeavingState = function () {
+        var repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
+        repertoire.setSelectionMode("none");
+        repertoire.onSelectionChange = null;
+    };
+    CastSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleCastSpell = function () {
+            var repertoire = _this.game.getPlayerTable(_this.game.getPlayerId()).spell_repertoire;
+            var selectedSpell = repertoire.getSelection()[0];
+            _this.game.markCardAsSelected(selectedSpell);
+            _this.game.actionManager.setup(selectedSpell);
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
+        this.game.addActionButtonPass();
+    };
+    return CastSpellStates;
+}());
+var ChooseNewSpellStates = (function () {
+    function ChooseNewSpellStates(game) {
+        this.game = game;
+    }
+    ChooseNewSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var spellPool = this.game.tableCenter.spellPool;
+        spellPool.setSelectionMode("single");
+        spellPool.onSelectionChange = function (selection, lastChange) {
+            if (selection && selection.length === 1) {
+                _this.game.enableButton("btn_confirm", "blue");
+            }
+            else {
+                _this.game.disableButton("btn_confirm");
+            }
+        };
+    };
+    ChooseNewSpellStates.prototype.onLeavingState = function () {
+        this.game.tableCenter.spellPool.setSelectionMode("none");
+        this.game.tableCenter.spellPool.onSelectionChange = null;
+    };
+    ChooseNewSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), function () {
+            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
+            _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+        });
+    };
+    return ChooseNewSpellStates;
+}());
+var BasicAttackStates = (function () {
+    function BasicAttackStates(game) {
+        this.game = game;
+    }
+    BasicAttackStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var hand = player_table.hand;
+        hand.setSelectionMode("single");
+        hand.onSelectionChange = function (selection, lastChange) {
+            _this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
+        };
+    };
+    BasicAttackStates.prototype.onLeavingState = function () {
+        var hand = this.game.getPlayerTable(this.game.getPlayerId()).hand;
+        hand.setSelectionMode("none");
+        hand.onSelectionChange = null;
+    };
+    BasicAttackStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleCastSpell = function () {
+            var hand = _this.game.getPlayerTable(_this.game.getPlayerId()).hand;
+            var selectedMana = hand.getSelection()[0];
+            _this.game.takeAction("basicAttack", { id: selectedMana.id });
+        };
+        this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
+        this.game.addActionButtonPass();
+    };
+    return BasicAttackStates;
+}());
+var CastSpellWithManaStates = (function () {
+    function CastSpellWithManaStates(game) {
+        this.game = game;
+    }
+    CastSpellWithManaStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.mana_cards = [];
+        this.spell = args.card;
+        var handleHandCardClick = function (card) {
+            _this.mana_cards.push(card);
+            _this.mana_deck.addCard(card);
+            var cost = _this.game.getCardType(_this.spell).cost;
+            _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === cost);
+        };
+        var handleDeckCardClick = function (card) {
+            if (_this.mana_cards.length > 0) {
+                _this.moveCardFromManaDeckToHand();
+                _this.game.disableButton("btnConfirm");
+            }
+        };
+        this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        this.player_table.hand.onCardClick = handleHandCardClick;
+        this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
+        this.mana_deck.onCardClick = handleDeckCardClick;
+        log("mana deck", this.mana_deck);
+    };
+    CastSpellWithManaStates.prototype.onLeavingState = function () {
+        this.player_table.hand.onCardClick = null;
+        this.mana_deck.onCardClick = null;
+        log("Restore", this.game.isRestoreMode);
+        if (this.game.isRestoreMode) {
+            this.restore();
+        }
+    };
+    CastSpellWithManaStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            _this.game.actionManager.addArgument(_this.mana_cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonClientCancel();
+    };
+    CastSpellWithManaStates.prototype.restore = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.mana_cards.length > 0)) return [3, 2];
+                        return [4, this.moveCardFromManaDeckToHand()];
+                    case 1:
+                        _a.sent();
+                        return [3, 0];
+                    case 2: return [2];
+                }
+            });
+        });
+    };
+    CastSpellWithManaStates.prototype.moveCardFromManaDeckToHand = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            var card = _this.mana_cards.pop();
+            _this.player_table.hand.addCard(card).then(function () {
+                resolve(true);
+            });
+            if (_this.mana_cards.length > 0) {
+                var topCard = _this.mana_cards[_this.mana_cards.length - 1];
+                _this.mana_deck.setCardNumber(_this.mana_cards.length, topCard);
+            }
+        });
+    };
+    return CastSpellWithManaStates;
+}());
+define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
+    return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());
+});

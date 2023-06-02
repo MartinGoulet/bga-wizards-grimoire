@@ -30,10 +30,13 @@ class WizardsGrimoire
    public spellsManager: SpellCardManager;
    public manasManager: ManaCardManager;
    public stateManager: StateManager;
+   public actionManager: ActionManager;
 
    public tableCenter: TableCenter;
    public playersTables: PlayerTable[] = [];
    public zoomManager: ZoomManager;
+
+   public isRestoreMode: boolean = false;
 
    constructor() {}
 
@@ -56,6 +59,7 @@ class WizardsGrimoire
       this.spellsManager = new SpellCardManager(this);
       this.manasManager = new ManaCardManager(this);
       this.stateManager = new StateManager(this);
+      this.actionManager = new ActionManager(this);
 
       this.tableCenter = new TableCenter(this);
 
@@ -110,6 +114,25 @@ class WizardsGrimoire
       this.disableButton(id);
    }
 
+   public addActionButtonClientCancel() {
+      const handleCancel = (evt: any): void => {
+         dojo.stopEvent(evt);
+         this.restoreGameState();
+      };
+      this.addActionButtonGray("btnCancelAction", _("Cancel"), handleCancel);
+   }
+
+   public addActionButtonPass() {
+      const handlePass = () => {
+         this.takeAction("pass");
+      };
+      this.addActionButtonRed("btn_pass", _("Pass"), handlePass);
+   }
+
+   public addActionButtonGray(id: string, label: string, action: (evt: any) => void) {
+      this.addActionButton(id, label, action, null, null, "gray");
+   }
+
    public addActionButtonRed(id: string, label: string, action: () => void) {
       this.addActionButton(id, label, action, null, null, "red");
    }
@@ -120,6 +143,14 @@ class WizardsGrimoire
          const table = new PlayerTable(this, player);
          this.playersTables.push(table);
       });
+   }
+
+   public toggleButtonEnable(id: string, enabled: boolean, color: "blue" | "red" = "blue"): void {
+      if (enabled) {
+         this.enableButton(id, color);
+      } else {
+         this.disableButton(id);
+      }
    }
 
    public disableButton(id: string): void {
@@ -151,14 +182,52 @@ class WizardsGrimoire
       return this.playersTables.find((playerTable) => playerTable.player_id === playerId);
    }
 
+   public markCardAsSelected(card: SpellCard) {
+      const div = this.spellsManager.getCardElement(card);
+      div.classList.add("wg-selected");
+   }
+
+   restoreGameState() {
+      log("restoreGameState");
+      this.isRestoreMode = true;
+      this.actionManager.reset();
+      this.clearSelection();
+      this.restoreServerGameState();
+      this.isRestoreMode = false;
+   }
+
+   clearSelection() {
+      log("clearSelection");
+      this.tableCenter.spellPool.unselectAll();
+      this.playersTables.forEach((table) => {
+         table.spell_repertoire.unselectAll();
+      });
+      document.querySelectorAll(".wg-selected").forEach((node) => {
+         node.classList.remove("wg-selected");
+      });
+   }
+
    public setTooltip(id: string, html: string) {
       this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
    }
 
-   public takeAction(action: string, data?: any) {
+   public takeAction(
+      action: string,
+      data?: any,
+      onSuccess?: (result: any) => void,
+      onComplete?: (is_error: boolean) => void
+   ) {
       data = data || {};
       data.lock = true;
-      (this as any).ajaxcall(`/wizardsgrimoire/wizardsgrimoire/${action}.html`, data, this, () => {});
+      onSuccess = onSuccess ?? function (result: any) {};
+      onComplete = onComplete ?? function (is_error: boolean) {};
+      (this as any).ajaxcall(
+         `/wizardsgrimoire/wizardsgrimoire/${action}.html`,
+         data,
+         this,
+         onSuccess,
+         onComplete
+      );
    }
 
    ///////////////////////////////////////////////////
