@@ -1334,6 +1334,7 @@ var isDebug = window.location.host == "studio.boardgamearena.com" || window.loca
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
+        this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
         this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
@@ -1388,11 +1389,17 @@ var WizardsGrimoire = (function () {
             el.classList.remove("bgabutton_disabled");
         }
     };
+    WizardsGrimoire.prototype.getCardType = function (card) {
+        return this.gamedatas.card_types[card.type];
+    };
     WizardsGrimoire.prototype.getPlayerId = function () {
         return Number(this.player_id);
     };
     WizardsGrimoire.prototype.getPlayerTable = function (playerId) {
         return this.playersTables.find(function (playerTable) { return playerTable.player_id === playerId; });
+    };
+    WizardsGrimoire.prototype.setTooltip = function (id, html) {
+        this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
     };
     WizardsGrimoire.prototype.takeAction = function (action, data) {
         data = data || {};
@@ -1416,6 +1423,12 @@ var WizardsGrimoire = (function () {
             console.error(log, args, "Exception thrown", e.stack);
         }
         return this.inherited(arguments);
+    };
+    WizardsGrimoire.prototype.formatGametext = function (rawText) {
+        if (!rawText)
+            return "";
+        var value = rawText.replace(",", ",<br />").replace(":", ":<br />");
+        return "<p>" + value.split(".").join(".</p><p>") + "</p>";
     };
     return WizardsGrimoire;
 }());
@@ -1479,10 +1492,16 @@ var SpellCardManager = (function (_super) {
                 div.dataset.type = "" + card.type;
             },
             setupFrontDiv: function (card, div) {
+                div.id = "".concat(_this.getId(card), "-front");
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
-                if (div.childNodes.length == 1) {
-                    div.insertAdjacentHTML("afterbegin", "<div class=\"help-marker\">\n                  <svg class=\"feather feather-help-circle\" fill=\"white\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n               </div>");
+                if (div.childNodes.length == 1 && card.type) {
+                    var helpMarkerId_1 = "".concat(_this.getId(card), "-help-marker");
+                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId_1, "\" class=\"help-marker\">\n                     <svg class=\"feather feather-help-circle\" fill=\"white\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n                  </div>"));
+                    game.setTooltip(helpMarkerId_1, _this.getTooltip(card));
+                    document.getElementById(helpMarkerId_1).addEventListener("click", function () {
+                        _this.game.tooltips[helpMarkerId_1].open(helpMarkerId_1);
+                    });
                 }
             },
             setupBackDiv: function (card, div) {
@@ -1502,6 +1521,13 @@ var SpellCardManager = (function (_super) {
         _this.game = game;
         return _this;
     }
+    SpellCardManager.prototype.getTooltip = function (card) {
+        var card_type = this.game.getCardType(card);
+        var name = card_type.name, cost = card_type.cost, description = card_type.description;
+        var gametext = this.game.formatGametext(description);
+        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(name, "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost :"), " ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(gametext, "</div>\n         </div>\n      </div>");
+        return html;
+    };
     return SpellCardManager;
 }(CardManager));
 var ManaCardManager = (function (_super) {

@@ -11,6 +11,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    spells: SpellInfo;
    manas: ManaInfo;
 
+   card_types: { [card_type: number]: CardType };
    player_board: PlayerBoardObject;
 }
 
@@ -26,6 +27,15 @@ interface Card {
    // type_arg: string;
    location: string;
    location_arg: number;
+}
+
+interface CardType {
+   name: string;
+   description: string;
+   type: "red" | "green" | "purple";
+   activation: "instant" | "delayed" | "ongoing";
+   cost: number;
+   icon: "+" | "++" | "scroll";
 }
 
 interface SpellCard extends Card {

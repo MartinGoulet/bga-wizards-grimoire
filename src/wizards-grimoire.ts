@@ -22,6 +22,8 @@ interface WizardsGrimoire
 class WizardsGrimoire
    implements ebg.core.gamegui, BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas>
 {
+   private TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
+
    public readonly gamedatas: WizardsGrimoireGamedatas;
    public notifManager: NotificationManager;
    public spellsManager: SpellCardManager;
@@ -125,12 +127,20 @@ class WizardsGrimoire
       }
    }
 
+   public getCardType(card: SpellCard): CardType {
+      return this.gamedatas.card_types[card.type];
+   }
+
    public getPlayerId(): number {
       return Number(this.player_id);
    }
 
    public getPlayerTable(playerId: number): PlayerTable {
       return this.playersTables.find((playerTable) => playerTable.player_id === playerId);
+   }
+
+   public setTooltip(id: string, html: string) {
+      this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
    }
 
    public takeAction(action: string, data?: any) {
@@ -173,6 +183,12 @@ class WizardsGrimoire
          console.error(log, args, "Exception thrown", e.stack);
       }
       return this.inherited(arguments);
+   }
+
+   formatGametext(rawText: string) {
+      if (!rawText) return "";
+      let value = rawText.replace(",", ",<br />").replace(":", ":<br />");
+      return "<p>" + value.split(".").join(".</p><p>") + "</p>";
    }
 }
 

@@ -193,6 +193,8 @@ class WizardsGrimoire extends Table {
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
+        $result['card_types'] = $this->card_types;
+
         $result['slot_count'] = intval(self::getGameStateValue(WG_VAR_SLOT_COUNT));
         $result['slot_cards'] = array_values($this->deck_spells->getCardsInLocation(CardLocation::SpellSlot()));
 

@@ -64,7 +64,7 @@ $this->card_types = [
   ],
   6 => [
     "name" => clienttranslate("Arcane tactics"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Gain 7 mana cards from the mana deck. Then place 4 mana cards from your hand on top of the mana deck in any order"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -88,7 +88,7 @@ $this->card_types = [
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Gain 4 mana cards. You may move a mana card between 2 of your other spells"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -105,7 +105,7 @@ $this->card_types = [
 
   11 => [
     "name" => clienttranslate("Rejuvenation"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Choose 1: Gain 4 mana cards, or take 2 mana cards of any power from the discard pile."),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -113,7 +113,7 @@ $this->card_types = [
   ],
   12 => [
     "name" => clienttranslate("Shackled motion"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Choose 1: Gain 4 mana cards, or your opponent must discard their hand"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -170,7 +170,7 @@ $this->card_types = [
   ],
   19 => [
     "name" => clienttranslate("Time distortion"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Pick up a mana card of 2 of your other spells"),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -203,7 +203,7 @@ $this->card_types = [
   ],
   23 => [
     "name" => clienttranslate("Vile laughter"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Deal 6 damage, minus the highest power mana in your hand"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
@@ -211,7 +211,7 @@ $this->card_types = [
   ],
   24 => [
     "name" => clienttranslate("Doom drop"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Each time a mana card is discarded of this spell, deal damage equal to that mana's power"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
     "cost" => 3,
@@ -220,7 +220,7 @@ $this->card_types = [
 
   25 => [
     "name" => clienttranslate("Energy storm"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Deal 3 damage. Deal 1 additional damage for each 4 power mana in your hand"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
@@ -302,7 +302,7 @@ $this->card_types = [
 
   35 => [
     "name" => clienttranslate("Shadow attack"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Discard a mana card off 1 of your other spells. Deal damage and gain mana equal to that mana<s power"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
@@ -452,7 +452,7 @@ $this->card_types = [
   ],
   53 => [
     "name" => clienttranslate("Wrath"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage."),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
@@ -469,8 +469,8 @@ $this->card_types = [
 
 
   55 => [
-    "name" => clienttranslate("Shared powers"),
-    "description" => clienttranslate(""),
+    "name" => clienttranslate("Shared power"),
+    "description" => clienttranslate("You may give your opponent 1 mana card from your hand. If you do, gain 4 mana cards"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
@@ -521,7 +521,7 @@ $this->card_types = [
 
   61 => [
     "name" => clienttranslate("Power hungry"),
-    "description" => clienttranslate(""),
+    "description" => clienttranslate("Both players basic attack mana cards go to your hand instead of the discard pile"),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,

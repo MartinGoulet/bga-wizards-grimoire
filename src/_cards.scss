@@ -7,19 +7,6 @@
       border-radius: 5px;
    }
 
-   .wg-card-spell-front {
-      background: url("img/spell-front.jpg");
-      background-size: calc(var(--width) * 10) calc(var(--height) * 7);
-
-      @for $row from 0 through 6 {
-         @for $col from 0 through 9 {
-            &[data-type="#{($row * 10) + ($col + 1)}"] {
-               background-position: ($col * -100%) ($row * -100%);
-            }
-         }
-      }
-   }
-
    .wg-card-spell-back {
       background: url("img/spell-back.jpg");
       background-size: var(--width) var(--height);
@@ -45,6 +32,20 @@
    }
 }
 
+.wg-card .wg-card-spell-front,
+.wg-tooltip-card .wg-card {
+   background: url("img/spell-front.jpg");
+   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+
+   @for $row from 0 through 6 {
+      @for $col from 0 through 9 {
+         &[data-type="#{($row * 10) + ($col + 1)}"] {
+            background-position: ($col * -100%) ($row * -100%);
+         }
+      }
+   }
+}
+
 .help-marker {
    position: absolute;
    right: 0;
@@ -52,4 +53,49 @@
    cursor: help !important;
    pointer-events: initial !important;
    user-select: initial !important;
+}
+
+.wg-tooltip-card {
+   display: contents;
+   min-width: 250px;
+   max-width: 300px;
+   gap: 15px;
+   --width: 160px;
+   --height: 224px;
+
+   .wg-tooltip-left {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      .wg-tooltip-header {
+         font-size: 18px;
+         font-style: italic;
+         font-weight: bold;
+         border-bottom: 2px solid black;
+         text-transform: uppercase;
+      }
+
+      .wg-tooltip-cost {
+         font-size: 14px;
+         font-weight: bold;
+         font-style: italic;
+      }
+
+      .wg-tooltip-gametext {
+         padding: 0 5px;
+         border-radius: 5px;
+         text-align: center;
+         max-width: 200px;
+      }
+   }
+}
+
+@keyframes flipCard {
+   0% {
+      transform: perspective(20em) rotateY(-10deg) scale(1.5);
+   }
+   to {
+      transform: perspective(20em) scale(1.6);
+   }
 }
