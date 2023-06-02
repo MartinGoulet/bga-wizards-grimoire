@@ -1,6 +1,7 @@
 const isDebug =
    window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 const log = isDebug ? console.log.bind(window.console) : function () {};
+const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
 
 interface WizardsGrimoire
    extends ebg.core.gamegui,
@@ -32,6 +33,7 @@ class WizardsGrimoire
 
    public tableCenter: TableCenter;
    public playersTables: PlayerTable[] = [];
+   public zoomManager: ZoomManager;
 
    constructor() {}
 
@@ -62,6 +64,16 @@ class WizardsGrimoire
       }
 
       this.createPlayerTables(gamedatas);
+
+      this.zoomManager = new ZoomManager({
+         element: document.getElementById("table"),
+         smooth: false,
+         zoomControls: {
+            color: "black"
+         },
+         localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
+         zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5]
+      });
 
       this.setupNotifications();
    }

@@ -1332,6 +1332,7 @@ define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/st
 });
 var isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 var log = isDebug ? console.log.bind(window.console) : function () { };
+var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
         this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
@@ -1347,6 +1348,15 @@ var WizardsGrimoire = (function () {
         for (var player_id in gamedatas.players) {
         }
         this.createPlayerTables(gamedatas);
+        this.zoomManager = new ZoomManager({
+            element: document.getElementById("table"),
+            smooth: false,
+            zoomControls: {
+                color: "black"
+            },
+            localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
+            zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5]
+        });
         this.setupNotifications();
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
