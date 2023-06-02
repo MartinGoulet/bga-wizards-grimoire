@@ -36,9 +36,9 @@
         "src/wizards-grimoire.d.ts",
         "src/wizards-grimoire.ts",
         
-        "src/notification-manager.ts",
-        "src/cards-manager.ts",
-        "src/state-manager.ts",
+        "src/managers/notification.ts",
+        "src/managers/cards.ts",
+        "src/managers/state.ts",
         "src/player-table.ts",
         "src/table-center.ts"
     ]

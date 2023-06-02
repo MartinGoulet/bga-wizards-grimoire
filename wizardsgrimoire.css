@@ -361,6 +361,18 @@
   max-width: 200px;
 }
 
+.bga-cards_selected-card .front {
+  animation: pulseSelectable 1.5s infinite alternate;
+}
+
+@keyframes pulseSelectable {
+  0% {
+    box-shadow: inset 0 0 3px 5px #00ffff;
+  }
+  to {
+    box-shadow: inset 0 0 10px 5px #0885c3;
+  }
+}
 @keyframes flipCard {
   0% {
     transform: perspective(20em) rotateY(-10deg) scale(1.5);
@@ -668,18 +680,7 @@ body > .card {
   border-radius: 5px;
   border: 1px solid darkslategray;
 }
-#spell-pool .bga-cards_selected-card .front {
-  animation: pulseSelectable 1.5s infinite alternate;
-}
 
-@keyframes pulseSelectable {
-  0% {
-    box-shadow: inset 0 0 3px 5px #00ffff;
-  }
-  to {
-    box-shadow: inset 0 0 10px 5px #0885c3;
-  }
-}
 .player-table {
   padding-top: 20px;
 }
@@ -692,6 +693,9 @@ body > .card {
   height: var(--height);
   border-radius: 5px;
   border: 1px solid darkslategray;
+}
+.player-table .spell-repertoire .wg-spell-slot:not(:empty) {
+  border-color: transparent;
 }
 .player-table .wg-title {
   position: absolute;
@@ -718,10 +722,17 @@ body > .card {
   --width: 110px !important;
   --height: 154px !important;
 }
+.player-table .mana-cooldown .mana-deck.deck[data-empty=false] {
+  border-color: transparent;
+}
 .player-table .hand {
   --width: 100px;
   --height: 140px;
   min-height: 150px;
+  margin-top: 20px;
+}
+
+#table {
   margin-top: 20px;
 }
 

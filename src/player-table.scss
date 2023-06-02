@@ -11,6 +11,10 @@
          border-radius: 5px;
          border: 1px solid darkslategray;
       }
+
+      .wg-spell-slot:not(:empty) {
+         border-color: transparent;
+      }
    }
 
    .wg-title {
@@ -38,6 +42,10 @@
          border: 1px solid blue;
          --width: 110px !important;
          --height: 154px !important;
+
+         &[data-empty="false"] {
+            border-color: transparent;
+         }
       }
    }
 

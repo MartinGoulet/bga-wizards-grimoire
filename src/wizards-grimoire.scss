@@ -4,6 +4,10 @@
 @import "table-center";
 @import "player-table";
 
+#table {
+   margin-top: 20px;
+}
+
 #tables-and-center {
    position: relative;
    display: flex;

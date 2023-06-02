@@ -1578,7 +1578,8 @@ var StateManager = (function () {
     function StateManager(game) {
         this.game = game;
         this.states = {
-            chooseNewSpell: new ChooseNewSpellStates(game)
+            chooseNewSpell: new ChooseNewSpellStates(game),
+            castSpell: new CastSpellStates(game)
         };
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
@@ -1638,6 +1639,43 @@ var ChooseNewSpellStates = (function () {
     };
     return ChooseNewSpellStates;
 }());
+var CastSpellStates = (function () {
+    function CastSpellStates(game) {
+        this.game = game;
+    }
+    CastSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var repertoire = player_table.spell_repertoire;
+        repertoire.setSelectionMode("single");
+        repertoire.onSelectionChange = function (selection, lastChange) {
+            if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
+                _this.game.enableButton("btn_cast", "blue");
+            }
+            else {
+                _this.game.disableButton("btn_cast");
+            }
+        };
+    };
+    CastSpellStates.prototype.onLeavingState = function () {
+        var repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
+        repertoire.setSelectionMode("none");
+        repertoire.onSelectionChange = null;
+    };
+    CastSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), function () {
+            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
+            _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+        });
+        this.game.addActionButtonRed("btn_pass", _("Pass"), function () {
+            _this.game.takeAction("pass");
+        });
+    };
+    return CastSpellStates;
+}());
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
         var _this = this;
@@ -1675,6 +1713,10 @@ var PlayerTable = (function () {
             this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
         }
     }
+    PlayerTable.prototype.canCast = function (card) {
+        var cost = this.game.getCardType(card).cost;
+        return this.hand.getCards().length >= cost;
+    };
     PlayerTable.prototype.onChooseSpell = function (card) {
         this.spell_repertoire.addCard(card, {
             fromStock: this.game.tableCenter.spellPool

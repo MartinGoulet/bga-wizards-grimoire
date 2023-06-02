@@ -8,26 +8,12 @@
    align-content: center;
    --width: 120px;
    --height: 168px;
-   width: calc((var(--width) + var(--gap) ) * 4);
+   width: calc((var(--width) + var(--gap)) * 4);
 
    .wg-spell-slot {
       width: var(--width);
       height: var(--height);
       border-radius: 5px;
       border: 1px solid darkslategray;
-   }
-
-   .bga-cards_selected-card .front {
-      animation: pulseSelectable 1.5s infinite alternate;
-   }
-}
-
-@keyframes pulseSelectable {
-   0% {
-       box-shadow: inset 0 0 3px 5px #00ffff;
-   }
-
-   to {
-       box-shadow: inset 0 0 10px 5px #0885c3;
    }
 }

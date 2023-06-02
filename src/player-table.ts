@@ -69,6 +69,11 @@ class PlayerTable {
       }
    }
 
+   public canCast(card: SpellCard): boolean {
+      const { cost } = this.game.getCardType(card);
+      return this.hand.getCards().length >= cost;
+   }
+
    public onChooseSpell(card: SpellCard) {
       this.spell_repertoire.addCard(card, {
          fromStock: this.game.tableCenter.spellPool

@@ -91,6 +91,20 @@
    }
 }
 
+.bga-cards_selected-card .front {
+   animation: pulseSelectable 1.5s infinite alternate;
+}
+
+@keyframes pulseSelectable {
+   0% {
+      box-shadow: inset 0 0 3px 5px #00ffff;
+   }
+
+   to {
+      box-shadow: inset 0 0 10px 5px #0885c3;
+   }
+}
+
 @keyframes flipCard {
    0% {
       transform: perspective(20em) rotateY(-10deg) scale(1.5);
