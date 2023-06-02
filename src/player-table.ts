@@ -3,6 +3,7 @@ class PlayerTable {
 
    public spell_repertoire: SlotStock<SpellCard>;
    public mana_cooldown: Deck<ManaCard>[] = [];
+   public hand: LineStock<ManaCard>;
 
    private current_player: boolean;
 
@@ -28,7 +29,7 @@ class PlayerTable {
                 </div>
             <div>`;
 
-      dojo.place(html, this.current_player ? "current-player-table" : "tables");
+      dojo.place(html, "tables");
 
       this.spell_repertoire = new SlotStock(
          game.spellsManager,
@@ -47,6 +48,41 @@ class PlayerTable {
             counter: {}
          });
          this.mana_cooldown.push(deck);
+      }
+
+      const board: PlayerBoardInfo = game.gamedatas.player_board[pId];
+      this.spell_repertoire.addCards(board.spells);
+
+      Object.keys(board.manas).forEach((pos: string) => {
+         this.mana_cooldown[Number(pos) - 1].setCardNumber(board.manas[pos]);
+      });
+
+      if (pCurrent) {
+         this.hand = new LineStock(
+            game.manasManager,
+            document.getElementById(`player-table-${pId}-hand-cards`),
+            {
+               center: true
+            }
+         );
+         this.hand.addCards(board.hand ?? []);
+      }
+   }
+
+   public onChooseSpell(card: SpellCard) {
+      this.spell_repertoire.addCard(card, {
+         fromStock: this.game.tableCenter.spellPool
+      });
+   }
+
+   public async onDrawManaCard(cards: ManaCard[]) {
+      for (let index = 0; index < cards.length; index++) {
+         const card = cards[index];
+         const topHiddenCard: ManaCard = { ...card, isHidden: true };
+
+         const { manaDeck } = this.game.tableCenter;
+         manaDeck.setCardNumber(manaDeck.getCardNumber(), topHiddenCard);
+         await this.hand.addCard(card);
       }
    }
 }

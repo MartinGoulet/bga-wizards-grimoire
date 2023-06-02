@@ -60,7 +60,7 @@ $basicGameStates = [
         "description" => clienttranslate("Game setup"),
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => ["" => 2]
+        "transitions" => ["" => ST_PLAYER_NEW_TURN]
     ],
 
     // Final state.
@@ -74,17 +74,90 @@ $basicGameStates = [
     ],
 ];
 
-$machinestates = $basicGameStates + array(
+$chooseSpellStates = [
+    ST_PLAYER_NEW_TURN => [
+        "name" => "playerNewTurn",
+        "type" => "game",
+        "action" => "stNewTurn",
+        "transitions" => [
+            "" => ST_CHOOSE_NEW_SPELL
+        ]
+    ],
 
-    // Note: ID=2 => your first state
-
-    2 => array(
-        "name" => "playerTurn",
-        "description" => clienttranslate('${actplayer} must play a card or pass'),
-        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
+    ST_CHOOSE_NEW_SPELL => [
+        "name" => "chooseNewSpell",
+        "description" => clienttranslate('${actplayer} must choose a new spell'),
+        "descriptionmyturn" => clienttranslate('${you} must choose a new spell'),
         "type" => "activeplayer",
-        "possibleactions" => array("playCard", "pass"),
-        "transitions" => array("playCard" => 2, "pass" => 2)
-    ),
+        "possibleactions" => ["chooseSpell", "pass"],
+        "transitions" => [
+            "next_player" => ST_NEXT_PLAYER,
+            "end" => ST_SPELL_COOL_DOWN
+        ]
+    ],
+];
 
-);
+$spellCoolDownStates = [
+    ST_SPELL_COOL_DOWN => [
+        "name" => "spellCoolDown",
+        "type" => "game",
+        "action" => "stSpellCoolDown",
+        "transitions" => [
+            "" => ST_GAIN_MANA
+        ]
+    ]
+];
+
+$gainManaStates = [
+    ST_GAIN_MANA => [
+        "name" => "gainMana",
+        "type" => "game",
+        "action" => "stGainMana",
+        "transitions" => [
+            "" => ST_CAST_SPELL
+        ]
+    ]
+];
+
+$castSpellsStates = [
+    ST_CAST_SPELL => [
+        "name" => "castSpell",
+        "description" => clienttranslate('${actplayer} may cast a spell or pass'),
+        "descriptionmyturn" => clienttranslate('${you} may cast a spell or pass'),
+        "type" => "activeplayer",
+        "possibleactions" => ["castSpell", "pass"],
+        "transitions" => [
+            "" => ST_BASIC_ATTACK
+        ]
+    ],
+];
+
+$basicAttackStates = [
+    ST_BASIC_ATTACK => [
+        "name" => "basicAttack",
+        "description" => clienttranslate('${actplayer} may discard a mana card to deal damage'),
+        "descriptionmyturn" => clienttranslate('${you} may discard a mana card to deal damage'),
+        "type" => "activeplayer",
+        "possibleactions" => ["basicAttack", "pass"],
+        "transitions" => [
+            "" => ST_SPELL_COOL_DOWN
+        ]
+    ],
+
+    ST_NEXT_PLAYER => [
+        "name" => "playerEndTurn",
+        "type" => "game",
+        "action" => "stNextPlayer",
+        "transitions" => [
+            "" => ST_PLAYER_NEW_TURN
+        ]
+    ]
+];
+
+$machinestates =
+    $basicGameStates +
+    $chooseSpellStates +
+    $spellCoolDownStates +
+    $gainManaStates +
+    $castSpellsStates +
+    $basicAttackStates;

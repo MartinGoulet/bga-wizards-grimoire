@@ -40,4 +40,10 @@
          --height: 154px !important;
       }
    }
+
+   .hand {
+      --width: 100px;
+      --height: 140px;
+      min-height: 160px;
+   }
 }

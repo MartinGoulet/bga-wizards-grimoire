@@ -1087,51 +1087,6 @@ var Deck = (function (_super) {
     };
     return Deck;
 }(CardStock));
-var AllVisibleDeck = (function (_super) {
-    __extends(AllVisibleDeck, _super);
-    function AllVisibleDeck(manager, element, settings) {
-        var _a;
-        var _this = _super.call(this, manager, element, settings) || this;
-        _this.manager = manager;
-        _this.element = element;
-        element.classList.add('all-visible-deck');
-        var cardWidth = _this.manager.getCardWidth();
-        var cardHeight = _this.manager.getCardHeight();
-        if (cardWidth && cardHeight) {
-            _this.element.style.setProperty('--width', "".concat(cardWidth, "px"));
-            _this.element.style.setProperty('--height', "".concat(cardHeight, "px"));
-        }
-        else {
-            throw new Error("You need to set cardWidth and cardHeight in the card manager to use Deck.");
-        }
-        element.style.setProperty('--shift', (_a = settings.shift) !== null && _a !== void 0 ? _a : '3px');
-        return _this;
-    }
-    AllVisibleDeck.prototype.addCard = function (card, animation, settings) {
-        var promise;
-        var order = this.cards.length;
-        promise = _super.prototype.addCard.call(this, card, animation, settings);
-        var cardId = this.manager.getId(card);
-        var cardDiv = document.getElementById(cardId);
-        cardDiv.style.setProperty('--order', '' + order);
-        this.element.style.setProperty('--tile-count', '' + this.cards.length);
-        return promise;
-    };
-    AllVisibleDeck.prototype.setOpened = function (opened) {
-        this.element.classList.toggle('opened', opened);
-    };
-    AllVisibleDeck.prototype.cardRemoved = function (card) {
-        var _this = this;
-        _super.prototype.cardRemoved.call(this, card);
-        this.cards.forEach(function (c, index) {
-            var cardId = _this.manager.getId(c);
-            var cardDiv = document.getElementById(cardId);
-            cardDiv.style.setProperty('--order', '' + index);
-        });
-        this.element.style.setProperty('--tile-count', '' + this.cards.length);
-    };
-    return AllVisibleDeck;
-}(CardStock));
 var LineStock = (function (_super) {
     __extends(LineStock, _super);
     function LineStock(manager, element, settings) {
@@ -1379,9 +1334,6 @@ var isDebug = window.location.host == "studio.boardgamearena.com" || window.loca
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
-        this.notifManager = new NotificationManager(this);
-        this.spellsManager = new SpellCardManager(this);
-        this.manasManager = new ManaCardManager(this);
         this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
@@ -1389,15 +1341,29 @@ var WizardsGrimoire = (function () {
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
         this.manasManager = new ManaCardManager(this);
+        this.stateManager = new StateManager(this);
         this.tableCenter = new TableCenter(this);
         for (var player_id in gamedatas.players) {
         }
         this.createPlayerTables(gamedatas);
         this.setupNotifications();
     };
-    WizardsGrimoire.prototype.onEnteringState = function (stateName, args) { };
-    WizardsGrimoire.prototype.onLeavingState = function (stateName) { };
-    WizardsGrimoire.prototype.onUpdateActionButtons = function (stateName, args) { };
+    WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
+        this.stateManager.onEnteringState(stateName, args);
+    };
+    WizardsGrimoire.prototype.onLeavingState = function (stateName) {
+        this.stateManager.onLeavingState(stateName);
+    };
+    WizardsGrimoire.prototype.onUpdateActionButtons = function (stateName, args) {
+        this.stateManager.onUpdateActionButtons(stateName, args);
+    };
+    WizardsGrimoire.prototype.addActionButtonDisabled = function (id, label, action) {
+        this.addActionButton(id, label, action);
+        this.disableButton(id);
+    };
+    WizardsGrimoire.prototype.addActionButtonRed = function (id, label, action) {
+        this.addActionButton(id, label, action, null, null, "red");
+    };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
         gamedatas.playerorder.forEach(function (player_id) {
@@ -1406,16 +1372,32 @@ var WizardsGrimoire = (function () {
             _this.playersTables.push(table);
         });
     };
+    WizardsGrimoire.prototype.disableButton = function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.classList.remove("bgabutton_blue");
+            el.classList.remove("bgabutton_red");
+            el.classList.add("bgabutton_disabled");
+        }
+    };
+    WizardsGrimoire.prototype.enableButton = function (id, color) {
+        if (color === void 0) { color = "blue"; }
+        var el = document.getElementById(id);
+        if (el) {
+            el.classList.add("bgabutton_".concat(color));
+            el.classList.remove("bgabutton_disabled");
+        }
+    };
     WizardsGrimoire.prototype.getPlayerId = function () {
         return Number(this.player_id);
+    };
+    WizardsGrimoire.prototype.getPlayerTable = function (playerId) {
+        return this.playersTables.find(function (playerTable) { return playerTable.player_id === playerId; });
     };
     WizardsGrimoire.prototype.takeAction = function (action, data) {
         data = data || {};
         data.lock = true;
         this.ajaxcall("/wizardsgrimoire/wizardsgrimoire/".concat(action, ".html"), data, this, function () { });
-    };
-    WizardsGrimoire.prototype.addActionButtonRed = function (id, label, action) {
-        this.addActionButton(id, label, action, null, null, "red");
     };
     WizardsGrimoire.prototype.setupNotifications = function () {
         log("notifications subscriptions setup");
@@ -1447,6 +1429,12 @@ var NotificationManager = (function () {
         this.game = game;
     }
     NotificationManager.prototype.setup = function () {
+        var _this = this;
+        this.subscribeEvent("onChooseSpell", 500);
+        this.subscribeEvent("onRefillSpell", 500);
+        this.subscribeEvent("onDrawManaCards", 1000);
+        this.subscribeEvent("onSpellCoolDown", 1000);
+        this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
     NotificationManager.prototype.subscribeEvent = function (eventName, time) {
         try {
@@ -1456,9 +1444,25 @@ var NotificationManager = (function () {
             }
         }
         catch (_a) {
-            console.error("NotificationManager::subscribeEvent");
+            console.error("NotificationManager::subscribeEvent", eventName);
         }
     };
+    NotificationManager.prototype.notif_onChooseSpell = function (args) {
+        var _a = args.args, player_id = _a.player_id, card = _a.card;
+        log("onChooseSpell", card);
+        this.game.getPlayerTable(player_id).onChooseSpell(card);
+    };
+    NotificationManager.prototype.notif_onRefillSpell = function (args) {
+        var card = args.args.card;
+        log("onRefillSpell", card);
+        this.game.tableCenter.onRefillSpell(card);
+    };
+    NotificationManager.prototype.notif_onDrawManaCards = function (args) {
+        var _a = args.args, player_id = _a.player_id, cards = _a.cards;
+        log("onDrawManaCards", cards);
+        this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+    };
+    NotificationManager.prototype.notif_onSpellCoolDown = function (args) { };
     return NotificationManager;
 }());
 var card_width = 120;
@@ -1477,11 +1481,21 @@ var SpellCardManager = (function (_super) {
             setupFrontDiv: function (card, div) {
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
+                if (div.childNodes.length == 1) {
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"help-marker\">\n                  <svg class=\"feather feather-help-circle\" fill=\"white\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n               </div>");
+                }
             },
             setupBackDiv: function (card, div) {
                 div.classList.add("wg-card-spell-back");
             },
-            isCardVisible: function (card) { return card.type !== null && card.type !== undefined; },
+            isCardVisible: function (card) {
+                if (card.isHidden == true) {
+                    return false;
+                }
+                else {
+                    return card.type !== null && card.type !== undefined;
+                }
+            },
             cardWidth: card_width,
             cardHeight: card_height
         }) || this;
@@ -1508,7 +1522,14 @@ var ManaCardManager = (function (_super) {
             setupBackDiv: function (card, div) {
                 div.classList.add("wg-card-mana-back");
             },
-            isCardVisible: function (card) { return card.type !== null && card.type !== undefined; },
+            isCardVisible: function (card) {
+                if (card.isHidden == true) {
+                    return false;
+                }
+                else {
+                    return card.type !== null && card.type !== undefined;
+                }
+            },
             cardWidth: card_width,
             cardHeight: card_height
         }) || this;
@@ -1517,8 +1538,74 @@ var ManaCardManager = (function (_super) {
     }
     return ManaCardManager;
 }(CardManager));
+var StateManager = (function () {
+    function StateManager(game) {
+        this.game = game;
+        this.states = {
+            chooseNewSpell: new ChooseNewSpellStates(game)
+        };
+    }
+    StateManager.prototype.onEnteringState = function (stateName, args) {
+        log("Entering state: " + stateName);
+        if (this.states[stateName] !== undefined) {
+            this.states[stateName].onEnteringState(args.args);
+        }
+        else {
+            console.warn("State not handled", stateName);
+        }
+    };
+    StateManager.prototype.onLeavingState = function (stateName) {
+        log("Leaving state: " + stateName);
+        if (this.states[stateName] !== undefined) {
+            this.states[stateName].onLeavingState();
+        }
+    };
+    StateManager.prototype.onUpdateActionButtons = function (stateName, args) {
+        log("onUpdateActionButtons: " + stateName);
+        if (this.states[stateName] !== undefined) {
+            if (this.game.isCurrentPlayerActive()) {
+                this.states[stateName].onUpdateActionButtons(args);
+            }
+        }
+    };
+    return StateManager;
+}());
+var ChooseNewSpellStates = (function () {
+    function ChooseNewSpellStates(game) {
+        this.game = game;
+    }
+    ChooseNewSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var spellPool = this.game.tableCenter.spellPool;
+        spellPool.setSelectionMode("single");
+        spellPool.onSelectionChange = function (selection, lastChange) {
+            if (selection && selection.length === 1) {
+                _this.game.enableButton("btn_confirm", "blue");
+            }
+            else {
+                _this.game.disableButton("btn_confirm");
+            }
+        };
+    };
+    ChooseNewSpellStates.prototype.onLeavingState = function () {
+        this.game.tableCenter.spellPool.setSelectionMode("none");
+        this.game.tableCenter.spellPool.onSelectionChange = null;
+    };
+    ChooseNewSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), function () {
+            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
+            _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+        });
+    };
+    return ChooseNewSpellStates;
+}());
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
+        var _this = this;
+        var _a;
         this.game = game;
         this.mana_cooldown = [];
         this.player_id = Number(player.id);
@@ -1526,7 +1613,7 @@ var PlayerTable = (function () {
         var pId = player.id, pName = player.name, pColor = player.color;
         var pCurrent = this.current_player.toString();
         var html = "\n            <div id=\"player-table-".concat(pId, "\" class=\"player-table whiteblock\" data-color=\"").concat(pColor, "\" style=\"--color: #").concat(pColor, "\">\n                <span class=\"wg-title\">").concat(pName, "</span>\n                <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-current-player=\"").concat(pCurrent, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                    <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                    <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                </div>\n            <div>");
-        dojo.place(html, this.current_player ? "current-player-table" : "tables");
+        dojo.place(html, "tables");
         this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
             slotsIds: [1, 2, 3, 4, 5, 6],
             slotClasses: ["wg-spell-slot"],
@@ -1540,7 +1627,49 @@ var PlayerTable = (function () {
             });
             this.mana_cooldown.push(deck);
         }
+        var board = game.gamedatas.player_board[pId];
+        this.spell_repertoire.addCards(board.spells);
+        Object.keys(board.manas).forEach(function (pos) {
+            _this.mana_cooldown[Number(pos) - 1].setCardNumber(board.manas[pos]);
+        });
+        if (pCurrent) {
+            this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
+                center: true
+            });
+            this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
+        }
     }
+    PlayerTable.prototype.onChooseSpell = function (card) {
+        this.spell_repertoire.addCard(card, {
+            fromStock: this.game.tableCenter.spellPool
+        });
+    };
+    PlayerTable.prototype.onDrawManaCard = function (cards) {
+        return __awaiter(this, void 0, void 0, function () {
+            var index, card, topHiddenCard, manaDeck;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        index = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(index < cards.length)) return [3, 4];
+                        card = cards[index];
+                        topHiddenCard = __assign(__assign({}, card), { isHidden: true });
+                        manaDeck = this.game.tableCenter.manaDeck;
+                        manaDeck.setCardNumber(manaDeck.getCardNumber(), topHiddenCard);
+                        return [4, this.hand.addCard(card)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        index++;
+                        return [3, 1];
+                    case 4: return [2];
+                }
+            });
+        });
+    };
     return PlayerTable;
 }());
 var EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
@@ -1574,5 +1703,10 @@ var TableCenter = (function () {
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
     }
+    TableCenter.prototype.onRefillSpell = function (card) {
+        var topHiddenCard = __assign(__assign({}, card), { isHidden: true });
+        this.spellDeck.setCardNumber(this.spellDeck.getCardNumber(), topHiddenCard);
+        this.spellPool.addCard(card);
+    };
     return TableCenter;
 }());

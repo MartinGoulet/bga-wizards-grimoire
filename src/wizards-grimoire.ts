@@ -23,9 +23,11 @@ class WizardsGrimoire
    implements ebg.core.gamegui, BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas>
 {
    public readonly gamedatas: WizardsGrimoireGamedatas;
-   public notifManager: NotificationManager = new NotificationManager(this);
-   public spellsManager: SpellCardManager = new SpellCardManager(this);
-   public manasManager: ManaCardManager = new ManaCardManager(this);
+   public notifManager: NotificationManager;
+   public spellsManager: SpellCardManager;
+   public manasManager: ManaCardManager;
+   public stateManager: StateManager;
+
    public tableCenter: TableCenter;
    public playersTables: PlayerTable[] = [];
 
@@ -49,6 +51,8 @@ class WizardsGrimoire
       this.notifManager = new NotificationManager(this);
       this.spellsManager = new SpellCardManager(this);
       this.manasManager = new ManaCardManager(this);
+      this.stateManager = new StateManager(this);
+
       this.tableCenter = new TableCenter(this);
 
       // Setting up player boards
@@ -66,20 +70,35 @@ class WizardsGrimoire
    // onEnteringState: this method is called each time we are entering into a new game state.
    //                  You can use this method to perform some user interface changes at this moment.
    //
-   public onEnteringState(stateName: string, args: any) {}
+   public onEnteringState(stateName: string, args: any) {
+      this.stateManager.onEnteringState(stateName, args);
+   }
 
    // onLeavingState: this method is called each time we are leaving a game state.
    //                 You can use this method to perform some user interface changes at this moment.
    //
-   public onLeavingState(stateName: string) {}
+   public onLeavingState(stateName: string) {
+      this.stateManager.onLeavingState(stateName);
+   }
 
    // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
    //                        action status bar (ie: the HTML links in the status bar).
    //
-   public onUpdateActionButtons(stateName: string, args: any) {}
+   public onUpdateActionButtons(stateName: string, args: any) {
+      this.stateManager.onUpdateActionButtons(stateName, args);
+   }
 
    ///////////////////////////////////////////////////
    //// Utilities
+
+   public addActionButtonDisabled(id: string, label: string, action?: (evt: any) => void) {
+      this.addActionButton(id, label, action);
+      this.disableButton(id);
+   }
+
+   public addActionButtonRed(id: string, label: string, action: () => void) {
+      this.addActionButton(id, label, action, null, null, "red");
+   }
 
    private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
       gamedatas.playerorder.forEach((player_id) => {
@@ -89,18 +108,35 @@ class WizardsGrimoire
       });
    }
 
+   public disableButton(id: string): void {
+      const el = document.getElementById(id);
+      if (el) {
+         el.classList.remove("bgabutton_blue");
+         el.classList.remove("bgabutton_red");
+         el.classList.add("bgabutton_disabled");
+      }
+   }
+
+   public enableButton(id: string, color: "blue" | "red" = "blue"): void {
+      const el = document.getElementById(id);
+      if (el) {
+         el.classList.add(`bgabutton_${color}`);
+         el.classList.remove("bgabutton_disabled");
+      }
+   }
+
    public getPlayerId(): number {
       return Number(this.player_id);
+   }
+
+   public getPlayerTable(playerId: number): PlayerTable {
+      return this.playersTables.find((playerTable) => playerTable.player_id === playerId);
    }
 
    public takeAction(action: string, data?: any) {
       data = data || {};
       data.lock = true;
       (this as any).ajaxcall(`/wizardsgrimoire/wizardsgrimoire/${action}.html`, data, this, () => {});
-   }
-
-   public addActionButtonRed(id: string, label: string, action: () => void) {
-      this.addActionButton(id, label, action, null, null, "red");
    }
 
    ///////////////////////////////////////////////////

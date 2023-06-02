@@ -248,6 +248,15 @@
   background-position: 100% 0%;
 }
 
+.help-marker {
+  position: absolute;
+  right: 0;
+  margin: 3px 3px 0 0;
+  cursor: help !important;
+  pointer-events: initial !important;
+  user-select: initial !important;
+}
+
 #bga-zoom-wrapper {
   position: relative;
 }
@@ -529,11 +538,6 @@ body > .card {
   top: calc((var(--height) + var(--shift)) * var(--order));
 }
 
-#current-player-table {
-  margin: 20px 0;
-  min-height: 131px;
-}
-
 #table-center {
   display: flex;
   gap: 20px;
@@ -544,6 +548,7 @@ body > .card {
   align-content: center;
   --width: 120px;
   --height: 168px;
+  width: calc((var(--width) + var(--gap)) * 4);
 }
 #spell-pool .wg-spell-slot {
   width: var(--width);
@@ -551,10 +556,16 @@ body > .card {
   border-radius: 5px;
   border: 1px solid darkslategray;
 }
+#spell-pool .bga-cards_selected-card .front {
+  animation: pulseSelectable 1.5s infinite alternate;
+}
 
-@media only screen and (min-width: 1560px) {
-  #spell-pool {
-    flex-direction: row;
+@keyframes pulseSelectable {
+  0% {
+    box-shadow: inset 0 0 3px 5px #00ffff;
+  }
+  to {
+    box-shadow: inset 0 0 10px 5px #0885c3;
   }
 }
 .player-table {
@@ -595,31 +606,28 @@ body > .card {
   --width: 110px !important;
   --height: 154px !important;
 }
+.player-table .hand {
+  --width: 100px;
+  --height: 140px;
+  min-height: 160px;
+}
 
 #tables-and-center {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 20px;
-  flex-direction: column;
   align-items: center;
-}
-#tables-and-center.double-column {
-  flex-direction: row-reverse;
-  justify-content: center;
-  align-items: start;
-}
-#tables-and-center.double-column #current-player-table {
-  display: none;
+  flex-flow: wrap;
 }
 #tables-and-center #tables {
   position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 10px;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .deck[data-empty=true] {
@@ -628,4 +636,12 @@ body > .card {
 }
 .deck .bga-cards_deck-counter {
   --bga-cards-deck-counter-size: 25px;
+}
+
+.bgabutton.bgabutton_disabled {
+  background: #e5e5ef;
+  border: 1px solid #9090af;
+  box-shadow: none;
+  color: #9090af;
+  text-shadow: none;
 }

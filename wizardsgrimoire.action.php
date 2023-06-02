@@ -37,6 +37,14 @@ class action_wizardsgrimoire extends APP_GameAction {
 
   // TODO: defines your action entry points there
 
+  public function chooseSpell() {
+    self::setAjaxMode();
+
+    $card_id = self::getArg("id", AT_posint, true);
+    $this->game->chooseSpell($card_id);
+
+    self::ajaxResponse();
+  }
 
   /*
     

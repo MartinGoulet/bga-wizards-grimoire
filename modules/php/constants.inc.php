@@ -20,6 +20,25 @@ define('WG_VAR_SLOT_COUNT', 'slot_count');
 define('ST_BGA_GAME_SETUP', 1);
 define('ST_END_GAME', 99);
 
+define('ST_PLAYER_NEW_TURN', 10);
+define('ST_CHOOSE_NEW_SPELL', 2);
+
+define('ST_SPELL_COOL_DOWN', 3);
+
+define('ST_GAIN_MANA', 4);
+
+define('ST_CAST_SPELL', 5);
+
+define('ST_BASIC_ATTACK', 6);
+
+define('ST_NEXT_PLAYER', 7);
+
+
+/*
+ * Statistic variables 
+ */
+define('WG_STAT_TURN_NUMBER', 'turns_number');
+
 /**
  * Spell Activation
  */

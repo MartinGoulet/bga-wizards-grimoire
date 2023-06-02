@@ -44,3 +44,12 @@
       background-position: 100% 0%;
    }
 }
+
+.help-marker {
+   position: absolute;
+   right: 0;
+   margin: 3px 3px 0 0;
+   cursor: help !important;
+   pointer-events: initial !important;
+   user-select: initial !important;
+}

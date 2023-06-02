@@ -17,9 +17,10 @@
  *
  */
 
+
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
-    if ($classParts[0] == 'WizardsGrimoie') {
+    if ($classParts[0] == 'WizardsGrimoire') {
         array_shift($classParts);
         $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
         if (file_exists($file)) {
@@ -32,10 +33,17 @@ $swdNamespaceAutoload = function ($class) {
 spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
+require_once('modules/php/actions.php');
+require_once('modules/php/states.php');
 require_once('modules/php/constants.inc.php');
 
+use WizardsGrimoire\Core\ActionTrait;
+use WizardsGrimoire\Core\StateTrait;
+use WizardsGrimoire\Objects\CardLocation;
 
 class WizardsGrimoire extends Table {
+    use ActionTrait;
+    use StateTrait;
 
     /** @var WizardsGrimoire */
     public static $instance = null;
@@ -121,6 +129,8 @@ class WizardsGrimoire extends Table {
         // (note: statistics used in this file must be defined in your stats.inc.php file)
         //self::initStat( 'table', 'table_teststat1', 0 );    // Init a table statistics
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
+        self::initStat('table', WG_STAT_TURN_NUMBER, 0);
+        self::initStat('player', WG_STAT_TURN_NUMBER, 0);
 
         // TODO: setup the initial game situation here
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
@@ -143,21 +153,18 @@ class WizardsGrimoire extends Table {
             $cards[] = ['type' => $id, 'type_arg' => 0, 'nbr' => 1];
         }
         $this->deck_spells->createCards($cards);
-        $this->deck_spells->shuffle('deck');
+        $this->deck_spells->shuffle(CardLocation::Deck());
 
         $cards = [];
         foreach ($this->mana_cards as $number => $count) {
             $cards[] = ['type' => $number, 'type_arg' => 0, 'nbr' => intval($count)];
         }
         $this->deck_manas->createCards($cards);
-        $this->deck_manas->shuffle('deck');
-
+        $this->deck_manas->shuffle(CardLocation::Deck());
 
         for ($i = 1; $i <= $slot_count; $i++) {
-            $this->deck_spells->pickCardForLocation('deck', "slot", $i);
+            $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
         }
-
-
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -187,17 +194,32 @@ class WizardsGrimoire extends Table {
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
         $result['slot_count'] = intval(self::getGameStateValue(WG_VAR_SLOT_COUNT));
-        $result['slot_cards'] = array_values($this->deck_spells->getCardsInLocation('slot'));
+        $result['slot_cards'] = array_values($this->deck_spells->getCardsInLocation(CardLocation::SpellSlot()));
 
         $result['spells'] = [
-            'deck_count' => intval($this->deck_spells->countCardInLocation('deck')),
-            'discard_count' => intval($this->deck_spells->countCardInLocation('discard')),
+            'deck_count' => intval($this->deck_spells->countCardInLocation(CardLocation::Deck())),
+            'discard_count' => intval($this->deck_spells->countCardInLocation(CardLocation::Discard())),
         ];
 
         $result['manas'] = [
-            'deck_count' => intval($this->deck_manas->countCardInLocation('deck')),
-            'discard_count' => intval($this->deck_manas->countCardInLocation('discard')),
+            'deck_count' => intval($this->deck_manas->countCardInLocation(CardLocation::Deck())),
+            'discard_count' => intval($this->deck_manas->countCardInLocation(CardLocation::Discard())),
         ];
+
+        $players = self::loadPlayersBasicInfos();
+        $result['player_board'] = [];
+        foreach ($players as $player_id => $player) {
+            $result['player_board'][$player_id] = [
+                'spells' => array_values($this->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id))),
+                'manas' => [],
+            ];
+            for ($i=1; $i <= 6; $i++) { 
+                $result['player_board'][$player_id]['manas'][$i] =
+                    intval($this->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $i)));
+            }
+        }
+        $result['player_board'][$player_id]['hand'] =
+            array_values($this->deck_manas->getCardsInLocation(CardLocation::Hand(), $current_player_id));
 
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");

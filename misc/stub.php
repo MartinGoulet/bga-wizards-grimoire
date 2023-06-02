@@ -16,7 +16,7 @@ function totranslate($message)
  */
 class Table
 {
-    protected $gamestate;
+    public $gamestate;
 
     /**
      * Default Constructor
@@ -67,14 +67,23 @@ class Table
      */
     static function getActivePlayerId()
     {
+        return 0;
     }
 
     /**
      * Get the "active_player" name
      * Note: avoid using this method in a "multiplayer" state because it does not mean anything.
      */
-    function getActivePlayerName()
+    static function getActivePlayerName()
     {
+    }
+
+    /**
+     * Get the name by id
+     */
+    static function getPlayerNameById($player_id) 
+    {
+        return "";
     }
 
     /**
@@ -94,7 +103,7 @@ class Table
      * Get the "current_player". The current player is the one from which the action originated (the one who sent the request).
      * @return int
      */
-    static function getCurrentPlayerId()
+    protected static function getCurrentPlayerId()
     {
     }
 
@@ -230,7 +239,7 @@ class Table
      * Make the next player active in the natural player order.
      * Note: you CANNOT use this method in a "activeplayer" or "multipleactiveplayer" state. You must use a "game" type game state for this.
      */
-    function activeNextPlayer()
+    protected function activeNextPlayer()
     {
     }
 
@@ -247,7 +256,7 @@ class Table
      * Standard extra time depends on the speed of the game (small with "slow" game option, bigger with other options).
      * You can also specify an exact time to add, in seconds, with the "specified_time" argument (rarely used).
      */
-    static function giveExtraTime($player_id, $specific_time=null )
+    protected static function giveExtraTime($player_id, $specific_time=null )
     {
     }
 
@@ -353,6 +362,7 @@ class Table
      */
     static function getStat($name, $player_id = null)
     {
+        return 0;
     }
 
 

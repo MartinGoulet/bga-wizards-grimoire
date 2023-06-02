@@ -40,4 +40,10 @@ class TableCenter {
 
       this.spellPool.addCards(game.gamedatas.slot_cards);
    }
+
+   public onRefillSpell(card: SpellCard) {
+      const topHiddenCard = { ...card, isHidden: true };
+      this.spellDeck.setCardNumber(this.spellDeck.getCardNumber(), topHiddenCard);
+      this.spellPool.addCard(card);
+   }
 }

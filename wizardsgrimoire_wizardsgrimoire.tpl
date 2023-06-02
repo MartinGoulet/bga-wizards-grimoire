@@ -9,7 +9,6 @@
             <div id="spell-discard"></div>
             <div id="spell-deck"></div>
         </div>
-        <div id="current-player-table"></div>
         <div id="tables"></div>
     </div>
 </div>

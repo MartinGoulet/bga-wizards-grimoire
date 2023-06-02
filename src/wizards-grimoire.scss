@@ -7,29 +7,21 @@
 #tables-and-center {
    position: relative;
    display: flex;
-   justify-content: center;
+   // justify-content: center;
+   justify-content: space-evenly;
    gap: 20px;
-   flex-direction: column;
+   // flex-direction: column;
    align-items: center;
-
-   &.double-column {
-      flex-direction: row-reverse;
-      justify-content: center;
-      align-items: start;
-
-      #current-player-table {
-         display: none;
-      }
-   }
+   flex-flow: wrap;
 
    #tables {
       position: relative;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: space-around;
+      align-items: flex-end;
       flex-wrap: wrap;
       gap: 10px;
-      flex-direction: column;
+      flex-direction: row;
    }
 }
 
@@ -41,5 +33,15 @@
 
    .bga-cards_deck-counter {
       --bga-cards-deck-counter-size: 25px;
+   }
+}
+
+.bgabutton {
+   &.bgabutton_disabled {
+      background: #e5e5ef;
+      border: 1px solid #9090af;
+      box-shadow: none;
+      color: #9090af;
+      text-shadow: none;
    }
 }
