@@ -3,7 +3,8 @@ class StateManager {
 
    constructor(private game: WizardsGrimoire) {
       this.states = {
-         chooseNewSpell: new ChooseNewSpellStates(game)
+         chooseNewSpell: new ChooseNewSpellStates(game),
+         castSpell: new CastSpellStates(game)
       };
    }
 
@@ -59,6 +60,41 @@ class ChooseNewSpellStates implements StateHandler {
       this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), () => {
          const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
          this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+      });
+   }
+}
+
+class CastSpellStates implements StateHandler {
+   constructor(private game: WizardsGrimoire) {}
+
+   onEnteringState(args: any): void {
+      if (!this.game.isCurrentPlayerActive()) return;
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const repertoire = player_table.spell_repertoire;
+
+      repertoire.setSelectionMode("single");
+      repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
+         if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
+            this.game.enableButton("btn_cast", "blue");
+         } else {
+            this.game.disableButton("btn_cast");
+         }
+      };
+   }
+
+   onLeavingState(): void {
+      const repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
+      repertoire.setSelectionMode("none");
+      repertoire.onSelectionChange = null;
+   }
+
+   onUpdateActionButtons(args: any): void {
+      this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), () => {
+         const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
+         this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+      });
+      this.game.addActionButtonRed("btn_pass", _("Pass"), () => {
+         this.game.takeAction("pass");
       });
    }
 }
