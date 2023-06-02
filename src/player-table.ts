@@ -17,7 +17,6 @@ class PlayerTable {
       const html = `
             <div id="player-table-${pId}" class="player-table whiteblock" data-color="${pColor}" style="--color: #${pColor}">
                 <span class="wg-title">${pName}</span>
-                <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-current-player="${pCurrent}" data-my-hand="${pCurrent}"></div>
                 <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
                 <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
                     <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
@@ -27,6 +26,7 @@ class PlayerTable {
                     <div id="player_table-${pId}-mana-deck-5" class="mana-deck"></div>
                     <div id="player_table-${pId}-mana-deck-6" class="mana-deck"></div>
                 </div>
+                <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-current-player="${pCurrent}" data-my-hand="${pCurrent}"></div>
             <div>`;
 
       dojo.place(html, "tables");
