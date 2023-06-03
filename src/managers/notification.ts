@@ -12,7 +12,12 @@ class NotificationManager {
 
       this.game.notifqueue.setIgnoreNotificationCheck(
          "message",
-         (notif) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id
+         (notif) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
+      );
+
+      this.game.notifqueue.setIgnoreNotificationCheck(
+         "onDrawManaCards",
+         (notif) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
       );
    }
 

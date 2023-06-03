@@ -37,15 +37,15 @@ class PlayerTable {
          {
             slotsIds: [1, 2, 3, 4, 5, 6],
             slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: (card) => card.location_arg
-         }
+            mapCardToSlot: (card) => card.location_arg,
+         },
       );
 
       for (let index = 1; index <= 6; index++) {
          const divDeck = document.getElementById(`player_table-${pId}-mana-deck-${index}`);
          const deck = new Deck(game.manasManager, divDeck, {
             cardNumber: 0,
-            counter: {}
+            counter: {},
          });
          this.mana_cooldown[index] = deck;
       }
@@ -57,16 +57,15 @@ class PlayerTable {
          this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
       });
 
-      if (pCurrent) {
-         this.hand = new LineStock(
-            game.manasManager,
-            document.getElementById(`player-table-${pId}-hand-cards`),
-            {
-               center: true
-            }
-         );
-         this.hand.addCards(board.hand ?? []);
-      }
+      this.hand = new LineStock(
+         game.manasManager,
+         document.getElementById(`player-table-${pId}-hand-cards`),
+         {
+            center: true,
+            sort: sortFunction("type", "type_arg"),
+         },
+      );
+      this.hand.addCards(board.hand ?? []);
    }
 
    public canCast(card: SpellCard): boolean {
@@ -76,7 +75,7 @@ class PlayerTable {
 
    public onChooseSpell(card: SpellCard) {
       this.spell_repertoire.addCard(card, {
-         fromStock: this.game.tableCenter.spellPool
+         fromStock: this.game.tableCenter.spellPool,
       });
    }
 

@@ -18,7 +18,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
 interface PlayerBoardInfo {
    manas: { [position: number]: ManaCard[] };
    spells: SpellCard[];
-   hand?: ManaCard[];
+   hand: ManaCard[];
 }
 
 interface Card {

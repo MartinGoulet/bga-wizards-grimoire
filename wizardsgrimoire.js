@@ -1327,6 +1327,39 @@ var CardManager = (function () {
     };
     return CardManager;
 }());
+function sortFunction() {
+    var sortedFields = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        sortedFields[_i] = arguments[_i];
+    }
+    return function (a, b) {
+        for (var i = 0; i < sortedFields.length; i++) {
+            var direction = 1;
+            var field = sortedFields[i];
+            if (field[0] == '-') {
+                direction = -1;
+                field = field.substring(1);
+            }
+            else if (field[0] == '+') {
+                field = field.substring(1);
+            }
+            var type = typeof a[field];
+            if (type === 'string') {
+                var compare = a[field].localeCompare(b[field]);
+                if (compare !== 0) {
+                    return compare;
+                }
+            }
+            else if (type === 'number') {
+                var compare = (a[field] - b[field]) * direction;
+                if (compare !== 0) {
+                    return compare * direction;
+                }
+            }
+        }
+        return 0;
+    };
+}
 var isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
@@ -1351,10 +1384,10 @@ var WizardsGrimoire = (function () {
             element: document.getElementById("table"),
             smooth: false,
             zoomControls: {
-                color: "black"
+                color: "black",
             },
             localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
-            zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2]
+            zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
         });
         this.setupNotifications();
     };
@@ -1455,6 +1488,9 @@ var WizardsGrimoire = (function () {
         document.querySelectorAll(".wg-selected").forEach(function (node) {
             node.classList.remove("wg-selected");
         });
+        document.querySelectorAll(".wg-selectable").forEach(function (node) {
+            node.classList.remove("wg-selectable");
+        });
     };
     WizardsGrimoire.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
@@ -1502,14 +1538,14 @@ var ActionManager = (function () {
         this.actions = [];
         this.actions_args = [];
     }
-    ActionManager.prototype.setup = function (card, takeAction, newAction) {
+    ActionManager.prototype.setup = function (takeAction, newAction) {
         if (takeAction === void 0) { takeAction = "castSpell"; }
         if (newAction === void 0) { newAction = "actionCastMana"; }
         log("actionmanager.reset");
         this.reset();
-        this.current_card = card;
         this.take_action = takeAction;
         this.actions.push(newAction);
+        return this;
     };
     ActionManager.prototype.reset = function () {
         log("actionmanager.reset");
@@ -1517,6 +1553,7 @@ var ActionManager = (function () {
         this.take_action = null;
         this.actions = [];
         this.actions_args = [];
+        return this;
     };
     ActionManager.prototype.addAction = function (card) {
         var _this = this;
@@ -1533,10 +1570,12 @@ var ActionManager = (function () {
             this.actions.push(js_actions);
         }
         log("actionmanager.actions values", this.actions);
+        return this;
     };
     ActionManager.prototype.addArgument = function (arg) {
         log("actionmanager.addArgument", arg);
         this.actions_args.push(arg);
+        return this;
     };
     ActionManager.prototype.activateNextAction = function () {
         var _this = this;
@@ -1552,7 +1591,7 @@ var ActionManager = (function () {
         };
         var data = {
             card_id: this.current_card.id,
-            args: this.actions_args.join(";")
+            args: this.actions_args.join(";"),
         };
         this.game.takeAction(this.take_action, data, null, handleError);
     };
@@ -1563,13 +1602,22 @@ var ActionManager = (function () {
         this.game.setClientState(states.client.castSpellWithMana, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
-                card: this.current_card
-            }
+                card: this.current_card,
+            },
         });
     };
-    ActionManager.prototype.replaceWithArg = function (msg, args) {
-        msg = this.game.format_string_recursive(msg, args);
-        return dojo.string.substitute(msg, args);
+    ActionManager.prototype.actionTimeDistortion = function () {
+        var name = this.game.getCardType(this.current_card).name;
+        var msg = _("${you} may select up to ${nbr} mana card");
+        msg = msg.replace("${nbr}", "2");
+        this.game.setClientState(states.client.selectMana, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                card: this.current_card,
+                count: 2,
+            },
+        });
     };
     return ActionManager;
 }());
@@ -1672,6 +1720,7 @@ var NotificationManager = (function () {
         this.subscribeEvent("onSpellCoolDown", 1000);
         this.subscribeEvent("onHealthChanged", 500);
         this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
+        this.game.notifqueue.setIgnoreNotificationCheck("onDrawManaCards", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
     NotificationManager.prototype.subscribeEvent = function (eventName, time) {
         try {
@@ -1709,13 +1758,14 @@ var NotificationManager = (function () {
 }());
 var states = {
     client: {
-        castSpellWithMana: "client_castSpellWithMana"
+        castSpellWithMana: "client_castSpellWithMana",
+        selectMana: "client_selectMana",
     },
     server: {
         castSpell: "castSpell",
         chooseNewSpell: "chooseNewSpell",
-        basicAttack: "basicAttack"
-    }
+        basicAttack: "basicAttack",
+    },
 };
 var StateManager = (function () {
     function StateManager(game) {
@@ -1723,6 +1773,7 @@ var StateManager = (function () {
         this.game = game;
         this.states = (_a = {},
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
+            _a[states.client.selectMana] = new SelectManaStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
@@ -1768,13 +1819,13 @@ var PlayerTable = (function () {
         this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
             slotsIds: [1, 2, 3, 4, 5, 6],
             slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: function (card) { return card.location_arg; }
+            mapCardToSlot: function (card) { return card.location_arg; },
         });
         for (var index = 1; index <= 6; index++) {
             var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
             var deck = new Deck(game.manasManager, divDeck, {
                 cardNumber: 0,
-                counter: {}
+                counter: {},
             });
             this.mana_cooldown[index] = deck;
         }
@@ -1783,12 +1834,11 @@ var PlayerTable = (function () {
         Object.keys(board.manas).forEach(function (pos) {
             _this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
         });
-        if (pCurrent) {
-            this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
-                center: true
-            });
-            this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
-        }
+        this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
+            center: true,
+            sort: sortFunction("type", "type_arg"),
+        });
+        this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
     }
     PlayerTable.prototype.canCast = function (card) {
         var cost = this.game.getCardType(card).cost;
@@ -1796,7 +1846,7 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.onChooseSpell = function (card) {
         this.spell_repertoire.addCard(card, {
-            fromStock: this.game.tableCenter.spellPool
+            fromStock: this.game.tableCenter.spellPool,
         });
     };
     PlayerTable.prototype.onDrawManaCard = function (cards) {
@@ -1896,7 +1946,8 @@ var CastSpellStates = (function () {
             var repertoire = _this.game.getPlayerTable(_this.game.getPlayerId()).spell_repertoire;
             var selectedSpell = repertoire.getSelection()[0];
             _this.game.markCardAsSelected(selectedSpell);
-            _this.game.actionManager.setup(selectedSpell);
+            _this.game.actionManager.setup("castSpell", "actionCastMana");
+            _this.game.actionManager.addAction(selectedSpell);
             _this.game.actionManager.activateNextAction();
         };
         this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
@@ -2042,6 +2093,58 @@ var CastSpellWithManaStates = (function () {
         });
     };
     return CastSpellWithManaStates;
+}());
+var SelectManaStates = (function () {
+    function SelectManaStates(game) {
+        this.game = game;
+    }
+    SelectManaStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var card = args.card, player_id = args.player_id, count = args.count;
+        this.player_table = this.game.getPlayerTable(player_id);
+        var handleChange = function () {
+            var nbr_cards_selected = _this.getManaDecks().filter(function (x) { return x.deck.getSelection().length > 0; }).length;
+            _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
+        };
+        this.getManaDecks().forEach(function (_a) {
+            var position = _a.position, deck = _a.deck;
+            if (position != card.location_arg && deck.getCardNumber() > 0) {
+                deck.setSelectionMode("single");
+                deck.onSelectionChange = handleChange;
+            }
+        });
+    };
+    SelectManaStates.prototype.onLeavingState = function () {
+        this.getManaDecks().forEach(function (_a) {
+            var deck = _a.deck;
+            deck.setSelectionMode("none");
+            deck.onSelectionChange = null;
+        });
+    };
+    SelectManaStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var selected_card_ids = _this.getManaDecks()
+                .filter(function (x) { return x.deck.getSelection().length > 0; })
+                .map(function (x) { return x.deck.getSelection()[0].id; })
+                .join(",");
+            _this.game.actionManager.addArgument(selected_card_ids).activateNextAction();
+        };
+        this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonClientCancel();
+    };
+    SelectManaStates.prototype.getManaDecks = function () {
+        var _this = this;
+        return [1, 2, 3, 4, 5, 6].map(function (position) {
+            return {
+                position: position,
+                deck: _this.player_table.mana_cooldown[position],
+            };
+        });
+    };
+    return SelectManaStates;
 }());
 define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
     return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());

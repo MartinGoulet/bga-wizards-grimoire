@@ -14,7 +14,7 @@ interface WizardsGrimoire
       score: number,
       duration: number,
       offset_x?: number,
-      offset_y?: number
+      offset_y?: number,
    ): void;
    fadeOutAndDestroy(id: string, duration?: number, delay?: number): void;
    showMessage(msg: string, type: "info" | "error" | "only_to_log"): void;
@@ -73,10 +73,10 @@ class WizardsGrimoire
          element: document.getElementById("table"),
          smooth: false,
          zoomControls: {
-            color: "black"
+            color: "black",
          },
          localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
-         zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2]
+         zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
       });
 
       this.setupNotifications();
@@ -205,6 +205,9 @@ class WizardsGrimoire
       document.querySelectorAll(".wg-selected").forEach((node) => {
          node.classList.remove("wg-selected");
       });
+      document.querySelectorAll(".wg-selectable").forEach((node) => {
+         node.classList.remove("wg-selectable");
+      });
    }
 
    public setTooltip(id: string, html: string) {
@@ -215,7 +218,7 @@ class WizardsGrimoire
       action: string,
       data?: any,
       onSuccess?: (result: any) => void,
-      onComplete?: (is_error: boolean) => void
+      onComplete?: (is_error: boolean) => void,
    ) {
       data = data || {};
       data.lock = true;
@@ -226,7 +229,7 @@ class WizardsGrimoire
          data,
          this,
          onSuccess,
-         onComplete
+         onComplete,
       );
    }
 

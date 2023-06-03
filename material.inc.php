@@ -93,6 +93,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
+    "class" => "Fracture"
   ],
   10 => [
     "name" => clienttranslate("Gleam of hope"),
@@ -175,6 +176,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
+    "class" => "TimeDistortion",
+    "js_actions" => "actionTimeDistortion",
   ],
   20 => [
     "name" => clienttranslate("Betrayal"),
@@ -527,6 +530,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
+    "class" => "PowerHungry",
   ],
   62 => [
     "name" => clienttranslate("Sneaky deal"),

@@ -69,27 +69,30 @@ trait ActionTrait {
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
-        
+
         $card_type = $this->card_types[$spell['type']];
         if (sizeof($mana_ids) !== $card_type['cost']) {
             throw new BgaSystemException("Not enough mana");
         }
 
-        $manaCards = array_map(function($card_id) use ($player_id) {
+        $manaCards = array_map(function ($card_id) use ($player_id) {
             return $this->assertIsCardInCurrentPlayerHand($card_id, $player_id);
         }, $mana_ids);
-        
+
         // Move card to the mana position below the spell
         foreach ($manaCards as $card_id => $card) {
             $this->deck_manas->insertCardOnExtremePosition(
-                $card['id'], 
-                CardLocation::PlayerManaCoolDown($player_id, $spell['location_arg']), 
-                true);
+                $card['id'],
+                CardLocation::PlayerManaCoolDown($player_id, $spell['location_arg']),
+                true
+            );
         }
 
-        // Notification
+        Notifications::castSpell($player_id, $card_type['name']);
 
-        $this->executeCard($spell, $args);
+        if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
+            $this->executeCard($spell, $args);
+        }
 
         $this->gamestate->nextState("cast");
     }

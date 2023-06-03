@@ -28,7 +28,8 @@ class CastSpellStates implements StateHandler {
          const selectedSpell: SpellCard = repertoire.getSelection()[0];
 
          this.game.markCardAsSelected(selectedSpell);
-         this.game.actionManager.setup(selectedSpell);
+         this.game.actionManager.setup("castSpell", "actionCastMana");
+         this.game.actionManager.addAction(selectedSpell);
          this.game.actionManager.activateNextAction();
       };
 

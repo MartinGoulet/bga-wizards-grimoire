@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use BgaUserException;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Objects\CardLocation;
 

@@ -30,6 +30,7 @@
         "node_modules/bga-cards/src/stocks/line-stock.ts",
         "node_modules/bga-cards/src/stocks/slot-stock.ts",
         "node_modules/bga-cards/src/card-manager.ts",
+        "node_modules/bga-cards/src/sort.ts",
 
         "src/wizards-grimoire.d.ts",
         "src/wizards-grimoire.ts",
@@ -47,6 +48,7 @@
         "src/states/basic-attack.ts",
 
         "src/states/cast-spell-with-mana.ts",
+        "src/states/select-mana.ts",
 
         "src/define.ts"
     ]

@@ -38,6 +38,8 @@ require_once('modules/php/states.php');
 require_once('modules/php/constants.inc.php');
 
 use WizardsGrimoire\Core\ActionTrait;
+use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\StateTrait;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -218,13 +220,16 @@ class WizardsGrimoire extends Table {
                 'spells' => array_values($this->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id))),
                 'manas' => [],
             ];
-            for ($i=1; $i <= 6; $i++) { 
-                $result['player_board'][$player_id]['manas'][$i] =
-                    $this->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $i), null, 'location_arg');
+            for ($i = 1; $i <= 6; $i++) {
+                $cards = $this->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $i), null, 'location_arg');
+                $cards = Game::anonynizeCards($cards, $player_id != $current_player_id);
+                $result['player_board'][$player_id]['manas'][$i] = array_values($cards);
             }
+
+            $cards = $this->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id);
+            $cards = Game::anonynizeCards($cards, $player_id != $current_player_id);
+            $result['player_board'][$player_id]['hand'] = array_values($cards);
         }
-        $result['player_board'][$player_id]['hand'] =
-            array_values($this->deck_manas->getCardsInLocation(CardLocation::Hand(), $current_player_id));
 
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");

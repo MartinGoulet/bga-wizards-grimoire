@@ -9,17 +9,13 @@ class ActionManager {
 
    constructor(private game: WizardsGrimoire) {}
 
-   public setup(
-      card: SpellCard,
-      takeAction: TakeActionType = "castSpell",
-      newAction: NewActionType = "actionCastMana"
-   ) {
+   public setup(takeAction: TakeActionType = "castSpell", newAction: NewActionType = "actionCastMana") {
       log("actionmanager.reset");
 
       this.reset();
-      this.current_card = card;
       this.take_action = takeAction;
       this.actions.push(newAction);
+      return this;
    }
 
    public reset() {
@@ -29,6 +25,7 @@ class ActionManager {
       this.take_action = null;
       this.actions = [];
       this.actions_args = [];
+      return this;
    }
 
    public addAction(card: SpellCard) {
@@ -45,11 +42,13 @@ class ActionManager {
       }
 
       log("actionmanager.actions values", this.actions);
+      return this;
    }
 
    public addArgument(arg: string) {
       log("actionmanager.addArgument", arg);
       this.actions_args.push(arg);
+      return this;
    }
 
    public activateNextAction() {
@@ -69,7 +68,7 @@ class ActionManager {
 
       const data = {
          card_id: this.current_card.id,
-         args: this.actions_args.join(";")
+         args: this.actions_args.join(";"),
       };
 
       this.game.takeAction(this.take_action, data, null, handleError);
@@ -86,13 +85,23 @@ class ActionManager {
       this.game.setClientState(states.client.castSpellWithMana, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
-            card: this.current_card
-         }
+            card: this.current_card,
+         },
       });
    }
 
-   private replaceWithArg(msg, args) {
-      msg = this.game.format_string_recursive(msg, args);
-      return dojo.string.substitute(msg, args);
+   private actionTimeDistortion() {
+      const { name } = this.game.getCardType(this.current_card);
+      let msg = _("${you} may select up to ${nbr} mana card");
+      msg = msg.replace("${nbr}", "2");
+
+      this.game.setClientState(states.client.selectMana, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            card: this.current_card,
+            count: 2,
+         },
+      });
    }
 }
