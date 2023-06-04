@@ -62,6 +62,7 @@ interface StateHandler {
    onEnteringState(args: any): void;
    onLeavingState(): void;
    onUpdateActionButtons(args: any): void;
+   restoreGameState();
 }
 
 /**

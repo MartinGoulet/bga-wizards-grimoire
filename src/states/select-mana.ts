@@ -33,15 +33,24 @@ class SelectManaStates implements StateHandler {
 
    onUpdateActionButtons(args: SelectManaArgs): void {
       const handleConfirm = () => {
-         const selected_card_ids = this.getManaDecks()
+         const selected_cards = this.getManaDecks()
             .filter((x) => x.deck.getSelection().length > 0)
-            .map((x) => x.deck.getSelection()[0].id)
-            .join(",");
+            .map((x) => x.deck.getSelection()[0].id);
 
-         this.game.actionManager.addArgument(selected_card_ids).activateNextAction();
+         if (selected_cards.length < args.count) {
+            const text = _("Are-you sure to not take all mana card?");
+            this.game.confirmationDialog(text, () => {
+               this.game.actionManager.addArgument(selected_cards.join(","));
+               this.game.actionManager.activateNextAction();
+            });
+         }
       };
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
       this.game.addActionButtonClientCancel();
+   }
+
+   restoreGameState() {
+      this.getManaDecks().forEach((deck) => deck.deck.unselectAll());
    }
 
    private getManaDecks() {

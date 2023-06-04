@@ -39,11 +39,6 @@ class CastSpellWithManaStates implements StateHandler {
    onLeavingState(): void {
       this.player_table.hand.onCardClick = null;
       this.mana_deck.onCardClick = null;
-
-      log("Restore", this.game.isRestoreMode);
-      if (this.game.isRestoreMode) {
-         this.restore();
-      }
    }
 
    onUpdateActionButtons(args: any): void {
@@ -56,6 +51,10 @@ class CastSpellWithManaStates implements StateHandler {
       this.game.addActionButtonClientCancel();
    }
 
+   restoreGameState() {
+      this.restore();
+   }
+
    private async restore() {
       while (this.mana_cards.length > 0) {
          await this.moveCardFromManaDeckToHand();
@@ -65,7 +64,6 @@ class CastSpellWithManaStates implements StateHandler {
    private moveCardFromManaDeckToHand() {
       return new Promise((resolve) => {
          const card = this.mana_cards.pop();
-         // card.isHidden = false;
          this.player_table.hand.addCard(card).then(() => {
             resolve(true);
          });

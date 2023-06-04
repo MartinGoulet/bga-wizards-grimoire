@@ -36,4 +36,6 @@ class CastSpellStates implements StateHandler {
       this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
       this.game.addActionButtonPass();
    }
+
+   restoreGameState() {}
 }

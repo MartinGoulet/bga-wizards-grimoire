@@ -24,4 +24,6 @@ class ChooseNewSpellStates implements StateHandler {
          this.game.takeAction("chooseSpell", { id: selectedSpell.id });
       });
    }
+
+   restoreGameState() {}
 }

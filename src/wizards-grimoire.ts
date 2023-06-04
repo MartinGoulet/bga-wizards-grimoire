@@ -36,8 +36,6 @@ class WizardsGrimoire
    public playersTables: PlayerTable[] = [];
    public zoomManager: ZoomManager;
 
-   public isRestoreMode: boolean = false;
-
    constructor() {}
 
    /*
@@ -189,11 +187,10 @@ class WizardsGrimoire
 
    restoreGameState() {
       log("restoreGameState");
-      this.isRestoreMode = true;
       this.actionManager.reset();
+      this.stateManager.restoreGameState();
       this.clearSelection();
       this.restoreServerGameState();
-      this.isRestoreMode = false;
    }
 
    clearSelection() {

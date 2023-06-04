@@ -12,6 +12,7 @@ const states = {
 
 class StateManager {
    private readonly states: { [statename: string]: StateHandler };
+   private readonly client_states: StateHandler[] = [];
 
    constructor(private game: WizardsGrimoire) {
       this.states = {
@@ -29,9 +30,16 @@ class StateManager {
 
       if (this.states[stateName] !== undefined) {
          this.states[stateName].onEnteringState(args.args);
+         if (stateName.startsWith("client_")) {
+            this.client_states.push(this.states[stateName]);
+         } else {
+            this.client_states.splice(0);
+         }
       } else {
+         this.client_states.splice(0);
          console.warn("State not handled", stateName);
       }
+      console.log("client states", this.client_states);
    }
 
    onLeavingState(stateName: string): void {
@@ -48,6 +56,13 @@ class StateManager {
          if (this.game.isCurrentPlayerActive()) {
             this.states[stateName].onUpdateActionButtons(args);
          }
+      }
+   }
+
+   restoreGameState() {
+      while (this.client_states.length > 0) {
+         const state = this.client_states.pop();
+         state.restoreGameState();
       }
    }
 }

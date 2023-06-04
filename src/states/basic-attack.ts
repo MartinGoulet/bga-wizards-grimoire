@@ -28,4 +28,6 @@ class BasicAttackStates implements StateHandler {
       this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
       this.game.addActionButtonPass();
    }
+
+   restoreGameState() {}
 }
