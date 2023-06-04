@@ -11,25 +11,21 @@ class TableCenter {
    public spellPool: SlotStock<SpellCard>;
 
    constructor(private game: WizardsGrimoire) {
-      this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), {
+      const settings = {
          cardNumber: 0,
          counter: {
             hideWhenEmpty: false,
          },
-      });
-
-      this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), {
-         cardNumber: game.gamedatas.spells.discard_count,
-         counter: {},
-      });
-
-      this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), {
-         cardNumber: game.gamedatas.manas.discard_count,
-         counter: {},
-      });
-      this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), {
-         cardNumber: 0,
-         counter: {},
+      };
+      this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
+      this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
+      this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), settings);
+      this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+      this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
+         slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
+         slotClasses: ["wg-spell-slot"],
+         mapCardToSlot: (card) => card.location_arg,
+         direction: "column",
       });
 
       game.gamedatas.spells.deck.forEach((card) => {
@@ -38,14 +34,6 @@ class TableCenter {
       game.gamedatas.manas.deck.forEach((card) => {
          this.manaDeck.addCard({ ...card, isHidden: true });
       });
-
-      this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
-         slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
-         slotClasses: ["wg-spell-slot"],
-         mapCardToSlot: (card) => card.location_arg,
-         direction: "column",
-      });
-
       this.spellPool.addCards(game.gamedatas.slot_cards);
    }
 

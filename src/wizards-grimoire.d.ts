@@ -47,13 +47,14 @@ interface ManaCard extends Card {
    isHidden?: boolean;
 }
 
-interface DeckInfo {
-   deck_count: number;
-   discard_count: number;
+interface SpellInfo {
    deck: SpellCard[];
+   discard: SpellCard[];
 }
-interface SpellInfo extends DeckInfo {}
-interface ManaInfo extends DeckInfo {}
+interface ManaInfo {
+   deck: ManaCard[];
+   discard: ManaCard[];
+}
 
 /////////////////////////////////////////////
 // States

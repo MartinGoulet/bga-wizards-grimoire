@@ -1900,35 +1900,27 @@ var TableCenter = (function () {
     function TableCenter(game) {
         var _this = this;
         this.game = game;
-        this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), {
+        var settings = {
             cardNumber: 0,
             counter: {
                 hideWhenEmpty: false,
             },
-        });
-        this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), {
-            cardNumber: game.gamedatas.spells.discard_count,
-            counter: {},
-        });
-        this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), {
-            cardNumber: game.gamedatas.manas.discard_count,
-            counter: {},
-        });
-        this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), {
-            cardNumber: 0,
-            counter: {},
+        };
+        this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
+        this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
+        this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), settings);
+        this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+        this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
+            slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
+            slotClasses: ["wg-spell-slot"],
+            mapCardToSlot: function (card) { return card.location_arg; },
+            direction: "column",
         });
         game.gamedatas.spells.deck.forEach(function (card) {
             _this.spellDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
         });
         game.gamedatas.manas.deck.forEach(function (card) {
             _this.manaDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
-        });
-        this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
-            slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
-            slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: function (card) { return card.location_arg; },
-            direction: "column",
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
     }
