@@ -8,6 +8,6 @@ class MyDeck<T> extends Deck<T> {
          settings = {};
       }
       settings.index = 0;
-      super.addCard(card, animation, settings);
+      return super.addCard(card, animation, settings);
    }
 }

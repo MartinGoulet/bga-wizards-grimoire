@@ -1545,7 +1545,7 @@ var MyDeck = (function (_super) {
             settings = {};
         }
         settings.index = 0;
-        _super.prototype.addCard.call(this, card, animation, settings);
+        return _super.prototype.addCard.call(this, card, animation, settings);
     };
     return MyDeck;
 }(Deck));
