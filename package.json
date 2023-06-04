@@ -4,10 +4,10 @@
   "description": "",
   "main": "wizardsgrimoire.js",
   "dependencies": {
-    "bga-cards": "github:thoun/bga-cards#2.0.1",
-    "bga-zoom": "github:thoun/bga-zoom#0.1.0"
   },
   "devDependencies": {
+    "bga-cards": "github:thoun/bga-cards#2.0.1",
+    "bga-zoom": "github:thoun/bga-zoom#0.1.0",
     "bga-studio-mg": "^0.1.5",
     "sass": "^1.62.1",
     "typescript": "^5.0.4"

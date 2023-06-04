@@ -34,6 +34,7 @@
 
         "src/wizards-grimoire.d.ts",
         "src/wizards-grimoire.ts",
+        "src/deck.ts",
         
         "src/managers/action.ts",
         "src/managers/cards.ts",

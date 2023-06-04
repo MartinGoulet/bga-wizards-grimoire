@@ -727,7 +727,7 @@ body > .card {
   --height: 154px !important;
 }
 .player-table .mana-cooldown .mana-deck.deck[data-empty=false] {
-  border-color: transparent;
+  border: none;
 }
 .player-table .hand {
   --width: 100px;

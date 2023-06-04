@@ -206,11 +206,17 @@ class WizardsGrimoire extends Table {
         $result['spells'] = [
             'deck_count' => intval($this->deck_spells->countCardInLocation(CardLocation::Deck())),
             'discard_count' => intval($this->deck_spells->countCardInLocation(CardLocation::Discard())),
+            'deck' => array_values(Game::anonynizeCards(
+                $this->deck_spells->getCardsInLocation(CardLocation::Deck())
+            )),
         ];
 
         $result['manas'] = [
             'deck_count' => intval($this->deck_manas->countCardInLocation(CardLocation::Deck())),
             'discard_count' => intval($this->deck_manas->countCardInLocation(CardLocation::Discard())),
+            'deck' => array_values(Game::anonynizeCards(
+                $this->deck_manas->getCardsInLocation(CardLocation::Deck())
+            )),
         ];
 
         $players = self::loadPlayersBasicInfos();

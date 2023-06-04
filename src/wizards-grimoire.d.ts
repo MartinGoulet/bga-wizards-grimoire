@@ -50,6 +50,7 @@ interface ManaCard extends Card {
 interface DeckInfo {
    deck_count: number;
    discard_count: number;
+   deck: SpellCard[];
 }
 interface SpellInfo extends DeckInfo {}
 interface ManaInfo extends DeckInfo {}

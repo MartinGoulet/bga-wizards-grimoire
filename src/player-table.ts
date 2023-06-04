@@ -43,7 +43,7 @@ class PlayerTable {
 
       for (let index = 1; index <= 6; index++) {
          const divDeck = document.getElementById(`player_table-${pId}-mana-deck-${index}`);
-         const deck = new Deck(game.manasManager, divDeck, {
+         const deck = new MyDeck(game.manasManager, divDeck, {
             cardNumber: 0,
             counter: {},
          });
@@ -54,7 +54,7 @@ class PlayerTable {
       this.spell_repertoire.addCards(board.spells);
 
       Object.keys(board.manas).forEach((pos: string) => {
-         this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
+         this.mana_cooldown[Number(pos)].addCards(board.manas[pos], null, { index: 0 });
       });
 
       this.hand = new LineStock(

@@ -1532,6 +1532,23 @@ var cardId = 200000;
 function getCardId() {
     return cardId++;
 }
+var MyDeck = (function (_super) {
+    __extends(MyDeck, _super);
+    function MyDeck(manager, element, settings) {
+        var _this = _super.call(this, manager, element, settings) || this;
+        _this.manager = manager;
+        _this.element = element;
+        return _this;
+    }
+    MyDeck.prototype.addCard = function (card, animation, settings) {
+        if (!settings) {
+            settings = {};
+        }
+        settings.index = 0;
+        _super.prototype.addCard.call(this, card, animation, settings);
+    };
+    return MyDeck;
+}(Deck));
 var ActionManager = (function () {
     function ActionManager(game) {
         this.game = game;
@@ -1823,7 +1840,7 @@ var PlayerTable = (function () {
         });
         for (var index = 1; index <= 6; index++) {
             var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
-            var deck = new Deck(game.manasManager, divDeck, {
+            var deck = new MyDeck(game.manasManager, divDeck, {
                 cardNumber: 0,
                 counter: {},
             });
@@ -1832,7 +1849,7 @@ var PlayerTable = (function () {
         var board = game.gamedatas.player_board[pId];
         this.spell_repertoire.addCards(board.spells);
         Object.keys(board.manas).forEach(function (pos) {
-            _this.mana_cooldown[Number(pos)].addCards(board.manas[pos]);
+            _this.mana_cooldown[Number(pos)].addCards(board.manas[pos], null, { index: 0 });
         });
         this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
             center: true,
@@ -1881,30 +1898,37 @@ var EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
 var TEN_CARDS_SLOT = [1, 6, 2, 7, 3, 8, 4, 9, 5, 10];
 var TableCenter = (function () {
     function TableCenter(game) {
+        var _this = this;
         this.game = game;
-        this.spellDeck = new Deck(game.spellsManager, document.getElementById("spell-deck"), {
-            cardNumber: game.gamedatas.spells.deck_count,
-            topCard: { id: 100000 },
-            counter: {}
+        this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), {
+            cardNumber: 0,
+            counter: {
+                hideWhenEmpty: false,
+            },
         });
-        this.spellDiscard = new Deck(game.spellsManager, document.getElementById("spell-discard"), {
+        this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), {
             cardNumber: game.gamedatas.spells.discard_count,
-            counter: {}
+            counter: {},
         });
-        this.manaDiscard = new Deck(game.manasManager, document.getElementById("mana-discard"), {
+        this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), {
             cardNumber: game.gamedatas.manas.discard_count,
-            counter: {}
+            counter: {},
         });
-        this.manaDeck = new Deck(game.manasManager, document.getElementById("mana-deck"), {
-            cardNumber: game.gamedatas.manas.deck_count,
-            topCard: { id: 100001 },
-            counter: {}
+        this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), {
+            cardNumber: 0,
+            counter: {},
+        });
+        game.gamedatas.spells.deck.forEach(function (card) {
+            _this.spellDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
+        });
+        game.gamedatas.manas.deck.forEach(function (card) {
+            _this.manaDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
         });
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
             slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
             mapCardToSlot: function (card) { return card.location_arg; },
-            direction: "column"
+            direction: "column",
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
     }
