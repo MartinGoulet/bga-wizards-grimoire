@@ -682,6 +682,8 @@ body > .card {
   width: var(--width);
   height: var(--height);
   border-radius: 5px;
+}
+#spell-pool .wg-spell-slot:empty {
   border: 1px solid darkslategray;
 }
 
@@ -727,7 +729,7 @@ body > .card {
   --height: 154px !important;
 }
 .player-table .mana-cooldown .mana-deck.deck[data-empty=false] {
-  border: none;
+  border-color: transparent;
 }
 .player-table .hand {
   --width: 100px;
