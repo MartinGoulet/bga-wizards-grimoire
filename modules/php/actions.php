@@ -65,7 +65,7 @@ trait ActionTrait {
         $this->checkAction('castSpell');
         $player_id = intval($this->getActivePlayerId());
         // Get the card and verify ownership
-        $spell = $this->assertIsCardInCurrentPlayerRepertoire($card_id, $player_id);
+        $spell = Assert::isCardInCurrentPlayerRepertoire($card_id, $player_id);
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
@@ -76,7 +76,7 @@ trait ActionTrait {
         }
 
         $manaCards = array_map(function ($card_id) use ($player_id) {
-            return $this->assertIsCardInCurrentPlayerHand($card_id, $player_id);
+            return Assert::isCardInCurrentPlayerHand($card_id, $player_id);
         }, $mana_ids);
 
         // Move card to the mana position below the spell
@@ -107,25 +107,7 @@ trait ActionTrait {
     //////////// 
 
 
-    private function assertIsCardInCurrentPlayerRepertoire($card_id, $player_id) {
-        $card = $this->deck_spells->getCard($card_id);
-
-        if ($card['location'] != CardLocation::PlayerSpellRepertoire($player_id)) {
-            throw new \BgaUserException($this->game->_("You don't own the card"));
-        }
-
-        return $card;
-    }
-
-    private function assertIsCardInCurrentPlayerHand(int $card_id, int $player_id) {
-        $card = $this->deck_manas->getCard($card_id);
-
-        if ($card['location'] !== CardLocation::Hand() || intval($card['location_arg']) !== $player_id) {
-            throw new \BgaUserException($this->_("You don't own the card"));
-        }
-
-        return $card;
-    }
+    
 
     private function executeCard($card, $args) {
         // Get info of the card
