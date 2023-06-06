@@ -24,6 +24,7 @@
 $this->card_types = [
   1 => [
     "name" => clienttranslate("Touch the void"),
+    "class" => "TouchTheVoid",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -32,6 +33,7 @@ $this->card_types = [
   ],
   2 => [
     "name" => clienttranslate("Overload"),
+    "class" => "Overload",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -40,6 +42,7 @@ $this->card_types = [
   ],
   3 => [
     "name" => clienttranslate("Mutation"),
+    "class" => "Mutation",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -48,6 +51,7 @@ $this->card_types = [
   ],
   4 => [
     "name" => clienttranslate("Stone crush"),
+    "class" => "StoneCrush",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -56,6 +60,7 @@ $this->card_types = [
   ],
   5 => [
     "name" => clienttranslate("Mist of pain"),
+    "class" => "MistOfPain",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -64,6 +69,7 @@ $this->card_types = [
   ],
   6 => [
     "name" => clienttranslate("Arcane tactics"),
+    "class" => "ArcaneTactics",
     "description" => clienttranslate("Gain 7 mana cards from the mana deck. Then place 4 mana cards from your hand on top of the mana deck in any order"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -72,6 +78,7 @@ $this->card_types = [
   ],
   7 => [
     "name" => clienttranslate("Freeze"),
+    "class" => "Freeze",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -80,6 +87,7 @@ $this->card_types = [
   ],
   8 => [
     "name" => clienttranslate("Energy reserve"),
+    "class" => "EnergyReserve",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -88,15 +96,16 @@ $this->card_types = [
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
+    "class" => "Fracture",
     "description" => clienttranslate("Gain 4 mana cards. You may move a mana card between 2 of your other spells"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "class" => "Fracture"
   ],
   10 => [
     "name" => clienttranslate("Gleam of hope"),
+    "class" => "GleamOfHope",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -106,6 +115,7 @@ $this->card_types = [
 
   11 => [
     "name" => clienttranslate("Rejuvenation"),
+    "class" => "Rejuvenation",
     "description" => clienttranslate("Choose 1: Gain 4 mana cards, or take 2 mana cards of any power from the discard pile."),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -114,6 +124,7 @@ $this->card_types = [
   ],
   12 => [
     "name" => clienttranslate("Shackled motion"),
+    "class" => "ShackledMotion",
     "description" => clienttranslate("Choose 1: Gain 4 mana cards, or your opponent must discard their hand"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -122,6 +133,7 @@ $this->card_types = [
   ],
   13 => [
     "name" => clienttranslate("Living wind"),
+    "class" => "LivingWind",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -130,6 +142,7 @@ $this->card_types = [
   ],
   14 => [
     "name" => clienttranslate("Coercive agreement"),
+    "class" => "CoerciveAgreement",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -139,6 +152,7 @@ $this->card_types = [
 
   15 => [
     "name" => clienttranslate("Arcane eye"),
+    "class" => "ArcaneEye",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -147,6 +161,7 @@ $this->card_types = [
   ],
   16 => [
     "name" => clienttranslate("Haste"),
+    "class" => "Haste",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -155,6 +170,7 @@ $this->card_types = [
   ],
   17 => [
     "name" => clienttranslate("Renewed fervor"),
+    "class" => "RenewedFervor",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -163,6 +179,7 @@ $this->card_types = [
   ],
   18 => [
     "name" => clienttranslate("Secret Oath"),
+    "class" => "SecretOath",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -171,16 +188,17 @@ $this->card_types = [
   ],
   19 => [
     "name" => clienttranslate("Time distortion"),
+    "class" => "TimeDistortion",
     "description" => clienttranslate("Pick up a mana card of 2 of your other spells"),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "class" => "TimeDistortion",
     "js_actions" => "actionTimeDistortion",
   ],
   20 => [
     "name" => clienttranslate("Betrayal"),
+    "class" => "Betrayal",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -190,6 +208,7 @@ $this->card_types = [
 
   21 => [
     "name" => clienttranslate("Blood lust"),
+    "class" => "BloodLust",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -198,6 +217,7 @@ $this->card_types = [
   ],
   22 => [
     "name" => clienttranslate("Delusion"),
+    "class" => "Delusion",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -206,15 +226,16 @@ $this->card_types = [
   ],
   23 => [
     "name" => clienttranslate("Vile laughter"),
+    "class" => "VileLaughter",
     "description" => clienttranslate("Deal 6 damage, minus the highest power mana in your hand"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
-    "class" => "VileLaughter",
   ],
   24 => [
     "name" => clienttranslate("Doom drop"),
+    "class" => "DoomDrop",
     "description" => clienttranslate("Each time a mana card is discarded of this spell, deal damage equal to that mana's power"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
@@ -224,6 +245,7 @@ $this->card_types = [
 
   25 => [
     "name" => clienttranslate("Energy storm"),
+    "class" => "EnergyStorm",
     "description" => clienttranslate("Deal 3 damage. Deal 1 additional damage for each 4 power mana in your hand"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -232,6 +254,7 @@ $this->card_types = [
   ],
   26 => [
     "name" => clienttranslate("Fire blast"),
+    "class" => "FireBlast",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -240,6 +263,7 @@ $this->card_types = [
   ],
   27 => [
     "name" => clienttranslate("Painful vision"),
+    "class" => "PainfulVision",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -248,6 +272,7 @@ $this->card_types = [
   ],
   28 => [
     "name" => clienttranslate("Possessed"),
+    "class" => "Possessed",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -256,6 +281,7 @@ $this->card_types = [
   ],
   29 => [
     "name" => clienttranslate("Second strike"),
+    "class" => "SecondStrike",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -264,6 +290,7 @@ $this->card_types = [
   ],
   30 => [
     "name" => clienttranslate("Trap attack"),
+    "class" => "TrapAttack",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -272,6 +299,7 @@ $this->card_types = [
   ],
   31 => [
     "name" => clienttranslate("Energy shield"),
+    "class" => "EnergyShield",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -280,6 +308,7 @@ $this->card_types = [
   ],
   32 => [
     "name" => clienttranslate("Growth"),
+    "class" => "Growth",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -288,6 +317,7 @@ $this->card_types = [
   ],
   33 => [
     "name" => clienttranslate("Fury"),
+    "class" => "Fury",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -296,6 +326,7 @@ $this->card_types = [
   ],
   34 => [
     "name" => clienttranslate("Hellstorm"),
+    "class" => "Hellstorm",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -306,6 +337,7 @@ $this->card_types = [
 
   35 => [
     "name" => clienttranslate("Shadow attack"),
+    "class" => "ShadowAttack",
     "description" => clienttranslate("Discard a mana card off 1 of your other spells. Deal damage and gain mana equal to that mana<s power"),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -314,6 +346,7 @@ $this->card_types = [
   ],
   36 => [
     "name" => clienttranslate("Crushing blow"),
+    "class" => "CrushingBlow",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -322,6 +355,7 @@ $this->card_types = [
   ],
   37 => [
     "name" => clienttranslate("False face"),
+    "class" => "FalseFace",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -330,6 +364,7 @@ $this->card_types = [
   ],
   38 => [
     "name" => clienttranslate("Quick swap"),
+    "class" => "QuickSwap",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
@@ -339,6 +374,7 @@ $this->card_types = [
 
   39 => [
     "name" => clienttranslate("Lullaby"),
+    "class" => "Lullaby",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -347,6 +383,7 @@ $this->card_types = [
   ],
   40 => [
     "name" => clienttranslate("Amnesia"),
+    "class" => "Amnesia",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -356,6 +393,7 @@ $this->card_types = [
 
   41 => [
     "name" => clienttranslate("Hoodwink"),
+    "class" => "Hoodwink",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -364,6 +402,7 @@ $this->card_types = [
   ],
   42 => [
     "name" => clienttranslate("Wild bloom"),
+    "class" => "WildBloom",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
@@ -372,6 +411,7 @@ $this->card_types = [
   ],
   43 => [
     "name" => clienttranslate("Tsunami"),
+    "class" => "Tsunami",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -380,6 +420,7 @@ $this->card_types = [
   ],
   44 => [
     "name" => clienttranslate("Twist of fate"),
+    "class" => "TwistOfFate",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -390,6 +431,7 @@ $this->card_types = [
 
   45 => [
     "name" => clienttranslate("Fatal flaw"),
+    "class" => "FatalFlaw",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -398,6 +440,7 @@ $this->card_types = [
   ],
   46 => [
     "name" => clienttranslate("Affliction"),
+    "class" => "Affliction",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -406,6 +449,7 @@ $this->card_types = [
   ],
   47 => [
     "name" => clienttranslate("Friendly truce"),
+    "class" => "FriendlyTruce",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -414,6 +458,7 @@ $this->card_types = [
   ],
   48 => [
     "name" => clienttranslate("Windstorm"),
+    "class" => "Windstorm",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -423,6 +468,7 @@ $this->card_types = [
 
   49 => [
     "name" => clienttranslate("Guilty bond"),
+    "class" => "GuiltyBond",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -431,6 +477,7 @@ $this->card_types = [
   ],
   50 => [
     "name" => clienttranslate("Trance state"),
+    "class" => "TranceState",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -440,6 +487,7 @@ $this->card_types = [
 
   51 => [
     "name" => clienttranslate("Renewal"),
+    "class" => "Renewal",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -448,6 +496,7 @@ $this->card_types = [
   ],
   52 => [
     "name" => clienttranslate("Toxic gift"),
+    "class" => "ToxicGift",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -456,6 +505,7 @@ $this->card_types = [
   ],
   53 => [
     "name" => clienttranslate("Wrath"),
+    "class" => "Wrath",
     "description" => clienttranslate("Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage."),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -464,6 +514,7 @@ $this->card_types = [
   ],
   54 => [
     "name" => clienttranslate("Reckless attack"),
+    "class" => "RecklessAttack",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
@@ -474,6 +525,7 @@ $this->card_types = [
 
   55 => [
     "name" => clienttranslate("Shared power"),
+    "class" => "SharedPower",
     "description" => clienttranslate("You may give your opponent 1 mana card from your hand. If you do, gain 4 mana cards"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -482,6 +534,7 @@ $this->card_types = [
   ],
   56 => [
     "name" => clienttranslate("Sleight of hand"),
+    "class" => "SleightOfHand",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -490,6 +543,7 @@ $this->card_types = [
   ],
   57 => [
     "name" => clienttranslate("Soul pact"),
+    "class" => "SoulPact",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -498,6 +552,7 @@ $this->card_types = [
   ],
   58 => [
     "name" => clienttranslate("Mirror image"),
+    "class" => "MirrorImage",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -507,6 +562,7 @@ $this->card_types = [
 
   59 => [
     "name" => clienttranslate("Battle vision"),
+    "class" => "BattleVision",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -515,6 +571,7 @@ $this->card_types = [
   ],
   60 => [
     "name" => clienttranslate("Silent support"),
+    "class" => "SilentSupport",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_DELAYED,
@@ -525,15 +582,16 @@ $this->card_types = [
 
   61 => [
     "name" => clienttranslate("Power hungry"),
+    "class" => "PowerHungry",
     "description" => clienttranslate("Both players basic attack mana cards go to your hand instead of the discard pile"),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "class" => "PowerHungry",
   ],
   62 => [
     "name" => clienttranslate("Sneaky deal"),
+    "class" => "SneakyDeal",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -542,6 +600,7 @@ $this->card_types = [
   ],
   63 => [
     "name" => clienttranslate("Puppetmaster"),
+    "class" => "Puppetmaster",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_UTILITY,
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
@@ -550,6 +609,7 @@ $this->card_types = [
   ],
   64 => [
     "name" => clienttranslate("Contamination"),
+    "class" => "Contamination",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -559,6 +619,7 @@ $this->card_types = [
 
   65 => [
     "name" => clienttranslate("Dance of pain"),
+    "class" => "DanceOfPain",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -567,6 +628,7 @@ $this->card_types = [
   ],
   66 => [
     "name" => clienttranslate("Drain soul"),
+    "class" => "DrainSoul",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -575,6 +637,7 @@ $this->card_types = [
   ],
   67 => [
     "name" => clienttranslate("Ice Storm"),
+    "class" => "IceStorm",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -583,6 +646,7 @@ $this->card_types = [
   ],
   68 => [
     "name" => clienttranslate("AfterShock"),
+    "class" => "AfterShock",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -592,6 +656,7 @@ $this->card_types = [
 
   69 => [
     "name" => clienttranslate("Bad fortune"),
+    "class" => "BadFortune",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
@@ -600,6 +665,7 @@ $this->card_types = [
   ],
   70 => [
     "name" => clienttranslate("Force of nature"),
+    "class" => "ForceOfNature",
     "description" => clienttranslate(""),
     "type" => WG_SPELL_TYPE_DAMAGE,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
