@@ -43,6 +43,9 @@ class SelectManaStates implements StateHandler {
                this.game.actionManager.addArgument(selected_cards.join(","));
                this.game.actionManager.activateNextAction();
             });
+         } else {
+            this.game.actionManager.addArgument(selected_cards.join(","));
+            this.game.actionManager.activateNextAction();
          }
       };
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);

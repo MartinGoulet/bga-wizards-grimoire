@@ -2167,6 +2167,10 @@ var SelectManaStates = (function () {
                     _this.game.actionManager.activateNextAction();
                 });
             }
+            else {
+                _this.game.actionManager.addArgument(selected_cards.join(","));
+                _this.game.actionManager.activateNextAction();
+            }
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         this.game.addActionButtonClientCancel();
