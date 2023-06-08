@@ -10,10 +10,16 @@ use WizardsGrimoire\Objects\CardLocation;
 
 abstract class BaseCard {
 
+    /** @var int */
+    public $owner;
+
     public function castSpell($args) {
         throw new BgaSystemException('Not implemented : castSpell of ' . get_class($this));
     }
 
+    public function onAfterBasicAttack($mana_id) {
+
+    }
 
     protected function dealDamage(int $damage, int $opponent_id = -1) {
 
