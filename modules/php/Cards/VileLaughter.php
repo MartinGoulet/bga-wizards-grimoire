@@ -12,14 +12,7 @@ class VileLaughter extends BaseCard {
         $player_id = Game::get()->getActivePlayerId();
         $cards = Game::get()->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id, 'card_type');
 
-        if(sizeof($cards) === 0) {
-            $max_value = 0;
-        } else {
-            $max_value = max(array_values(array_map(function ($card) {
-                return $card['card_type'];
-            }, $cards)));
-        }
-
+        $max_value = Game::getMaxManaCardValue($cards);
         $this->dealDamage(6 - $max_value);
     }
 }

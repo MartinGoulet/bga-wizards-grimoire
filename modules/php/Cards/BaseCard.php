@@ -39,12 +39,16 @@ abstract class BaseCard {
         );
     }
 
-    protected function drawManaCards(int $nbr) 
+    protected function drawManaCards(int $nbr, int $player_id = 0) 
     {
-        $playerId = Players::getPlayerId();
+        if($player_id == 0) {
+            $playerId = Players::getPlayerId();
+        }
         $mana_cards = Game::get()->deck_manas->pickCards($nbr, CardLocation::Deck(), $playerId);
 
         Notifications::drawManaCards($playerId, $mana_cards);
+
+        return $mana_cards;
     }
 
     protected function getCardName() {

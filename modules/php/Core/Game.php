@@ -62,4 +62,13 @@ class Game {
     public static function getSpellCard($card) {
         return Game::get()->card_types[$card['type']];
     }
+
+    public static function getMaxManaCardValue($cards) {
+        if($cards == null || sizeof($cards) === 0) {
+            return 0;
+        }
+        return max(array_values(array_map(function ($card) {
+            return $card['card_type'];
+        }, $cards)));
+    }
 }
