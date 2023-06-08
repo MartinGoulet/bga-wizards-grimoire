@@ -38,6 +38,7 @@ interface CardType {
    cost: number;
    icon: "+" | "++" | "scroll";
    js_actions?: string[] | string;
+   debug: "red" | "yellow" | "green";
 }
 
 interface SpellCard extends Card {
