@@ -19,7 +19,7 @@ class LivingWind extends BaseCard {
         foreach ($spells as $card_id => $spell) {
             $pos = intval($spell['location_arg']);
             $count = Game::Get()->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $pos));
-            if($count > 0) {
+            if ($count > 0) {
                 $total--;
             }
         }

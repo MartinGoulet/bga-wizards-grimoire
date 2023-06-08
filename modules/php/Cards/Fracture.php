@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use BgaSystemException;
 use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;

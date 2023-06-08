@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
 class Fury extends BaseCard {
@@ -12,14 +13,13 @@ class Fury extends BaseCard {
         $opponent_id = Players::getOpponentId();
 
         $total = 0;
-        for ($i=1; $i <= 6; $i++) { 
+        for ($i = 1; $i <= 6; $i++) {
             $count = Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($opponent_id, $i));
-            if($count > 0) {
+            if ($count > 0) {
                 $total++;
             }
         }
 
         $this->dealDamage($total);
     }
-
 }

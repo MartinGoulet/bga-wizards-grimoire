@@ -16,5 +16,4 @@ class TranceState extends BaseCard {
         $damage = max([3 - $hand_count, 0]);
         $this->dealDamage($damage);
     }
-
 }

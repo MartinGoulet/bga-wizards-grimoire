@@ -19,7 +19,7 @@ class SpellCardManager extends CardManager<SpellCard> {
             if (div.childNodes.length == 1 && card.type) {
                const helpMarkerId = `${this.getId(card)}-help-marker`;
                // TODO : Remove before production
-               const color = isDebug ? "white" : this.game.getCardType(card).debug;
+               const color = !isDebug ? "white" : this.game.getCardType(card).debug;
                div.insertAdjacentHTML(
                   "afterbegin",
                   `<div id="${helpMarkerId}" class="help-marker">

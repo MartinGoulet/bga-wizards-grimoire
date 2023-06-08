@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
 class Betrayal extends BaseCard {
@@ -13,5 +14,4 @@ class Betrayal extends BaseCard {
 
         $this->drawManaCards(3, Players::getOpponentId());
     }
-
 }

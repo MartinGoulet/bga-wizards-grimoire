@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -13,16 +14,15 @@ class Delusion extends BaseCard {
 
         $this->dealDamage(3);
 
-        if(sizeof($args) == 1) {
-            $player_id = Player::getPlayerId();
+        if (sizeof($args) == 1) {
+            $player_id = Players::getPlayerId();
             $opponent_id = Players::getOpponentId();
             $opponent_stack_pos = intval(array_shift($args));
-            $card = Game::get()->$deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($opponent_id, $opponent_stack_pos));
-            if($card !== null) {
+            $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($opponent_id, $opponent_stack_pos));
+            if ($card !== null) {
                 $card_after = Game::get()->deck_manas->pickCard(CardLocation::PlayerManaCoolDown($opponent_id, $opponent_stack_pos), $player_id);
                 Notifications::moveManaCard($player_id, [$card], [$card_after]);
             }
         }
     }
-
 }

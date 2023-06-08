@@ -3,6 +3,8 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
 class ArcaneEye extends BaseCard {
@@ -16,18 +18,17 @@ class ArcaneEye extends BaseCard {
         $cards_after = [];
 
         foreach ($spells as $card_id => $spell) {
-            $card_type = Game::getSpellCard($card);
-            if(intval($card_type['cost']) >= 3) {
+            $card_type = Game::getSpellCard($spell);
+            if (intval($card_type['cost']) >= 3) {
                 $pos = intval($spell['location_arg']);
                 $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $pos));
-                if($card != null) {
+                if ($card != null) {
                     $cards_before[] = $card;
-                    $cards_after[] = Game::get()->deck_manas->pickCard(CardLocation::PlayerManaCoolDown($player_id, $pos));
+                    $cards_after[] = Game::get()->deck_manas->pickCard(CardLocation::PlayerManaCoolDown($player_id, $pos), $player_id);
                 }
             }
         }
 
         Notifications::moveManaCard($player_id, $cards_before, $cards_after);
     }
-
 }

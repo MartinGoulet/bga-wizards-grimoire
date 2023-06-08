@@ -45,7 +45,6 @@ class TableCenter {
       game.gamedatas.spells.discard.forEach((card) => {
          this.spellDiscard.addCard(card);
       });
-      debugger;
       const sortAscending = (a: ManaCard, b: ManaCard) => Number(a.location_arg) - Number(b.location_arg);
       game.gamedatas.manas.discard.sort(sortAscending).forEach((card) => {
          this.manaDiscard.addCard(card);

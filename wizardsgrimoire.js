@@ -1812,7 +1812,7 @@ var SpellCardManager = (function (_super) {
                 div.classList.add("wg-card-spell-front");
                 if (div.childNodes.length == 1 && card.type) {
                     var helpMarkerId_1 = "".concat(_this.getId(card), "-help-marker");
-                    var color = isDebug ? "white" : _this.game.getCardType(card).debug;
+                    var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
                     div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId_1, "\" class=\"help-marker\">\n                     <svg class=\"feather feather-help-circle\" fill=\"").concat(color, "\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n                  </div>"));
                     game.setTooltip(helpMarkerId_1, _this.getTooltip(card));
                     document.getElementById(helpMarkerId_1).addEventListener("click", function () {
@@ -1936,7 +1936,6 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
         log("onMoveManaCards", cards_before, cards_after);
-        debugger;
         var _loop_3 = function (index) {
             var before = cards_before[index];
             var after = cards_after.find(function (x) { return x.id == before.id; });
@@ -2190,7 +2189,6 @@ var TableCenter = (function () {
         game.gamedatas.spells.discard.forEach(function (card) {
             _this.spellDiscard.addCard(card);
         });
-        debugger;
         var sortAscending = function (a, b) { return Number(a.location_arg) - Number(b.location_arg); };
         game.gamedatas.manas.discard.sort(sortAscending).forEach(function (card) {
             _this.manaDiscard.addCard(card);
