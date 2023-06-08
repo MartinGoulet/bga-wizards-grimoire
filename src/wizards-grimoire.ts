@@ -18,6 +18,7 @@ interface WizardsGrimoire
    ): void;
    fadeOutAndDestroy(id: string, duration?: number, delay?: number): void;
    showMessage(msg: string, type: "info" | "error" | "only_to_log"): void;
+   updatePlayerOrdering(): void;
 }
 
 class WizardsGrimoire
@@ -136,7 +137,8 @@ class WizardsGrimoire
    }
 
    private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
-      gamedatas.playerorder.forEach((player_id) => {
+      debugger;
+      gamedatas.players_order.forEach((player_id) => {
          const player = gamedatas.players[Number(player_id)];
          const table = new PlayerTable(this, player);
          this.playersTables.push(table);

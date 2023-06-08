@@ -239,6 +239,8 @@ class WizardsGrimoire extends Table {
             $result['player_board'][$player_id]['hand'] = array_values($cards);
         }
 
+        $result['players_order'] = array_keys(Players::getPlayersInOrder());
+
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
 

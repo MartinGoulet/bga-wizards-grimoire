@@ -40,4 +40,25 @@ class Players extends \APP_DbObject {
     public static function setPlayerLife(int $player_id, int $life) {
         self::DbQuery("UPDATE player SET player_score = $life WHERE player_id = $player_id");
     }
+
+    public static function getPlayersInOrder() {
+        $result = [];
+
+        $players = Game::get()->loadPlayersBasicInfos();
+        $next_player = Game::get()->getNextPlayerTable();
+        $player_id = Players::getPlayerId();
+
+        // Check for spectator
+        if (!key_exists($player_id, $players)) {
+            $player_id = $next_player[0];
+        }
+
+        // Build array starting with current player
+        for ($i = 0; $i < count($players); $i++) {
+            $result[$player_id] = $players[$player_id];
+            $player_id = $next_player[$player_id];
+        }
+
+        return $result;
+    }
 }

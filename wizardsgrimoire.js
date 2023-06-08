@@ -1426,7 +1426,8 @@ var WizardsGrimoire = (function () {
     };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
-        gamedatas.playerorder.forEach(function (player_id) {
+        debugger;
+        gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
             var table = new PlayerTable(_this, player);
             _this.playersTables.push(table);
