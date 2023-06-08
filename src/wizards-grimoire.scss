@@ -6,15 +6,15 @@
 
 #table {
    margin-top: 20px;
+   display: flex;
+   justify-content: center;
 }
 
 #tables-and-center {
    position: relative;
    display: flex;
-   // justify-content: center;
-   justify-content: space-evenly;
+   justify-content: center;
    gap: 20px;
-   // flex-direction: column;
    align-items: center;
    flex-flow: wrap;
 

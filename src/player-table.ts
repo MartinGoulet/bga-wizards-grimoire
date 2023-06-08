@@ -95,7 +95,6 @@ class PlayerTable {
    }
 
    public async onMoveManaCard(before: ManaCard, after: ManaCard) {
-      debugger;
       const stockBeforeManager = this.game.manasManager.getCardStock(before);
       const stockBefore = this.getStock(before);
       const stockAfter = this.getStock(after);

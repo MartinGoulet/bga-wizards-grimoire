@@ -1,14 +1,16 @@
 #table-center {
    display: flex;
+   justify-content: center;
+   width: 732px;
    gap: 20px;
 }
 
 #spell-pool {
+   width: 732px;
    max-height: 400px;
    align-content: center;
    --width: 120px;
    --height: 168px;
-   width: calc((var(--width) + var(--gap)) * 4);
 
    .wg-spell-slot {
       width: var(--width);

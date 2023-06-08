@@ -137,7 +137,6 @@ class WizardsGrimoire
    }
 
    private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
-      debugger;
       gamedatas.players_order.forEach((player_id) => {
          const player = gamedatas.players[Number(player_id)];
          const table = new PlayerTable(this, player);

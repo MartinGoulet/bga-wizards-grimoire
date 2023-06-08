@@ -1426,7 +1426,6 @@ var WizardsGrimoire = (function () {
     };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
-        debugger;
         gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
             var table = new PlayerTable(_this, player);
@@ -1795,7 +1794,6 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
         log("onMoveManaCards", cards_before, cards_after);
-        debugger;
         for (var index = 0; index < nbr; index++) {
             var before = cards_before[index];
             var after = cards_after[index];
@@ -1954,7 +1952,6 @@ var PlayerTable = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var stockBeforeManager, stockBefore, stockAfter, newCard;
             return __generator(this, function (_a) {
-                debugger;
                 stockBeforeManager = this.game.manasManager.getCardStock(before);
                 stockBefore = this.getStock(before);
                 stockAfter = this.getStock(after);

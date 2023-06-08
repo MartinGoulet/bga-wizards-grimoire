@@ -668,15 +668,17 @@ body > .card {
 
 #table-center {
   display: flex;
+  justify-content: center;
+  width: 732px;
   gap: 20px;
 }
 
 #spell-pool {
+  width: 732px;
   max-height: 400px;
   align-content: center;
   --width: 120px;
   --height: 168px;
-  width: calc((var(--width) + var(--gap)) * 4);
 }
 #spell-pool .wg-spell-slot {
   width: var(--width);
@@ -743,12 +745,14 @@ body > .card {
 
 #table {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 #tables-and-center {
   position: relative;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   gap: 20px;
   align-items: center;
   flex-flow: wrap;
