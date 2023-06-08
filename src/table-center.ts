@@ -17,10 +17,18 @@ class TableCenter {
             hideWhenEmpty: false,
          },
       };
-      this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
-      this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
-      this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), settings);
-      this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+      this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
+      this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+      this.spellDiscard = new VisibleDeck(
+         game.spellsManager,
+         document.getElementById("spell-discard"),
+         settings,
+      );
+      this.manaDiscard = new VisibleDeck(
+         game.manasManager,
+         document.getElementById("mana-discard"),
+         settings,
+      );
       this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
          slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
          slotClasses: ["wg-spell-slot"],
@@ -37,7 +45,9 @@ class TableCenter {
       game.gamedatas.spells.discard.forEach((card) => {
          this.spellDiscard.addCard(card);
       });
-      game.gamedatas.manas.discard.forEach((card) => {
+      debugger;
+      const sortAscending = (a: ManaCard, b: ManaCard) => Number(a.location_arg) - Number(b.location_arg);
+      game.gamedatas.manas.discard.sort(sortAscending).forEach((card) => {
          this.manaDiscard.addCard(card);
       });
       this.spellPool.addCards(game.gamedatas.slot_cards);

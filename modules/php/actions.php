@@ -79,6 +79,7 @@ trait ActionTrait {
             return Assert::isCardInHand($card_id, $player_id);
         }, $mana_ids);
 
+        
         // Move card to the mana position below the spell
         foreach ($mana_cards_before as $card_id => $card) {
             $this->deck_manas->insertCardOnExtremePosition(

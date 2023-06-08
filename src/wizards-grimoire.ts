@@ -206,6 +206,9 @@ class WizardsGrimoire
       document.querySelectorAll(".wg-selectable").forEach((node) => {
          node.classList.remove("wg-selectable");
       });
+      document.querySelectorAll(".wg-deck-was-selected").forEach((node) => {
+         node.classList.remove("wg-deck-was-selected");
+      });
    }
 
    public setTooltip(id: string, html: string) {

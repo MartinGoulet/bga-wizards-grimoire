@@ -6,13 +6,24 @@ class SelectManaStates implements StateHandler {
    onEnteringState(args: SelectManaArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
 
-      const { card, player_id, count } = args;
+      const { exclude, player_id, count } = args;
       this.player_table = this.game.getPlayerTable(player_id);
 
-      const handleChange = () => {
-         const nbr_cards_selected = this.getManaDecks().filter(
-            (x) => x.deck.getSelection().length > 0,
-         ).length;
+      const handleChange = (selection: ManaCard[], lastChange: ManaCard) => {
+         let nbr_cards_selected = this.player_table
+            .getManaDecks(exclude)
+            .filter((x) => x.getSelection().length > 0).length;
+
+         // Single selection
+         if (args.exact && args.count == 1 && nbr_cards_selected > 1) {
+            this.player_table.getManaDecks(exclude).forEach((deck) => {
+               if (!deck.contains(lastChange)) {
+                  deck.unselectAll();
+               }
+            });
+            nbr_cards_selected = 1;
+         }
+
          if (args.exact) {
             this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected == count);
          } else {
@@ -20,16 +31,14 @@ class SelectManaStates implements StateHandler {
          }
       };
 
-      this.getManaDecks().forEach(({ position, deck }) => {
-         if (position != card.location_arg && deck.getCardNumber() > 0) {
-            deck.setSelectionMode("single");
-            deck.onSelectionChange = handleChange;
-         }
+      this.player_table.getManaDecks(exclude).forEach((deck) => {
+         deck.setSelectionMode("single");
+         deck.onSelectionChange = handleChange;
       });
    }
 
    onLeavingState(): void {
-      this.getManaDecks().forEach(({ deck }) => {
+      this.player_table.getManaDecks().forEach((deck) => {
          deck.setSelectionMode("none");
          deck.onSelectionChange = null;
       });
@@ -37,9 +46,10 @@ class SelectManaStates implements StateHandler {
 
    onUpdateActionButtons(args: SelectManaArgs): void {
       const handleConfirm = () => {
-         const selected_cards = this.getManaDecks()
-            .filter((x) => x.deck.getSelection().length > 0)
-            .map((x) => x.deck.getSelection()[0].id);
+         const selected_cards = this.player_table
+            .getManaDecks(args.exclude)
+            .filter((x) => x.getSelection().length > 0)
+            .map((x) => x.getSelection()[0].id);
 
          if (selected_cards.length < args.count) {
             if (!args.exact) {
@@ -59,16 +69,7 @@ class SelectManaStates implements StateHandler {
    }
 
    restoreGameState() {
-      this.getManaDecks().forEach((deck) => deck.deck.unselectAll());
-   }
-
-   private getManaDecks() {
-      return [1, 2, 3, 4, 5, 6].map((position: number) => {
-         return {
-            position,
-            deck: this.player_table.mana_cooldown[position],
-         };
-      });
+      this.player_table.getManaDecks().forEach((deck) => deck.unselectAll());
    }
 }
 
@@ -77,4 +78,5 @@ interface SelectManaArgs {
    card: SpellCard;
    count: number;
    exact: boolean;
+   exclude: number[];
 }

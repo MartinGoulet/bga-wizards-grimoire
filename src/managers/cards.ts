@@ -22,7 +22,7 @@ class SpellCardManager extends CardManager<SpellCard> {
                   "afterbegin",
                   `<div id="${helpMarkerId}" class="help-marker">
                      <svg class="feather feather-help-circle" fill="white" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
-                  </div>`
+                  </div>`,
                );
 
                game.setTooltip(helpMarkerId, this.getTooltip(card));
@@ -42,7 +42,7 @@ class SpellCardManager extends CardManager<SpellCard> {
             }
          },
          cardWidth: card_width,
-         cardHeight: card_height
+         cardHeight: card_height,
       });
    }
 
@@ -89,7 +89,13 @@ class ManaCardManager extends CardManager<ManaCard> {
             }
          },
          cardWidth: card_width,
-         cardHeight: card_height
+         cardHeight: card_height,
       });
+   }
+
+   getCardById(id: number) {
+      return this.getCardStock({ id } as ManaCard)
+         .getCards()
+         .find((x) => x.id == id);
    }
 }

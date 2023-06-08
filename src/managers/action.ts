@@ -29,16 +29,16 @@ class ActionManager {
    }
 
    public addAction(card: SpellCard) {
-      log("actionmanager.addAction", card);
       this.current_card = card;
+      const card_type = this.game.getCardType(card);
+      log("actionmanager.addAction", card, card_type);
 
-      const { js_actions } = this.game.getCardType(card);
-      if (!js_actions) {
+      if (!card_type.js_actions) {
          log("actionmanager.addAction no js_Actions");
-      } else if (Array.isArray(js_actions)) {
-         js_actions.forEach((action) => this.actions.push(action));
-      } else if (typeof js_actions === "string") {
-         this.actions.push(js_actions);
+      } else if (Array.isArray(card_type.js_actions)) {
+         card_type.js_actions.forEach((action) => this.actions.push(action));
+      } else if (typeof card_type.js_actions === "string") {
+         this.actions.push(card_type.js_actions);
       }
 
       log("actionmanager.actions values", this.actions);
@@ -90,6 +90,50 @@ class ActionManager {
       });
    }
 
+   private actionSelectManaFrom() {
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+
+      const emptyDecks = player_table
+         .getManaDeckWithSpellOver()
+         .filter((deck) => deck.isEmpty())
+         .map((deck) => deck.location);
+
+      const argsSuppl = {
+         exclude: emptyDecks,
+         ignore: null,
+      };
+
+      if (this.actions.length > 0 && this.actions[0] == "actionSelectManaTo") {
+         argsSuppl.ignore = () => {
+            // Remove the actionSelectManaTo
+            this.actions.shift();
+            this.activateNextAction();
+         };
+      }
+
+      const msgFrom = _("${you} must select ${nbr} mana card - source");
+      this.selectManaDeck(1, msgFrom, true, argsSuppl);
+   }
+
+   private actionSelectManaTo() {
+      const manaDeckPosition: number = Number(this.actions_args[this.actions_args.length - 1]);
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      player_table.mana_cooldown[manaDeckPosition].forceSelected();
+
+      const argsSuppl = {
+         exclude: [manaDeckPosition],
+      };
+
+      const msg = _("${you} must select ${nbr} mana card - destination");
+      this.selectManaDeck(1, msg, true, argsSuppl);
+   }
+
+   private actionShadowAttack() {
+      // const msg = _("${you} must select ${nbr} mana card to discard");
+      // this.selectMana(1, msg, true);
+      this.actionSelectManaFrom();
+   }
+
    private actionSharedPower() {
       const msg = _("${you} may select ${nbr} mana card to give to your opponent");
       this.selectManaHand(1, msg, false);
@@ -103,18 +147,24 @@ class ActionManager {
    ////////////////////////////////////////
    // Utilities
 
-   private selectMana(count: number, msg: string, exact: boolean) {
+   private selectMana(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
       const { name } = this.game.getCardType(this.current_card);
       msg = msg.replace("${nbr}", count.toString());
 
+      argsSuppl.exclude = argsSuppl.exclude ?? [];
+      argsSuppl.exclude.push(Number(this.current_card.location_arg));
+
+      const args = {
+         ...argsSuppl,
+         player_id: this.game.getPlayerId(),
+         card: this.current_card,
+         count,
+         exact,
+      };
+
       this.game.setClientState(states.client.selectMana, {
          descriptionmyturn: _(name) + " : " + msg,
-         args: {
-            player_id: this.game.getPlayerId(),
-            card: this.current_card,
-            count,
-            exact,
-         },
+         args,
       });
    }
 
@@ -130,6 +180,27 @@ class ActionManager {
             count,
             exact,
          },
+      });
+   }
+
+   private selectManaDeck(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
+      const { name } = this.game.getCardType(this.current_card);
+      msg = msg.replace("${nbr}", count.toString());
+
+      argsSuppl.exclude = argsSuppl.exclude ?? [];
+      argsSuppl.exclude.push(Number(this.current_card.location_arg));
+
+      const args = {
+         ...argsSuppl,
+         player_id: this.game.getPlayerId(),
+         card: this.current_card,
+         count,
+         exact,
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args,
       });
    }
 }

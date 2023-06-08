@@ -2,9 +2,20 @@
 
 namespace WizardsGrimoire\Core;
 
+use BgaSystemException;
 use WizardsGrimoire\Objects\CardLocation;
 
 class Assert {
+
+    public static function hasManaCardUnderSpell($deck_position, $player_id) {
+        $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $deck_position));
+
+        if ($card == null) {
+            throw new BgaSystemException("Card not found under the spell at position " . $deck_position);
+        }
+
+        return $card;
+    }
 
     public static function isCardInRepertoire($card_id, $player_id) {
         $card = Game::get()->deck_spells->getCard($card_id);

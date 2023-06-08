@@ -2,7 +2,7 @@ class PlayerTable {
    public player_id: number;
 
    public spell_repertoire: SlotStock<SpellCard>;
-   public mana_cooldown: { [pos: number]: Deck<ManaCard> } = {};
+   public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: LineStock<ManaCard>;
 
    private current_player: boolean;
@@ -43,12 +43,7 @@ class PlayerTable {
 
       for (let index = 1; index <= 6; index++) {
          const divDeck = document.getElementById(`player_table-${pId}-mana-deck-${index}`);
-         const deck = new Deck(game.manasManager, divDeck, {
-            cardNumber: 0,
-            counter: {},
-            autoRemovePreviousCards: false,
-         });
-         this.mana_cooldown[index] = deck;
+         this.mana_cooldown[index] = new ManaDeck(game.manasManager, divDeck, index);
       }
 
       const board: PlayerBoardInfo = game.gamedatas.player_board[pId];
@@ -76,6 +71,30 @@ class PlayerTable {
    public canCast(card: SpellCard): boolean {
       const { cost } = this.game.getCardType(card);
       return this.hand.getCards().length >= cost;
+   }
+
+   public getManaDecks(exclude: number[] = []) {
+      const positions = [];
+      for (let index = 1; index <= 6; index++) {
+         if (exclude.indexOf(index) < 0) {
+            positions.push(index);
+         }
+      }
+      return positions.map((position: number) => this.mana_cooldown[position]);
+   }
+
+   public getManaDeckWithSpellOver(exclude: number[] = []) {
+      const spellsPosition: number[] = this.spell_repertoire
+         .getCards()
+         .map((card) => Number(card.location_arg));
+
+      const positions = [];
+      for (let index = 1; index <= 6; index++) {
+         if (exclude.indexOf(index) < 0 && spellsPosition.indexOf(index) >= 0) {
+            positions.push(index);
+         }
+      }
+      return positions.map((position: number) => this.mana_cooldown[position]);
    }
 
    public onChooseSpell(card: SpellCard) {

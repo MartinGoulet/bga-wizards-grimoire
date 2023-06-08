@@ -1489,6 +1489,9 @@ var WizardsGrimoire = (function () {
         document.querySelectorAll(".wg-selectable").forEach(function (node) {
             node.classList.remove("wg-selectable");
         });
+        document.querySelectorAll(".wg-deck-was-selected").forEach(function (node) {
+            node.classList.remove("wg-deck-was-selected");
+        });
     };
     WizardsGrimoire.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
@@ -1530,22 +1533,109 @@ var cardId = 200000;
 function getCardId() {
     return cardId++;
 }
-var MyDeck = (function (_super) {
-    __extends(MyDeck, _super);
-    function MyDeck(manager, element, settings) {
+var HiddenDeck = (function (_super) {
+    __extends(HiddenDeck, _super);
+    function HiddenDeck(manager, element, settings) {
         var _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         return _this;
     }
-    MyDeck.prototype.addCard = function (card, animation, settings) {
-        if (!settings) {
-            settings = {};
-        }
-        settings.index = 0;
+    HiddenDeck.prototype.addCard = function (card, animation, settings) {
+        var _a;
+        settings = settings !== null && settings !== void 0 ? settings : {};
+        settings.index = (_a = settings.index) !== null && _a !== void 0 ? _a : 0;
         return _super.prototype.addCard.call(this, card, animation, settings);
     };
-    return MyDeck;
+    return HiddenDeck;
+}(Deck));
+var VisibleDeck = (function (_super) {
+    __extends(VisibleDeck, _super);
+    function VisibleDeck(manager, element, settings) {
+        var _this = _super.call(this, manager, element, settings) || this;
+        _this.manager = manager;
+        _this.element = element;
+        return _this;
+    }
+    VisibleDeck.prototype.addCard = function (card, animation, settings) {
+        var _a;
+        settings = settings !== null && settings !== void 0 ? settings : {};
+        settings.index = (_a = settings.index) !== null && _a !== void 0 ? _a : card.location_arg;
+        return _super.prototype.addCard.call(this, card, animation, settings);
+    };
+    return VisibleDeck;
+}(Deck));
+var ManaDeck = (function (_super) {
+    __extends(ManaDeck, _super);
+    function ManaDeck(manager, element, location) {
+        var _this = _super.call(this, manager, element, {
+            cardNumber: 0,
+            counter: {},
+            autoRemovePreviousCards: false,
+        }) || this;
+        _this.location = location;
+        _this.isDeckSelectable = false;
+        _this._isDeckSelected = false;
+        return _this;
+    }
+    Object.defineProperty(ManaDeck.prototype, "isDeckSelected", {
+        get: function () {
+            return this._isDeckSelected;
+        },
+        set: function (value) {
+            this._isDeckSelected = value;
+            this.element.classList.toggle("wg-deck-selected", this.isDeckSelected);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ManaDeck.prototype.addCard = function (card, animation, settings) {
+        settings = settings !== null && settings !== void 0 ? settings : {};
+        settings.index = Number(card.location_arg);
+        return _super.prototype.addCard.call(this, card, animation, settings);
+    };
+    ManaDeck.prototype.setDeckIsSelectable = function (value) {
+        this.isDeckSelectable = value;
+        if (!this.isDeckSelectable && this.isDeckSelected) {
+            this.isDeckSelected = false;
+        }
+    };
+    ManaDeck.prototype.bindClick = function () {
+        var _this = this;
+        var _a;
+        (_a = this.element) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function (event) {
+            if (_this.isDeckSelectable) {
+                _this.deckClick();
+            }
+            else {
+                var cardDiv_1 = event.target.closest(".card");
+                if (!cardDiv_1) {
+                    return;
+                }
+                var card = _this.cards.find(function (c) { return _this.manager.getId(c) == cardDiv_1.id; });
+                if (!card) {
+                    return;
+                }
+                _this.cardClick(card);
+            }
+        });
+    };
+    ManaDeck.prototype.deckClick = function () {
+        var _a;
+        if (this.isDeckSelectable) {
+            this.isDeckSelected = !this.isDeckSelected;
+            (_a = this.onDeckSelectionChanged) === null || _a === void 0 ? void 0 : _a.call(this);
+        }
+    };
+    ManaDeck.prototype.forceSelected = function () {
+        var _a;
+        (_a = this.element) === null || _a === void 0 ? void 0 : _a.classList.add("wg-deck-was-selected");
+    };
+    ManaDeck.prototype.unselectDeck = function () {
+        this.isDeckSelected = false;
+        this.element.classList.toggle("wg-deck-selected", this.isDeckSelected);
+    };
+    return ManaDeck;
 }(Deck));
 var ActionManager = (function () {
     function ActionManager(game) {
@@ -1572,17 +1662,17 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.addAction = function (card) {
         var _this = this;
-        log("actionmanager.addAction", card);
         this.current_card = card;
-        var js_actions = this.game.getCardType(card).js_actions;
-        if (!js_actions) {
+        var card_type = this.game.getCardType(card);
+        log("actionmanager.addAction", card, card_type);
+        if (!card_type.js_actions) {
             log("actionmanager.addAction no js_Actions");
         }
-        else if (Array.isArray(js_actions)) {
-            js_actions.forEach(function (action) { return _this.actions.push(action); });
+        else if (Array.isArray(card_type.js_actions)) {
+            card_type.js_actions.forEach(function (action) { return _this.actions.push(action); });
         }
-        else if (typeof js_actions === "string") {
-            this.actions.push(js_actions);
+        else if (typeof card_type.js_actions === "string") {
+            this.actions.push(card_type.js_actions);
         }
         log("actionmanager.actions values", this.actions);
         return this;
@@ -1621,6 +1711,39 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionSelectManaFrom = function () {
+        var _this = this;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var emptyDecks = player_table
+            .getManaDeckWithSpellOver()
+            .filter(function (deck) { return deck.isEmpty(); })
+            .map(function (deck) { return deck.location; });
+        var argsSuppl = {
+            exclude: emptyDecks,
+            ignore: null,
+        };
+        if (this.actions.length > 0 && this.actions[0] == "actionSelectManaTo") {
+            argsSuppl.ignore = function () {
+                _this.actions.shift();
+                _this.activateNextAction();
+            };
+        }
+        var msgFrom = _("${you} must select ${nbr} mana card - source");
+        this.selectManaDeck(1, msgFrom, true, argsSuppl);
+    };
+    ActionManager.prototype.actionSelectManaTo = function () {
+        var manaDeckPosition = Number(this.actions_args[this.actions_args.length - 1]);
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        player_table.mana_cooldown[manaDeckPosition].forceSelected();
+        var argsSuppl = {
+            exclude: [manaDeckPosition],
+        };
+        var msg = _("${you} must select ${nbr} mana card - destination");
+        this.selectManaDeck(1, msg, true, argsSuppl);
+    };
+    ActionManager.prototype.actionShadowAttack = function () {
+        this.actionSelectManaFrom();
+    };
     ActionManager.prototype.actionSharedPower = function () {
         var msg = _("${you} may select ${nbr} mana card to give to your opponent");
         this.selectManaHand(1, msg, false);
@@ -1629,17 +1752,17 @@ var ActionManager = (function () {
         var msg = _("${you} may select up to ${nbr} mana card");
         this.selectMana(2, msg, false);
     };
-    ActionManager.prototype.selectMana = function (count, msg, exact) {
+    ActionManager.prototype.selectMana = function (count, msg, exact, argsSuppl) {
+        var _a;
+        if (argsSuppl === void 0) { argsSuppl = {}; }
         var name = this.game.getCardType(this.current_card).name;
         msg = msg.replace("${nbr}", count.toString());
+        argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
+        argsSuppl.exclude.push(Number(this.current_card.location_arg));
+        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact });
         this.game.setClientState(states.client.selectMana, {
             descriptionmyturn: _(name) + " : " + msg,
-            args: {
-                player_id: this.game.getPlayerId(),
-                card: this.current_card,
-                count: count,
-                exact: exact,
-            },
+            args: args,
         });
     };
     ActionManager.prototype.selectManaHand = function (count, msg, exact) {
@@ -1653,6 +1776,19 @@ var ActionManager = (function () {
                 count: count,
                 exact: exact,
             },
+        });
+    };
+    ActionManager.prototype.selectManaDeck = function (count, msg, exact, argsSuppl) {
+        var _a;
+        if (argsSuppl === void 0) { argsSuppl = {}; }
+        var name = this.game.getCardType(this.current_card).name;
+        msg = msg.replace("${nbr}", count.toString());
+        argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
+        argsSuppl.exclude.push(Number(this.current_card.location_arg));
+        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact });
+        this.game.setClientState(states.client.selectManaDeck, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: args,
         });
     };
     return ActionManager;
@@ -1695,7 +1831,7 @@ var SpellCardManager = (function (_super) {
                 }
             },
             cardWidth: card_width,
-            cardHeight: card_height
+            cardHeight: card_height,
         }) || this;
         _this.game = game;
         return _this;
@@ -1736,11 +1872,16 @@ var ManaCardManager = (function (_super) {
                 }
             },
             cardWidth: card_width,
-            cardHeight: card_height
+            cardHeight: card_height,
         }) || this;
         _this.game = game;
         return _this;
     }
+    ManaCardManager.prototype.getCardById = function (id) {
+        return this.getCardStock({ id: id })
+            .getCards()
+            .find(function (x) { return x.id == id; });
+    };
     return ManaCardManager;
 }(CardManager));
 var ANIMATION_MS = 1500;
@@ -1794,10 +1935,15 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
         log("onMoveManaCards", cards_before, cards_after);
-        for (var index = 0; index < nbr; index++) {
+        debugger;
+        var _loop_3 = function (index) {
             var before = cards_before[index];
-            var after = cards_after[index];
-            this.game.getPlayerTable(player_id).onMoveManaCard(before, after);
+            var after = cards_after.find(function (x) { return x.id == before.id; });
+            this_1.game.getPlayerTable(player_id).onMoveManaCard(before, after);
+        };
+        var this_1 = this;
+        for (var index = 0; index < nbr; index++) {
+            _loop_3(index);
         }
     };
     NotificationManager.prototype.notif_onSpellCoolDown = function (notif) { };
@@ -1813,6 +1959,7 @@ var states = {
         castSpellWithMana: "client_castSpellWithMana",
         selectMana: "client_selectMana",
         selectManaHand: "client_selectManaHand",
+        selectManaDeck: "client_selectManaDeck",
     },
     server: {
         castSpell: "castSpell",
@@ -1828,6 +1975,7 @@ var StateManager = (function () {
         this.states = (_a = {},
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
             _a[states.client.selectMana] = new SelectManaStates(game),
+            _a[states.client.selectManaDeck] = new SelectManaDeckStates(game),
             _a[states.client.selectManaHand] = new SelectManaHandStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
@@ -1892,12 +2040,7 @@ var PlayerTable = (function () {
         });
         for (var index = 1; index <= 6; index++) {
             var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
-            var deck = new Deck(game.manasManager, divDeck, {
-                cardNumber: 0,
-                counter: {},
-                autoRemovePreviousCards: false,
-            });
-            this.mana_cooldown[index] = deck;
+            this.mana_cooldown[index] = new ManaDeck(game.manasManager, divDeck, index);
         }
         var board = game.gamedatas.player_board[pId];
         this.spell_repertoire.addCards(board.spells);
@@ -1917,6 +2060,31 @@ var PlayerTable = (function () {
     PlayerTable.prototype.canCast = function (card) {
         var cost = this.game.getCardType(card).cost;
         return this.hand.getCards().length >= cost;
+    };
+    PlayerTable.prototype.getManaDecks = function (exclude) {
+        var _this = this;
+        if (exclude === void 0) { exclude = []; }
+        var positions = [];
+        for (var index = 1; index <= 6; index++) {
+            if (exclude.indexOf(index) < 0) {
+                positions.push(index);
+            }
+        }
+        return positions.map(function (position) { return _this.mana_cooldown[position]; });
+    };
+    PlayerTable.prototype.getManaDeckWithSpellOver = function (exclude) {
+        var _this = this;
+        if (exclude === void 0) { exclude = []; }
+        var spellsPosition = this.spell_repertoire
+            .getCards()
+            .map(function (card) { return Number(card.location_arg); });
+        var positions = [];
+        for (var index = 1; index <= 6; index++) {
+            if (exclude.indexOf(index) < 0 && spellsPosition.indexOf(index) >= 0) {
+                positions.push(index);
+            }
+        }
+        return positions.map(function (position) { return _this.mana_cooldown[position]; });
     };
     PlayerTable.prototype.onChooseSpell = function (card) {
         this.spell_repertoire.addCard(card, {
@@ -2002,10 +2170,10 @@ var TableCenter = (function () {
                 hideWhenEmpty: false,
             },
         };
-        this.spellDeck = new MyDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
-        this.spellDiscard = new MyDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
-        this.manaDiscard = new MyDeck(game.manasManager, document.getElementById("mana-discard"), settings);
-        this.manaDeck = new MyDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+        this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
+        this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"), settings);
+        this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
+        this.manaDiscard = new VisibleDeck(game.manasManager, document.getElementById("mana-discard"), settings);
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
             slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
@@ -2021,7 +2189,9 @@ var TableCenter = (function () {
         game.gamedatas.spells.discard.forEach(function (card) {
             _this.spellDiscard.addCard(card);
         });
-        game.gamedatas.manas.discard.forEach(function (card) {
+        debugger;
+        var sortAscending = function (a, b) { return Number(a.location_arg) - Number(b.location_arg); };
+        game.gamedatas.manas.discard.sort(sortAscending).forEach(function (card) {
             _this.manaDiscard.addCard(card);
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
@@ -2221,10 +2391,20 @@ var SelectManaStates = (function () {
         var _this = this;
         if (!this.game.isCurrentPlayerActive())
             return;
-        var card = args.card, player_id = args.player_id, count = args.count;
+        var exclude = args.exclude, player_id = args.player_id, count = args.count;
         this.player_table = this.game.getPlayerTable(player_id);
-        var handleChange = function () {
-            var nbr_cards_selected = _this.getManaDecks().filter(function (x) { return x.deck.getSelection().length > 0; }).length;
+        var handleChange = function (selection, lastChange) {
+            var nbr_cards_selected = _this.player_table
+                .getManaDecks(exclude)
+                .filter(function (x) { return x.getSelection().length > 0; }).length;
+            if (args.exact && args.count == 1 && nbr_cards_selected > 1) {
+                _this.player_table.getManaDecks(exclude).forEach(function (deck) {
+                    if (!deck.contains(lastChange)) {
+                        deck.unselectAll();
+                    }
+                });
+                nbr_cards_selected = 1;
+            }
             if (args.exact) {
                 _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected == count);
             }
@@ -2232,17 +2412,13 @@ var SelectManaStates = (function () {
                 _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
             }
         };
-        this.getManaDecks().forEach(function (_a) {
-            var position = _a.position, deck = _a.deck;
-            if (position != card.location_arg && deck.getCardNumber() > 0) {
-                deck.setSelectionMode("single");
-                deck.onSelectionChange = handleChange;
-            }
+        this.player_table.getManaDecks(exclude).forEach(function (deck) {
+            deck.setSelectionMode("single");
+            deck.onSelectionChange = handleChange;
         });
     };
     SelectManaStates.prototype.onLeavingState = function () {
-        this.getManaDecks().forEach(function (_a) {
-            var deck = _a.deck;
+        this.player_table.getManaDecks().forEach(function (deck) {
             deck.setSelectionMode("none");
             deck.onSelectionChange = null;
         });
@@ -2250,9 +2426,10 @@ var SelectManaStates = (function () {
     SelectManaStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
-            var selected_cards = _this.getManaDecks()
-                .filter(function (x) { return x.deck.getSelection().length > 0; })
-                .map(function (x) { return x.deck.getSelection()[0].id; });
+            var selected_cards = _this.player_table
+                .getManaDecks(args.exclude)
+                .filter(function (x) { return x.getSelection().length > 0; })
+                .map(function (x) { return x.getSelection()[0].id; });
             if (selected_cards.length < args.count) {
                 if (!args.exact) {
                     var text = _("Are-you sure to not take all mana card?");
@@ -2271,18 +2448,85 @@ var SelectManaStates = (function () {
         this.game.addActionButtonClientCancel();
     };
     SelectManaStates.prototype.restoreGameState = function () {
-        this.getManaDecks().forEach(function (deck) { return deck.deck.unselectAll(); });
-    };
-    SelectManaStates.prototype.getManaDecks = function () {
-        var _this = this;
-        return [1, 2, 3, 4, 5, 6].map(function (position) {
-            return {
-                position: position,
-                deck: _this.player_table.mana_cooldown[position],
-            };
-        });
+        this.player_table.getManaDecks().forEach(function (deck) { return deck.unselectAll(); });
     };
     return SelectManaStates;
+}());
+var SelectManaDeckStates = (function () {
+    function SelectManaDeckStates(game) {
+        this.game = game;
+    }
+    SelectManaDeckStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var exclude = args.exclude, player_id = args.player_id, count = args.count;
+        this.player_table = this.game.getPlayerTable(player_id);
+        var decks = this.player_table.getManaDeckWithSpellOver(exclude);
+        var handleChange = function (lastDeck) {
+            var nbr_decks_selected = decks.filter(function (x) { return x.isDeckSelected; }).length;
+            if (args.exact && args.count == 1 && nbr_decks_selected > 1) {
+                decks.forEach(function (deck) {
+                    if (deck !== lastDeck) {
+                        deck.unselectDeck();
+                    }
+                });
+                nbr_decks_selected = 1;
+            }
+            if (args.exact) {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_decks_selected == count);
+            }
+            else {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_decks_selected <= count);
+            }
+        };
+        decks.forEach(function (deck) {
+            deck.setDeckIsSelectable(true);
+            deck.onDeckSelectionChanged = function () { return handleChange(deck); };
+        });
+    };
+    SelectManaDeckStates.prototype.onLeavingState = function () {
+        this.player_table.getManaDecks().forEach(function (deck) {
+            deck.setDeckIsSelectable(false);
+            deck.onDeckSelectionChanged = null;
+        });
+    };
+    SelectManaDeckStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var decks = _this.player_table.getManaDeckWithSpellOver(args.exclude);
+            var selected_decks = decks.filter(function (x) { return x.isDeckSelected; }).map(function (x) { return x.location; });
+            if (selected_decks.length < args.count) {
+                if (!args.exact) {
+                    var text = _("Are-you sure to not take all mana card?");
+                    _this.game.confirmationDialog(text, function () {
+                        _this.game.actionManager.addArgument(selected_decks.join(","));
+                        _this.game.actionManager.activateNextAction();
+                    });
+                }
+            }
+            else {
+                _this.game.actionManager.addArgument(selected_decks.join(","));
+                _this.game.actionManager.activateNextAction();
+            }
+        };
+        var handleIgnore = function () {
+            var text = _("Are-you sure you want to ignore this effect?");
+            _this.game.confirmationDialog(text, args.ignore);
+        };
+        this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        if (args.ignore) {
+            this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
+        }
+        this.game.addActionButtonClientCancel();
+    };
+    SelectManaDeckStates.prototype.restoreGameState = function () {
+        this.player_table.getManaDecks().forEach(function (deck) {
+            deck.setDeckIsSelectable(false);
+            deck.onDeckSelectionChanged = null;
+        });
+    };
+    return SelectManaDeckStates;
 }());
 var SelectManaHandStates = (function () {
     function SelectManaHandStates(game) {
