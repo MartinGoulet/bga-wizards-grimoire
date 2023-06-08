@@ -43,9 +43,10 @@ class PlayerTable {
 
       for (let index = 1; index <= 6; index++) {
          const divDeck = document.getElementById(`player_table-${pId}-mana-deck-${index}`);
-         const deck = new MyDeck(game.manasManager, divDeck, {
+         const deck = new Deck(game.manasManager, divDeck, {
             cardNumber: 0,
             counter: {},
+            autoRemovePreviousCards: false,
          });
          this.mana_cooldown[index] = deck;
       }
@@ -54,7 +55,10 @@ class PlayerTable {
       this.spell_repertoire.addCards(board.spells);
 
       Object.keys(board.manas).forEach((pos: string) => {
-         this.mana_cooldown[Number(pos)].addCards(board.manas[pos], null, { index: 0 });
+         const deck = this.mana_cooldown[Number(pos)];
+         board.manas[pos].forEach((card) => {
+            deck.addCard(card, null, { index: 0 });
+         });
       });
 
       this.hand = new LineStock(
@@ -88,5 +92,42 @@ class PlayerTable {
          manaDeck.setCardNumber(manaDeck.getCardNumber(), topHiddenCard);
          await this.hand.addCard(card);
       }
+   }
+
+   public async onMoveManaCard(before: ManaCard, after: ManaCard) {
+      const stockBeforeManager = this.game.manasManager.getCardStock(before);
+      const stockBefore = this.getStock(before);
+      const stockAfter = this.getStock(after);
+
+      if (stockBefore !== stockBeforeManager) {
+         // The card already move (client state)
+         return;
+      }
+      debugger;
+      if (!stockAfter.contains(after)) {
+         const newCard: ManaCard = { ...after, isHidden: this.isStockHidden(stockAfter) };
+         stockAfter.addCard(newCard);
+      }
+   }
+
+   private isStockHidden(stock: CardStock<ManaCard>) {
+      return (this.hand == stock && !this.current_player) || this.game.tableCenter.manaDeck == stock;
+   }
+
+   private getStock(card: ManaCard): CardStock<ManaCard> {
+      if (card.location == "hand") {
+         return this.hand;
+      }
+
+      if (card.location == "deck") {
+         return this.game.tableCenter.manaDeck;
+      }
+
+      if (card.location == "discard") {
+         return this.game.tableCenter.manaDeck;
+      }
+
+      const index = Number(card.location.substring(card.location.length - 1));
+      return this.mana_cooldown[index];
    }
 }

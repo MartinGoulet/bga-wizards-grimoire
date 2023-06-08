@@ -6,7 +6,8 @@ class NotificationManager {
    setup() {
       this.subscribeEvent("onChooseSpell", 500);
       this.subscribeEvent("onRefillSpell", 500);
-      this.subscribeEvent("onDrawManaCards", 1000);
+      this.subscribeEvent("onDrawManaCards", 1000, true);
+      this.subscribeEvent("onMoveManaCards", 1000, true);
       this.subscribeEvent("onSpellCoolDown", 1000);
       this.subscribeEvent("onHealthChanged", 500);
 
@@ -14,18 +15,20 @@ class NotificationManager {
          "message",
          (notif) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
       );
-
-      this.game.notifqueue.setIgnoreNotificationCheck(
-         "onDrawManaCards",
-         (notif) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
-      );
    }
 
-   private subscribeEvent(eventName: string, time?: number) {
+   private subscribeEvent(eventName: string, time: number, setIgnore: boolean = false) {
       try {
          dojo.subscribe(eventName, this, "notif_" + eventName);
          if (time) {
             this.game.notifqueue.setSynchronous(eventName, time);
+         }
+         if (setIgnore) {
+            this.game.notifqueue.setIgnoreNotificationCheck(
+               eventName,
+               (notif) =>
+                  notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
+            );
          }
       } catch {
          console.error("NotificationManager::subscribeEvent", eventName);
@@ -47,6 +50,16 @@ class NotificationManager {
       const { player_id, cards } = notif.args;
       log("onDrawManaCards", cards);
       this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+   }
+
+   private notif_onMoveManaCards(notif: INotification<NotifMoveManaCardsArgs>) {
+      const { player_id, cards_before, cards_after, nbr } = notif.args;
+      log("onMoveManaCards", cards_before, cards_after);
+      for (let index = 0; index < nbr; index++) {
+         const before = cards_before[index];
+         const after = cards_after[index];
+         this.game.getPlayerTable(player_id).onMoveManaCard(before, after);
+      }
    }
 
    private notif_onSpellCoolDown(notif: INotification<NotifSpellCoolDownArgs>) {}

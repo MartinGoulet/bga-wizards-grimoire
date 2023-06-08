@@ -65,7 +65,7 @@ trait ActionTrait {
         $this->checkAction('castSpell');
         $player_id = intval($this->getActivePlayerId());
         // Get the card and verify ownership
-        $spell = Assert::isCardInCurrentPlayerRepertoire($card_id, $player_id);
+        $spell = Assert::isCardInRepertoire($card_id, $player_id);
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
@@ -75,12 +75,12 @@ trait ActionTrait {
             throw new BgaSystemException("Not enough mana");
         }
 
-        $manaCards = array_map(function ($card_id) use ($player_id) {
-            return Assert::isCardInCurrentPlayerHand($card_id, $player_id);
+        $mana_cards_before = array_map(function ($card_id) use ($player_id) {
+            return Assert::isCardInHand($card_id, $player_id);
         }, $mana_ids);
 
         // Move card to the mana position below the spell
-        foreach ($manaCards as $card_id => $card) {
+        foreach ($mana_cards_before as $card_id => $card) {
             $this->deck_manas->insertCardOnExtremePosition(
                 $card['id'],
                 CardLocation::PlayerManaCoolDown($player_id, $spell['location_arg']),
@@ -88,7 +88,8 @@ trait ActionTrait {
             );
         }
 
-        Notifications::castSpell($player_id, $card_type['name']);
+        $mana_cards_after = $this->deck_manas->getCards($mana_ids);
+        Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
             $this->executeCard($spell, $args);
@@ -107,7 +108,7 @@ trait ActionTrait {
     //////////// 
 
 
-    
+
 
     private function executeCard($card, $args) {
         // Get info of the card

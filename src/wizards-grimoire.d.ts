@@ -83,6 +83,13 @@ interface NotifDrawManaCardsArgs {
    cards: ManaCard[];
 }
 
+interface NotifMoveManaCardsArgs {
+   player_id: number;
+   nbr: number;
+   cards_before: ManaCard[];
+   cards_after: ManaCard[];
+}
+
 interface NotifSpellCoolDownArgs {
    player_id: number;
    mana_cards_discard: { pos: number | ManaCard };

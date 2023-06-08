@@ -1731,17 +1731,24 @@ var NotificationManager = (function () {
         var _this = this;
         this.subscribeEvent("onChooseSpell", 500);
         this.subscribeEvent("onRefillSpell", 500);
-        this.subscribeEvent("onDrawManaCards", 1000);
+        this.subscribeEvent("onDrawManaCards", 1000, true);
+        this.subscribeEvent("onMoveManaCards", 1000, true);
         this.subscribeEvent("onSpellCoolDown", 1000);
         this.subscribeEvent("onHealthChanged", 500);
         this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
-        this.game.notifqueue.setIgnoreNotificationCheck("onDrawManaCards", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
-    NotificationManager.prototype.subscribeEvent = function (eventName, time) {
+    NotificationManager.prototype.subscribeEvent = function (eventName, time, setIgnore) {
+        var _this = this;
+        if (setIgnore === void 0) { setIgnore = false; }
         try {
             dojo.subscribe(eventName, this, "notif_" + eventName);
             if (time) {
                 this.game.notifqueue.setSynchronous(eventName, time);
+            }
+            if (setIgnore) {
+                this.game.notifqueue.setIgnoreNotificationCheck(eventName, function (notif) {
+                    return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id;
+                });
             }
         }
         catch (_a) {
@@ -1762,6 +1769,15 @@ var NotificationManager = (function () {
         var _a = notif.args, player_id = _a.player_id, cards = _a.cards;
         log("onDrawManaCards", cards);
         this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+    };
+    NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
+        var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
+        log("onMoveManaCards", cards_before, cards_after);
+        for (var index = 0; index < nbr; index++) {
+            var before = cards_before[index];
+            var after = cards_after[index];
+            this.game.getPlayerTable(player_id).onMoveManaCard(before, after);
+        }
     };
     NotificationManager.prototype.notif_onSpellCoolDown = function (notif) { };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
@@ -1853,16 +1869,20 @@ var PlayerTable = (function () {
         });
         for (var index = 1; index <= 6; index++) {
             var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
-            var deck = new MyDeck(game.manasManager, divDeck, {
+            var deck = new Deck(game.manasManager, divDeck, {
                 cardNumber: 0,
                 counter: {},
+                autoRemovePreviousCards: false,
             });
             this.mana_cooldown[index] = deck;
         }
         var board = game.gamedatas.player_board[pId];
         this.spell_repertoire.addCards(board.spells);
         Object.keys(board.manas).forEach(function (pos) {
-            _this.mana_cooldown[Number(pos)].addCards(board.manas[pos], null, { index: 0 });
+            var deck = _this.mana_cooldown[Number(pos)];
+            board.manas[pos].forEach(function (card) {
+                deck.addCard(card, null, { index: 0 });
+            });
         });
         this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
             center: true,
@@ -1904,6 +1924,41 @@ var PlayerTable = (function () {
                 }
             });
         });
+    };
+    PlayerTable.prototype.onMoveManaCard = function (before, after) {
+        return __awaiter(this, void 0, void 0, function () {
+            var stockBeforeManager, stockBefore, stockAfter, newCard;
+            return __generator(this, function (_a) {
+                stockBeforeManager = this.game.manasManager.getCardStock(before);
+                stockBefore = this.getStock(before);
+                stockAfter = this.getStock(after);
+                if (stockBefore !== stockBeforeManager) {
+                    return [2];
+                }
+                debugger;
+                if (!stockAfter.contains(after)) {
+                    newCard = __assign(__assign({}, after), { isHidden: this.isStockHidden(stockAfter) });
+                    stockAfter.addCard(newCard);
+                }
+                return [2];
+            });
+        });
+    };
+    PlayerTable.prototype.isStockHidden = function (stock) {
+        return (this.hand == stock && !this.current_player) || this.game.tableCenter.manaDeck == stock;
+    };
+    PlayerTable.prototype.getStock = function (card) {
+        if (card.location == "hand") {
+            return this.hand;
+        }
+        if (card.location == "deck") {
+            return this.game.tableCenter.manaDeck;
+        }
+        if (card.location == "discard") {
+            return this.game.tableCenter.manaDeck;
+        }
+        var index = Number(card.location.substring(card.location.length - 1));
+        return this.mana_cooldown[index];
     };
     return PlayerTable;
 }());

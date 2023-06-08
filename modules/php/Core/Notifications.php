@@ -4,7 +4,7 @@ namespace WizardsGrimoire\Core;
 
 class Notifications {
 
-    static function castSpell($player_id, $card_name) {
+    static function castSpell($player_id, $card_name, $cards_before, $cards_after) {
         $msg = clienttranslate('${player_name} cast ${card_name}');
         self::message($msg, [
             'player_id' => intval($player_id),
@@ -12,6 +12,8 @@ class Notifications {
             'card_name' => $card_name,
             'i18n' => ['card_name'],
         ]);
+
+        self::moveManaCard($player_id, $cards_before, $cards_after, '');
     }
 
     static function chooseSpell($player_id, $card) {
@@ -32,12 +34,31 @@ class Notifications {
             'player_name' => self::getPlayerName($player_id),
             'nbr' => sizeof($cards),
         ];
-        
+
         $args['cards'] = array_values($cards);
         self::notify($player_id, 'onDrawManaCards', $msg, $args);
 
         $args['cards'] = array_values(Game::anonynizeCards($cards));
         self::notifyAll('onDrawManaCards', $msg, $args, $player_id);
+    }
+
+    static function moveManaCard($player_id, $cards_before, $cards_after, $msg = "@@@") {
+        if ($msg == "@@@") {
+            $msg = clienttranslate('${player_name} move ${nbr} mana cards');
+        }
+        $args = [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'nbr' => sizeof($cards_before),
+        ];
+
+        $args['cards_before'] = array_values($cards_before);
+        $args['cards_after'] = array_values($cards_after);
+        self::notify($player_id, 'onMoveManaCards', $msg, $args);
+
+        $args['cards_before'] = array_values(Game::anonynizeCards($cards_before));
+        $args['cards_after'] = array_values(Game::anonynizeCards($cards_after));
+        self::notifyAll('onMoveManaCards', $msg, $args, $player_id);
     }
 
     public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {
