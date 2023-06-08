@@ -32,10 +32,10 @@ trait StateTrait {
         $mana_cards_discard = [];
         for ($i = 1; $i < 6; $i++) {
             $location_from = CardLocation::PlayerManaCoolDown($playerId, $i);
-            $mana_card = Game::get()->deck_manas->getCardOnTop($location_from);
+            $mana_card = $this->deck_manas->getCardOnTop($location_from);
             if($mana_card) {
                 $mana_cards_discard[$i] = $mana_card['id'];
-                Game::get()->deck_manas->moveCard($$mana_card['id'], CardLocation::Discard());
+                $this->deck_manas->moveCard($mana_card['id'], CardLocation::Discard());
             }
         }
 

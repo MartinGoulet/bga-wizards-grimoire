@@ -90,17 +90,45 @@ class ActionManager {
       });
    }
 
+   private actionSharedPower() {
+      const msg = _("${you} may select ${nbr} mana card to give to your opponent");
+      this.selectManaHand(1, msg, false);
+   }
+
    private actionTimeDistortion() {
+      const msg = _("${you} may select up to ${nbr} mana card");
+      this.selectMana(2, msg, false);
+   }
+
+   ////////////////////////////////////////
+   // Utilities
+
+   private selectMana(count: number, msg: string, exact: boolean) {
       const { name } = this.game.getCardType(this.current_card);
-      let msg = _("${you} may select up to ${nbr} mana card");
-      msg = msg.replace("${nbr}", "2");
+      msg = msg.replace("${nbr}", count.toString());
 
       this.game.setClientState(states.client.selectMana, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
             player_id: this.game.getPlayerId(),
             card: this.current_card,
-            count: 2,
+            count,
+            exact,
+         },
+      });
+   }
+
+   private selectManaHand(count: number, msg: string, exact: boolean) {
+      const { name } = this.game.getCardType(this.current_card);
+      msg = msg.replace("${nbr}", count.toString());
+
+      this.game.setClientState(states.client.selectManaHand, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            card: this.current_card,
+            count,
+            exact,
          },
       });
    }

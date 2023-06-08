@@ -8,11 +8,13 @@ class CastSpellStates implements StateHandler {
 
       repertoire.setSelectionMode("single");
       repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
-         if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
-            this.game.enableButton("btn_cast", "blue");
-         } else {
-            this.game.disableButton("btn_cast");
-         }
+         const canSelect =
+            selection &&
+            selection.length === 1 &&
+            player_table.canCast(selection[0]) &&
+            player_table.mana_cooldown[lastChange.location_arg].getCardNumber() == 0;
+
+         this.game.toggleButtonEnable("btn_cast", canSelect);
       };
    }
 

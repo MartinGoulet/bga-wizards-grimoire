@@ -2,6 +2,7 @@ const states = {
    client: {
       castSpellWithMana: "client_castSpellWithMana",
       selectMana: "client_selectMana",
+      selectManaHand: "client_selectManaHand",
    },
    server: {
       castSpell: "castSpell",
@@ -18,6 +19,7 @@ class StateManager {
       this.states = {
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
          [states.client.selectMana]: new SelectManaStates(game),
+         [states.client.selectManaHand]: new SelectManaHandStates(game),
 
          [states.server.basicAttack]: new BasicAttackStates(game),
          [states.server.castSpell]: new CastSpellStates(game),

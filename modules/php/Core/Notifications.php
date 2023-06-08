@@ -88,7 +88,7 @@ class Notifications {
     }
 
     static function refillSpell($player_id, $card) {
-        $msg = clienttranslate('$${card_name} is added to the spell repertoire.');
+        $msg = clienttranslate('${card_name} is added to the spell repertoire.');
         self::notifyAll('onRefillSpell', $msg, [
             'card' => $card,
             'card_name' => self::getSpellCardName($card),
@@ -109,7 +109,8 @@ class Notifications {
      *************************/
 
     protected static function getSpellCardName($card) {
-        Game::get()->card_types[$card['type']]['name'];
+        $card_type = Game::get()->card_types[$card['type']];
+        return $card_type['name'];
     }
 
     protected static function notifyAll($name, $msg, $args = [], $exclude_player_id = null) {

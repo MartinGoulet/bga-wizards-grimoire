@@ -95,6 +95,7 @@ class PlayerTable {
    }
 
    public async onMoveManaCard(before: ManaCard, after: ManaCard) {
+      debugger;
       const stockBeforeManager = this.game.manasManager.getCardStock(before);
       const stockBefore = this.getStock(before);
       const stockAfter = this.getStock(after);
@@ -116,7 +117,11 @@ class PlayerTable {
 
    private getStock(card: ManaCard): CardStock<ManaCard> {
       if (card.location == "hand") {
-         return this.hand;
+         if (card.location_arg == this.player_id) {
+            return this.hand;
+         } else {
+            return this.game.manasManager.getCardStock(card);
+         }
       }
 
       if (card.location == "deck") {

@@ -1621,16 +1621,37 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionSharedPower = function () {
+        var msg = _("${you} may select ${nbr} mana card to give to your opponent");
+        this.selectManaHand(1, msg, false);
+    };
     ActionManager.prototype.actionTimeDistortion = function () {
-        var name = this.game.getCardType(this.current_card).name;
         var msg = _("${you} may select up to ${nbr} mana card");
-        msg = msg.replace("${nbr}", "2");
+        this.selectMana(2, msg, false);
+    };
+    ActionManager.prototype.selectMana = function (count, msg, exact) {
+        var name = this.game.getCardType(this.current_card).name;
+        msg = msg.replace("${nbr}", count.toString());
         this.game.setClientState(states.client.selectMana, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
                 player_id: this.game.getPlayerId(),
                 card: this.current_card,
-                count: 2,
+                count: count,
+                exact: exact,
+            },
+        });
+    };
+    ActionManager.prototype.selectManaHand = function (count, msg, exact) {
+        var name = this.game.getCardType(this.current_card).name;
+        msg = msg.replace("${nbr}", count.toString());
+        this.game.setClientState(states.client.selectManaHand, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                card: this.current_card,
+                count: count,
+                exact: exact,
             },
         });
     };
@@ -1773,6 +1794,7 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
         log("onMoveManaCards", cards_before, cards_after);
+        debugger;
         for (var index = 0; index < nbr; index++) {
             var before = cards_before[index];
             var after = cards_after[index];
@@ -1791,6 +1813,7 @@ var states = {
     client: {
         castSpellWithMana: "client_castSpellWithMana",
         selectMana: "client_selectMana",
+        selectManaHand: "client_selectManaHand",
     },
     server: {
         castSpell: "castSpell",
@@ -1806,6 +1829,7 @@ var StateManager = (function () {
         this.states = (_a = {},
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
             _a[states.client.selectMana] = new SelectManaStates(game),
+            _a[states.client.selectManaHand] = new SelectManaHandStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
@@ -1929,6 +1953,7 @@ var PlayerTable = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var stockBeforeManager, stockBefore, stockAfter, newCard;
             return __generator(this, function (_a) {
+                debugger;
                 stockBeforeManager = this.game.manasManager.getCardStock(before);
                 stockBefore = this.getStock(before);
                 stockAfter = this.getStock(after);
@@ -1948,7 +1973,12 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.getStock = function (card) {
         if (card.location == "hand") {
-            return this.hand;
+            if (card.location_arg == this.player_id) {
+                return this.hand;
+            }
+            else {
+                return this.game.manasManager.getCardStock(card);
+            }
         }
         if (card.location == "deck") {
             return this.game.tableCenter.manaDeck;
@@ -2016,12 +2046,11 @@ var CastSpellStates = (function () {
         var repertoire = player_table.spell_repertoire;
         repertoire.setSelectionMode("single");
         repertoire.onSelectionChange = function (selection, lastChange) {
-            if (selection && selection.length === 1 && player_table.canCast(selection[0])) {
-                _this.game.enableButton("btn_cast", "blue");
-            }
-            else {
-                _this.game.disableButton("btn_cast");
-            }
+            var canSelect = selection &&
+                selection.length === 1 &&
+                player_table.canCast(selection[0]) &&
+                player_table.mana_cooldown[lastChange.location_arg].getCardNumber() == 0;
+            _this.game.toggleButtonEnable("btn_cast", canSelect);
         };
     };
     CastSpellStates.prototype.onLeavingState = function () {
@@ -2197,7 +2226,12 @@ var SelectManaStates = (function () {
         this.player_table = this.game.getPlayerTable(player_id);
         var handleChange = function () {
             var nbr_cards_selected = _this.getManaDecks().filter(function (x) { return x.deck.getSelection().length > 0; }).length;
-            _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
+            if (args.exact) {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected == count);
+            }
+            else {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
+            }
         };
         this.getManaDecks().forEach(function (_a) {
             var position = _a.position, deck = _a.deck;
@@ -2221,11 +2255,13 @@ var SelectManaStates = (function () {
                 .filter(function (x) { return x.deck.getSelection().length > 0; })
                 .map(function (x) { return x.deck.getSelection()[0].id; });
             if (selected_cards.length < args.count) {
-                var text = _("Are-you sure to not take all mana card?");
-                _this.game.confirmationDialog(text, function () {
-                    _this.game.actionManager.addArgument(selected_cards.join(","));
-                    _this.game.actionManager.activateNextAction();
-                });
+                if (!args.exact) {
+                    var text = _("Are-you sure to not take all mana card?");
+                    _this.game.confirmationDialog(text, function () {
+                        _this.game.actionManager.addArgument(selected_cards.join(","));
+                        _this.game.actionManager.activateNextAction();
+                    });
+                }
             }
             else {
                 _this.game.actionManager.addArgument(selected_cards.join(","));
@@ -2248,6 +2284,56 @@ var SelectManaStates = (function () {
         });
     };
     return SelectManaStates;
+}());
+var SelectManaHandStates = (function () {
+    function SelectManaHandStates(game) {
+        this.game = game;
+    }
+    SelectManaHandStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var card = args.card, player_id = args.player_id, count = args.count;
+        this.player_table = this.game.getPlayerTable(player_id);
+        var handleChange = function () {
+            var nbr_cards_selected = _this.player_table.hand.getSelection().length;
+            if (args.exact) {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected == count);
+            }
+            else {
+                _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
+            }
+        };
+        this.player_table.hand.setSelectionMode("single");
+        this.player_table.hand.onSelectionChange = handleChange;
+    };
+    SelectManaHandStates.prototype.onLeavingState = function () {
+        this.player_table.hand.setSelectionMode("none");
+        this.player_table.hand.onSelectionChange = null;
+    };
+    SelectManaHandStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var selected_card_ids = _this.player_table.hand.getSelection().map(function (x) { return x.id; });
+            if (selected_card_ids.length < args.count) {
+                if (!args.exact) {
+                    var text = _("Are-you sure to not take all mana card?");
+                    _this.game.confirmationDialog(text, function () {
+                        _this.game.actionManager.addArgument(selected_card_ids.join(","));
+                        _this.game.actionManager.activateNextAction();
+                    });
+                }
+            }
+            else {
+                _this.game.actionManager.addArgument(selected_card_ids.join(","));
+                _this.game.actionManager.activateNextAction();
+            }
+        };
+        this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonClientCancel();
+    };
+    SelectManaHandStates.prototype.restoreGameState = function () { };
+    return SelectManaHandStates;
 }());
 define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
     return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());

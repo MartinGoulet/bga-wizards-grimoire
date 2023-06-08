@@ -531,6 +531,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
+    "js_actions" => "actionSharedPower",
   ],
   56 => [
     "name" => clienttranslate("Sleight of hand"),
