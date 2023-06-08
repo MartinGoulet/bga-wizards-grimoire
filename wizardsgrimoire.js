@@ -1909,6 +1909,7 @@ var PlayerTable = (function () {
         });
         this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
             center: true,
+            wrap: "wrap",
             sort: sortFunction("type", "type_arg"),
         });
         this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);

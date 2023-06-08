@@ -1,5 +1,6 @@
 .player-table {
    padding-top: 20px;
+   width: 732px;
 
    .spell-repertoire {
       --width: 110px;
@@ -30,6 +31,7 @@
 
    .mana-cooldown {
       display: flex;
+      justify-content: center;
       min-height: 160px;
       gap: 8px;
       margin-top: 10px;

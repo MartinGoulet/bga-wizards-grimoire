@@ -691,6 +691,7 @@ body > .card {
 
 .player-table {
   padding-top: 20px;
+  width: 732px;
 }
 .player-table .spell-repertoire {
   --width: 110px;
@@ -717,6 +718,7 @@ body > .card {
 }
 .player-table .mana-cooldown {
   display: flex;
+  justify-content: center;
   min-height: 160px;
   gap: 8px;
   margin-top: 10px;
@@ -761,7 +763,7 @@ body > .card {
   position: relative;
   display: flex;
   justify-content: space-around;
-  align-items: flex-end;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 10px;
   flex-direction: row;

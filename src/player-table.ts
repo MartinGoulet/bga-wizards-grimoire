@@ -66,6 +66,7 @@ class PlayerTable {
          document.getElementById(`player-table-${pId}-hand-cards`),
          {
             center: true,
+            wrap: "wrap",
             sort: sortFunction("type", "type_arg"),
          },
       );
