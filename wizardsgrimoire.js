@@ -1535,8 +1535,14 @@ function getCardId() {
 }
 var HiddenDeck = (function (_super) {
     __extends(HiddenDeck, _super);
-    function HiddenDeck(manager, element, settings) {
-        var _this = _super.call(this, manager, element, settings) || this;
+    function HiddenDeck(manager, element) {
+        var _this = _super.call(this, manager, element, {
+            cardNumber: 0,
+            counter: {
+                hideWhenEmpty: false,
+            },
+            autoRemovePreviousCards: false,
+        }) || this;
         _this.manager = manager;
         _this.element = element;
         return _this;
@@ -1551,8 +1557,14 @@ var HiddenDeck = (function (_super) {
 }(Deck));
 var VisibleDeck = (function (_super) {
     __extends(VisibleDeck, _super);
-    function VisibleDeck(manager, element, settings) {
-        var _this = _super.call(this, manager, element, settings) || this;
+    function VisibleDeck(manager, element) {
+        var _this = _super.call(this, manager, element, {
+            cardNumber: 0,
+            counter: {
+                hideWhenEmpty: false,
+            },
+            autoRemovePreviousCards: false,
+        }) || this;
         _this.manager = manager;
         _this.element = element;
         return _this;
@@ -1711,6 +1723,19 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionGiveManaFromHandToOpponent = function () {
+        var msg = _("${you} may select ${nbr} mana card to give to your opponent");
+        this.selectManaHand(1, msg, false, {
+            skip: {
+                label: _("Pass"),
+                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+            },
+        });
+    };
+    ActionManager.prototype.actionSelectManaCardFromHand = function () {
+        var msg = _("${you} may select ${nbr} mana card from your hand");
+        this.selectManaHand(1, msg, true);
+    };
     ActionManager.prototype.actionSelectManaFrom = function () {
         var _this = this;
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -1728,7 +1753,9 @@ var ActionManager = (function () {
                 _this.activateNextAction();
             };
         }
-        var msgFrom = _("${you} must select ${nbr} mana card - source");
+        var msgFrom = this.actions.length > 0
+            ? _("${you} must select ${nbr} mana card - source")
+            : _("${you} must select ${nbr} mana card");
         this.selectManaDeck(1, msgFrom, true, argsSuppl);
     };
     ActionManager.prototype.actionSelectManaTo = function () {
@@ -1743,10 +1770,6 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionShadowAttack = function () {
         this.actionSelectManaFrom();
-    };
-    ActionManager.prototype.actionSharedPower = function () {
-        var msg = _("${you} may select ${nbr} mana card to give to your opponent");
-        this.selectManaHand(1, msg, false);
     };
     ActionManager.prototype.actionTimeDistortion = function () {
         var msg = _("${you} may select up to ${nbr} mana card");
@@ -1765,17 +1788,14 @@ var ActionManager = (function () {
             args: args,
         });
     };
-    ActionManager.prototype.selectManaHand = function (count, msg, exact) {
+    ActionManager.prototype.selectManaHand = function (count, msg, exact, argsSuppl) {
+        if (argsSuppl === void 0) { argsSuppl = {}; }
         var name = this.game.getCardType(this.current_card).name;
         msg = msg.replace("${nbr}", count.toString());
+        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact });
         this.game.setClientState(states.client.selectManaHand, {
             descriptionmyturn: _(name) + " : " + msg,
-            args: {
-                player_id: this.game.getPlayerId(),
-                card: this.current_card,
-                count: count,
-                exact: exact,
-            },
+            args: args,
         });
     };
     ActionManager.prototype.selectManaDeck = function (count, msg, exact, argsSuppl) {
@@ -1946,11 +1966,12 @@ var NotificationManager = (function () {
             _loop_3(index);
         }
     };
-    NotificationManager.prototype.notif_onSpellCoolDown = function (notif) { };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);
-        var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining;
+        var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining, damage = _a.damage;
         this.game.scoreCtrl[player_id].toValue(life_remaining);
+        var color = damage > 0 ? "ff0000" : "008000";
+        this.game.displayScoring("player-table-".concat(player_id), color, -damage, 1000);
     };
     return NotificationManager;
 }());
@@ -2021,6 +2042,26 @@ var StateManager = (function () {
     };
     return StateManager;
 }());
+var Hand = (function (_super) {
+    __extends(Hand, _super);
+    function Hand(manager, element, current_player) {
+        var _this = _super.call(this, manager, element, {
+            center: true,
+            wrap: "wrap",
+            sort: sortFunction("type", "type_arg"),
+        }) || this;
+        _this.current_player = current_player;
+        return _this;
+    }
+    Hand.prototype.addCard = function (card, animation, settings) {
+        var copy = __assign(__assign({}, card), { isHidden: !this.current_player });
+        if (!this.current_player) {
+            copy.type = null;
+        }
+        return _super.prototype.addCard.call(this, copy, animation, settings);
+    };
+    return Hand;
+}(LineStock));
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
         var _this = this;
@@ -2050,11 +2091,7 @@ var PlayerTable = (function () {
                 deck.addCard(card, null, { index: 0 });
             });
         });
-        this.hand = new LineStock(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), {
-            center: true,
-            wrap: "wrap",
-            sort: sortFunction("type", "type_arg"),
-        });
+        this.hand = new Hand(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), this.current_player);
         this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
     }
     PlayerTable.prototype.canCast = function (card) {
@@ -2121,17 +2158,22 @@ var PlayerTable = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var stockBeforeManager, stockBefore, stockAfter, newCard;
             return __generator(this, function (_a) {
-                stockBeforeManager = this.game.manasManager.getCardStock(before);
-                stockBefore = this.getStock(before);
-                stockAfter = this.getStock(after);
-                if (stockBefore !== stockBeforeManager) {
-                    return [2];
+                switch (_a.label) {
+                    case 0:
+                        stockBeforeManager = this.game.manasManager.getCardStock(before);
+                        stockBefore = this.getStock(before);
+                        stockAfter = this.getStock(after);
+                        if (stockBefore !== stockBeforeManager) {
+                            return [2];
+                        }
+                        if (!!stockAfter.contains(after)) return [3, 2];
+                        newCard = __assign(__assign({}, after), { isHidden: this.isStockHidden(stockAfter) });
+                        return [4, stockAfter.addCard(newCard)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
                 }
-                if (!stockAfter.contains(after)) {
-                    newCard = __assign(__assign({}, after), { isHidden: this.isStockHidden(stockAfter) });
-                    stockAfter.addCard(newCard);
-                }
-                return [2];
             });
         });
     };
@@ -2144,7 +2186,7 @@ var PlayerTable = (function () {
                 return this.hand;
             }
             else {
-                return this.game.manasManager.getCardStock(card);
+                return this.game.getPlayerTable(Number(card.location_arg)).hand;
             }
         }
         if (card.location == "deck") {
@@ -2164,16 +2206,10 @@ var TableCenter = (function () {
     function TableCenter(game) {
         var _this = this;
         this.game = game;
-        var settings = {
-            cardNumber: 0,
-            counter: {
-                hideWhenEmpty: false,
-            },
-        };
-        this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
-        this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"), settings);
-        this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"), settings);
-        this.manaDiscard = new VisibleDeck(game.manasManager, document.getElementById("mana-discard"), settings);
+        this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
+        this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
+        this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
+        this.manaDiscard = new VisibleDeck(game.manasManager, document.getElementById("mana-discard"));
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
             slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
@@ -2571,8 +2607,17 @@ var SelectManaHandStates = (function () {
                 _this.game.actionManager.activateNextAction();
             }
         };
+        var handleSkip = function () {
+            _this.game.confirmationDialog(_(args.skip.message), function () {
+                _this.game.actionManager.activateNextAction();
+            });
+        };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        if (args.skip) {
+            this.game.addActionButtonRed("btn_skip", _(args.skip.label), handleSkip);
+        }
         this.game.addActionButtonClientCancel();
+        this.game.toggleButtonEnable("btn_confirm", !args.exact);
     };
     SelectManaHandStates.prototype.restoreGameState = function () { };
     return SelectManaHandStates;

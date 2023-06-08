@@ -68,18 +68,16 @@ trait ActionTrait {
         $spell = Assert::isCardInRepertoire($card_id, $player_id);
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
-
-
+        
         $card_type = $this->card_types[$spell['type']];
         if (sizeof($mana_ids) !== $card_type['cost']) {
             throw new BgaSystemException("Not enough mana");
         }
 
-        $mana_cards_before = array_map(function ($card_id) use ($player_id) {
-            return Assert::isCardInHand($card_id, $player_id);
+        $mana_cards_before = array_map(function ($mana_id) use ($player_id) {
+            return Assert::isCardInHand($mana_id, $player_id);
         }, $mana_ids);
 
-        
         // Move card to the mana position below the spell
         foreach ($mana_cards_before as $card_id => $card) {
             $this->deck_manas->insertCardOnExtremePosition(

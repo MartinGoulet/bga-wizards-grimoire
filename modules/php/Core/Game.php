@@ -68,7 +68,7 @@ class Game {
             return 0;
         }
         return max(array_values(array_map(function ($card) {
-            return $card['card_type'];
+            return $card['type'];
         }, $cards)));
     }
 }

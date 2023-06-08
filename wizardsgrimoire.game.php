@@ -439,4 +439,9 @@ class WizardsGrimoire extends Table {
 
 
     }
+
+    // Exposing protected method translation
+    public static function translate($text) {
+        return self::_($text);
+    }
 }

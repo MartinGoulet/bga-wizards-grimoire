@@ -62,11 +62,20 @@ class NotificationManager {
       }
    }
 
-   private notif_onSpellCoolDown(notif: INotification<NotifSpellCoolDownArgs>) {}
+   // private notif_onSpellCoolDown(notif: INotification<NotifSpellCoolDownArgs>) {
+   //    const { player_id, mana_cards_discard } = notif.args;
+   //    log("notif_onSpellCoolDown", mana_cards_discard);
+   //    const player_table = this.game.getPlayerTable(Number(player_id));
+   //    mana_cards_discard.forEach((card_id) => {
+   //       player_table.onMoveManaCard(this.game.manasManager.getCardById(card_id), card);
+   //    });
+   // }
 
    private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {
       log("notif_onHealthChanged", notif.args);
-      const { player_id, life_remaining } = notif.args;
+      const { player_id, life_remaining, damage } = notif.args;
       this.game.scoreCtrl[player_id].toValue(life_remaining);
+      const color = damage > 0 ? "ff0000" : "008000";
+      this.game.displayScoring(`player-table-${player_id}`, color, -damage, 1000);
    }
 }

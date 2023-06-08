@@ -1,3 +1,25 @@
+class Hand extends LineStock<ManaCard> {
+   constructor(manager: CardManager<ManaCard>, element: HTMLElement, protected current_player: boolean) {
+      super(manager, element, {
+         center: true,
+         wrap: "wrap",
+         sort: sortFunction("type", "type_arg"),
+      });
+   }
+
+   public addCard(
+      card: ManaCard,
+      animation?: CardAnimation<ManaCard>,
+      settings?: AddCardSettings,
+   ): Promise<boolean> {
+      const copy: ManaCard = { ...card, isHidden: !this.current_player };
+      if (!this.current_player) {
+         copy.type = null;
+      }
+      return super.addCard(copy, animation, settings);
+   }
+}
+
 class PlayerTable {
    public player_id: number;
 
@@ -56,14 +78,10 @@ class PlayerTable {
          });
       });
 
-      this.hand = new LineStock(
+      this.hand = new Hand(
          game.manasManager,
          document.getElementById(`player-table-${pId}-hand-cards`),
-         {
-            center: true,
-            wrap: "wrap",
-            sort: sortFunction("type", "type_arg"),
-         },
+         this.current_player,
       );
       this.hand.addCards(board.hand ?? []);
    }
@@ -126,7 +144,7 @@ class PlayerTable {
 
       if (!stockAfter.contains(after)) {
          const newCard: ManaCard = { ...after, isHidden: this.isStockHidden(stockAfter) };
-         stockAfter.addCard(newCard);
+         await stockAfter.addCard(newCard);
       }
    }
 
@@ -139,7 +157,7 @@ class PlayerTable {
          if (card.location_arg == this.player_id) {
             return this.hand;
          } else {
-            return this.game.manasManager.getCardStock(card);
+            return this.game.getPlayerTable(Number(card.location_arg)).hand;
          }
       }
 

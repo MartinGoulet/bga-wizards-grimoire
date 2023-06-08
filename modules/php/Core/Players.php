@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use WizardsGrimoire\Objects\CardLocation;
 
 /*
  * Players manager : allows to easily access players ...

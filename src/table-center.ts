@@ -11,24 +11,11 @@ class TableCenter {
    public spellPool: SlotStock<SpellCard>;
 
    constructor(private game: WizardsGrimoire) {
-      const settings = {
-         cardNumber: 0,
-         counter: {
-            hideWhenEmpty: false,
-         },
-      };
-      this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"), settings);
-      this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"), settings);
-      this.spellDiscard = new VisibleDeck(
-         game.spellsManager,
-         document.getElementById("spell-discard"),
-         settings,
-      );
-      this.manaDiscard = new VisibleDeck(
-         game.manasManager,
-         document.getElementById("mana-discard"),
-         settings,
-      );
+      this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
+      this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
+      this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
+      this.manaDiscard = new VisibleDeck(game.manasManager, document.getElementById("mana-discard"));
+
       this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
          slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
          slotClasses: ["wg-spell-slot"],

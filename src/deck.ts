@@ -1,6 +1,12 @@
 class HiddenDeck<T extends Card> extends Deck<T> {
-   constructor(protected manager: CardManager<T>, protected element: HTMLElement, settings: DeckSettings<T>) {
-      super(manager, element, settings);
+   constructor(protected manager: CardManager<T>, protected element: HTMLElement) {
+      super(manager, element, {
+         cardNumber: 0,
+         counter: {
+            hideWhenEmpty: false,
+         },
+         autoRemovePreviousCards: false,
+      });
    }
 
    public addCard(card: T, animation?: CardAnimation<T>, settings?: AddCardToDeckSettings): Promise<boolean> {
@@ -11,8 +17,14 @@ class HiddenDeck<T extends Card> extends Deck<T> {
 }
 
 class VisibleDeck<T extends Card> extends Deck<T> {
-   constructor(protected manager: CardManager<T>, protected element: HTMLElement, settings: DeckSettings<T>) {
-      super(manager, element, settings);
+   constructor(protected manager: CardManager<T>, protected element: HTMLElement) {
+      super(manager, element, {
+         cardNumber: 0,
+         counter: {
+            hideWhenEmpty: false,
+         },
+         autoRemovePreviousCards: false,
+      });
    }
 
    public addCard(card: T, animation?: CardAnimation<T>, settings?: AddCardToDeckSettings): Promise<boolean> {

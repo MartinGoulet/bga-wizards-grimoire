@@ -29,17 +29,19 @@ trait StateTrait {
     function stSpellCoolDown() {
         $playerId = intval($this->getActivePlayerId());
 
-        $mana_cards_discard = [];
+        $cards_before = [];
+        $cards_after = [];
         for ($i = 1; $i < 6; $i++) {
             $location_from = CardLocation::PlayerManaCoolDown($playerId, $i);
             $mana_card = $this->deck_manas->getCardOnTop($location_from);
             if($mana_card) {
-                $mana_cards_discard[$i] = $mana_card['id'];
-                $this->deck_manas->moveCard($mana_card['id'], CardLocation::Discard());
+                $cards_before[] = $mana_card;
+                $this->deck_manas->insertCardOnExtremePosition($mana_card['id'], CardLocation::Discard(), true);
+                $cards_after[] = $this->deck_manas->getCard($mana_card['id']);
             }
         }
 
-        Notifications::spellCoolDown($playerId, $mana_cards_discard);
+        Notifications::moveManaCard($playerId, $cards_before, $cards_after, "@@@", false);
         $this->gamestate->nextState();
     }
 

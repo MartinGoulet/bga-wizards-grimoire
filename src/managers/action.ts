@@ -90,6 +90,21 @@ class ActionManager {
       });
    }
 
+   private actionGiveManaFromHandToOpponent() {
+      const msg = _("${you} may select ${nbr} mana card to give to your opponent");
+      this.selectManaHand(1, msg, false, {
+         skip: {
+            label: _("Pass"),
+            message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+         },
+      });
+   }
+
+   private actionSelectManaCardFromHand() {
+      const msg = _("${you} may select ${nbr} mana card from your hand");
+      this.selectManaHand(1, msg, true);
+   }
+
    private actionSelectManaFrom() {
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
 
@@ -111,7 +126,10 @@ class ActionManager {
          };
       }
 
-      const msgFrom = _("${you} must select ${nbr} mana card - source");
+      const msgFrom =
+         this.actions.length > 0
+            ? _("${you} must select ${nbr} mana card - source")
+            : _("${you} must select ${nbr} mana card");
       this.selectManaDeck(1, msgFrom, true, argsSuppl);
    }
 
@@ -132,11 +150,6 @@ class ActionManager {
       // const msg = _("${you} must select ${nbr} mana card to discard");
       // this.selectMana(1, msg, true);
       this.actionSelectManaFrom();
-   }
-
-   private actionSharedPower() {
-      const msg = _("${you} may select ${nbr} mana card to give to your opponent");
-      this.selectManaHand(1, msg, false);
    }
 
    private actionTimeDistortion() {
@@ -168,18 +181,21 @@ class ActionManager {
       });
    }
 
-   private selectManaHand(count: number, msg: string, exact: boolean) {
+   private selectManaHand(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
       const { name } = this.game.getCardType(this.current_card);
       msg = msg.replace("${nbr}", count.toString());
 
+      const args = {
+         ...argsSuppl,
+         player_id: this.game.getPlayerId(),
+         card: this.current_card,
+         count,
+         exact,
+      };
+
       this.game.setClientState(states.client.selectManaHand, {
          descriptionmyturn: _(name) + " : " + msg,
-         args: {
-            player_id: this.game.getPlayerId(),
-            card: this.current_card,
-            count,
-            exact,
-         },
+         args,
       });
    }
 

@@ -2,11 +2,13 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
-
 class Mutation extends BaseCard {
 
-    // TODO
+    public function castSpell($args) {
+        // Gain 1 mana card. Deal damage equal to that mana's power
+        $cards = $this->drawManaCards(1);
 
+        $mana_power = intval(array_shift($cards)['type']);
+        $this->dealDamage($mana_power);
+    }
 }

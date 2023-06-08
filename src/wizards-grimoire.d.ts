@@ -94,7 +94,7 @@ interface NotifMoveManaCardsArgs {
 
 interface NotifSpellCoolDownArgs {
    player_id: number;
-   mana_cards_discard: { pos: number | ManaCard };
+   mana_cards_discard: number[];
 }
 
 interface NotifHealthChangedArgs {

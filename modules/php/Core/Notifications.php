@@ -53,6 +53,14 @@ class Notifications {
         self::notifyAll('onDrawManaCards', $msg, $args, $player_id);
     }
 
+    static function hasNoManaCard(int $player_id, int $value) {
+        self::message('${player_name} does not have a ${value} power mana.', [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "value" => $value,
+        ]);
+    }
+
     static function moveManaCard($player_id, $cards_before, $cards_after, $msg = "@@@", $anonimyze = true) {
         if ($msg == "@@@") {
             $msg = clienttranslate('${player_name} move ${nbr} mana cards');
@@ -67,7 +75,7 @@ class Notifications {
         $args['cards_after'] = array_values($cards_after);
         self::notify($player_id, 'onMoveManaCards', $msg, $args);
 
-        if($anonimyze) {
+        if ($anonimyze) {
             $args['cards_before'] = array_values(Game::anonynizeCards($cards_before));
             $args['cards_after'] = array_values(Game::anonynizeCards($cards_after));
         }
@@ -96,12 +104,24 @@ class Notifications {
         ]);
     }
 
-    static function spellCoolDown($player_id, $mana_cards_discard) {
-        self::notify($player_id, 'onSpellCoolDown', '', [
+    static function revealManaCard(int $player_id, int $value) {
+        self::message('${player_name} reveals a ${value} power mana.', [
             'player_id' => intval($player_id),
-            'mana_cards_discard' => $mana_cards_discard,
-            // 'player_name' => self::getPlayerName($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "value" => $value,
         ]);
+    }
+
+    // static function spellCoolDown($player_id, $mana_cards_discard) {
+    //     self::notify($player_id, 'onSpellCoolDown', '', [
+    //         'player_id' => intval($player_id),
+    //         'mana_cards_discard' => $mana_cards_discard,
+    //         // 'player_name' => self::getPlayerName($player_id),
+    //     ]);
+    // }
+
+    static function spellNoEffect() {
+        self::message(clienttranslate("The spell has no effect since requirement was not met"));
     }
 
     /*************************

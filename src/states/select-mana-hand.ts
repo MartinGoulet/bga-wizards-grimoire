@@ -30,7 +30,6 @@ class SelectManaHandStates implements StateHandler {
    onUpdateActionButtons(args: SelectManaArgs): void {
       const handleConfirm = () => {
          const selected_card_ids = this.player_table.hand.getSelection().map((x) => x.id);
-
          if (selected_card_ids.length < args.count) {
             if (!args.exact) {
                const text = _("Are-you sure to not take all mana card?");
@@ -44,8 +43,19 @@ class SelectManaHandStates implements StateHandler {
             this.game.actionManager.activateNextAction();
          }
       };
+      const handleSkip = () => {
+         this.game.confirmationDialog(_(args.skip.message), () => {
+            this.game.actionManager.activateNextAction();
+         });
+      };
+
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+      if (args.skip) {
+         this.game.addActionButtonRed("btn_skip", _(args.skip.label), handleSkip);
+      }
       this.game.addActionButtonClientCancel();
+
+      this.game.toggleButtonEnable("btn_confirm", !args.exact);
    }
 
    restoreGameState() {}
@@ -56,4 +66,8 @@ interface SelectManaArgs {
    card: SpellCard;
    count: number;
    exact: boolean;
+   skip?: {
+      label: string;
+      message: string;
+   };
 }

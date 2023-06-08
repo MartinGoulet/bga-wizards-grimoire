@@ -50,7 +50,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
   4 => [
     "name" => clienttranslate("Stone crush"),
@@ -100,7 +100,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "red",
+    "js_actions" => "actionSelectManaFrom",
+    "debug" => "lightgreen",
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
@@ -224,7 +225,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
 
   21 => [
@@ -356,7 +357,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   34 => [
     "name" => clienttranslate("Hellstorm"),
@@ -378,7 +379,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
     "js_actions" => "actionShadowAttack",
   ],
   36 => [
@@ -524,7 +525,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "red",
+    "js_actions" => "actionSelectManaCardFromHand",
+    "debug" => "lightgreen",
   ],
   50 => [
     "name" => clienttranslate("Trance state"),
@@ -555,7 +557,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "js_actions" => "actionGiveManaFromHandToOpponent",
+    "debug" => "lightgreen",
   ],
   53 => [
     "name" => clienttranslate("Wrath"),
@@ -587,8 +590,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
-    "js_actions" => "actionSharedPower",
+    "debug" => "lightgreen",
+    "js_actions" => "actionGiveManaFromHandToOpponent",
   ],
   56 => [
     "name" => clienttranslate("Sleight of hand"),
@@ -702,7 +705,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   67 => [
     "name" => clienttranslate("Ice Storm"),

@@ -14,14 +14,16 @@ class SharedPower extends BaseCard {
 
         // You may give your opponent 1 mana card from your hand. 
         // If you do, gain 4 mana cards
+        if(sizeof($args) == 0) {
+            Notifications::spellNoEffect();
+            return;
+        }
+
         $mana_id = array_shift($args);
-        $player_id = Players::getPlayerId();
         $opponent_id = Players::getOpponentId();
         $manaDeck = Game::get()->deck_manas;
 
-        if (!$mana_id) return;
-
-        $card = Assert::isCardInHand($mana_id, $player_id);
+        $card = Assert::isCardInHand($mana_id);
 
         // Give opponent 1 mana
         $manaDeck->moveCard($mana_id, CardLocation::Hand(), $opponent_id);
