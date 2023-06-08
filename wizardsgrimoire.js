@@ -1935,7 +1935,6 @@ var PlayerTable = (function () {
                 if (stockBefore !== stockBeforeManager) {
                     return [2];
                 }
-                debugger;
                 if (!stockAfter.contains(after)) {
                     newCard = __assign(__assign({}, after), { isHidden: this.isStockHidden(stockAfter) });
                     stockAfter.addCard(newCard);
@@ -1955,7 +1954,7 @@ var PlayerTable = (function () {
             return this.game.tableCenter.manaDeck;
         }
         if (card.location == "discard") {
-            return this.game.tableCenter.manaDeck;
+            return this.game.tableCenter.manaDiscard;
         }
         var index = Number(card.location.substring(card.location.length - 1));
         return this.mana_cooldown[index];
@@ -1989,6 +1988,12 @@ var TableCenter = (function () {
         });
         game.gamedatas.manas.deck.forEach(function (card) {
             _this.manaDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
+        });
+        game.gamedatas.spells.discard.forEach(function (card) {
+            _this.spellDiscard.addCard(card);
+        });
+        game.gamedatas.manas.discard.forEach(function (card) {
+            _this.manaDiscard.addCard(card);
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
     }

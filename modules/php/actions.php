@@ -98,6 +98,23 @@ trait ActionTrait {
         $this->gamestate->nextState("cast");
     }
 
+    public function basicAttack(int $card_id) {
+        $this->checkAction('basicAttack');
+        $player_id = Players::getPlayerId();
+        $opponent_id = Players::getOpponentId();
+        $card = Assert::isCardInHand($card_id, $player_id);
+        $damage = intval($card['type']);
+
+        Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
+        $card_after = $this->deck_manas->getCard($card_id);
+        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
+
+        $life_remaining = Players::dealDamage($damage, $opponent_id);
+        Notifications::basicAttack($opponent_id, $damage, $life_remaining);
+
+        $this->gamestate->nextState('attack');
+    }
+
     public function pass() {
         $this->checkAction('pass');
         $this->gamestate->nextState('pass');

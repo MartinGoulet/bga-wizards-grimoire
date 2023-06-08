@@ -10,6 +10,19 @@ namespace WizardsGrimoire\Core;
 
 class Players extends \APP_DbObject {
 
+    public static function dealDamage(int $damage, int $opponent_id = -1) {
+
+        if($opponent_id <= 0) {
+            $opponent_id = self::getOpponentId();
+        }
+
+        $life = self::getPlayerLife($opponent_id);
+        $life_remaining = $life - $damage;
+        self::setPlayerLife($opponent_id, $life_remaining);
+
+        return $life_remaining;
+    }
+
     public static function getPlayerId() {
         return Game::get()->getActivePlayerId();
     }

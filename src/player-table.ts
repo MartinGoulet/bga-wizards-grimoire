@@ -103,7 +103,7 @@ class PlayerTable {
          // The card already move (client state)
          return;
       }
-      debugger;
+
       if (!stockAfter.contains(after)) {
          const newCard: ManaCard = { ...after, isHidden: this.isStockHidden(stockAfter) };
          stockAfter.addCard(newCard);
@@ -124,7 +124,7 @@ class PlayerTable {
       }
 
       if (card.location == "discard") {
-         return this.game.tableCenter.manaDeck;
+         return this.game.tableCenter.manaDiscard;
       }
 
       const index = Number(card.location.substring(card.location.length - 1));

@@ -34,6 +34,12 @@ class TableCenter {
       game.gamedatas.manas.deck.forEach((card) => {
          this.manaDeck.addCard({ ...card, isHidden: true });
       });
+      game.gamedatas.spells.discard.forEach((card) => {
+         this.spellDiscard.addCard(card);
+      });
+      game.gamedatas.manas.discard.forEach((card) => {
+         this.manaDiscard.addCard(card);
+      });
       this.spellPool.addCards(game.gamedatas.slot_cards);
    }
 
