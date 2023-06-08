@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Core;
 
 use BgaSystemException;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
 class Assert {
@@ -27,7 +28,11 @@ class Assert {
         return $card;
     }
 
-    public static function isCardInHand(int $card_id, int $player_id) {
+    public static function isCardInHand(int $card_id, int $player_id = 0) {
+        if($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+
         $card = Game::get()->deck_manas->getCard($card_id);
 
         if ($card['location'] !== CardLocation::Hand() || intval($card['location_arg']) !== $player_id) {

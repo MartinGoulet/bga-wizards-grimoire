@@ -7,6 +7,9 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class CrushingBlow extends BaseCard {
 
-    // TODO
+    public function castSpell($args) {
+        // Deal 6 damage
+        $this->dealDamage(6);
+    }
 
 }
