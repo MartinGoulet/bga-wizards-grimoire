@@ -2,7 +2,7 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 
 class Hellstorm extends BaseCard {
 
@@ -13,5 +13,4 @@ class Hellstorm extends BaseCard {
         $max_value = ManaCard::getMaxValue($cards);
         $this->dealDamage($max_value);
     }
-
 }

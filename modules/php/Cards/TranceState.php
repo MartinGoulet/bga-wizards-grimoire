@@ -3,7 +3,6 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Objects\CardLocation;
 
 class TranceState extends BaseCard {
 

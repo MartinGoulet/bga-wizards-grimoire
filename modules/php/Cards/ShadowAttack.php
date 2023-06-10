@@ -3,10 +3,9 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Assert;
-use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
 
 class ShadowAttack extends BaseCard {
 
@@ -19,7 +18,8 @@ class ShadowAttack extends BaseCard {
         $card = Assert::hasManaCardUnderSpell($mana_deck_pos, $player_id);
 
         ManaCard::addOnTopOfDiscard($card['id']);
-        $cardAfter = ManaCard::get($card['id'];
+
+        $cardAfter = ManaCard::get($card['id']);
         Notifications::moveManaCard($player_id, [$card], [$cardAfter]);
 
         $power = intval($card['type']);

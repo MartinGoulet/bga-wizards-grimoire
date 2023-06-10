@@ -68,7 +68,7 @@ trait ActionTrait {
         $spell = Assert::isCardInRepertoire($card_id, $player_id);
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
-        
+
         $card_type = $this->card_types[$spell['type']];
         if (sizeof($mana_ids) !== $card_type['cost']) {
             throw new BgaSystemException("Not enough mana");

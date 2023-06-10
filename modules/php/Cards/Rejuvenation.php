@@ -5,6 +5,7 @@ namespace WizardsGrimoire\Cards;
 use BgaSystemException;
 use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;

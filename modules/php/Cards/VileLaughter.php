@@ -3,7 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoire\Core\ManaCard;
 
 class VileLaughter extends BaseCard {
 

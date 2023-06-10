@@ -8,7 +8,7 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Assert {
 
-    public static function hasManaCardUnderSpell($deck_position, int $player_id = 0) {
+    public static function hasManaCardUnderSpell(int $deck_position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }

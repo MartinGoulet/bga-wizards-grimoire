@@ -2,11 +2,9 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
 
 class FireBlast extends BaseCard {
 

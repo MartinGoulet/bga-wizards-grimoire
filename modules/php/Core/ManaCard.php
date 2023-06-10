@@ -13,7 +13,7 @@ class ManaCard {
         Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
     }
 
-    public static function addOnTopOfManaCoolDown(int $card_id, int $position, int player_id = 0) {
+    public static function addOnTopOfManaCoolDown(int $card_id, int $position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -70,14 +70,14 @@ class ManaCard {
 
     public static function getHand(int $player_id = 0) {
         if($player_id == 0) {
-            $player_id = self::getPlayerId();
+            $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id);
     }
 
     public static function getHandCount(int $player_id = 0) {
         if($player_id == 0) {
-            $player_id = self::getPlayerId();
+            $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->countCardInLocation(CardLocation::Hand(), $player_id);
     }

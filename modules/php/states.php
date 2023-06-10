@@ -4,7 +4,6 @@ namespace WizardsGrimoire\Core;
 
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Objects\CardLocation;
 
 trait StateTrait {
 
