@@ -8,8 +8,11 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Assert {
 
-    public static function hasManaCardUnderSpell($deck_position, $player_id) {
-        $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $deck_position));
+    public static function hasManaCardUnderSpell($deck_position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $card = ManaCard::getOnTopOnManaCoolDown($deck_position, $player_id);
 
         if ($card == null) {
             throw new BgaSystemException("Card not found under the spell at position " . $deck_position);
@@ -29,7 +32,7 @@ class Assert {
     }
 
     public static function isCardInDiscard(int $card_id) {
-        $card = Game::get()->deck_manas->getCard($card_id);
+        $card = ManaCard::get($card_id);
         if ($card['location'] != CardLocation::Discard()) {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];
@@ -44,7 +47,7 @@ class Assert {
             $player_id = Players::getPlayerId();
         }
 
-        $card = Game::get()->deck_manas->getCard($card_id);
+        $card = ManaCard::get($card_id);
         if ($card['location'] != CardLocation::Hand() || intval($card['location_arg']) != $player_id) {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];

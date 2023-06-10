@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
@@ -14,14 +15,14 @@ class EnergyReserve extends BaseCard {
         // Pick up a mana card off 1 of your others spells. Gain mana equal to that mana's power.
         $player_id = Players::getPlayerId();
         $position = intval(array_shift($args));
-        $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $position));
+        $card = ManaCard::getOnTopOnManaCoolDown($position);
 
         if ($card == null) {
             throw new BgaSystemException("No card");
         }
 
         Game::get()->deck_manas->moveCard($card['id'], CardLocation::Hand(), Players::getPlayerId());
-        $card_after = Game::get()->deck_manas->getCard($card['id']);
+        $card_after = ManaCard::get($card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
 
         $mana_power = intval($card['type']);

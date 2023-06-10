@@ -2,14 +2,14 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\ManaCard;
 
 class GleamOfHope extends BaseCard {
 
     public function castSpell($args) {
 
         // Gain mana until you have 5 mana cards in your hand
-        $hand_count = Players::getHandCount();
+        $hand_count = ManaCard::getHandCount();
 
         $this->drawManaCards(5 - $hand_count);
     }

@@ -14,7 +14,7 @@ class TouchTheVoid extends BaseCard {
         $max_value = 0;
 
         for ($i = 1; $i <= 6; $i++) {
-            $count = Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $i));
+            $count = ManaCard::countOnTopOfManaCoolDown($i);
             if ($count > $max_value) {
                 $max_value = $count;
             }

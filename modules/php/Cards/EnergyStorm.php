@@ -11,7 +11,7 @@ class EnergyStorm extends BaseCard {
     public function castSpell($args) {
         // Deal 3 damage. Deal 1 additional damage for each 4 power mana in your hand
         $player_id = Players::getPlayerId();
-        $mana_cards = Game::get()->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id);
+        $mana_cards = ManaCard::getHand();
 
         $nbr_4_powers = sizeof(array_filter($mana_cards, function ($card) {
             return $card['type'] == 4;

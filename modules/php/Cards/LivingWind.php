@@ -20,7 +20,7 @@ class LivingWind extends BaseCard {
             $card_type = Game::getSpellCard($spell);
             if ($card_type['class'] !== "LivingWind") {
                 $pos = intval($spell['location_arg']);
-                $count = Game::Get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $pos));
+                $count = ManaCard::countOnTopOfManaCoolDown($pos);
 
                 if ($count > 0) {
                     $total--;

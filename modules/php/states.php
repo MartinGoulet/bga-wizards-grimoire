@@ -34,8 +34,7 @@ trait StateTrait {
         $spell_delayed = [];
 
         for ($i = 1; $i <= 6; $i++) {
-            $location_from = CardLocation::PlayerManaCoolDown($playerId, $i);
-            $mana_card = $this->deck_manas->getCardOnTop($location_from);
+            $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
             if ($mana_card) {
                 $spell = SpellCard::getCardInRepertoire($i);
                 $spell_info = SpellCard::getCardInfo($spell);
@@ -48,8 +47,8 @@ trait StateTrait {
                     }
                 }
                 $cards_before[] = $mana_card;
-                $this->deck_manas->insertCardOnExtremePosition($mana_card['id'], CardLocation::Discard(), true);
-                $cards_after[] = $this->deck_manas->getCard($mana_card['id']);
+                ManaCard::addOnTopOfDiscard($mana_card['id']);
+                $cards_after[] = ManaCard::get($mana_card['id']);
             }
         }
 

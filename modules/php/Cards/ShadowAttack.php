@@ -18,8 +18,8 @@ class ShadowAttack extends BaseCard {
 
         $card = Assert::hasManaCardUnderSpell($mana_deck_pos, $player_id);
 
-        Game::get()->deck_manas->insertCardOnExtremePosition($card['id'], CardLocation::Discard(), true);
-        $cardAfter = Game::get()->deck_manas->getCard($card['id']);
+        ManaCard::addOnTopOfDiscard($card['id']);
+        $cardAfter = ManaCard::get($card['id'];
         Notifications::moveManaCard($player_id, [$card], [$cardAfter]);
 
         $power = intval($card['type']);

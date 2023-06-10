@@ -10,7 +10,7 @@ class Hellstorm extends BaseCard {
         // Gain 5 mana cards. Deal damage equal to the highest power mana you gain
         $cards = $this->drawManaCards(5);
 
-        $max_value = Game::getMaxManaCardValue($cards);
+        $max_value = ManaCard::getMaxValue($cards);
         $this->dealDamage($max_value);
     }
 

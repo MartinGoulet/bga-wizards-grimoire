@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Assert;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 
@@ -17,7 +18,7 @@ class GuiltyBond extends BaseCard {
 
         Notifications::revealManaCard(Players::getPlayerId(), $mana_power);
 
-        $opponent_hand = Players::getHand(Players::getOpponentId());
+        $opponent_hand = ManaCard::getHand(Players::getOpponentId());
         $cards_same_power = array_filter($opponent_hand, function($card) use($mana_power) {
             return intval($card['type']) == $mana_power;
         });

@@ -23,7 +23,7 @@ class Rejuvenation extends BaseCard {
             }, $mana_ids);
 
             Game::get()->deck_manas->moveCards($mana_ids, CardLocation::Hand(), $player_id);
-            $cards_after = Game::get()->deck_manas->getCards($mana_ids);
+            $cards_after = ManaCard::getCards($mana_ids);
             Notifications::moveManaCard($player_id, $cards_before, $cards_after);
         } else {
             throw new BgaSystemException("Arguments error " . sizeof($args));

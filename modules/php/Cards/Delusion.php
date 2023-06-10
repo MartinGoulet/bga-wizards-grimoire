@@ -18,7 +18,7 @@ class Delusion extends BaseCard {
             $player_id = Players::getPlayerId();
             $opponent_id = Players::getOpponentId();
             $opponent_stack_pos = intval(array_shift($args));
-            $card = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($opponent_id, $opponent_stack_pos));
+            $card = ManaCard::getOnTopOnManaCoolDown($opponent_stack_pos, $opponent_id);
             if ($card !== null) {
                 $card_after = Game::get()->deck_manas->pickCard(CardLocation::PlayerManaCoolDown($opponent_id, $opponent_stack_pos), $player_id);
                 Notifications::moveManaCard($player_id, [$card], [$card_after]);

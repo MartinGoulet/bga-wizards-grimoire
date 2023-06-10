@@ -80,14 +80,10 @@ trait ActionTrait {
 
         // Move card to the mana position below the spell
         foreach ($mana_cards_before as $card_id => $card) {
-            $this->deck_manas->insertCardOnExtremePosition(
-                $card['id'],
-                CardLocation::PlayerManaCoolDown($player_id, $spell['location_arg']),
-                true
-            );
+            ManaCard::addOnTopOfManaCoolDown($card['id'], intval($spell['location_arg']));
         }
 
-        $mana_cards_after = $this->deck_manas->getCards($mana_ids);
+        $mana_cards_after = ManaCard::getCards($mana_ids);
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
@@ -106,8 +102,8 @@ trait ActionTrait {
         $card = Assert::isCardInHand($mana_id, $player_id);
         $damage = intval($card['type']);
 
-        Game::get()->deck_manas->insertCardOnExtremePosition($mana_id, CardLocation::Discard(), true);
-        $card_after = $this->deck_manas->getCard($mana_id);
+        ManaCard::addOnTopOfDiscard($mana_id);
+        $card_after = ManaCard::get($mana_id);
         Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);

@@ -22,7 +22,7 @@ class ToxicGift extends BaseCard {
         $card = Assert::isCardInHand($card_id);
 
         Game::get()->deck_manas->moveCard($card["id"], CardLocation::Hand(), Players::getOpponentId());
-        $card_after = Game::get()->deck_manas->getCard($card_id);
+        $card_after = ManaCard::get($card_id);
         Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
 
         $damage = intval($card['type']);

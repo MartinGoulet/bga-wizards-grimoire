@@ -34,7 +34,7 @@ class Game extends APP_DbObject {
         $ongoing_active_spell = array_filter($spells, function($card) use($game, $player_id) {
             $card_type = self::getSpellCard($card);
             if($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
-                $count = $game->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $card['location_arg']));
+                $count = ManaCard::countOnTopOfManaCoolDown($card['location_arg']);
                 if($count > 0) {
                     return true;
                 }
@@ -50,7 +50,7 @@ class Game extends APP_DbObject {
         $ongoing_active_spell = array_filter($spells, function($card) use($game, $player_id) {
             $card_type = self::getSpellCard($card);
             if($card_type['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
-                $count = $game->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $card['location_arg']));
+                $count = ManaCard::countOnTopOfManaCoolDown($card['location_arg']);
                 if($count > 0) {
                     return true;
                 }
@@ -62,15 +62,6 @@ class Game extends APP_DbObject {
 
     public static function getSpellCard($card) {
         return Game::get()->card_types[$card['type']];
-    }
-
-    public static function getMaxManaCardValue($cards) {
-        if($cards == null || sizeof($cards) === 0) {
-            return 0;
-        }
-        return max(array_values(array_map(function ($card) {
-            return $card['type'];
-        }, $cards)));
     }
 
     static function setGlobalVariable(string $name, /*object|array*/ $obj) {

@@ -14,7 +14,7 @@ class Fury extends BaseCard {
 
         $total = 0;
         for ($i = 1; $i <= 6; $i++) {
-            $count = Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($opponent_id, $i));
+            $count = ManaCard::countOnTopOfManaCoolDown($i, $opponent_id);
             if ($count > 0) {
                 $total++;
             }

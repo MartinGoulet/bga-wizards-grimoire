@@ -2,7 +2,7 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\ManaCard;
 
 class Tsunami extends BaseCard {
 
@@ -12,7 +12,7 @@ class Tsunami extends BaseCard {
 
         $this->drawManaCards(1);
 
-        $hand = Players::getHand();
+        $hand = ManaCard::getHand();
 
         $distinct_values = array_unique(array_values(array_filter($hand, function ($card) {
             return intval($card['type']);

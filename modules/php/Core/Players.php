@@ -24,20 +24,6 @@ class Players extends \APP_DbObject {
         return $life_remaining;
     }
 
-    public static function getHandCount(int $player_id = 0) {
-        if($player_id == 0) {
-            $player_id = self::getPlayerId();
-        }
-        return Game::get()->deck_manas->countCardInLocation(CardLocation::Hand(), $player_id);
-    }
-
-    public static function getHand(int $player_id = 0) {
-        if($player_id == 0) {
-            $player_id = self::getPlayerId();
-        }
-        return Game::get()->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id);
-    }
-
     public static function getPlayerId() {
         return Game::get()->getActivePlayerId();
     }

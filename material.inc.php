@@ -101,7 +101,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
     "js_actions" => "actionSelectManaFrom",
-    "debug" => "lightgreen",
+    "debug" => "green",
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
