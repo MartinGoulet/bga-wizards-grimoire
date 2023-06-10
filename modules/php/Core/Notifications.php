@@ -54,10 +54,17 @@ class Notifications {
     }
 
     static function hasNoManaCard(int $player_id, int $value) {
-        self::message('${player_name} does not have a ${value} power mana.', [
+        self::message(clienttranslate('${player_name} does not have a ${value} power mana.'), [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "value" => $value,
+        ]);
+    }
+
+    static function manaDeckShuffle($cards) {
+        $msg = clienttranslate("Mana deck reshuffle because it's empty");
+        self::notifyAll('onManaDeckShuffle', $msg, [
+            "cards" => $cards,
         ]);
     }
 

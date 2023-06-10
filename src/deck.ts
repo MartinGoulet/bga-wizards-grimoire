@@ -26,12 +26,6 @@ class VisibleDeck<T extends Card> extends Deck<T> {
          autoRemovePreviousCards: false,
       });
    }
-
-   public addCard(card: T, animation?: CardAnimation<T>, settings?: AddCardToDeckSettings): Promise<boolean> {
-      settings = settings ?? {};
-      settings.index = settings.index ?? card.location_arg;
-      return super.addCard(card, animation, settings);
-   }
 }
 
 class ManaDeck extends Deck<ManaCard> {

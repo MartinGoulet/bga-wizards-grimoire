@@ -31,10 +31,22 @@ trait StateTrait {
 
         $cards_before = [];
         $cards_after = [];
-        for ($i = 1; $i < 6; $i++) {
+        $spell_delayed = [];
+
+        for ($i = 1; $i <= 6; $i++) {
             $location_from = CardLocation::PlayerManaCoolDown($playerId, $i);
             $mana_card = $this->deck_manas->getCardOnTop($location_from);
-            if($mana_card) {
+            if ($mana_card) {
+                $spell = SpellCard::getCardInRepertoire($i);
+                $spell_info = SpellCard::getCardInfo($spell);
+                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
+                    if($spell_info['activation_auto'] == true) {
+                        $instance = SpellCard::getInstanceOfCard($spell);
+                        $instance->castSpell($mana_card);
+                    } else {
+                        $spell_delayed[] = $spell['id'];
+                    }
+                }
                 $cards_before[] = $mana_card;
                 $this->deck_manas->insertCardOnExtremePosition($mana_card['id'], CardLocation::Discard(), true);
                 $cards_after[] = $this->deck_manas->getCard($mana_card['id']);
@@ -42,14 +54,18 @@ trait StateTrait {
         }
 
         Notifications::moveManaCard($playerId, $cards_before, $cards_after, "@@@", false);
-        $this->gamestate->nextState();
+
+        if(sizeof($spell_delayed) == 0) {
+            $this->gamestate->nextState('next');
+        } else {
+            Game::setGlobalVariable(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed);
+            $this->gamestate->nextState('delayed');
+        }
+
     }
 
     function stGainMana() {
-        $playerId = intval($this->getActivePlayerId());
-        $mana_cards = $this->deck_manas->pickCards(3, CardLocation::Deck(), $playerId);
-
-        Notifications::drawManaCards($playerId, $mana_cards);
+        ManaCard::Draw(3);
         $this->gamestate->nextState();
     }
 

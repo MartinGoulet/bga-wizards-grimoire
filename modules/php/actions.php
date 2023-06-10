@@ -91,7 +91,9 @@ trait ActionTrait {
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
-            $this->executeCard($spell, $args);
+            $cardClass = SpellCard::getInstanceOfCard($spell);
+            // Execute the ability of the card
+            $cardClass->castSpell($args, $spell['id']);
         }
 
         $this->gamestate->nextState("cast");
@@ -115,13 +117,13 @@ trait ActionTrait {
         $opponent_ongoing_spells = Game::getOngoingActiveSpells($opponent_id);
 
         foreach ($player_ongoing_spells as $card_id => $card) {
-            $spell = $this->getInstanceOfCard($card);
+            $spell = SpellCard::getInstanceOfCard($card);
             $spell->owner = $player_id;
             $spell->onAfterBasicAttack($mana_id);
         }
 
         foreach ($opponent_ongoing_spells as $card_id => $card) {
-            $spell = $this->getInstanceOfCard($card);
+            $spell = SpellCard::getInstanceOfCard($card);
             $spell->owner = $opponent_id;
             $spell->onAfterBasicAttack($mana_id);
         }
@@ -138,23 +140,4 @@ trait ActionTrait {
     //////////// Private method
     //////////// 
 
-
-    /**
-     * @return BaseCard
-     */
-    private function getInstanceOfCard($card) {
-        // Get info of the card
-        $card_type = $this->card_types[$card['type']];
-        // Create the class for the card logic
-        $className = "WizardsGrimoire\\Cards\\" . $card_type['class'];
-        /** @var BaseCard */
-        $cardClass = new $className();
-        return $cardClass;
-    }
-
-    private function executeCard($card, $args) {
-        $cardClass = $this->getInstanceOfCard($card);
-        // Execute the ability of the card
-        $cardClass->castSpell($args, $card['id']);
-    }
 }

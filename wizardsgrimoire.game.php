@@ -34,10 +34,12 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
 require_once('modules/php/actions.php');
+require_once('modules/php/args.php');
 require_once('modules/php/states.php');
 require_once('modules/php/constants.inc.php');
 
 use WizardsGrimoire\Core\ActionTrait;
+use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\StateTrait;
@@ -45,6 +47,7 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class WizardsGrimoire extends Table {
     use ActionTrait;
+    use ArgsTrait;
     use StateTrait;
 
     /** @var WizardsGrimoire */
@@ -86,7 +89,6 @@ class WizardsGrimoire extends Table {
 
         $this->deck_manas = self::getNew("module.common.deck");
         $this->deck_manas->init("manas");
-        $this->deck_manas->autoreshuffle = true;
     }
 
     public static function get() {
@@ -417,7 +419,7 @@ class WizardsGrimoire extends Table {
         // $from_version is the current version of this game database, in numerical form.
         // For example, if the game was running with a release of your game named "140430-1345",
         // $from_version is equal to 1404301345
-
+        
         // Example:
         //        if( $from_version <= 1404301345 )
         //        {

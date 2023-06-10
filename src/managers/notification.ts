@@ -8,6 +8,7 @@ class NotificationManager {
       this.subscribeEvent("onRefillSpell", 500);
       this.subscribeEvent("onDrawManaCards", 1000, true);
       this.subscribeEvent("onMoveManaCards", 1000, true);
+      this.subscribeEvent("onManaDeckShuffle", 2500);
       this.subscribeEvent("onSpellCoolDown", 1000);
       this.subscribeEvent("onHealthChanged", 500);
 
@@ -50,6 +51,11 @@ class NotificationManager {
       const { player_id, cards } = notif.args;
       log("onDrawManaCards", cards);
       this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+   }
+
+   private notif_onManaDeckShuffle(notif: INotification<NotifManaDeckShuffleArgs>) {
+      log("onManaDeckShuffle");
+      this.game.tableCenter.shuffleManaDeck(notif.args.cards);
    }
 
    private notif_onMoveManaCards(notif: INotification<NotifMoveManaCardsArgs>) {

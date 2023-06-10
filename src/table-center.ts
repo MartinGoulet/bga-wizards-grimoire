@@ -2,13 +2,15 @@ const EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
 const TEN_CARDS_SLOT = [1, 6, 2, 7, 3, 8, 4, 9, 5, 10];
 
 class TableCenter {
-   public spellDeck: Deck<SpellCard>;
-   public spellDiscard: Deck<SpellCard>;
+   public spellDeck: HiddenDeck<SpellCard>;
+   public spellDiscard: VisibleDeck<SpellCard>;
 
-   public manaDeck: Deck<ManaCard>;
-   public manaDiscard: Deck<ManaCard>;
+   public manaDeck: HiddenDeck<ManaCard>;
+   public manaDiscard: VisibleDeck<ManaCard>;
 
    public spellPool: SlotStock<SpellCard>;
+
+   public manaDiscardDisplay: LineStock<ManaCard>;
 
    constructor(private game: WizardsGrimoire) {
       this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
@@ -22,6 +24,13 @@ class TableCenter {
          mapCardToSlot: (card) => card.location_arg,
          direction: "column",
       });
+
+      this.manaDiscardDisplay = new LineStock(
+         game.manasManager,
+         document.getElementById("mana-discard-display"),
+         { gap: "2px" },
+      );
+      this.manaDiscardDisplay.setSelectionMode("multiple");
 
       game.gamedatas.spells.deck.forEach((card) => {
          this.spellDeck.addCard({ ...card, isHidden: true });
@@ -37,6 +46,28 @@ class TableCenter {
          this.manaDiscard.addCard(card);
       });
       this.spellPool.addCards(game.gamedatas.slot_cards);
+   }
+
+   public async shuffleManaDeck(cards: ManaCard[]) {
+      await this.manaDeck.addCards(cards);
+      await this.manaDeck.shuffle(8);
+   }
+
+   public moveManaDiscardPile(toDisplay: boolean) {
+      this.manaDiscardDisplay.unselectAll();
+      if (toDisplay) {
+         const cards = [...this.manaDiscard.getCards()];
+         this.manaDiscardDisplay.addCards(cards);
+      } else {
+         // const cards = [...this.manaDiscardDisplay.getCards()];
+         // this.manaDiscard.addCards(cards);
+         this.manaDiscardDisplay
+            .getCards()
+            .sort((x, y) => x.location_arg - y.location_arg)
+            .forEach((card) => {
+               this.manaDiscard.addCard(card);
+            });
+      }
    }
 
    public onRefillSpell(card: SpellCard) {

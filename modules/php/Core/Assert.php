@@ -28,6 +28,17 @@ class Assert {
         return $card;
     }
 
+    public static function isCardInDiscard(int $card_id) {
+        $card = Game::get()->deck_manas->getCard($card_id);
+        if ($card['location'] != CardLocation::Discard()) {
+            $card_loc = $card['location'];
+            $card_loc_arg = $card['location_arg'];
+            throw new \BgaSystemException("The card $card_id doesn't belong to discard. Card info : $card_loc, $card_loc_arg");
+        }
+
+        return $card;
+    }
+
     public static function isCardInHand(int $card_id, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();

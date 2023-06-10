@@ -1,14 +1,17 @@
 const states = {
    client: {
       castSpellWithMana: "client_castSpellWithMana",
+      question: "client_question",
       selectMana: "client_selectMana",
-      selectManaHand: "client_selectManaHand",
       selectManaDeck: "client_selectManaDeck",
+      selectManaDiscard: "client_selectManaDiscard",
+      selectManaHand: "client_selectManaHand",
    },
    server: {
       castSpell: "castSpell",
       chooseNewSpell: "chooseNewSpell",
       basicAttack: "basicAttack",
+      activateDelayedSpell: "activateDelayedSpell",
    },
 };
 
@@ -19,10 +22,13 @@ class StateManager {
    constructor(private game: WizardsGrimoire) {
       this.states = {
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
+         [states.client.question]: new QuestionStates(game),
          [states.client.selectMana]: new SelectManaStates(game),
          [states.client.selectManaDeck]: new SelectManaDeckStates(game),
+         [states.client.selectManaDiscard]: new SelectManaDiscardStates(game),
          [states.client.selectManaHand]: new SelectManaHandStates(game),
 
+         [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.basicAttack]: new BasicAttackStates(game),
          [states.server.castSpell]: new CastSpellStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),

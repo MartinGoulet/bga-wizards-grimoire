@@ -5,9 +5,11 @@
 @import "player-table";
 
 #table {
-   margin-top: 20px;
    display: flex;
    justify-content: center;
+}
+#bga-zoom-wrapper {
+   padding: 20px 0;
 }
 
 #tables-and-center {

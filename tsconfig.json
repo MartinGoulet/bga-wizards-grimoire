@@ -48,9 +48,12 @@
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
 
+        "src/states/activate-delayed-spell.ts",
         "src/states/cast-spell-with-mana.ts",
+        "src/states/question.ts",
         "src/states/select-mana.ts",
         "src/states/select-mana-deck.ts",
+        "src/states/select-mana-discard.ts",
         "src/states/select-mana-hand.ts",
 
         "src/define.ts"

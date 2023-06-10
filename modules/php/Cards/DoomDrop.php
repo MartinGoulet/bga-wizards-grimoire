@@ -2,11 +2,12 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
-
 class DoomDrop extends BaseCard {
 
-    // TODO
+    public function castSpell($args) {
+        // Each time a mana card is discarded of this spell, deal damage equal to that mana's power
+        $mana_card = $args;
 
+        $this->dealDamage(intval($mana_card['type']));
+    }
 }

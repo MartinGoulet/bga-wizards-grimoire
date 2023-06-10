@@ -91,6 +91,21 @@ class PlayerTable {
       return this.hand.getCards().length >= cost;
    }
 
+   public getSpellSlotAvailables() {
+      if (this.spell_repertoire.getCards().length < 6) {
+         return arrayRange(this.spell_repertoire.getCards().length + 1, 6);
+      }
+
+      const slots: number[] = [];
+      Object.keys(this.mana_cooldown).forEach((index) => {
+         const deck: ManaDeck = this.mana_cooldown[index];
+         if (deck.getCards().length == 0) {
+            slots.push(Number(index));
+         }
+      });
+      return slots;
+   }
+
    public getManaDecks(exclude: number[] = []) {
       const positions = [];
       for (let index = 1; index <= 6; index++) {

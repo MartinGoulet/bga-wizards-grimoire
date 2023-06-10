@@ -85,6 +85,10 @@ interface NotifDrawManaCardsArgs {
    cards: ManaCard[];
 }
 
+interface NotifManaDeckShuffleArgs {
+   cards: ManaCard[];
+}
+
 interface NotifMoveManaCardsArgs {
    player_id: number;
    nbr: number;

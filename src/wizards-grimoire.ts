@@ -2,6 +2,7 @@ const isDebug =
    window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 const log = isDebug ? console.log.bind(window.console) : function () {};
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
+const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
 
 interface WizardsGrimoire
    extends ebg.core.gamegui,

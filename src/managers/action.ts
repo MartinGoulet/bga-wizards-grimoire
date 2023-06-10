@@ -105,6 +105,19 @@ class ActionManager {
       this.selectManaHand(1, msg, true);
    }
 
+   private actionSelectTwoManaCardFromDiscard() {
+      const msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
+      const { name } = this.game.getCardType(this.current_card);
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 2,
+            exact: true,
+         } as SelectManaDiscardArgs,
+      });
+   }
+
    private actionSelectManaFrom() {
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
 
@@ -146,19 +159,45 @@ class ActionManager {
       this.selectManaDeck(1, msg, true, argsSuppl);
    }
 
-   private actionShadowAttack() {
-      // const msg = _("${you} must select ${nbr} mana card to discard");
-      // this.selectMana(1, msg, true);
-      this.actionSelectManaFrom();
-   }
-
    private actionTimeDistortion() {
       const msg = _("${you} may select up to ${nbr} mana card");
       this.selectMana(2, msg, false);
    }
 
    ////////////////////////////////////////
+   // Specific card action
+
+   private actionRejuvenation() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Gain 4 mana cards"),
+               action: () => {
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Take 2 mana cards of any power from the discard pile"),
+               action: () => {
+                  this.actions.push("actionSelectTwoManaCardFromDiscard");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   ////////////////////////////////////////
    // Utilities
+
+   private question(args: QuestionArgs) {
+      const { name } = this.game.getCardType(this.current_card);
+      this.game.setClientState(states.client.question, {
+         descriptionmyturn: _(name),
+         args,
+      });
+   }
 
    private selectMana(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
       const { name } = this.game.getCardType(this.current_card);

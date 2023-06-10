@@ -14,6 +14,8 @@ define('WG_DIFFICULTY_ADVANCED', 3);
  */
 define('WG_VAR_SLOT_COUNT', 'slot_count');
 
+define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
+
 /*
  * State constants
  */
@@ -24,6 +26,7 @@ define('ST_PLAYER_NEW_TURN', 10);
 define('ST_CHOOSE_NEW_SPELL', 2);
 
 define('ST_SPELL_COOL_DOWN', 3);
+define('ST_SPELL_CD_ACTIVATE_DELAYED', 31);
 
 define('ST_GAIN_MANA', 4);
 

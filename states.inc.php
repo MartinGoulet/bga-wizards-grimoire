@@ -92,7 +92,8 @@ $chooseSpellStates = [
         "possibleactions" => ["chooseSpell", "pass"],
         "transitions" => [
             "next_player" => ST_NEXT_PLAYER,
-            "end" => ST_SPELL_COOL_DOWN
+            "pass" => ST_SPELL_COOL_DOWN,
+            "end" => ST_SPELL_COOL_DOWN,
         ]
     ],
 ];
@@ -103,9 +104,23 @@ $spellCoolDownStates = [
         "type" => "game",
         "action" => "stSpellCoolDown",
         "transitions" => [
-            "" => ST_GAIN_MANA
+            "next" => ST_GAIN_MANA,
+            "delayed" => ST_SPELL_CD_ACTIVATE_DELAYED,
         ]
-    ]
+    ],
+
+    ST_SPELL_CD_ACTIVATE_DELAYED => [
+        "name" => "activateDelayedSpell",
+        "description" => clienttranslate('${actplayer} may activate a spell or pass'),
+        "descriptionmyturn" => clienttranslate('${you} may activate a spell or pass'),
+        "args" => "argActivateDelayedSpell",
+        "type" => "activeplayer",
+        "possibleactions" => ["activateSpell", "pass"],
+        "transitions" => [
+            "cast" => ST_SPELL_CD_ACTIVATE_DELAYED,
+            "pass" => ST_GAIN_MANA
+        ]
+    ],
 ];
 
 $gainManaStates = [

@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
@@ -41,14 +42,7 @@ abstract class BaseCard {
 
     protected function drawManaCards(int $nbr, int $player_id = 0) 
     {
-        if($player_id == 0) {
-            $player_id = Players::getPlayerId();
-        }
-        $mana_cards = Game::get()->deck_manas->pickCards($nbr, CardLocation::Deck(), $player_id);
-
-        Notifications::drawManaCards($player_id, $mana_cards);
-
-        return $mana_cards;
+        return ManaCard::Draw($nbr, $player_id);
     }
 
     protected function getCardName() {

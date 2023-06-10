@@ -1,6 +1,7 @@
 #table-center {
    display: flex;
    justify-content: center;
+   flex-wrap: wrap;
    width: 732px;
    gap: 20px;
 }
@@ -19,6 +20,32 @@
 
       &:empty {
          border: 1px solid darkslategray;
+      }
+   }
+}
+
+#mana-discard-display {
+   display: none;
+}
+
+.gamestate_client_selectManaDiscard {
+
+   #mana-discard-display {
+      --width: 100px;
+      --height: 140px;
+      display: flex;
+      width: 100%;
+      row-gap: 10px;
+      border: 2px solid black;
+      padding: 25px 25px 25px 50px;
+      border-radius: 10px;
+
+      .wg-card {
+         margin-left: -25px;
+
+         &:hover {
+            z-index: 1000;
+         }
       }
    }
 }
