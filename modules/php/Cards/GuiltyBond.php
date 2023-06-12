@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -12,7 +11,7 @@ class GuiltyBond extends BaseCard {
     public function castSpell($args) {
         // Show your opponent a mana from your hand. Deal 2 damage if they have a mana of the same power in their hand
         $mana_id = intval(array_shift($args));
-        $card = Assert::isCardInHand($mana_id);
+        $card = ManaCard::isInHand($mana_id);
         $mana_power = intval($card['type']);
 
         Notifications::revealManaCard(Players::getPlayerId(), $mana_power);

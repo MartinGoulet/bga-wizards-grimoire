@@ -5,6 +5,7 @@ namespace WizardsGrimoire\Cards;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Objects\CardLocation;
 
 class RenewedFervor extends BaseCard {
@@ -12,10 +13,10 @@ class RenewedFervor extends BaseCard {
     public function castSpell($args) {
         // Pick up a mana card off each of your instant attack spells that costs 2 or less.
         $player_id = Players::getPlayerId();
+        $spells = SpellCard::getCardsFromRepertoire();
 
-        $spells = Game::get()->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id));
         $cards = array_filter($spells, function ($card) {
-            $card_type = Game::getSpellCard($card);
+            $card_type = Spell::getCardInfo($card);
             $isInstantAttackSpellWithCostTwoOrLess =
                 $card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT &&
                 $card_type['type'] == WG_SPELL_TYPE_DAMAGE &&

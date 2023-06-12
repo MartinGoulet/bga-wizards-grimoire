@@ -19,7 +19,7 @@ trait ActionTrait {
     public function chooseSpell(int $card_id) {
         $this->checkAction('chooseSpell');
 
-        $card = $this->deck_spells->getCard($card_id);
+        $card = SpellCard::get($card_id);
 
         if ($card == null) {
             throw new \BgaSystemException('Card is null');
@@ -48,7 +48,7 @@ trait ActionTrait {
             $card['location_arg']
         );
 
-        $card = $this->deck_spells->getCard($card_id);
+        $card = SpellCard::get($card_id);
 
         Notifications::chooseSpell($playerId, $card);
         Notifications::refillSpell($playerId, $newSpell);
@@ -65,7 +65,7 @@ trait ActionTrait {
         $this->checkAction('castSpell');
         $player_id = intval($this->getActivePlayerId());
         // Get the card and verify ownership
-        $spell = Assert::isCardInRepertoire($card_id, $player_id);
+        $spell = SpellCard::isInRepertoire($card_id, $player_id);
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
@@ -75,7 +75,7 @@ trait ActionTrait {
         }
 
         $mana_cards_before = array_map(function ($mana_id) use ($player_id) {
-            return Assert::isCardInHand($mana_id, $player_id);
+            return ManaCard::isInHand($mana_id, $player_id);
         }, $mana_ids);
 
         // Move card to the mana position below the spell
@@ -99,7 +99,7 @@ trait ActionTrait {
         $this->checkAction('basicAttack');
         $player_id = Players::getPlayerId();
         $opponent_id = Players::getOpponentId();
-        $card = Assert::isCardInHand($mana_id, $player_id);
+        $card = ManaCard::isInHand($mana_id, $player_id);
         $damage = intval($card['type']);
 
         ManaCard::addOnTopOfDiscard($mana_id);
@@ -109,8 +109,8 @@ trait ActionTrait {
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
 
-        $player_ongoing_spells = Game::getOngoingActiveSpells($player_id);
-        $opponent_ongoing_spells = Game::getOngoingActiveSpells($opponent_id);
+        $player_ongoing_spells = SpellCard::getOngoingActiveSpells($player_id);
+        $opponent_ongoing_spells = SpellCard::getOngoingActiveSpells($opponent_id);
 
         foreach ($player_ongoing_spells as $card_id => $card) {
             $spell = SpellCard::getInstanceOfCard($card);

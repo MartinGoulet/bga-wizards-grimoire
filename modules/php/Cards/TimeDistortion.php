@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -20,7 +19,7 @@ class TimeDistortion extends BaseCard {
         // Note : Since mana card is not moved, the current spell card played didn't have
         //        any mana card under it.
         foreach ($mana_cards_before as $card_id => $card) {
-            Assert::isManaCardOnTopOfSpellCard($card, $player_id);
+            ManaCard::isOnTopOfSpell($card, $player_id);
         }
 
         Game::get()->deck_manas->moveCards($mana_cards_id, CardLocation::Hand(), $player_id);

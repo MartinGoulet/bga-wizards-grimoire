@@ -37,7 +37,7 @@ trait StateTrait {
         for ($i = 1; $i <= 6; $i++) {
             $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
             if ($mana_card) {
-                $spell = SpellCard::getCardInRepertoire($i);
+                $spell = SpellCard::getFromRepertoire($i);
                 $spell_info = SpellCard::getCardInfo($spell);
                 if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
                     if($spell_info['activation_auto'] == true) {

@@ -33,7 +33,7 @@ class Notifications {
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
             'card' => $card,
-            'card_name' => self::getSpellCardName($card),
+            'card_name' => SpellCard::getName($card),
             'i18n' => ['card_name'],
         ]);
     }
@@ -106,7 +106,7 @@ class Notifications {
         $msg = clienttranslate('${card_name} is added to the spell repertoire.');
         self::notifyAll('onRefillSpell', $msg, [
             'card' => $card,
-            'card_name' => self::getSpellCardName($card),
+            'card_name' => SpellCard::getName($card),
             'i18n' => ['card_name'],
         ]);
     }
@@ -119,14 +119,6 @@ class Notifications {
         ]);
     }
 
-    // static function spellCoolDown($player_id, $mana_cards_discard) {
-    //     self::notify($player_id, 'onSpellCoolDown', '', [
-    //         'player_id' => intval($player_id),
-    //         'mana_cards_discard' => $mana_cards_discard,
-    //         // 'player_name' => self::getPlayerName($player_id),
-    //     ]);
-    // }
-
     static function spellNoEffect() {
         self::message(clienttranslate("The spell has no effect since requirement was not met"));
     }
@@ -134,11 +126,6 @@ class Notifications {
     /*************************
      **** GENERIC METHODS ****
      *************************/
-
-    protected static function getSpellCardName($card) {
-        $card_type = Game::get()->card_types[$card['type']];
-        return $card_type['name'];
-    }
 
     protected static function notifyAll($name, $msg, $args = [], $exclude_player_id = null) {
         if ($exclude_player_id != null) {

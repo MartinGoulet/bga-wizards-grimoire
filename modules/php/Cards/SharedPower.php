@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -23,7 +22,7 @@ class SharedPower extends BaseCard {
         $mana_id = array_shift($args);
         $opponent_id = Players::getOpponentId();
 
-        $card = Assert::isCardInHand($mana_id);
+        $card = ManaCard::isInHand($mana_id);
 
         // Give opponent 1 mana
         

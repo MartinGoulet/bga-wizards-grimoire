@@ -91,10 +91,65 @@ class ManaCard {
         }, $cards)));
     }
 
-    static function getOnTopOnManaCoolDown(int $position, int $player_id = 0) {
+    public static function getOnTopOnManaCoolDown(int $position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
+
+    public static function hasUnderSpell(int $deck_position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $card = ManaCard::getOnTopOnManaCoolDown($deck_position, $player_id);
+
+        if ($card == null) {
+            throw new BgaSystemException("Mana card not found under the spell at position " . $deck_position);
+        }
+
+        return $card;
+    }
+
+    public static function isInDiscard(int $card_id) {
+        $card = ManaCard::get($card_id);
+        if ($card['location'] != CardLocation::Discard()) {
+            $card_loc = $card['location'];
+            $card_loc_arg = $card['location_arg'];
+            throw new \BgaSystemException("The card $card_id doesn't belong to discard. Card info : $card_loc, $card_loc_arg");
+        }
+
+        return $card;
+    }
+
+    public static function isInHand(int $card_id, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+
+        $card = ManaCard::get($card_id);
+        if ($card['location'] != CardLocation::Hand() || intval($card['location_arg']) != $player_id) {
+            $card_loc = $card['location'];
+            $card_loc_arg = $card['location_arg'];
+            throw new \BgaSystemException("The card $card_id doesn't belong to $player_id. Card info : $card_loc, $card_loc_arg");
+        }
+
+        return $card;
+    }
+
+    public static function isOnTopOfSpell($card, $player_id) {
+
+        for ($i = 1; $i <= 6; $i++) {
+            $isOnTop =
+                $card['location'] == CardLocation::PlayerManaCoolDown($player_id, $i) &&
+                $card['location_arg'] == 1;
+
+            if ($isOnTop) {
+                return true;
+            }
+        }
+
+        throw new \BgaSystemException("Mana card not under a spell card in the repertoire " . $card['id']);
+    }
+
 }

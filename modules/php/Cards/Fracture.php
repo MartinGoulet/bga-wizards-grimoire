@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -22,7 +21,7 @@ class Fracture extends BaseCard {
             $player_id = Players::getPlayerId();
             $deck_mana = Game::get()->deck_manas;
 
-            $src_top_card = Assert::hasManaCardUnderSpell($src_deck_pos);
+            $src_top_card = ManaCard::hasUnderSpell($src_deck_pos);
 
             ManaCard::addOnTopOfManaCoolDown($src_top_card['id'], $dest_deck_pos);
             $dest_top_card = $deck_mana->getCard($src_top_card['id']);

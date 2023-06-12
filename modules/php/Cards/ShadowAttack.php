@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -15,7 +14,7 @@ class ShadowAttack extends BaseCard {
         $mana_deck_pos = array_shift($args);
         $player_id = Players::getPlayerId();
 
-        $card = Assert::hasManaCardUnderSpell($mana_deck_pos, $player_id);
+        $card = ManaCard::hasUnderSpell($mana_deck_pos, $player_id);
 
         ManaCard::addOnTopOfDiscard($card['id']);
 

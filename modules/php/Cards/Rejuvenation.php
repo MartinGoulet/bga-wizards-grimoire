@@ -3,7 +3,6 @@
 namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
-use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -20,7 +19,7 @@ class Rejuvenation extends BaseCard {
             $player_id = Players::getPlayerId();
             $mana_ids = explode(",", array_shift($args));
             $cards_before = array_map(function ($mana_id) {
-                return Assert::isCardInDiscard($mana_id);
+                return ManaCard::isInDiscard($mana_id);
             }, $mana_ids);
 
             Game::get()->deck_manas->moveCards($mana_ids, CardLocation::Hand(), $player_id);

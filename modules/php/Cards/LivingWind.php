@@ -5,6 +5,7 @@ namespace WizardsGrimoire\Cards;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Objects\CardLocation;
 
 class LivingWind extends BaseCard {
@@ -13,12 +14,12 @@ class LivingWind extends BaseCard {
         // Gain 6 mana cards, 
         // gain 1 fewer mana for each of your other spells that have a mana on them
         $player_id = Players::getPlayerId();
-        $spells = Game::get()->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id));
+        $spells = SpellCard::getCardsFromRepertoire();
 
         $total = 6;
 
         foreach ($spells as $card_id => $spell) {
-            $card_type = Game::getSpellCard($spell);
+            $card_type = SpellCard::getCardInfo($spell);
             if ($card_type['class'] !== "LivingWind") {
                 $pos = intval($spell['location_arg']);
                 $count = ManaCard::countOnTopOfManaCoolDown($pos);

@@ -42,6 +42,7 @@ use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -228,7 +229,7 @@ class WizardsGrimoire extends Table {
         $result['player_board'] = [];
         foreach ($players as $player_id => $player) {
             $result['player_board'][$player_id] = [
-                'spells' => array_values($this->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id))),
+                'spells' => array_values(SpellCard::getCardsFromRepertoire()),
                 'manas' => [],
             ];
             for ($i = 1; $i <= 6; $i++) {
