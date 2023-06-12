@@ -17,16 +17,18 @@ trait StateTrait {
     */
 
     function stNewTurn() {
-        $playerId = intval($this->getActivePlayerId());
+        $player_id = intval($this->getActivePlayerId());
+        $this->setGameStateValue(WG_VAR_CURRENT_PLAYER, $player_id);
 
         $this->incStat(1, WG_STAT_TURN_NUMBER);
-        $this->incStat(1, WG_STAT_TURN_NUMBER, $playerId);
+        $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
+
 
         $this->gamestate->nextState();
     }
 
     function stSpellCoolDown() {
-        $playerId = intval($this->getActivePlayerId());
+        $player_id = intval($this->getActivePlayerId());
 
         $cards_before = [];
         $cards_after = [];
@@ -51,7 +53,7 @@ trait StateTrait {
             }
         }
 
-        Notifications::moveManaCard($playerId, $cards_before, $cards_after, "@@@", false);
+        Notifications::moveManaCard($player_id, $cards_before, $cards_after, "@@@", false);
 
         if(sizeof($spell_delayed) == 0) {
             $this->gamestate->nextState('next');
@@ -68,8 +70,8 @@ trait StateTrait {
     }
 
     function stNextPlayer() {
-        $playerId = intval($this->getActivePlayerId());
-        $this->giveExtraTime($playerId);
+        $player_id = intval($this->getActivePlayerId());
+        $this->giveExtraTime($player_id);
         $this->activeNextPlayer();
 
         $this->gamestate->nextState();

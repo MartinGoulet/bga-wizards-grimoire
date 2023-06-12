@@ -31,6 +31,16 @@
    }
 }
 
+.wg-title {
+   position: absolute;
+   margin: -36px 0 0 0;
+   border: 3px solid var(--color);
+   border-radius: 5px;
+   padding: 3px 10px;
+   font-weight: 600;
+   background-color: white;
+}
+
 .deck {
    &[data-empty="true"] {
       border: 1px solid black;

@@ -73,6 +73,7 @@ class WizardsGrimoire extends Table {
 
         self::initGameStateLabels(array(
             WG_VAR_SLOT_COUNT => 10,
+            WG_VAR_CURRENT_PLAYER => 11,
             //    "my_first_global_variable" => 10,
             //    "my_second_global_variable" => 11,
             //      ...
@@ -440,6 +441,10 @@ class WizardsGrimoire extends Table {
         //
 
 
+    }
+
+    function setCurrentPlayer() {
+        self::setGameStateInitialValue(WG_VAR_CURRENT_PLAYER, self::getCurrentPlayerId());
     }
 
     // Exposing protected method translation

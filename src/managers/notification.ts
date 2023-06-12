@@ -9,7 +9,6 @@ class NotificationManager {
       this.subscribeEvent("onDrawManaCards", 1000, true);
       this.subscribeEvent("onMoveManaCards", 1000, true);
       this.subscribeEvent("onManaDeckShuffle", 2500);
-      this.subscribeEvent("onSpellCoolDown", 1000);
       this.subscribeEvent("onHealthChanged", 500);
 
       this.game.notifqueue.setIgnoreNotificationCheck(

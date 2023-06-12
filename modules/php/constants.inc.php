@@ -13,6 +13,7 @@ define('WG_DIFFICULTY_ADVANCED', 3);
  * Game variables
  */
 define('WG_VAR_SLOT_COUNT', 'slot_count');
+define('WG_VAR_CURRENT_PLAYER', 'current_player');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 

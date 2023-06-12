@@ -724,6 +724,7 @@ body > .card {
 .player-table {
   padding-top: 20px;
   width: 732px;
+  border-radius: 8px;
 }
 .player-table .spell-repertoire {
   --width: 110px;
@@ -739,21 +740,14 @@ body > .card {
   border-color: transparent;
 }
 .player-table .wg-title {
-  position: absolute;
-  margin: -36px 0 0 0;
-  border: 3px solid var(--color);
-  border-radius: 5px;
-  padding: 3px 10px;
-  font-weight: 600;
   color: var(--color);
-  background-color: white;
 }
 .player-table .mana-cooldown {
   display: flex;
   justify-content: center;
   min-height: 160px;
   gap: 8px;
-  margin-top: 10px;
+  margin: 10px 0;
 }
 .player-table .mana-cooldown .mana-deck.deck {
   display: inline-block;
@@ -769,6 +763,9 @@ body > .card {
 }
 .player-table .mana-cooldown .mana-deck.deck .wg-card {
   border-radius: 5px;
+}
+.player-table.player-hand {
+  margin-top: 20px;
 }
 .player-table .hand {
   --width: 100px;
@@ -802,6 +799,16 @@ body > .card {
   flex-wrap: wrap;
   gap: 10px;
   flex-direction: row;
+}
+
+.wg-title {
+  position: absolute;
+  margin: -36px 0 0 0;
+  border: 3px solid var(--color);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-weight: 600;
+  background-color: white;
 }
 
 .deck[data-empty=true] {

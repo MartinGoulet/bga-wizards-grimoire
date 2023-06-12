@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Assert;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
@@ -21,13 +22,13 @@ class SharedPower extends BaseCard {
 
         $mana_id = array_shift($args);
         $opponent_id = Players::getOpponentId();
-        $manaDeck = Game::get()->deck_manas;
 
         $card = Assert::isCardInHand($mana_id);
 
         // Give opponent 1 mana
-        $manaDeck->moveCard($mana_id, CardLocation::Hand(), $opponent_id);
-        $cardAfter = $manaDeck->getCard($mana_id);
+        
+        Game::get()->deck_manas->moveCard($mana_id, CardLocation::Hand(), $opponent_id);
+        $cardAfter = ManaCard::get($mana_id);
         Notifications::moveManaCard($opponent_id, [$card], [$cardAfter]);
 
         // Gain 4 mana cards

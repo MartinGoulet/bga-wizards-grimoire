@@ -37,19 +37,24 @@ class PlayerTable {
       const pCurrent = this.current_player.toString();
 
       const html = `
-            <div id="player-table-${pId}" class="player-table whiteblock" data-color="${pColor}" style="--color: #${pColor}">
-                <span class="wg-title">${pName}</span>
-                <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
-                <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
-                    <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
-                    <div id="player_table-${pId}-mana-deck-2" class="mana-deck"></div>
-                    <div id="player_table-${pId}-mana-deck-3" class="mana-deck"></div>
-                    <div id="player_table-${pId}-mana-deck-4" class="mana-deck"></div>
-                    <div id="player_table-${pId}-mana-deck-5" class="mana-deck"></div>
-                    <div id="player_table-${pId}-mana-deck-6" class="mana-deck"></div>
-                </div>
-                <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-current-player="${pCurrent}" data-my-hand="${pCurrent}"></div>
-            <div>`;
+            <div style="--color: #${pColor}" data-color="${pColor}">
+               <div id="player-table-${pId}" class="player-table whiteblock">
+                  <span class="wg-title">${_("Spell Repertoire")}</span>
+                  <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
+                  <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
+                     <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-2" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-3" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-4" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-5" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-6" class="mana-deck"></div>
+                  </div>
+               </div>
+               <div class="player-table whiteblock player-hand">
+                  <span class="wg-title">${_("Hand")}</span>
+                  <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-current-player="${pCurrent}" data-my-hand="${pCurrent}"></div>
+               </div>
+            </div>`;
 
       dojo.place(html, "tables");
 

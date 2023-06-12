@@ -65,7 +65,7 @@ class ManaCard {
     }
 
     public static function getCards($card_ids) {
-        return Game::get()->deck_manas->getCard($card_ids);
+        return Game::get()->deck_manas->getCards($card_ids);
     }
 
     public static function getHand(int $player_id = 0) {

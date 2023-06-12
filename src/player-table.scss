@@ -1,6 +1,7 @@
 .player-table {
    padding-top: 20px;
    width: 732px;
+   border-radius: 8px;
 
    .spell-repertoire {
       --width: 110px;
@@ -19,14 +20,7 @@
    }
 
    .wg-title {
-      position: absolute;
-      margin: -36px 0 0 0;
-      border: 3px solid var(--color);
-      border-radius: 5px;
-      padding: 3px 10px;
-      font-weight: 600;
       color: var(--color);
-      background-color: white;
    }
 
    .mana-cooldown {
@@ -34,7 +28,7 @@
       justify-content: center;
       min-height: 160px;
       gap: 8px;
-      margin-top: 10px;
+      margin: 10px 0;
 
       .mana-deck.deck {
          display: inline-block;
@@ -53,6 +47,10 @@
             border-radius: 5px;
          }
       }
+   }
+
+   &.player-hand {
+      margin-top: 20px;
    }
 
    .hand {
