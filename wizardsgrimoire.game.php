@@ -75,12 +75,9 @@ class WizardsGrimoire extends Table {
         self::initGameStateLabels(array(
             WG_VAR_SLOT_COUNT => 10,
             WG_VAR_CURRENT_PLAYER => 11,
-            //    "my_first_global_variable" => 10,
-            //    "my_second_global_variable" => 11,
-            //      ...
-            //    "my_first_game_variant" => 100,
-            //    "my_second_game_variant" => 101,
-            //      ...
+            WG_VAR_SPELL_PLAYED => 12,
+            WG_VAR_INTERACTION_PLAYER => 13,
+
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
         ));
 
@@ -133,6 +130,9 @@ class WizardsGrimoire extends Table {
 
         // Init global values with their initial values
         //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
+        self::setGameStateInitialValue(WG_VAR_CURRENT_PLAYER, 0);
+        self::setGameStateInitialValue(WG_VAR_INTERACTION_PLAYER, 0);
+        self::setGameStateInitialValue(WG_VAR_SPELL_PLAYED, 0);
 
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -229,7 +229,7 @@ class WizardsGrimoire extends Table {
         $result['player_board'] = [];
         foreach ($players as $player_id => $player) {
             $result['player_board'][$player_id] = [
-                'spells' => array_values(SpellCard::getCardsFromRepertoire()),
+                'spells' => array_values(SpellCard::getCardsFromRepertoire($player_id)),
                 'manas' => [],
             ];
             for ($i = 1; $i <= 6; $i++) {
@@ -247,6 +247,8 @@ class WizardsGrimoire extends Table {
 
         $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
+
+        $result['opponent_id'] = Players::getOpponentId();
 
         return $result;
     }
@@ -442,10 +444,6 @@ class WizardsGrimoire extends Table {
         //
 
 
-    }
-
-    function setCurrentPlayer() {
-        self::setGameStateInitialValue(WG_VAR_CURRENT_PLAYER, self::getCurrentPlayerId());
     }
 
     // Exposing protected method translation

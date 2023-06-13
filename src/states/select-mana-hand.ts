@@ -18,7 +18,7 @@ class SelectManaHandStates implements StateHandler {
          }
       };
 
-      this.player_table.hand.setSelectionMode("single");
+      this.player_table.hand.setSelectionMode("multiple");
       this.player_table.hand.onSelectionChange = handleChange;
    }
 

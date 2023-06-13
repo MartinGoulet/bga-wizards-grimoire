@@ -24,66 +24,67 @@
 
 
 class action_wizardsgrimoire extends APP_GameAction {
-  // Constructor: please do not modify
-  public function __default() {
-    if (self::isArg('notifwindow')) {
-      $this->view = "common_notifwindow";
-      $this->viewArgs['table'] = self::getArg("table", AT_posint, true);
-    } else {
-      $this->view = "wizardsgrimoire_wizardsgrimoire";
-      self::trace("Complete reinitialization of board game");
-    }
-  }
+   // Constructor: please do not modify
+   public function __default() {
+      if (self::isArg('notifwindow')) {
+         $this->view = "common_notifwindow";
+         $this->viewArgs['table'] = self::getArg("table", AT_posint, true);
+      } else {
+         $this->view = "wizardsgrimoire_wizardsgrimoire";
+         self::trace("Complete reinitialization of board game");
+      }
+   }
 
-  // TODO: defines your action entry points there
+   // TODO: defines your action entry points there
 
-  public function chooseSpell() {
-    self::setAjaxMode();
+   public function chooseSpell() {
+      self::setAjaxMode();
 
-    $card_id = self::getArg("id", AT_posint, true);
-    $this->game->chooseSpell($card_id);
+      $card_id = self::getArg("id", AT_posint, true);
+      $this->game->chooseSpell($card_id);
 
-    self::ajaxResponse();
-  }
+      self::ajaxResponse();
+   }
 
-  public function castSpell() {
-    self::setAjaxMode();
+   public function castSpell() {
+      self::setAjaxMode();
 
-    $card_id = self::getArg("card_id", AT_posint, true);
-    $args = self::getArg("args", AT_numberlist, true);
+      $card_id = self::getArg("card_id", AT_posint, true);
+      $args = $this->getArrayArgs();
 
-    // Removing last ';' if exists
-    if (substr($args, -1) == ';')
-      $args = substr($args, 0, -1);
+      $this->game->castSpell($card_id, $args);
 
-    if ($args == '')
-      $args = array();
-    else
-      $args = explode(';', $args);
+      self::ajaxResponse();
+   }
 
-    $this->game->castSpell($card_id, $args);
+   public function castSpellInteraction() {
+      self::setAjaxMode();
 
-    self::ajaxResponse();
-  }
+      $args = $this->getArrayArgs();
 
-  public function basicAttack() {
-    self::setAjaxMode();
+      $this->game->castSpellInteraction($args);
 
-    $card_id = self::getArg("id", AT_posint, true);
-    $this->game->basicAttack($card_id);
+      self::ajaxResponse();
+   }
 
-    self::ajaxResponse();
-  }
+   public function basicAttack() {
+      self::setAjaxMode();
 
-  public function pass() {
-    self::setAjaxMode();
+      $card_id = self::getArg("id", AT_posint, true);
+      $this->game->basicAttack($card_id);
 
-    $this->game->pass();
+      self::ajaxResponse();
+   }
 
-    self::ajaxResponse();
-  }
+   public function pass() {
+      self::setAjaxMode();
 
-  /*
+      $this->game->pass();
+
+      self::ajaxResponse();
+   }
+
+   /*
     
     Example:
   	
@@ -103,4 +104,19 @@ class action_wizardsgrimoire extends APP_GameAction {
     }
     
     */
+
+   private function getArrayArgs() {
+      $args = self::getArg("args", AT_numberlist, true);
+
+      // Removing last ';' if exists
+      if (substr($args, -1) == ';')
+         $args = substr($args, 0, -1);
+
+      if ($args == '')
+         $args = array();
+      else
+         $args = explode(';', $args);
+
+      return $args;
+   }
 }

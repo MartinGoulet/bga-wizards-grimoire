@@ -1,5 +1,4 @@
-type NewActionType = "actionCastMana";
-type TakeActionType = "castSpell";
+type TakeActionType = "castSpell" | "castSpellInteraction";
 
 class ActionManager {
    private actions: string[] = [];
@@ -9,12 +8,14 @@ class ActionManager {
 
    constructor(private game: WizardsGrimoire) {}
 
-   public setup(takeAction: TakeActionType = "castSpell", newAction: NewActionType = "actionCastMana") {
+   public setup(takeAction: TakeActionType = "castSpell", newAction?: string) {
       log("actionmanager.reset");
 
       this.reset();
       this.take_action = takeAction;
-      this.actions.push(newAction);
+      if (newAction) {
+         this.actions.push(newAction);
+      }
       return this;
    }
 
@@ -32,17 +33,29 @@ class ActionManager {
       this.current_card = card;
       const card_type = this.game.getCardType(card);
       log("actionmanager.addAction", card, card_type);
-
-      if (!card_type.js_actions) {
-         log("actionmanager.addAction no js_Actions");
-      } else if (Array.isArray(card_type.js_actions)) {
-         card_type.js_actions.forEach((action) => this.actions.push(action));
-      } else if (typeof card_type.js_actions === "string") {
-         this.actions.push(card_type.js_actions);
-      }
-
+      this.addActionPriv(card_type.js_actions);
       log("actionmanager.actions values", this.actions);
       return this;
+   }
+
+   public addActionInteraction(card: SpellCard) {
+      this.current_card = card;
+      const card_type = this.game.getCardType(card);
+      log("actionmanager.addActionInteraction", card, card_type);
+      this.addActionPriv(card_type.js_actions_interaction);
+      return this;
+   }
+
+   private addActionPriv(actions?: string[] | string) {
+      if (!actions) {
+         log("actionmanager.addActionPriv no actions");
+      } else if (Array.isArray(actions)) {
+         actions.forEach((action) => this.actions.push(action));
+      } else if (typeof actions === "string") {
+         this.actions.push(actions);
+      }
+
+      log("actionmanager.addActionPriv values", this.actions);
    }
 
    public addArgument(arg: string) {
@@ -103,6 +116,27 @@ class ActionManager {
    private actionSelectManaCardFromHand() {
       const msg = _("${you} may select ${nbr} mana card from your hand");
       this.selectManaHand(1, msg, true);
+   }
+
+   private actionMistOfPain() {
+      const msg = _("${you} may discard up to ${nbr} mana card from your hand");
+      this.selectManaHand(4, msg, false, { canCancel: false });
+   }
+
+   private actionWrath() {
+      const msg = _("${you} may discard ${nbr} mana card from your hand");
+      this.selectManaHand(2, msg, true, {
+         canCancel: false,
+         skip: {
+            label: _("Pass"),
+            message: _("Are you sure that you didn't want to discard mana cards?"),
+         },
+      });
+   }
+
+   private actionArcaneTactics() {
+      const msg = _("${you} may select ${nbr} mana card from your hand");
+      this.returnManaCardToDeck(msg, 4, false);
    }
 
    private actionSelectTwoManaCardFromDiscard() {
@@ -254,6 +288,18 @@ class ActionManager {
       };
 
       this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args,
+      });
+   }
+
+   private returnManaCardToDeck(msg: string, count: number, canCancel: boolean) {
+      msg = msg.replace("${nbr}", count.toString());
+
+      const args = { count, canCancel, exact: true };
+
+      const { name } = this.game.getCardType(this.current_card);
+      this.game.setClientState(states.client.selectManaReturnDeck, {
          descriptionmyturn: _(name) + " : " + msg,
          args,
       });

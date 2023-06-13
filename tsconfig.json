@@ -45,6 +45,7 @@
         "src/table-center.ts",
 
         "src/states/cast-spell.ts",
+        "src/states/cast-spell-interaction.ts",
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
 
@@ -55,6 +56,7 @@
         "src/states/select-mana-deck.ts",
         "src/states/select-mana-discard.ts",
         "src/states/select-mana-hand.ts",
+        "src/states/select-mana-return-deck.ts",
 
         "src/define.ts"
     ]

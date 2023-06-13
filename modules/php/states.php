@@ -23,7 +23,6 @@ trait StateTrait {
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
 
-
         $this->gamestate->nextState();
     }
 
@@ -40,7 +39,7 @@ trait StateTrait {
                 $spell = SpellCard::getFromRepertoire($i);
                 $spell_info = SpellCard::getCardInfo($spell);
                 if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
-                    if($spell_info['activation_auto'] == true) {
+                    if ($spell_info['activation_auto'] == true) {
                         $instance = SpellCard::getInstanceOfCard($spell);
                         $instance->castSpell($mana_card);
                     } else {
@@ -55,18 +54,35 @@ trait StateTrait {
 
         Notifications::moveManaCard($player_id, $cards_before, $cards_after, "@@@", false);
 
-        if(sizeof($spell_delayed) == 0) {
+        if (sizeof($spell_delayed) == 0) {
             $this->gamestate->nextState('next');
         } else {
-            Game::setGlobalVariable(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed);
+            Globals::setCoolDownDelayedSpell($spell_delayed);
             $this->gamestate->nextState('delayed');
         }
-
     }
 
     function stGainMana() {
         ManaCard::Draw(3);
         $this->gamestate->nextState();
+    }
+
+    function stCastSpellSwitchOpponent() {
+        Game::get()->gamestate->changeActivePlayer(Globals::getInteractionPlayer());
+        Game::get()->gamestate->nextState();
+    }
+
+    function stCastSpellReturnCurrentPlayer() {
+        if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
+            Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
+        }
+        Game::get()->gamestate->nextState();
+    }
+
+    function stActivateInteractivePlayer() {
+        $player_id = Globals::getInteractionPlayer();
+        $player_id = Players::getOpponentId();
+        $this->gamestate->setPlayersMultiactive([$player_id], 'next', true);
     }
 
     function stNextPlayer() {

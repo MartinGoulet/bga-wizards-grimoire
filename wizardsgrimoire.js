@@ -1390,6 +1390,16 @@ var WizardsGrimoire = (function () {
             zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
         });
         this.setupNotifications();
+        this.setupDebug(gamedatas);
+    };
+    WizardsGrimoire.prototype.setupDebug = function (gamedatas) {
+        var arrCardType = [];
+        Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
+        var level1 = arrCardType
+            .filter(function (x) { return x.icon == "+" && x.debug == "red"; })
+            .sort(function (a, b) { return a.debug.localeCompare(b.debug); });
+        var text = level1.map(function (x) { return "".concat(x.name, " : ").concat(x.debug); });
+        console.log(text);
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
@@ -1652,11 +1662,12 @@ var ActionManager = (function () {
     }
     ActionManager.prototype.setup = function (takeAction, newAction) {
         if (takeAction === void 0) { takeAction = "castSpell"; }
-        if (newAction === void 0) { newAction = "actionCastMana"; }
         log("actionmanager.reset");
         this.reset();
         this.take_action = takeAction;
-        this.actions.push(newAction);
+        if (newAction) {
+            this.actions.push(newAction);
+        }
         return this;
     };
     ActionManager.prototype.reset = function () {
@@ -1668,21 +1679,32 @@ var ActionManager = (function () {
         return this;
     };
     ActionManager.prototype.addAction = function (card) {
-        var _this = this;
         this.current_card = card;
         var card_type = this.game.getCardType(card);
         log("actionmanager.addAction", card, card_type);
-        if (!card_type.js_actions) {
-            log("actionmanager.addAction no js_Actions");
-        }
-        else if (Array.isArray(card_type.js_actions)) {
-            card_type.js_actions.forEach(function (action) { return _this.actions.push(action); });
-        }
-        else if (typeof card_type.js_actions === "string") {
-            this.actions.push(card_type.js_actions);
-        }
+        this.addActionPriv(card_type.js_actions);
         log("actionmanager.actions values", this.actions);
         return this;
+    };
+    ActionManager.prototype.addActionInteraction = function (card) {
+        this.current_card = card;
+        var card_type = this.game.getCardType(card);
+        log("actionmanager.addActionInteraction", card, card_type);
+        this.addActionPriv(card_type.js_actions_interaction);
+        return this;
+    };
+    ActionManager.prototype.addActionPriv = function (actions) {
+        var _this = this;
+        if (!actions) {
+            log("actionmanager.addActionPriv no actions");
+        }
+        else if (Array.isArray(actions)) {
+            actions.forEach(function (action) { return _this.actions.push(action); });
+        }
+        else if (typeof actions === "string") {
+            this.actions.push(actions);
+        }
+        log("actionmanager.addActionPriv values", this.actions);
     };
     ActionManager.prototype.addArgument = function (arg) {
         log("actionmanager.addArgument", arg);
@@ -1730,6 +1752,24 @@ var ActionManager = (function () {
     ActionManager.prototype.actionSelectManaCardFromHand = function () {
         var msg = _("${you} may select ${nbr} mana card from your hand");
         this.selectManaHand(1, msg, true);
+    };
+    ActionManager.prototype.actionMistOfPain = function () {
+        var msg = _("${you} may discard up to ${nbr} mana card from your hand");
+        this.selectManaHand(4, msg, false, { canCancel: false });
+    };
+    ActionManager.prototype.actionWrath = function () {
+        var msg = _("${you} may discard ${nbr} mana card from your hand");
+        this.selectManaHand(2, msg, true, {
+            canCancel: false,
+            skip: {
+                label: _("Pass"),
+                message: _("Are you sure that you didn't want to discard mana cards?"),
+            },
+        });
+    };
+    ActionManager.prototype.actionArcaneTactics = function () {
+        var msg = _("${you} may select ${nbr} mana card from your hand");
+        this.returnManaCardToDeck(msg, 4, false);
     };
     ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
         var msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
@@ -1843,6 +1883,15 @@ var ActionManager = (function () {
             args: args,
         });
     };
+    ActionManager.prototype.returnManaCardToDeck = function (msg, count, canCancel) {
+        msg = msg.replace("${nbr}", count.toString());
+        var args = { count: count, canCancel: canCancel, exact: true };
+        var name = this.game.getCardType(this.current_card).name;
+        this.game.setClientState(states.client.selectManaReturnDeck, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: args,
+        });
+    };
     return ActionManager;
 }());
 var card_width = 120;
@@ -1889,6 +1938,11 @@ var SpellCardManager = (function (_super) {
         _this.game = game;
         return _this;
     }
+    SpellCardManager.prototype.getCardById = function (id) {
+        return this.getCardStock({ id: id })
+            .getCards()
+            .find(function (x) { return x.id == id; });
+    };
     SpellCardManager.prototype.getTooltip = function (card) {
         var card_type = this.game.getCardType(card);
         var name = card_type.name, cost = card_type.cost, description = card_type.description;
@@ -2019,9 +2073,11 @@ var states = {
         selectManaDeck: "client_selectManaDeck",
         selectManaDiscard: "client_selectManaDiscard",
         selectManaHand: "client_selectManaHand",
+        selectManaReturnDeck: "client_selectManaReturnDeck",
     },
     server: {
         castSpell: "castSpell",
+        castSpellInteraction: "castSpellInteraction",
         chooseNewSpell: "chooseNewSpell",
         basicAttack: "basicAttack",
         activateDelayedSpell: "activateDelayedSpell",
@@ -2039,9 +2095,11 @@ var StateManager = (function () {
             _a[states.client.selectManaDeck] = new SelectManaDeckStates(game),
             _a[states.client.selectManaDiscard] = new SelectManaDiscardStates(game),
             _a[states.client.selectManaHand] = new SelectManaHandStates(game),
+            _a[states.client.selectManaReturnDeck] = new SelectManaReturnDeckStates(game),
             _a[states.server.activateDelayedSpell] = new ActivateDelayedSpellStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
+            _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
             _a);
     }
@@ -2333,6 +2391,7 @@ var CastSpellStates = (function () {
     }
     CastSpellStates.prototype.onEnteringState = function (args) {
         var _this = this;
+        this.game.clearSelection();
         if (!this.game.isCurrentPlayerActive())
             return;
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -2361,11 +2420,43 @@ var CastSpellStates = (function () {
             _this.game.actionManager.addAction(selectedSpell);
             _this.game.actionManager.activateNextAction();
         };
-        this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
-        this.game.addActionButtonPass();
+        var handlePass = function () {
+            _this.game.takeAction("pass");
+        };
+        if (this.hasSpellAvailable()) {
+            this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
+            this.game.addActionButtonPass();
+        }
+        else {
+            this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
+        }
     };
     CastSpellStates.prototype.restoreGameState = function () { };
+    CastSpellStates.prototype.hasSpellAvailable = function () {
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        return player_table.getManaDeckWithSpellOver().length < player_table.spell_repertoire.getCards().length;
+    };
     return CastSpellStates;
+}());
+var CastSpellInteractionStates = (function () {
+    function CastSpellInteractionStates(game) {
+        this.game = game;
+    }
+    CastSpellInteractionStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        this.game.markCardAsSelected(args.spell);
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.game.actionManager.setup("castSpellInteraction");
+        this.game.actionManager.addActionInteraction(args.spell);
+        setTimeout(function () {
+            _this.game.actionManager.activateNextAction();
+        }, 10);
+    };
+    CastSpellInteractionStates.prototype.onLeavingState = function () { };
+    CastSpellInteractionStates.prototype.onUpdateActionButtons = function (args) { };
+    CastSpellInteractionStates.prototype.restoreGameState = function () { };
+    return CastSpellInteractionStates;
 }());
 var ChooseNewSpellStates = (function () {
     function ChooseNewSpellStates(game) {
@@ -2460,7 +2551,6 @@ var ActivateDelayedSpellStates = (function () {
         var selectable_cards = this.player_table.spell_repertoire
             .getCards()
             .filter(function (card) { return args.spells.indexOf(card.id.toString()) >= 0; });
-        debugger;
         this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
     };
     ActivateDelayedSpellStates.prototype.onLeavingState = function () { };
@@ -2487,16 +2577,16 @@ var CastSpellWithManaStates = (function () {
             return;
         this.mana_cards = [];
         this.spell = args.card;
+        var cost = this.game.getCardType(this.spell).cost;
         var handleHandCardClick = function (card) {
             _this.mana_cards.push(card);
             _this.mana_deck.addCard(card);
-            var cost = _this.game.getCardType(_this.spell).cost;
             _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === cost);
         };
         var handleDeckCardClick = function (card) {
             if (_this.mana_cards.length > 0) {
                 _this.moveCardFromManaDeckToHand();
-                _this.game.disableButton("btnConfirm");
+                _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === cost);
             }
         };
         this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -2783,7 +2873,7 @@ var SelectManaHandStates = (function () {
                 _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
             }
         };
-        this.player_table.hand.setSelectionMode("single");
+        this.player_table.hand.setSelectionMode("multiple");
         this.player_table.hand.onSelectionChange = handleChange;
     };
     SelectManaHandStates.prototype.onLeavingState = function () {
@@ -2822,6 +2912,87 @@ var SelectManaHandStates = (function () {
     };
     SelectManaHandStates.prototype.restoreGameState = function () { };
     return SelectManaHandStates;
+}());
+var SelectManaReturnDeckStates = (function () {
+    function SelectManaReturnDeckStates(game) {
+        this.game = game;
+    }
+    SelectManaReturnDeckStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.mana_cards = [];
+        var count = args.count;
+        var handleHandCardClick = function (card) {
+            _this.mana_cards.push(card);
+            _this.game.tableCenter.manaDeck.addCard(__assign(__assign({}, card), { type: null, isHidden: true }));
+            _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
+            _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0, "gray");
+        };
+        var handleDeckCardClick = function (card) {
+            if (_this.mana_cards.length > 0) {
+                _this.moveCardFromManaDeckToHand();
+                _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
+                _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0);
+            }
+        };
+        this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        this.player_table.hand.onCardClick = handleHandCardClick;
+        this.game.tableCenter.manaDeck.onCardClick = handleDeckCardClick;
+    };
+    SelectManaReturnDeckStates.prototype.onLeavingState = function () {
+        this.player_table.hand.onCardClick = null;
+        this.game.tableCenter.manaDeck.onCardClick = null;
+    };
+    SelectManaReturnDeckStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            _this.game.actionManager.addArgument(_this.mana_cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+        if (args.canCancel) {
+            this.game.addActionButtonClientCancel();
+        }
+        else {
+            var handleCancel = function (evt) {
+                _this.restoreGameState();
+            };
+            this.game.addActionButtonDisabled("btnCancelAction", _("Cancel"), handleCancel);
+        }
+    };
+    SelectManaReturnDeckStates.prototype.restoreGameState = function () {
+        this.restore();
+        this.game.disableButton("btnConfirm");
+        this.game.disableButton("btnCancelAction");
+    };
+    SelectManaReturnDeckStates.prototype.restore = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.mana_cards.length > 0)) return [3, 2];
+                        return [4, this.moveCardFromManaDeckToHand()];
+                    case 1:
+                        _a.sent();
+                        debugger;
+                        return [3, 0];
+                    case 2: return [2];
+                }
+            });
+        });
+    };
+    SelectManaReturnDeckStates.prototype.moveCardFromManaDeckToHand = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            var card = _this.mana_cards.pop();
+            console.log("Mana pop", __assign({}, _this.mana_cards));
+            _this.player_table.hand.addCard(card).then(function () {
+                resolve(true);
+            });
+        });
+    };
+    return SelectManaReturnDeckStates;
 }());
 define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
     return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());

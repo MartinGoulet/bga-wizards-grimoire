@@ -48,6 +48,12 @@ class SpellCardManager extends CardManager<SpellCard> {
       });
    }
 
+   getCardById(id: number) {
+      return this.getCardStock({ id } as SpellCard)
+         .getCards()
+         .find((x) => x.id == id);
+   }
+
    getTooltip(card: SpellCard) {
       const card_type = this.game.getCardType(card);
       const { name, cost, description } = card_type;

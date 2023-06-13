@@ -80,6 +80,21 @@ class WizardsGrimoire
       });
 
       this.setupNotifications();
+
+      this.setupDebug(gamedatas);
+   }
+
+   setupDebug(gamedatas: WizardsGrimoireGamedatas) {
+      const arrCardType: CardType[] = [];
+      Object.keys(gamedatas.card_types).forEach((index) => arrCardType.push(gamedatas.card_types[index]));
+
+      const level1 = arrCardType
+         .filter((x) => x.icon == "+" && x.debug == "red")
+         .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug));
+
+      const text = level1.map((x) => `${x.name} : ${x.debug}`);
+
+      console.log(text);
    }
 
    ///////////////////////////////////////////////////
@@ -145,7 +160,7 @@ class WizardsGrimoire
       });
    }
 
-   public toggleButtonEnable(id: string, enabled: boolean, color: "blue" | "red" = "blue"): void {
+   public toggleButtonEnable(id: string, enabled: boolean, color: "blue" | "red" | "gray" = "blue"): void {
       if (enabled) {
          this.enableButton(id, color);
       } else {
@@ -162,7 +177,7 @@ class WizardsGrimoire
       }
    }
 
-   public enableButton(id: string, color: "blue" | "red" = "blue"): void {
+   public enableButton(id: string, color: "blue" | "red" | "gray" = "blue"): void {
       const el = document.getElementById(id);
       if (el) {
          el.classList.add(`bgabutton_${color}`);

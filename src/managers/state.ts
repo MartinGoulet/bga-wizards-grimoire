@@ -6,9 +6,11 @@ const states = {
       selectManaDeck: "client_selectManaDeck",
       selectManaDiscard: "client_selectManaDiscard",
       selectManaHand: "client_selectManaHand",
+      selectManaReturnDeck: "client_selectManaReturnDeck",
    },
    server: {
       castSpell: "castSpell",
+      castSpellInteraction: "castSpellInteraction",
       chooseNewSpell: "chooseNewSpell",
       basicAttack: "basicAttack",
       activateDelayedSpell: "activateDelayedSpell",
@@ -27,10 +29,12 @@ class StateManager {
          [states.client.selectManaDeck]: new SelectManaDeckStates(game),
          [states.client.selectManaDiscard]: new SelectManaDiscardStates(game),
          [states.client.selectManaHand]: new SelectManaHandStates(game),
+         [states.client.selectManaReturnDeck]: new SelectManaReturnDeckStates(game),
 
          [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.basicAttack]: new BasicAttackStates(game),
          [states.server.castSpell]: new CastSpellStates(game),
+         [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
       };
    }

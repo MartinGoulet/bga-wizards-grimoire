@@ -17,6 +17,10 @@ abstract class BaseCard {
         throw new BgaSystemException('Not implemented : castSpell of ' . get_class($this));
     }
 
+    public function castSpellInteraction($args) {
+        throw new BgaSystemException('Not implemented : castSpellCallback of ' . get_class($this));
+    }
+
     public function onAfterBasicAttack($mana_id) {
 
     }

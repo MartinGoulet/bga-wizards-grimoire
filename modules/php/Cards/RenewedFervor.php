@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
@@ -15,8 +16,8 @@ class RenewedFervor extends BaseCard {
         $player_id = Players::getPlayerId();
         $spells = SpellCard::getCardsFromRepertoire();
 
-        $cards = array_filter($spells, function ($card) {
-            $card_type = Spell::getCardInfo($card);
+        $spells = array_filter($spells, function ($card) {
+            $card_type = SpellCard::getCardInfo($card);
             $isInstantAttackSpellWithCostTwoOrLess =
                 $card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT &&
                 $card_type['type'] == WG_SPELL_TYPE_DAMAGE &&
@@ -25,15 +26,19 @@ class RenewedFervor extends BaseCard {
             return $isInstantAttackSpellWithCostTwoOrLess;
         });
 
-        $top_mana_cards = [];
-        foreach ($cards as $card_id => $card) {
+        $cards_before = [];
+        $cards_after = [];
+        foreach ($spells as $card_id => $card) {
             $position = intval($card['location_arg']);
-            $top_mana_cards[] = Game::get()->deck_manas->pickCardForLocation(
+            $card = ManaCard::getOnTopOnManaCoolDown($position);
+            $cards_before[] = $card;
+            Game::get()->deck_manas->pickCardForLocation(
                 CardLocation::PlayerManaCoolDown($player_id, $position),
                 CardLocation::Hand(),
                 $player_id
             );
+            $cards_after[] = ManaCard::get($card['id']);
         }
-        Notifications::moveManaCard($player_id, $cards, $top_mana_cards);
+        Notifications::moveManaCard($player_id, $cards_before, $cards_after);
     }
 }

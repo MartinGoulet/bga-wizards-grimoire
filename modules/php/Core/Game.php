@@ -27,20 +27,5 @@ class Game extends APP_DbObject {
 
         return $newCards;
     }
-
-    static function setGlobalVariable(string $name, /*object|array*/ $obj) {
-        $jsonObj = json_encode($obj);
-        self::DbQuery("INSERT INTO `global_variables`(`name`, `value`)  VALUES ('$name', '$jsonObj') ON DUPLICATE KEY UPDATE `value` = '$jsonObj'");
-    }
-
-    static function getGlobalVariable(string $name, $asArray = null) {
-        /** @var string */
-        $json_obj = self::getUniqueValueFromDB("SELECT `value` FROM `global_variables` where `name` = '$name'");
-        if ($json_obj) {
-            $object = json_decode($json_obj, $asArray);
-            return $object;
-        } else {
-            return null;
-        }
-    }
+    
 }

@@ -143,7 +143,39 @@ $castSpellsStates = [
         "possibleactions" => ["castSpell", "pass"],
         "transitions" => [
             "cast" => ST_CAST_SPELL,
-            "pass" => ST_BASIC_ATTACK
+            "pass" => ST_BASIC_ATTACK,
+            "player" => ST_CAST_SPELL_INTERACTION,
+            "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
+        ]
+    ],
+
+    ST_CAST_SPELL_SWITCH_OPPONENT => [
+        "name" => "castSpellSwitchOpponent",
+        "type" => "game",
+        "action" => "stCastSpellSwitchOpponent",
+        "transitions" => [
+            "" => ST_CAST_SPELL_INTERACTION,
+        ]
+    ],
+
+    ST_CAST_SPELL_INTERACTION => array(
+        "name" => "castSpellInteraction",
+        "description" => clienttranslate('${actplayer} must conclude the effect of the spell'),
+        "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
+        "type" => "activeplayer",
+        "args" => "argCastSpellInteraction",
+        "possibleactions" => ["castSpellInteraction"],
+        "transitions" => [
+            "" => ST_CAST_SPELL_RETURN_CURRENT_PLAYER
+        ]
+    ),
+
+    ST_CAST_SPELL_RETURN_CURRENT_PLAYER => [
+        "name" => "castSpellReturnCurrentPlayer",
+        "type" => "game",
+        "action" => "stCastSpellReturnCurrentPlayer",
+        "transitions" => [
+            "" => ST_CAST_SPELL,
         ]
     ],
 ];

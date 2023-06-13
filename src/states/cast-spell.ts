@@ -2,6 +2,7 @@ class CastSpellStates implements StateHandler {
    constructor(private game: WizardsGrimoire) {}
 
    onEnteringState(args: any): void {
+      this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
       const repertoire = player_table.spell_repertoire;
@@ -35,9 +36,22 @@ class CastSpellStates implements StateHandler {
          this.game.actionManager.activateNextAction();
       };
 
-      this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
-      this.game.addActionButtonPass();
+      const handlePass = () => {
+         this.game.takeAction("pass");
+      };
+
+      if (this.hasSpellAvailable()) {
+         this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
+         this.game.addActionButtonPass();
+      } else {
+         this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
+      }
    }
 
    restoreGameState() {}
+
+   hasSpellAvailable() {
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      return player_table.getManaDeckWithSpellOver().length < player_table.spell_repertoire.getCards().length;
+   }
 }

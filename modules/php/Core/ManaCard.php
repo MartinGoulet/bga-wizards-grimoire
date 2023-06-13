@@ -10,6 +10,10 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class ManaCard {
 
+    public static function addOnTopOfDeck($card_id) {
+        Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Deck(), true);
+    }
+
     public static function addOnTopOfDiscard($card_id) {
         Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
     }
@@ -70,21 +74,21 @@ class ManaCard {
     }
 
     public static function getHand(int $player_id = 0) {
-        if($player_id == 0) {
+        if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->getCardsInLocation(CardLocation::Hand(), $player_id);
     }
 
     public static function getHandCount(int $player_id = 0) {
-        if($player_id == 0) {
+        if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->countCardInLocation(CardLocation::Hand(), $player_id);
     }
 
     public static function getMaxValue($cards) {
-        if($cards == null || sizeof($cards) === 0) {
+        if ($cards == null || sizeof($cards) === 0) {
             return 0;
         }
         return max(array_values(array_map(function ($card) {
@@ -138,14 +142,15 @@ class ManaCard {
         return $card;
     }
 
-    public static function isOnTopOfSpell($card, $player_id) {
+    public static function isOnTopOfSpell($card, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
 
         for ($i = 1; $i <= 6; $i++) {
-            $isOnTop =
-                $card['location'] == CardLocation::PlayerManaCoolDown($player_id, $i) &&
-                $card['location_arg'] == 1;
+            $topCard = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $i));
 
-            if ($isOnTop) {
+            if ($topCard && $topCard['id'] == $card['id']) {
                 return true;
             }
         }
@@ -153,4 +158,7 @@ class ManaCard {
         throw new \BgaSystemException("Mana card not under a spell card in the repertoire " . $card['id']);
     }
 
+    public static function revealFromDeck($count) {
+        return Game::get()->deck_manas->getCardsOnTop($count, CardLocation::Deck());
+    }
 }

@@ -15,7 +15,6 @@ class ActivateDelayedSpellStates implements StateHandler {
          .getCards()
          .filter((card) => args.spells.indexOf(card.id.toString()) >= 0);
 
-      debugger;
       this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
    }
    onLeavingState(): void {}

@@ -14,6 +14,8 @@ define('WG_DIFFICULTY_ADVANCED', 3);
  */
 define('WG_VAR_SLOT_COUNT', 'slot_count');
 define('WG_VAR_CURRENT_PLAYER', 'current_player');
+define('WG_VAR_INTERACTION_PLAYER', 'interaction_player');
+define('WG_VAR_SPELL_PLAYED', 'spell_played');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
@@ -32,6 +34,9 @@ define('ST_SPELL_CD_ACTIVATE_DELAYED', 31);
 define('ST_GAIN_MANA', 4);
 
 define('ST_CAST_SPELL', 5);
+define('ST_CAST_SPELL_INTERACTION', 51);
+define('ST_CAST_SPELL_SWITCH_OPPONENT', 52);
+define('ST_CAST_SPELL_RETURN_CURRENT_PLAYER', 53);
 
 define('ST_BASIC_ATTACK', 6);
 

@@ -2,11 +2,34 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
+use BgaSystemException;
+use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\Players;
 
 class ShackledMotion extends BaseCard {
 
-    // TODO
+    public function castSpell($args) {
+        // Choose 1: Gain 4 mana cards, or your opponent must discard their hand
+        $choice = intval(array_shift($args));
 
+        switch ($choice) {
+            case 1:
+                $this->drawManaCards(4);
+                break;
+            case 1:
+                $opponent_id = Players::getOpponentId();
+                $cards_before = ManaCard::getHand($opponent_id);
+                $cards_after = [];
+                foreach ($cards_before as $card_id) {
+                    ManaCard::addOnTopOfDiscard($card_id);
+                    $cards_after[] = ManaCard::get($card_id);
+                }
+                Notifications::moveManaCard($opponent_id, $cards_before, $cards_after);
+                break;
+
+            default:
+                throw new BgaSystemException("Invalid choice " . $choice);
+        }
+    }
 }

@@ -3,13 +3,11 @@
 namespace WizardsGrimoire\Cards;
 
 use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Players;
 
 class TouchTheVoid extends BaseCard {
 
     public function castSpell($args) {
         // Deal damage equal to the quantity of mana cards on 1 of your spells
-        $player_id = Players::getPlayerId();
         $max_value = 0;
 
         for ($i = 1; $i <= 6; $i++) {

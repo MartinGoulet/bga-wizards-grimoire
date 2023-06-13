@@ -16,7 +16,13 @@ trait ArgsTrait {
 
     function argActivateDelayedSpell() {
         return [
-            "spells" => Game::getGlobalVariable(WG_GV_COOLDOWN_DELAYED_SPELLS, true)
+            "spells" => Globals::getCoolDownDelayedSpell(true)
+        ];
+    }
+
+    function argCastSpellInteraction() {
+        return [
+            "spell" => SpellCard::get(Globals::getSpellPlayed()),
         ];
     }
 

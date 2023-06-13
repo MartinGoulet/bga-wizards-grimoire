@@ -69,7 +69,7 @@ trait ActionTrait {
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
-        $card_type = $this->card_types[$spell['type']];
+        $card_type = SpellCard::getCardInfo($spell);
         if (sizeof($mana_ids) !== $card_type['cost']) {
             throw new BgaSystemException("Not enough mana");
         }
@@ -87,12 +87,43 @@ trait ActionTrait {
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
+            Globals::setSpellPlayed(intval($spell['id']));
             $cardClass = SpellCard::getInstanceOfCard($spell);
             // Execute the ability of the card
-            $cardClass->castSpell($args, $spell['id']);
-        }
+            $cardClass->castSpell($args);
 
-        $this->gamestate->nextState("cast");
+            $card_interaction = $card_type['interaction'] ?? "";
+
+            switch ($card_interaction) {
+                case 'player':
+                    Globals::setInteractionPlayer(Players::getPlayerId());
+                    $this->gamestate->nextState("player");
+                    break;
+
+                case 'opponent':
+                    Globals::setInteractionPlayer(Players::getOpponentId());
+                    $this->gamestate->nextState("opponent");
+                    break;
+
+                default:
+                    $this->gamestate->nextState("cast");
+                    break;
+            }
+        } else {
+            $this->gamestate->nextState("cast");
+        }
+    }   
+
+    public function castSpellInteraction($args) {
+        $this->checkAction('castSpellInteraction');
+        $player_id = Players::getPlayerId();
+        // Get the card and verify ownership
+        $spell = SpellCard::isInRepertoire(Globals::getSpellPlayed(), $player_id);
+
+        $cardClass = SpellCard::getInstanceOfCard($spell);
+        // Execute the ability of the card
+        $cardClass->castSpellInteraction($args);
+        $this->gamestate->nextState();
     }
 
     public function basicAttack(int $mana_id) {

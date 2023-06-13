@@ -15,6 +15,10 @@ class SpellCard {
         return Game::get()->card_types[$card['type']];
     }
 
+    public static function getPositionInRepertoire($spell) {
+        return intval($spell['location_arg']);
+    }
+
     public static function getFromRepertoire($position, int $player_id = 0) {
         if($player_id == 0) {
             $player_id = Players::getPlayerId();
