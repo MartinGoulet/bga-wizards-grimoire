@@ -15,7 +15,7 @@ class SpellCard {
         return Game::get()->card_types[$card['type']];
     }
 
-    static function getFromRepertoire($position, int $player_id = 0) {
+    public static function getFromRepertoire($position, int $player_id = 0) {
         if($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -23,7 +23,7 @@ class SpellCard {
         return array_shift($cards);
     }
 
-    static function getCardsFromRepertoire(int $player_id = 0) {
+    public static function getCardsFromRepertoire(int $player_id = 0) {
         if($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -33,7 +33,7 @@ class SpellCard {
     /**
      * @return BaseCard
      */
-    static function getInstanceOfCard($card) {
+    public static function getInstanceOfCard($card) {
         // Get info of the card
         $card_type = Game::get()->card_types[$card['type']];
         // Create the class for the card logic
@@ -43,7 +43,7 @@ class SpellCard {
         return $cardClass;
     }
 
-    protected static function getName($card) {
+    public static function getName($card) {
         $card_type = Game::get()->card_types[$card['type']];
         return $card_type['name'];
     }
@@ -51,7 +51,7 @@ class SpellCard {
     public static function getOngoingActiveSpells($player_id) {
         $spells = self::getCardsFromRepertoire($player_id);
         $ongoing_active_spell = array_filter($spells, function($card) use($player_id) {
-            $card_type = self::getSpellCard($card);
+            $card_type = self::getCardInfo($card);
             return $card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING 
                 && ManaCard::countOnTopOfManaCoolDown($card['location_arg']) > 0;
         });
@@ -61,7 +61,7 @@ class SpellCard {
     public static function getDelayedActiveSpells($player_id) {
         $spells = SpellCard::getCardsFromRepertoire($player_id);
         $ongoing_active_spell = array_filter($spells, function($card) use($player_id) {
-            $card_type = self::getSpellCard($card);
+            $card_type = self::getCardInfo($card);
             return $card_type['activation'] == WG_SPELL_ACTIVATION_DELAYED
                 && ManaCard::countOnTopOfManaCoolDown($card['location_arg']) > 0;
         });

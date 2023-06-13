@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use BgaSystemException;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
