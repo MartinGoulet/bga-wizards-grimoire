@@ -38,6 +38,13 @@ class Notifications {
         ]);
     }
 
+    static function discardSpell($player_id, $card) {
+        self::notifyAll('onDiscardSpell', '', [
+            'player_id' => intval($player_id),
+            'card' => $card,
+        ]);
+    }
+
     static function drawManaCards($player_id, $cards) {
         $msg = clienttranslate('${player_name} draws ${nbr} mana cards');
         $args = [

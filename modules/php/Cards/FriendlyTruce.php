@@ -14,6 +14,11 @@ class FriendlyTruce extends BaseCard {
     public function castSpell($args) {
         // Your opponent may give you 3 cards from their hand. 
         // If they do not, gain 5 mana cards
+        
+    }
+
+    public function castSpellInteraction($args)
+    {
         if ($args != null && $args != "") {
             $mana_ids = explode(",", array_shift($args));
             if (sizeof($mana_ids) != 3) {

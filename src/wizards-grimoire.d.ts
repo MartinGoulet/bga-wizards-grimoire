@@ -76,6 +76,10 @@ interface NotifChooseSpellArgs {
    player_id: number;
    card: SpellCard;
 }
+interface NotifDiscardSpellArgs {
+   player_id: number;
+   card: SpellCard;
+}
 
 interface NotifRefillSpellArgs {
    card: SpellCard;

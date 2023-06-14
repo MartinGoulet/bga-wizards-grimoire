@@ -5,6 +5,7 @@ class NotificationManager {
 
    setup() {
       this.subscribeEvent("onChooseSpell", 500);
+      this.subscribeEvent("onDiscardSpell", 500);
       this.subscribeEvent("onRefillSpell", 500);
       this.subscribeEvent("onDrawManaCards", 1000, true);
       this.subscribeEvent("onMoveManaCards", 1000, true);
@@ -40,6 +41,13 @@ class NotificationManager {
       log("onChooseSpell", card);
       this.game.getPlayerTable(player_id).onChooseSpell(card);
    }
+
+   private notif_onDiscardSpell(notif: INotification<NotifDiscardSpellArgs>) {
+      const { player_id, card } = notif.args;
+      log("onDiscardSpell", card);
+      this.game.tableCenter.spellDiscard.addCard(card);
+   }
+
    private notif_onRefillSpell(notif: INotification<NotifRefillSpellArgs>) {
       const { card } = notif.args;
       log("onRefillSpell", card);

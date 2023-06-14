@@ -44,16 +44,22 @@ class SelectManaHandStates implements StateHandler {
          }
       };
       const handleSkip = () => {
-         this.game.confirmationDialog(_(args.skip.message), () => {
+         if (args.skip?.message) {
+            this.game.confirmationDialog(_(args.skip.message), () => {
+               this.game.actionManager.activateNextAction();
+            });
+         } else {
             this.game.actionManager.activateNextAction();
-         });
+         }
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
       if (args.skip) {
          this.game.addActionButtonRed("btn_skip", _(args.skip.label), handleSkip);
       }
-      this.game.addActionButtonClientCancel();
+      if (args.canCancel !== false) {
+         this.game.addActionButtonClientCancel();
+      }
 
       this.game.toggleButtonEnable("btn_confirm", !args.exact);
    }
@@ -66,6 +72,7 @@ interface SelectManaArgs {
    card: SpellCard;
    count: number;
    exact: boolean;
+   canCancel?: boolean;
    skip?: {
       label: string;
       message: string;

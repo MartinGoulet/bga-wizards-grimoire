@@ -96,7 +96,7 @@ class PlayerTable {
       return this.hand.getCards().length >= cost;
    }
 
-   public getSpellSlotAvailables() {
+   public getSpellSlotAvailables(): number[] {
       if (this.spell_repertoire.getCards().length < 6) {
          return arrayRange(this.spell_repertoire.getCards().length + 1, 6);
       }

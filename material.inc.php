@@ -514,7 +514,9 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "interaction" => "opponent",
+    "js_actions_interaction" => "actionFriendlyTruce",
+    "debug" => "lightgreen",
   ],
   48 => [
     "name" => clienttranslate("Windstorm"),

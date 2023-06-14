@@ -1396,9 +1396,22 @@ var WizardsGrimoire = (function () {
         var arrCardType = [];
         Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
         var level1 = arrCardType
-            .filter(function (x) { return x.icon == "+" && x.debug == "red"; })
-            .sort(function (a, b) { return a.debug.localeCompare(b.debug); });
-        var text = level1.map(function (x) { return "".concat(x.name, " : ").concat(x.debug); });
+            .filter(function (x) { return x.icon == "+"; })
+            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
+            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
+        var level2 = arrCardType
+            .filter(function (x) { return x.icon == "++"; })
+            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
+            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
+        var expansion = arrCardType
+            .filter(function (x) { return x.icon == "scroll"; })
+            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
+            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
+        var text = {
+            level1: level1,
+            level2: level2,
+            expansion: expansion,
+        };
         console.log(text);
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
@@ -1503,6 +1516,13 @@ var WizardsGrimoire = (function () {
         document.querySelectorAll(".wg-deck-was-selected").forEach(function (node) {
             node.classList.remove("wg-deck-was-selected");
         });
+    };
+    WizardsGrimoire.prototype.setGamestateDescription = function (property) {
+        if (property === void 0) { property = ""; }
+        var originalState = this.gamedatas.gamestates[this.gamedatas.gamestate.id];
+        this.gamedatas.gamestate.description = "".concat(originalState["description" + property]);
+        this.gamedatas.gamestate.descriptionmyturn = "".concat(originalState["descriptionmyturn" + property]);
+        this.updatePageTitle();
     };
     WizardsGrimoire.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
@@ -1767,6 +1787,10 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionFriendlyTruce = function () {
+        var msg = _("${you} may give ${nbr} cards from your hand or pass");
+        this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
+    };
     ActionManager.prototype.actionArcaneTactics = function () {
         var msg = _("${you} may select ${nbr} mana card from your hand");
         this.returnManaCardToDeck(msg, 4, false);
@@ -1999,6 +2023,7 @@ var NotificationManager = (function () {
     NotificationManager.prototype.setup = function () {
         var _this = this;
         this.subscribeEvent("onChooseSpell", 500);
+        this.subscribeEvent("onDiscardSpell", 500);
         this.subscribeEvent("onRefillSpell", 500);
         this.subscribeEvent("onDrawManaCards", 1000, true);
         this.subscribeEvent("onMoveManaCards", 1000, true);
@@ -2028,6 +2053,11 @@ var NotificationManager = (function () {
         var _a = notif.args, player_id = _a.player_id, card = _a.card;
         log("onChooseSpell", card);
         this.game.getPlayerTable(player_id).onChooseSpell(card);
+    };
+    NotificationManager.prototype.notif_onDiscardSpell = function (notif) {
+        var _a = notif.args, player_id = _a.player_id, card = _a.card;
+        log("onDiscardSpell", card);
+        this.game.tableCenter.spellDiscard.addCard(card);
     };
     NotificationManager.prototype.notif_onRefillSpell = function (notif) {
         var card = notif.args.card;
@@ -2434,7 +2464,8 @@ var CastSpellStates = (function () {
     CastSpellStates.prototype.restoreGameState = function () { };
     CastSpellStates.prototype.hasSpellAvailable = function () {
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        return player_table.getManaDeckWithSpellOver().length < player_table.spell_repertoire.getCards().length;
+        var number_available_spell = player_table.getManaDeckWithSpellOver().length;
+        return number_available_spell > 0;
     };
     return CastSpellStates;
 }());
@@ -2463,15 +2494,21 @@ var ChooseNewSpellStates = (function () {
         this.game = game;
     }
     ChooseNewSpellStates.prototype.onEnteringState = function (args) {
-        var _this = this;
         if (!this.game.isCurrentPlayerActive())
             return;
         this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var available_slots = this.player_table.getSpellSlotAvailables();
-        if (available_slots.length == 0) {
-            this.game.tableCenter.spellPool.setSelectionMode("none");
-            return;
+        if (this.player_table.getSpellSlotAvailables().length == 0) {
+            this.clearSelectionMode();
         }
+        else if (this.player_table.spell_repertoire.getCards().length < 6) {
+            this.onEnteringStateChoose();
+        }
+        else {
+            this.onEnteringStateReplace();
+        }
+    };
+    ChooseNewSpellStates.prototype.onEnteringStateChoose = function () {
+        var _this = this;
         var handleSelection = function (selection, lastChange) {
             if (selection && selection.length === 1) {
                 _this.game.enableButton("btn_confirm", "blue");
@@ -2483,25 +2520,60 @@ var ChooseNewSpellStates = (function () {
         this.game.tableCenter.spellPool.setSelectionMode("single");
         this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
     };
+    ChooseNewSpellStates.prototype.onEnteringStateReplace = function () {
+        var _this = this;
+        var handleSelection = function () {
+            var chooseSpell = _this.player_table.spell_repertoire.getSelection();
+            var replaceSpell = _this.game.tableCenter.spellPool.getSelection();
+            _this.game.toggleButtonEnable("btn_replace", chooseSpell.length == 1 && replaceSpell.length == 1);
+        };
+        this.game.tableCenter.spellPool.setSelectionMode("single");
+        this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
+        this.player_table.spell_repertoire.setSelectionMode("single");
+        this.player_table.spell_repertoire.onSelectionChange = handleSelection;
+        var positions = this.player_table.getSpellSlotAvailables();
+        var selectableCards = this.player_table.spell_repertoire
+            .getCards()
+            .filter(function (card) { return positions.indexOf(Number(card.location_arg)) >= 0; });
+        this.player_table.spell_repertoire.setSelectableCards(selectableCards);
+        this.game.setGamestateDescription("Replace");
+    };
     ChooseNewSpellStates.prototype.onLeavingState = function () {
-        this.game.tableCenter.spellPool.setSelectionMode("none");
-        this.game.tableCenter.spellPool.onSelectionChange = null;
+        this.clearSelectionMode();
     };
     ChooseNewSpellStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var available_slots = this.player_table.getSpellSlotAvailables();
-        if (available_slots.length > 0) {
+        if (this.player_table.spell_repertoire.getCards().length < 6) {
             this.game.addActionButtonDisabled("btn_confirm", _("Choose"), function () {
                 var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
                 _this.game.takeAction("chooseSpell", { id: selectedSpell.id });
             });
+        }
+        else {
+            var available_slots = this.player_table.getSpellSlotAvailables();
+            if (available_slots.length > 0) {
+                this.game.addActionButtonDisabled("btn_replace", _("Replace"), function () {
+                    var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
+                    var replacedSpell = _this.player_table.spell_repertoire.getSelection()[0];
+                    _this.game.takeAction("replaceSpell", {
+                        new_spell_id: selectedSpell.id,
+                        old_spell_id: replacedSpell.id,
+                    });
+                });
+            }
         }
         if (this.player_table.spell_repertoire.getCards().length == 6) {
             this.game.addActionButtonPass();
         }
     };
     ChooseNewSpellStates.prototype.restoreGameState = function () { };
+    ChooseNewSpellStates.prototype.clearSelectionMode = function () {
+        this.game.tableCenter.spellPool.setSelectionMode("none");
+        this.game.tableCenter.spellPool.onSelectionChange = null;
+        this.player_table.spell_repertoire.setSelectionMode("none");
+        this.player_table.spell_repertoire.onSelectionChange = null;
+    };
     return ChooseNewSpellStates;
 }());
 var BasicAttackStates = (function () {
@@ -2899,15 +2971,23 @@ var SelectManaHandStates = (function () {
             }
         };
         var handleSkip = function () {
-            _this.game.confirmationDialog(_(args.skip.message), function () {
+            var _a;
+            if ((_a = args.skip) === null || _a === void 0 ? void 0 : _a.message) {
+                _this.game.confirmationDialog(_(args.skip.message), function () {
+                    _this.game.actionManager.activateNextAction();
+                });
+            }
+            else {
                 _this.game.actionManager.activateNextAction();
-            });
+            }
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         if (args.skip) {
             this.game.addActionButtonRed("btn_skip", _(args.skip.label), handleSkip);
         }
-        this.game.addActionButtonClientCancel();
+        if (args.canCancel !== false) {
+            this.game.addActionButtonClientCancel();
+        }
         this.game.toggleButtonEnable("btn_confirm", !args.exact);
     };
     SelectManaHandStates.prototype.restoreGameState = function () { };

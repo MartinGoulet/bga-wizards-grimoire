@@ -133,6 +133,10 @@ class ActionManager {
          },
       });
    }
+   private actionFriendlyTruce() {
+      const msg = _("${you} may give ${nbr} cards from your hand or pass");
+      this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
+   }
 
    private actionArcaneTactics() {
       const msg = _("${you} may select ${nbr} mana card from your hand");

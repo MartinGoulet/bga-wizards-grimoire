@@ -57,6 +57,17 @@ class action_wizardsgrimoire extends APP_GameAction {
       self::ajaxResponse();
    }
 
+   public function replaceSpell() {
+      self::setAjaxMode();
+
+      $old_spell_id = self::getArg("old_spell_id", AT_posint, true);
+      $new_spell_id = self::getArg("new_spell_id", AT_posint, true);
+
+      $this->game->replaceSpell($old_spell_id, $new_spell_id);
+
+      self::ajaxResponse();
+   }
+
    public function castSpellInteraction() {
       self::setAjaxMode();
 

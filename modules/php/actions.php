@@ -61,6 +61,46 @@ trait ActionTrait {
         }
     }
 
+    public function replaceSpell(int $old_card_id, int $new_card_id) {
+        $this->checkAction('replaceSpell');
+
+        $old_card = SpellCard::get($old_card_id);
+        $new_card = SpellCard::get($new_card_id);
+        $player_id = Players::getPlayerId();
+        $spell_count = Game::get()->deck_spells->countCardInLocation(CardLocation::PlayerSpellRepertoire($player_id));
+
+        if ($spell_count < 6) {
+            throw new BgaSystemException("Use chooseSpell action");
+        } elseif ($old_card == null || $new_card == null) {
+            throw new BgaSystemException("Cards not found");
+        }
+
+        // Discard old spell
+        Game::get()->deck_spells->insertCardOnExtremePosition($old_card_id, CardLocation::Discard(), true);
+        $discarded_card = SpellCard::get($old_card_id);
+        Notifications::discardSpell($player_id, $discarded_card);
+
+        // Choose spell
+        $this->deck_spells->moveCard(
+            $new_card_id,
+            CardLocation::PlayerSpellRepertoire($player_id),
+            $old_card['location_arg']
+        );
+
+        $card = SpellCard::get($new_card_id);
+        Notifications::chooseSpell($player_id, $card);
+
+        $newSpell = Game::get()->deck_spells->pickCardForLocation(
+            CardLocation::Deck(),
+            CardLocation::SpellSlot(),
+            $new_card['location_arg'],
+        );
+
+        Notifications::refillSpell($player_id, $newSpell);
+
+        $this->gamestate->nextState('end');
+    }
+
     public function castSpell(int $card_id, $args) {
         $this->checkAction('castSpell');
         $player_id = intval($this->getActivePlayerId());
@@ -112,7 +152,7 @@ trait ActionTrait {
         } else {
             $this->gamestate->nextState("cast");
         }
-    }   
+    }
 
     public function castSpellInteraction($args) {
         $this->checkAction('castSpellInteraction');

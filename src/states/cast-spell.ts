@@ -52,6 +52,7 @@ class CastSpellStates implements StateHandler {
 
    hasSpellAvailable() {
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
-      return player_table.getManaDeckWithSpellOver().length < player_table.spell_repertoire.getCards().length;
+      const number_available_spell = player_table.getManaDeckWithSpellOver().length;
+      return number_available_spell > 0;
    }
 }
