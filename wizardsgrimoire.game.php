@@ -78,6 +78,8 @@ class WizardsGrimoire extends Table {
             WG_VAR_SPELL_PLAYED => 12,
             WG_VAR_INTERACTION_PLAYER => 13,
             WG_VAR_SKIP_INTERACTION => 14,
+            WG_VAR_DISCOUNT_NEXT_SPELL => 15,
+            WG_VAR_DISCOUNT_ATTACK_SPELL => 16,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
         ));
@@ -130,10 +132,12 @@ class WizardsGrimoire extends Table {
         /************ Start the game initialization *****/
 
         // Init global values with their initial values
-        //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
         self::setGameStateInitialValue(WG_VAR_CURRENT_PLAYER, 0);
         self::setGameStateInitialValue(WG_VAR_INTERACTION_PLAYER, 0);
         self::setGameStateInitialValue(WG_VAR_SPELL_PLAYED, 0);
+        self::setGameStateInitialValue(WG_VAR_SKIP_INTERACTION, 0);
+        self::setGameStateInitialValue(WG_VAR_DISCOUNT_NEXT_SPELL, 0);
+        self::setGameStateInitialValue(WG_VAR_DISCOUNT_ATTACK_SPELL, 0);
 
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -246,8 +250,8 @@ class WizardsGrimoire extends Table {
 
         $result['players_order'] = array_keys(Players::getPlayersInOrder($current_player_id));
 
-        $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
-        $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
+        // $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
+        // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
 
         $result['opponent_id'] = Players::getOpponentId();
 

@@ -20,6 +20,13 @@ trait ArgsTrait {
         ];
     }
 
+    function argCastSpell() {
+        return [
+            "discount_attack_spell" => Globals::getDiscountAttackSpell(true),
+            "discount_next_spell" => Globals::getDiscountNextSpell(true),
+        ];
+    }
+
     function argCastSpellInteraction() {
         return [
             "spell" => SpellCard::get(Globals::getSpellPlayed()),

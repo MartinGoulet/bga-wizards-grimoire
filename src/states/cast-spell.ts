@@ -1,11 +1,14 @@
 class CastSpellStates implements StateHandler {
    constructor(private game: WizardsGrimoire) {}
 
-   onEnteringState(args: any): void {
+   onEnteringState(args: CastSpellArgs): void {
       this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
       const repertoire = player_table.spell_repertoire;
+
+      player_table.setDiscountNextAttack(args.discount_attack_spell);
+      player_table.setDiscountNextSpell(args.discount_next_spell);
 
       repertoire.setSelectionMode("single");
       repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
@@ -25,7 +28,7 @@ class CastSpellStates implements StateHandler {
       repertoire.onSelectionChange = null;
    }
 
-   onUpdateActionButtons(args: any): void {
+   onUpdateActionButtons(args: CastSpellArgs): void {
       const handleCastSpell = () => {
          const repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
          const selectedSpell: SpellCard = repertoire.getSelection()[0];
@@ -58,4 +61,9 @@ class CastSpellStates implements StateHandler {
 
       return nbr_empty_deck > 0;
    }
+}
+
+interface CastSpellArgs {
+   discount_attack_spell: number;
+   discount_next_spell: number;
 }

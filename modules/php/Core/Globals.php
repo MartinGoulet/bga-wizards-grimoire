@@ -22,6 +22,22 @@ class Globals extends APP_DbObject {
         return Globals::set(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed);
     }
 
+    public static function getDiscountAttackSpell() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_DISCOUNT_ATTACK_SPELL));
+    }
+
+    public static function setDiscountAttackSpell(int $value) {
+        Game::get()->setGameStateValue(WG_VAR_DISCOUNT_ATTACK_SPELL, $value);
+    }
+
+    public static function getDiscountNextSpell() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_DISCOUNT_NEXT_SPELL));
+    }
+
+    public static function setDiscountNextSpell(int $value) {
+        Game::get()->setGameStateValue(WG_VAR_DISCOUNT_NEXT_SPELL, $value);
+    }
+
     public static function getInteractionPlayer() {
         return intval(Game::get()->getGameStateValue(WG_VAR_INTERACTION_PLAYER));
     }

@@ -30,7 +30,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   2 => [
     "name" => clienttranslate("Overload"),
@@ -94,9 +94,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "interaction" => "player",
-    "js_actions_interaction" => "actionFreeze",
-    "debug" => "red",
+    "js_actions" => "actionFreeze",
+    "debug" => "lightgreen",
   ],
   8 => [
     "name" => clienttranslate("Energy reserve"),
@@ -107,7 +106,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
     "js_actions" => "actionSelectManaFrom",
-    "debug" => "green",
+    "debug" => "lightgreen",
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
@@ -150,6 +149,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
+    "js_actions" => "actionShackledMotion",
     "debug" => "yellow",
   ],
   13 => [
@@ -191,7 +191,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
   17 => [
     "name" => clienttranslate("Renewed fervor"),
@@ -201,7 +201,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   18 => [
     "name" => clienttranslate("Secret Oath"),
@@ -263,7 +263,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   24 => [
     "name" => clienttranslate("Doom drop"),
@@ -285,7 +285,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   26 => [
     "name" => clienttranslate("Fire blast"),
@@ -335,7 +335,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "js_actions" => "actionTrapAttack",
+    "debug" => "lightgreen",
   ],
   31 => [
     "name" => clienttranslate("Energy shield"),
@@ -375,7 +376,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
 
 
@@ -526,7 +527,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
 
   49 => [
@@ -559,7 +560,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   52 => [
     "name" => clienttranslate("Toxic gift"),
@@ -680,7 +681,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "js_actions" => "actionSneakyDeal",
+    "debug" => "lightgreen",
   ],
   63 => [
     "name" => clienttranslate("Puppetmaster"),

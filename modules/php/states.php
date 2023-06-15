@@ -23,7 +23,11 @@ trait StateTrait {
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
 
-        $this->gamestate->nextState();
+        Globals::setDiscountAttackSpell(0);
+        Globals::setDiscountNextSpell(0);
+
+        $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
+        $this->gamestate->nextState($next_state);
     }
 
     function stSpellCoolDown() {

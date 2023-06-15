@@ -91,14 +91,21 @@ class ActionManager {
    // Actions
 
    private actionCastMana() {
-      const { name, cost } = this.game.getCardType(this.current_card);
-      let msg = _("${you} must pay ${nbr} mana card");
-      msg = msg.replace("${nbr}", cost.toString());
+      const { name, cost, type } = this.game.getCardType(this.current_card);
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+
+      let modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
+      if (type == "red") {
+         modifiedCost = Math.max(modifiedCost - player_table.getDiscountNextAttack(), 0);
+      }
+
+      const msg = _("${you} must pay ${nbr} mana card").replace("${nbr}", modifiedCost.toString());
 
       this.game.setClientState(states.client.castSpellWithMana, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
             card: this.current_card,
+            cost: modifiedCost,
          },
       });
    }
@@ -141,6 +148,75 @@ class ActionManager {
    private actionArcaneTactics() {
       const msg = _("${you} may select ${nbr} mana card from your hand");
       this.returnManaCardToDeck(msg, 4, false);
+   }
+
+   private actionFreeze() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Draw 4 cards"),
+               action: () => {
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Place a mana card from the mana deck on one of your opponent's spells"),
+               action: () => {
+                  this.selectManaDeck(1, _("Select an opponent's spell deck"), true, {
+                     player_id: this.game.getOpponentId(),
+                  });
+               },
+            },
+         ],
+      });
+   }
+
+   private actionShackledMotion() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Draw 4 cards"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Your opponent must discard their hand"),
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTrapAttack() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionSneakyDeal() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Deal 1 damage"),
+               action: () => {
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Discard a mana card off 1 of your other spells"),
+               action: () => {
+                  this.actions.push("actionSelectManaFrom");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
    }
 
    private actionSelectTwoManaCardFromDiscard() {
@@ -281,14 +357,16 @@ class ActionManager {
       msg = msg.replace("${nbr}", count.toString());
 
       argsSuppl.exclude = argsSuppl.exclude ?? [];
-      argsSuppl.exclude.push(Number(this.current_card.location_arg));
+      if (!argsSuppl.player_id || argsSuppl.player_id == this.game.getPlayerId()) {
+         argsSuppl.exclude.push(Number(this.current_card.location_arg));
+      }
 
       const args = {
-         ...argsSuppl,
          player_id: this.game.getPlayerId(),
          card: this.current_card,
          count,
          exact,
+         ...argsSuppl,
       };
 
       this.game.setClientState(states.client.selectManaDeck, {

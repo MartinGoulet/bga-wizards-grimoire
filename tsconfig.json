@@ -43,6 +43,7 @@
 
         "src/player-table.ts",
         "src/table-center.ts",
+        "src/game-options.ts",
 
         "src/states/cast-spell.ts",
         "src/states/cast-spell-interaction.ts",

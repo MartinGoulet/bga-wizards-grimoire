@@ -57,23 +57,29 @@ class ChooseNewSpellStates implements StateHandler {
    onUpdateActionButtons(args: any): void {
       this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
 
-      if (this.player_table.spell_repertoire.getCards().length < 6) {
-         this.game.addActionButtonDisabled("btn_confirm", _("Choose"), () => {
-            const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
+      const handleConfirm = () => {
+         const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
+         if (selectedSpell != null) {
             this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+         }
+      };
+
+      const handleReplace = () => {
+         const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
+         const replacedSpell = this.player_table.spell_repertoire.getSelection()[0];
+
+         this.game.takeAction("replaceSpell", {
+            new_spell_id: selectedSpell.id,
+            old_spell_id: replacedSpell.id,
          });
+      };
+
+      if (this.player_table.spell_repertoire.getCards().length < 6) {
+         this.game.addActionButtonDisabled("btn_confirm", _("Choose"), handleConfirm);
       } else {
          const available_slots = this.player_table.getSpellSlotAvailables();
          if (available_slots.length > 0) {
-            this.game.addActionButtonDisabled("btn_replace", _("Replace"), () => {
-               const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
-               const replacedSpell = this.player_table.spell_repertoire.getSelection()[0];
-
-               this.game.takeAction("replaceSpell", {
-                  new_spell_id: selectedSpell.id,
-                  old_spell_id: replacedSpell.id,
-               });
-            });
+            this.game.addActionButtonDisabled("btn_replace", _("Replace"), handleReplace);
          }
       }
       if (this.player_table.spell_repertoire.getCards().length == 6) {

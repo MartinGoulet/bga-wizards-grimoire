@@ -52,17 +52,37 @@ class ManaCard {
             $mana_cards_1 = $deck->pickCards($card_left, CardLocation::Deck(), $player_id);
             Notifications::drawManaCards($player_id, $mana_cards_1);
 
-            $deck->moveAllCardsInLocation(CardLocation::Discard(), CardLocation::Deck());
-            $deck->shuffle(CardLocation::Deck());
-            $cards = $deck->getCardsInLocation(CardLocation::Deck());
-            $cards = Game::anonynizeCards($cards);
-            Notifications::manaDeckShuffle($cards);
+            self::reshuffle();
 
             $mana_cards_2 = $deck->pickCards($count - $card_left, CardLocation::Deck(), $player_id);
             Notifications::drawManaCards($player_id, $mana_cards_2);
 
             return array_merge($mana_cards_1, $mana_cards_2);
         }
+    }
+
+    public static function reshuffle() {
+        $deck = Game::get()->deck_manas;
+        $deck->moveAllCardsInLocation(CardLocation::Discard(), CardLocation::Deck());
+        $deck->shuffle(CardLocation::Deck());
+        $cards = $deck->getCardsInLocation(CardLocation::Deck());
+        $cards = Game::anonynizeCards($cards);
+        Notifications::manaDeckShuffle($cards);
+    }
+
+    public static function dealFromDeckToManaCoolDown($position, $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $deck = Game::get()->deck_manas;
+        if ($deck->countCardInLocation(CardLocation::Deck()) == 0) {
+            self::reshuffle();
+        }
+        $card = $deck->getCardOnTop(CardLocation::Deck());
+        $deck->pickCardForLocation(CardLocation::Deck(), "temp");
+        $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
+        $card_after = self::get($card['id']);
+        Notifications::moveManaCard($player_id, [$card], [$card_after]);
     }
 
     public static function get(int $card_id) {

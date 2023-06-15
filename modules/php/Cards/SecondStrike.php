@@ -2,11 +2,14 @@
 
 namespace WizardsGrimoire\Cards;
 
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoire\Core\Globals;
 
 class SecondStrike extends BaseCard {
 
-    // TODO
-
+    public function castSpell($args) {
+        // Deal 3 damage. 
+        $this->dealDamage(3);
+        // The next time you cast an attack spell this turn, it costs 1 less.
+        Globals::setDiscountAttackSpell(1);
+    }
 }

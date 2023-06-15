@@ -9,6 +9,7 @@ class SelectManaDeckStates implements StateHandler {
       const { exclude, player_id, count } = args;
       this.player_table = this.game.getPlayerTable(player_id);
 
+      debugger;
       const decks = this.player_table.getManaDeckWithSpellOver(exclude);
 
       const handleChange = (lastDeck: ManaDeck) => {

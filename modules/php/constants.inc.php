@@ -17,6 +17,8 @@ define('WG_VAR_CURRENT_PLAYER', 'current_player');
 define('WG_VAR_INTERACTION_PLAYER', 'interaction_player');
 define('WG_VAR_SPELL_PLAYED', 'spell_played');
 define('WG_VAR_SKIP_INTERACTION', 'skip_interaction');
+define('WG_VAR_DISCOUNT_NEXT_SPELL', 'discount_next_spell');
+define('WG_VAR_DISCOUNT_ATTACK_SPELL', 'discount_attack_spell');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
@@ -29,6 +31,8 @@ define('ST_END_GAME', 99);
 
 define('ST_PLAYER_NEW_TURN', 10);
 define('ST_CHOOSE_NEW_SPELL', 2);
+define('ST_DISCARD_MANA', 11);
+
 
 define('ST_SPELL_COOL_DOWN', 3);
 define('ST_SPELL_CD_ACTIVATE_DELAYED', 31);

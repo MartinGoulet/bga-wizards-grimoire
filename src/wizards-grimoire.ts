@@ -34,6 +34,7 @@ class WizardsGrimoire
    public stateManager: StateManager;
    public actionManager: ActionManager;
 
+   public gameOptions: GameOptions;
    public tableCenter: TableCenter;
    public playersTables: PlayerTable[] = [];
    public zoomManager: ZoomManager;
@@ -61,12 +62,10 @@ class WizardsGrimoire
       this.stateManager = new StateManager(this);
       this.actionManager = new ActionManager(this);
 
+      this.gameOptions = new GameOptions(this);
       this.tableCenter = new TableCenter(this);
 
       // Setting up player boards
-      for (let player_id in gamedatas.players) {
-      }
-
       this.createPlayerTables(gamedatas);
 
       this.zoomManager = new ZoomManager({
@@ -202,6 +201,10 @@ class WizardsGrimoire
 
    public getCardType(card: SpellCard): CardType {
       return this.gamedatas.card_types[card.type];
+   }
+
+   public getOpponentId(): number {
+      return Number(this.gamedatas.opponent_id);
    }
 
    public getPlayerId(): number {

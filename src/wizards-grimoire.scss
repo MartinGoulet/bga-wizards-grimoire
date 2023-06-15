@@ -3,6 +3,48 @@
 @import "../node_modules/bga-cards/bga-cards";
 @import "table-center";
 @import "player-table";
+@import "game-options";
+
+.player-board {
+   .break {
+      flex-basis: 100%;
+      height: 0;
+   }
+
+   .dtIconTokens {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+      margin: 0 10px;
+
+      .dt-icon {
+         height: 24px;
+         width: 24px;
+         background-size: 24px 24px;
+         box-shadow: 1px 2px 2px 1px black;
+         border-radius: 20px;
+         border: 1px solid black;
+         margin: 0px;
+
+         &:not(:first-child) {
+            margin-left: -10px;
+         }
+      }
+   }
+
+   .dtIconGroup {
+      display: flex;
+      margin-left: 15px;
+   }
+
+   .dtIconCounter {
+      display: inline-block;
+      font-weight: bold;
+      line-height: 25px;
+      vertical-align: super;
+      margin: 0 3px;
+   }
+}
 
 #table {
    display: flex;

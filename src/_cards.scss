@@ -100,12 +100,14 @@
 }
 
 .wg-deck-selected,
-.wg-deck-selected .front {
+.wg-deck-selected .front,
+.wg-deck-selected .back {
    animation: pulseSelectable 1.5s infinite alternate;
 }
 
 .wg-deck-was-selected,
-.wg-deck-was-selected .front {
+.wg-deck-was-selected .front,
+.wg-deck-was-selected .back {
    box-shadow: inset 0 0 6px 5px #00ffff !important;
 }
 

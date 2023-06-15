@@ -17,15 +17,15 @@ class ShackledMotion extends BaseCard {
             case 1:
                 $this->drawManaCards(4);
                 break;
-            case 1:
+            case 2:
                 $opponent_id = Players::getOpponentId();
                 $cards_before = ManaCard::getHand($opponent_id);
                 $cards_after = [];
-                foreach ($cards_before as $card_id) {
+                foreach ($cards_before as $card_id => $card) {
                     ManaCard::addOnTopOfDiscard($card_id);
                     $cards_after[] = ManaCard::get($card_id);
                 }
-                Notifications::moveManaCard($opponent_id, $cards_before, $cards_after);
+                Notifications::moveManaCard($opponent_id, $cards_before, $cards_after, "@@@", false);
                 break;
 
             default:

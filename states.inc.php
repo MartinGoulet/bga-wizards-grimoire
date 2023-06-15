@@ -87,15 +87,27 @@ $chooseSpellStates = [
         "type" => "game",
         "action" => "stNewTurn",
         "transitions" => [
-            "" => ST_CHOOSE_NEW_SPELL
+            "spell" => ST_CHOOSE_NEW_SPELL,
+            "discard" => ST_DISCARD_MANA,
+        ]
+    ],
+
+    ST_DISCARD_MANA => [
+        "name" => "discardMana",
+        "description" => clienttranslate('${actplayer} must discards to 10 mana cards'),
+        "descriptionmyturn" => clienttranslate('${you} must discard to 10 mana cards'),
+        "type" => "activeplayer",
+        "possibleactions" => ["discardMana"],
+        "transitions" => [
+            "" => ST_NEXT_PLAYER,
         ]
     ],
 
     ST_CHOOSE_NEW_SPELL => [
         "name" => "chooseNewSpell",
-        "description" => clienttranslate('${actplayer} must choose a new spell'),
+        "description" => clienttranslate('${actplayer} must chooses a new spell'),
         "descriptionReplace" => clienttranslate('${actplayer} may choose to replace a spell'),
-        "descriptionmyturn" => clienttranslate('${you} must choose a new spell'),
+        "descriptionmyturn" => clienttranslate('${you} must chooses a new spell'),
         "descriptionmyturnReplace" => clienttranslate('${you} may choose to replace a spell'),
         "type" => "activeplayer",
         "possibleactions" => ["chooseSpell", "replaceSpell", "pass"],
@@ -151,6 +163,7 @@ $castSpellsStates = [
         "description" => clienttranslate('${actplayer} may cast a spell or pass'),
         "descriptionmyturn" => clienttranslate('${you} may cast a spell or pass'),
         "type" => "activeplayer",
+        "args" => "argCastSpell",
         "possibleactions" => ["castSpell", "pass"],
         "transitions" => [
             "cast" => ST_CAST_SPELL,

@@ -6,11 +6,20 @@ class CastSpellWithManaStates implements StateHandler {
 
    constructor(private game: WizardsGrimoire) {}
 
-   onEnteringState(args: any): void {
+   onEnteringState(args: CastSpellWithManaArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
       this.mana_cards = [];
       this.spell = args.card;
-      const { cost } = this.game.getCardType(this.spell);
+
+      let { cost, type } = this.game.getCardType(this.spell);
+
+      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
+
+      cost = Math.max(cost - this.player_table.getDiscountNextSpell(), 0);
+      if (type == "red") {
+         cost = Math.max(cost - this.player_table.getDiscountNextAttack(), 0);
+      }
 
       const handleHandCardClick = (card: ManaCard) => {
          this.mana_cards.push(card);
@@ -27,10 +36,7 @@ class CastSpellWithManaStates implements StateHandler {
          }
       };
 
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
       this.player_table.hand.onCardClick = handleHandCardClick;
-
-      this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
       this.mana_deck.onCardClick = handleDeckCardClick;
 
       log("mana deck", this.mana_deck);
@@ -41,14 +47,16 @@ class CastSpellWithManaStates implements StateHandler {
       this.mana_deck.onCardClick = null;
    }
 
-   onUpdateActionButtons(args: any): void {
+   onUpdateActionButtons(args: CastSpellWithManaArgs): void {
       const handleConfirm = () => {
          this.game.actionManager.addArgument(this.mana_cards.map((x) => x.id).join(","));
          this.game.actionManager.activateNextAction();
       };
 
-      this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+      this.game.addActionButton("btnConfirm", _("Confirm"), handleConfirm);
       this.game.addActionButtonClientCancel();
+
+      this.game.toggleButtonEnable("btnConfirm", args.cost == 0);
    }
 
    restoreGameState() {
@@ -73,4 +81,9 @@ class CastSpellWithManaStates implements StateHandler {
          }
       });
    }
+}
+
+interface CastSpellWithManaArgs {
+   cost: number;
+   card: SpellCard;
 }

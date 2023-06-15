@@ -16,6 +16,22 @@ trait ActionTrait {
         (note: each method below must match an input method in nicodemus.action.php)
     */
 
+    public function discardMana(array $card_ids) {
+        $this->checkAction('discardMana');
+
+        $hand_count = ManaCard::getHandCount();
+        if ($hand_count - sizeof($card_ids) !== 10) {
+            throw new BgaSystemException("Not enough mana discarded");
+        }
+
+        foreach ($card_ids as $card_id) {
+            ManaCard::isInHand($card_id);
+            ManaCard::addOnTopOfDiscard($card_id);
+        }
+
+        $this->gamestate->nextState();
+    }
+
     public function chooseSpell(int $card_id) {
         $this->checkAction('chooseSpell');
 
@@ -110,20 +126,38 @@ trait ActionTrait {
         $mana_ids = explode(',', $mana_ids);
 
         $card_type = SpellCard::getCardInfo($spell);
-        if (sizeof($mana_ids) !== $card_type['cost']) {
-            throw new BgaSystemException("Not enough mana");
+        $cost = intval($card_type['cost']);
+
+        $cost = max($cost - Globals::getDiscountNextSpell(), 0);
+        Globals::setDiscountNextSpell(0);
+        if ($card_type['type'] == WG_SPELL_TYPE_DAMAGE) {
+            $cost = max($cost - Globals::getDiscountNextSpell(), 0);
+            Globals::setDiscountAttackSpell(0);
         }
 
-        $mana_cards_before = array_map(function ($mana_id) use ($player_id) {
-            return ManaCard::isInHand($mana_id, $player_id);
-        }, $mana_ids);
-
-        // Move card to the mana position below the spell
-        foreach ($mana_cards_before as $card_id => $card) {
-            ManaCard::addOnTopOfManaCoolDown($card['id'], intval($spell['location_arg']));
+        if ($cost == 0 && sizeof($mana_ids) == 1 && $mana_ids[0] == "") {
+            // Free card
+        } else if (sizeof($mana_ids) !== $cost) {
+            throw new BgaSystemException("Not the right amount of mana required" . sizeof($mana_ids) . " : " . $cost);
         }
 
-        $mana_cards_after = ManaCard::getCards($mana_ids);
+        if ($cost > 0) {
+            $mana_cards_before = array_map(function ($mana_id) use ($player_id) {
+                return ManaCard::isInHand($mana_id, $player_id);
+            }, $mana_ids);
+
+            // Move card to the mana position below the spell
+            foreach ($mana_cards_before as $card_id => $card) {
+                ManaCard::addOnTopOfManaCoolDown($card['id'], intval($spell['location_arg']));
+            }
+
+            $mana_cards_after = ManaCard::getCards($mana_ids);
+        } else {
+            $mana_cards_before = [];
+            $mana_cards_after = [];
+        }
+
+
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
@@ -132,7 +166,7 @@ trait ActionTrait {
             // Execute the ability of the card
             $cardClass->castSpell($args);
 
-            if(Globals::getSkipInteraction()) {
+            if (Globals::getSkipInteraction()) {
                 Globals::setSkipInteraction(false);
                 $this->castOrEndGame();
                 return;
@@ -161,7 +195,7 @@ trait ActionTrait {
     }
 
     private function castOrEndGame() {
-        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else {
             $this->gamestate->nextState('cast');
@@ -178,7 +212,7 @@ trait ActionTrait {
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
 
-        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else {
             $this->gamestate->nextState('return');
@@ -214,12 +248,11 @@ trait ActionTrait {
             $spell->onAfterBasicAttack($mana_id);
         }
 
-        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else {
             $this->gamestate->nextState('attack');
         }
-
     }
 
     public function pass() {

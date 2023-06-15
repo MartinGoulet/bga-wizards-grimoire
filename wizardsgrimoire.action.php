@@ -37,6 +37,16 @@ class action_wizardsgrimoire extends APP_GameAction {
 
    // TODO: defines your action entry points there
 
+   public function discardMana() {
+      self::setAjaxMode();
+
+      $args = $this->getArrayArgs();
+
+      $this->game->discardMana($args);
+
+      self::ajaxResponse();
+   }
+
    public function chooseSpell() {
       self::setAjaxMode();
 

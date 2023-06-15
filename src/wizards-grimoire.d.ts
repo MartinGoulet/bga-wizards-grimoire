@@ -14,6 +14,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    card_types: { [card_type: number]: CardType };
    player_board: PlayerBoardObject;
    players_order: number[];
+   opponent_id: number;
 }
 
 interface PlayerBoardInfo {

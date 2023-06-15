@@ -38,7 +38,7 @@ class PlayerTable {
 
       const html = `
             <div style="--color: #${pColor}" data-color="${pColor}">
-               <div id="player-table-${pId}" class="player-table whiteblock">
+               <div id="player-table-${pId}" class="player-table whiteblock" data-discount-next-spell="0" data-discount-next-attack="0">
                   <span class="wg-title">${_("Spell Repertoire")}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
                   <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
@@ -191,5 +191,25 @@ class PlayerTable {
 
       const index = Number(card.location.substring(card.location.length - 1));
       return this.mana_cooldown[index];
+   }
+
+   getDiscountNextAttack() {
+      return Number(this.getPlayerTableDiv().dataset.discountNextAttack);
+   }
+
+   setDiscountNextAttack(amount: number) {
+      this.getPlayerTableDiv().dataset.discountNextAttack = amount.toString();
+   }
+
+   getDiscountNextSpell() {
+      return Number(this.getPlayerTableDiv().dataset.discountNextSpell);
+   }
+
+   setDiscountNextSpell(amount: number) {
+      this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
+   }
+
+   private getPlayerTableDiv() {
+      return document.getElementById(`player-table-${this.player_id}`);
    }
 }
