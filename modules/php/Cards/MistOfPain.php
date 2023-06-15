@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -10,7 +11,12 @@ use WizardsGrimoire\Core\Players;
 class MistOfPain extends BaseCard {
 
     public function castSpell($args) {
-        // Your opponent may discard up to 4 mana cards from their hand. For each mana they do not discard, deal 1 damage
+        // Your opponent may discard up to 4 mana cards from their hand. 
+        // For each mana they do not discard, deal 1 damage
+        if (ManaCard::getHandCount(Players::getOpponentId()) == 0) {
+            Globals::setSkipInteraction(true);
+            $this->castSpellInteraction(null);
+        }
     }
 
     public function castSpellInteraction($args) {

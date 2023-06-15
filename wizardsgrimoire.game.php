@@ -77,6 +77,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_CURRENT_PLAYER => 11,
             WG_VAR_SPELL_PLAYED => 12,
             WG_VAR_INTERACTION_PLAYER => 13,
+            WG_VAR_SKIP_INTERACTION => 14,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
         ));

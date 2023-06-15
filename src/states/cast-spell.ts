@@ -42,7 +42,7 @@ class CastSpellStates implements StateHandler {
 
       if (this.hasSpellAvailable()) {
          this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
-         this.game.addActionButtonPass();
+         this.game.addActionButtonRed("btn_pass", _("Move to basic attack"), handlePass);
       } else {
          this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
       }
@@ -51,8 +51,11 @@ class CastSpellStates implements StateHandler {
    restoreGameState() {}
 
    hasSpellAvailable() {
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
-      const number_available_spell = player_table.getManaDeckWithSpellOver().length;
-      return number_available_spell > 0;
+      const nbr_empty_deck = this.game
+         .getPlayerTable(this.game.getPlayerId())
+         .getManaDeckWithSpellOver()
+         .filter((deck) => deck.isEmpty()).length;
+
+      return nbr_empty_deck > 0;
    }
 }

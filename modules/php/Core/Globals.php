@@ -30,6 +30,15 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_INTERACTION_PLAYER, $player_id);
     }
 
+    public static function getSkipInteraction() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_SKIP_INTERACTION)) == 1;
+    }
+
+    public static function setSkipInteraction(bool $skip) {
+        $value = $skip ? 1 : 0;
+        Game::get()->setGameStateValue(WG_VAR_SKIP_INTERACTION, $value);
+    }
+
     public static function getSpellPlayed() {
         return intval(Game::get()->getGameStateValue(WG_VAR_SPELL_PLAYED));
     }

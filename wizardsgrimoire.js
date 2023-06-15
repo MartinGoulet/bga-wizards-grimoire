@@ -2090,8 +2090,9 @@ var NotificationManager = (function () {
         log("notif_onHealthChanged", notif.args);
         var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining, damage = _a.damage;
         this.game.scoreCtrl[player_id].toValue(life_remaining);
-        var color = damage > 0 ? "ff0000" : "008000";
-        this.game.displayScoring("player-table-".concat(player_id), color, -damage, 1000);
+        if (damage > 0) {
+            this.game.displayScoring("player-table-".concat(player_id), "ff0000", -damage, 1000);
+        }
     };
     return NotificationManager;
 }());
@@ -2455,7 +2456,7 @@ var CastSpellStates = (function () {
         };
         if (this.hasSpellAvailable()) {
             this.game.addActionButtonDisabled("btn_cast", _("Cast spell"), handleCastSpell);
-            this.game.addActionButtonPass();
+            this.game.addActionButtonRed("btn_pass", _("Move to basic attack"), handlePass);
         }
         else {
             this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
@@ -2463,9 +2464,11 @@ var CastSpellStates = (function () {
     };
     CastSpellStates.prototype.restoreGameState = function () { };
     CastSpellStates.prototype.hasSpellAvailable = function () {
-        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var number_available_spell = player_table.getManaDeckWithSpellOver().length;
-        return number_available_spell > 0;
+        var nbr_empty_deck = this.game
+            .getPlayerTable(this.game.getPlayerId())
+            .getManaDeckWithSpellOver()
+            .filter(function (deck) { return deck.isEmpty(); }).length;
+        return nbr_empty_deck > 0;
     };
     return CastSpellStates;
 }());
@@ -2571,8 +2574,10 @@ var ChooseNewSpellStates = (function () {
     ChooseNewSpellStates.prototype.clearSelectionMode = function () {
         this.game.tableCenter.spellPool.setSelectionMode("none");
         this.game.tableCenter.spellPool.onSelectionChange = null;
-        this.player_table.spell_repertoire.setSelectionMode("none");
-        this.player_table.spell_repertoire.onSelectionChange = null;
+        if (this.player_table) {
+            this.player_table.spell_repertoire.setSelectionMode("none");
+            this.player_table.spell_repertoire.onSelectionChange = null;
+        }
     };
     return ChooseNewSpellStates;
 }());
@@ -2601,7 +2606,9 @@ var BasicAttackStates = (function () {
         var handleCastSpell = function () {
             var hand = _this.game.getPlayerTable(_this.game.getPlayerId()).hand;
             var selectedMana = hand.getSelection()[0];
-            _this.game.takeAction("basicAttack", { id: selectedMana.id });
+            if (selectedMana) {
+                _this.game.takeAction("basicAttack", { id: selectedMana.id });
+            }
         };
         this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
         this.game.addActionButtonPass();

@@ -88,7 +88,8 @@ class NotificationManager {
       log("notif_onHealthChanged", notif.args);
       const { player_id, life_remaining, damage } = notif.args;
       this.game.scoreCtrl[player_id].toValue(life_remaining);
-      const color = damage > 0 ? "ff0000" : "008000";
-      this.game.displayScoring(`player-table-${player_id}`, color, -damage, 1000);
+      if (damage > 0) {
+         this.game.displayScoring(`player-table-${player_id}`, "ff0000", -damage, 1000);
+      }
    }
 }

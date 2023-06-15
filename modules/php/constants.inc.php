@@ -16,6 +16,7 @@ define('WG_VAR_SLOT_COUNT', 'slot_count');
 define('WG_VAR_CURRENT_PLAYER', 'current_player');
 define('WG_VAR_INTERACTION_PLAYER', 'interaction_player');
 define('WG_VAR_SPELL_PLAYED', 'spell_played');
+define('WG_VAR_SKIP_INTERACTION', 'skip_interaction');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
@@ -23,6 +24,7 @@ define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
  * State constants
  */
 define('ST_BGA_GAME_SETUP', 1);
+define('ST_PRE_END_OF_GAME', 98);
 define('ST_END_GAME', 99);
 
 define('ST_PLAYER_NEW_TURN', 10);

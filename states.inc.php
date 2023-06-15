@@ -63,6 +63,13 @@ $basicGameStates = [
         "transitions" => ["" => ST_PLAYER_NEW_TURN]
     ],
 
+    ST_PRE_END_OF_GAME => [
+        'name' => 'preEndOfGame',
+        'type' => 'game',
+        'action' => 'stPreEndOfGame',
+        'transitions' => ["" => ST_END_GAME],
+      ],
+
     // Final state.
     // Please do not modify.
     ST_END_GAME => [
@@ -108,6 +115,7 @@ $spellCoolDownStates = [
         "transitions" => [
             "next" => ST_GAIN_MANA,
             "delayed" => ST_SPELL_CD_ACTIVATE_DELAYED,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 
@@ -120,7 +128,8 @@ $spellCoolDownStates = [
         "possibleactions" => ["activateSpell", "pass"],
         "transitions" => [
             "cast" => ST_SPELL_CD_ACTIVATE_DELAYED,
-            "pass" => ST_GAIN_MANA
+            "pass" => ST_GAIN_MANA,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 ];
@@ -148,6 +157,7 @@ $castSpellsStates = [
             "pass" => ST_BASIC_ATTACK,
             "player" => ST_CAST_SPELL_INTERACTION,
             "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 
@@ -168,7 +178,8 @@ $castSpellsStates = [
         "args" => "argCastSpellInteraction",
         "possibleactions" => ["castSpellInteraction"],
         "transitions" => [
-            "" => ST_CAST_SPELL_RETURN_CURRENT_PLAYER
+            "return" => ST_CAST_SPELL_RETURN_CURRENT_PLAYER,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ),
 
@@ -191,7 +202,8 @@ $basicAttackStates = [
         "possibleactions" => ["basicAttack", "pass"],
         "transitions" => [
             "attack" => ST_NEXT_PLAYER,
-            "pass" => ST_NEXT_PLAYER
+            "pass" => ST_NEXT_PLAYER,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 

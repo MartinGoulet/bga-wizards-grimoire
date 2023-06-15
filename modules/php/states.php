@@ -92,4 +92,8 @@ trait StateTrait {
 
         $this->gamestate->nextState();
     }
+
+    public function stPreEndOfGame() {
+        $this->gamestate->nextState();
+    }
 }

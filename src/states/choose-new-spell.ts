@@ -86,7 +86,9 @@ class ChooseNewSpellStates implements StateHandler {
    clearSelectionMode(): void {
       this.game.tableCenter.spellPool.setSelectionMode("none");
       this.game.tableCenter.spellPool.onSelectionChange = null;
-      this.player_table.spell_repertoire.setSelectionMode("none");
-      this.player_table.spell_repertoire.onSelectionChange = null;
+      if (this.player_table) {
+         this.player_table.spell_repertoire.setSelectionMode("none");
+         this.player_table.spell_repertoire.onSelectionChange = null;
+      }
    }
 }

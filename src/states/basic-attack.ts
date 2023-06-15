@@ -22,7 +22,9 @@ class BasicAttackStates implements StateHandler {
       const handleCastSpell = () => {
          const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
          const selectedMana: SpellCard = hand.getSelection()[0];
-         this.game.takeAction("basicAttack", { id: selectedMana.id });
+         if (selectedMana) {
+            this.game.takeAction("basicAttack", { id: selectedMana.id });
+         }
       };
 
       this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);

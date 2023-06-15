@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -14,11 +15,13 @@ class FriendlyTruce extends BaseCard {
     public function castSpell($args) {
         // Your opponent may give you 3 cards from their hand. 
         // If they do not, gain 5 mana cards
-        
+        if (ManaCard::getHandCount(Players::getOpponentId()) < 3) {
+            Globals::setSkipInteraction(true);
+            $this->castSpellInteraction(null);
+        }
     }
 
-    public function castSpellInteraction($args)
-    {
+    public function castSpellInteraction($args) {
         if ($args != null && $args != "") {
             $mana_ids = explode(",", array_shift($args));
             if (sizeof($mana_ids) != 3) {

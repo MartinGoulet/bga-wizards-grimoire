@@ -60,7 +60,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   5 => [
     "name" => clienttranslate("Mist of pain"),
@@ -128,7 +128,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
 
   11 => [
@@ -221,7 +221,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_BEGINNER,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
     "js_actions" => "actionTimeDistortion",
   ],
   20 => [

@@ -132,6 +132,12 @@ trait ActionTrait {
             // Execute the ability of the card
             $cardClass->castSpell($args);
 
+            if(Globals::getSkipInteraction()) {
+                Globals::setSkipInteraction(false);
+                $this->castOrEndGame();
+                return;
+            }
+
             $card_interaction = $card_type['interaction'] ?? "";
 
             switch ($card_interaction) {
@@ -146,11 +152,19 @@ trait ActionTrait {
                     break;
 
                 default:
-                    $this->gamestate->nextState("cast");
+                    $this->castOrEndGame();
                     break;
             }
         } else {
             $this->gamestate->nextState("cast");
+        }
+    }
+
+    private function castOrEndGame() {
+        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->gamestate->nextState('cast');
         }
     }
 
@@ -163,7 +177,12 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
-        $this->gamestate->nextState();
+
+        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->gamestate->nextState('return');
+        }
     }
 
     public function basicAttack(int $mana_id) {
@@ -195,7 +214,12 @@ trait ActionTrait {
             $spell->onAfterBasicAttack($mana_id);
         }
 
-        $this->gamestate->nextState('attack');
+        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->gamestate->nextState('attack');
+        }
+
     }
 
     public function pass() {

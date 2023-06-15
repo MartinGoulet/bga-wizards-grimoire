@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards;
 
-
 use BgaSystemException;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -12,6 +12,10 @@ class Wrath extends BaseCard {
 
     public function castSpell($args) {
         // Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage.
+        if(ManaCard::getHandCount(Players::getOpponentId()) < 2) {
+            Globals::setSkipInteraction(true);
+            $this->castSpellInteraction(null);
+        }
     }
 
     public function castSpellInteraction($args) {
