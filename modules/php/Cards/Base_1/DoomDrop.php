@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
+use WizardsGrimoire\Cards\BaseCard;
 class DoomDrop extends BaseCard {
 
     public function castSpell($args) {

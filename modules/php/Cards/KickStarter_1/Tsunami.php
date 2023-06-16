@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Cards\KickStarter_1;
 
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
 
 class Tsunami extends BaseCard {

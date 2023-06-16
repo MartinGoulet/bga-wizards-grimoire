@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
 
 class EnergyStorm extends BaseCard {

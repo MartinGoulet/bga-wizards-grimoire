@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
+use WizardsGrimoire\Cards\BaseCard;
 class SleightOfHand extends BaseCard {
 
     public function castSpell($args) {
