@@ -40,7 +40,7 @@ interface CardType {
    icon: "Base_1" | "Base_2" | "KickStarter_1";
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
-   debug: "red" | "yellow" | "green";
+   debug: "red" | "yellow" | "lightgreen";
 }
 
 interface SpellCard extends Card {
@@ -102,9 +102,9 @@ interface NotifMoveManaCardsArgs {
    cards_after: ManaCard[];
 }
 
-interface NotifSpellCoolDownArgs {
+interface NotifRevealManaCardArgs {
    player_id: number;
-   mana_cards_discard: number[];
+   mana_values: number[];
 }
 
 interface NotifHealthChangedArgs {

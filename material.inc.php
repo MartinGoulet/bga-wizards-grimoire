@@ -399,7 +399,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 5,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   37 => [
     "name" => clienttranslate("False face"),
@@ -527,7 +527,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
+    "debug" => "yellow",
   ],
 
   49 => [

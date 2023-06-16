@@ -118,11 +118,15 @@ class Notifications {
         ]);
     }
 
-    static function revealManaCard(int $player_id, int $value) {
-        self::message('${player_name} reveals a ${value} power mana.', [
+    static function revealManaCard(int $player_id, array $cards) {
+        $values = array_map(function ($card) {
+            return intval($card['type']);
+        }, $cards);
+
+        self::message('${player_name} reveals ${mana_values} from mana deck', [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
-            "value" => $value,
+            "mana_values" => $values,
         ]);
     }
 

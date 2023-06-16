@@ -108,7 +108,15 @@ class WizardsGrimoire
          expansion,
       };
 
-      console.log(text);
+      // console.log(text);
+      arrCardType
+         .filter((x) => x.icon == "Base_1" && x.debug !== "lightgreen")
+         .sort((a: CardType, b: CardType) => a.name.localeCompare(b.name))
+         .forEach((card) => {
+            log(card.name);
+            log(card.description);
+            log("----------------");
+         });
    }
 
    ///////////////////////////////////////////////////
@@ -303,6 +311,12 @@ class WizardsGrimoire
 
             if (args.card_name !== undefined) {
                args.card_name = "<b>" + _(args.card_name) + "</b>";
+            }
+
+            if (args.mana_values !== undefined) {
+               args.mana_values = args.mana_values
+                  .map((value) => `<span class="wg-icon-log i-mana-x">${value}</span>`)
+                  .join(" ");
             }
          }
       } catch (e) {

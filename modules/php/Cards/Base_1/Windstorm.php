@@ -20,9 +20,8 @@ class Windstorm extends BaseCard {
         $this->dealDamage(2);
 
         $player_id = Players::getPlayerId();
-        $topCard = Game::get()->deck_manas->getCardOnTop(CardLocation::Deck());
+        $topCard = array_shift(ManaCard::revealFromDeck(1));
         $value = intval($topCard['type']);
-        Notifications::revealManaCard(Players::getPlayerId(), $value);
 
         if ($value == 1) {
             $spell = SpellCard::get(Globals::getSpellPlayed());

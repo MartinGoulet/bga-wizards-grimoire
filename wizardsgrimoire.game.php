@@ -41,6 +41,7 @@ require_once('modules/php/constants.inc.php');
 use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
@@ -464,5 +465,10 @@ class WizardsGrimoire extends Table {
     // Exposing protected method translation
     public static function translate($text) {
         return self::_($text);
+    }
+
+    public function debugNotif() {
+        $cards = $this->deck_manas->getCardsOnTop(3, CardLocation::Deck());
+        Notifications::revealManaCard($this->getActivePlayerId(), $cards);
     }
 }

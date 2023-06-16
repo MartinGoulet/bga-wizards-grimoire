@@ -194,6 +194,8 @@ class ManaCard {
     }
 
     public static function revealFromDeck($count) {
-        return Game::get()->deck_manas->getCardsOnTop($count, CardLocation::Deck());
+        $cards = Game::get()->deck_manas->getCardsOnTop($count, CardLocation::Deck());
+        Notifications::revealManaCard(Players::getPlayerId(), $cards);
+        return $cards;
     }
 }

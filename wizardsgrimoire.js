@@ -1411,7 +1411,14 @@ var WizardsGrimoire = (function () {
             level2: level2,
             expansion: expansion,
         };
-        console.log(text);
+        arrCardType
+            .filter(function (x) { return x.icon == "Base_1" && x.debug !== "lightgreen"; })
+            .sort(function (a, b) { return a.name.localeCompare(b.name); })
+            .forEach(function (card) {
+            log(card.name);
+            log(card.description);
+            log("----------------");
+        });
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
@@ -1546,6 +1553,11 @@ var WizardsGrimoire = (function () {
                 args.processed = true;
                 if (args.card_name !== undefined) {
                     args.card_name = "<b>" + _(args.card_name) + "</b>";
+                }
+                if (args.mana_values !== undefined) {
+                    args.mana_values = args.mana_values
+                        .map(function (value) { return "<span class=\"wg-icon-log i-mana-x\">".concat(value, "</span>"); })
+                        .join(" ");
                 }
             }
         }
