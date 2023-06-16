@@ -2,15 +2,24 @@ class GameOptions {
    constructor(private game: WizardsGrimoire) {
       const playerBoards = document.getElementById("");
 
+      const { phase1, phase2, phase3, phase4, phase5 } = {
+         phase1: _("Choose a New Spell"),
+         phase2: _("Spell Cool Down"),
+         phase3: _("Gain 3 Mana"),
+         phase4: _("Cast Spells"),
+         phase5: _("Basic Attack"),
+      };
+
       const html = `
             <div class="player-board">
                 <div class="player-board-inner">
-                    <ul id="dt-phases">
-                        <li id="dt-p-unkeep"><div class="dt-icon i-unkeep-phase"></div><div class="dt-phase-name">Choose a New Spell</div></li>
-                        <li id="dt-p-unkeep"><div class="dt-icon i-unkeep-phase"></div><div class="dt-phase-name">Spell Cool Down</div></li>
-                        <li id="dt-p-main_1"><div class="dt-icon i-cards"></div><div class="dt-phase-name">Gain 3 Mana</div></li>
-                        <li id="dt-p-offensive"><div class="dt-icon i-main-phase"></div><div class="dt-phase-name">Cast Spells</div></li>
-                        <li id="dt-p-targeting"><div class="dt-icon i-roll-phase"></div><div class="dt-phase-name">Basic Attack</div></li>
+                    <div id="wg-phase-selector" data-phase="1"></div>
+                    <ul id="wg-phases">
+                        <li><div class="wg-icon"></div><div class="wg-phase-name">1. ${phase1}</div></li>
+                        <li><div class="wg-icon"></div><div class="wg-phase-name">2. ${phase2}</div></li>
+                        <li><div class="wg-icon"></div><div class="wg-phase-name">3. ${phase3}</div></li>
+                        <li><div class="wg-icon"></div><div class="wg-phase-name">4. ${phase4}</div></li>
+                        <li><div class="wg-icon"></div><div class="wg-phase-name">5. ${phase5}</div></li>
                     </ul>
                 </div>
             </div>`;
@@ -18,5 +27,9 @@ class GameOptions {
       dojo.place(html, "player_boards");
 
       this.game.updatePlayerOrdering();
+   }
+
+   public setPhase(phase: number) {
+      document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
    }
 }

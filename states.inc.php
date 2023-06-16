@@ -83,6 +83,7 @@ $basicGameStates = [
 
 $chooseSpellStates = [
     ST_PLAYER_NEW_TURN => [
+        "phase" => 1,
         "name" => "playerNewTurn",
         "type" => "game",
         "action" => "stNewTurn",
@@ -93,6 +94,7 @@ $chooseSpellStates = [
     ],
 
     ST_DISCARD_MANA => [
+        "phase" => 1,
         "name" => "discardMana",
         "description" => clienttranslate('${actplayer} must discards to 10 mana cards'),
         "descriptionmyturn" => clienttranslate('${you} must discard to 10 mana cards'),
@@ -104,6 +106,7 @@ $chooseSpellStates = [
     ],
 
     ST_CHOOSE_NEW_SPELL => [
+        "phase" => 1,
         "name" => "chooseNewSpell",
         "description" => clienttranslate('${actplayer} must chooses a new spell'),
         "descriptionReplace" => clienttranslate('${actplayer} may choose to replace a spell'),
@@ -121,6 +124,7 @@ $chooseSpellStates = [
 
 $spellCoolDownStates = [
     ST_SPELL_COOL_DOWN => [
+        "phase" => 2,
         "name" => "spellCoolDown",
         "type" => "game",
         "action" => "stSpellCoolDown",
@@ -132,6 +136,7 @@ $spellCoolDownStates = [
     ],
 
     ST_SPELL_CD_ACTIVATE_DELAYED => [
+        "phase" => 2,
         "name" => "activateDelayedSpell",
         "description" => clienttranslate('${actplayer} may activate a spell or pass'),
         "descriptionmyturn" => clienttranslate('${you} may activate a spell or pass'),
@@ -148,6 +153,7 @@ $spellCoolDownStates = [
 
 $gainManaStates = [
     ST_GAIN_MANA => [
+        "phase" => 3,
         "name" => "gainMana",
         "type" => "game",
         "action" => "stGainMana",
@@ -159,6 +165,7 @@ $gainManaStates = [
 
 $castSpellsStates = [
     ST_CAST_SPELL => [
+        "phase" => 4,
         "name" => "castSpell",
         "description" => clienttranslate('${actplayer} may cast a spell or pass'),
         "descriptionmyturn" => clienttranslate('${you} may cast a spell or pass'),
@@ -175,6 +182,7 @@ $castSpellsStates = [
     ],
 
     ST_CAST_SPELL_SWITCH_OPPONENT => [
+        "phase" => 4,
         "name" => "castSpellSwitchOpponent",
         "type" => "game",
         "action" => "stCastSpellSwitchOpponent",
@@ -184,6 +192,7 @@ $castSpellsStates = [
     ],
 
     ST_CAST_SPELL_INTERACTION => array(
+        "phase" => 4,
         "name" => "castSpellInteraction",
         "description" => clienttranslate('${actplayer} must conclude the effect of the spell'),
         "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
@@ -197,6 +206,7 @@ $castSpellsStates = [
     ),
 
     ST_CAST_SPELL_RETURN_CURRENT_PLAYER => [
+        "phase" => 4,
         "name" => "castSpellReturnCurrentPlayer",
         "type" => "game",
         "action" => "stCastSpellReturnCurrentPlayer",
@@ -208,6 +218,7 @@ $castSpellsStates = [
 
 $basicAttackStates = [
     ST_BASIC_ATTACK => [
+        "phase" => 5,
         "name" => "basicAttack",
         "description" => clienttranslate('${actplayer} may discard a mana card to deal damage'),
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to deal damage'),
@@ -221,6 +232,7 @@ $basicAttackStates = [
     ],
 
     ST_NEXT_PLAYER => [
+        "phase" => 5,
         "name" => "playerEndTurn",
         "type" => "game",
         "action" => "stNextPlayer",

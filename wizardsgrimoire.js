@@ -1395,15 +1395,15 @@ var WizardsGrimoire = (function () {
         var arrCardType = [];
         Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
         var level1 = arrCardType
-            .filter(function (x) { return x.icon == "+"; })
+            .filter(function (x) { return x.icon == "Base_1"; })
             .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
             .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
         var level2 = arrCardType
-            .filter(function (x) { return x.icon == "++"; })
+            .filter(function (x) { return x.icon == "Base_2"; })
             .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
             .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
         var expansion = arrCardType
-            .filter(function (x) { return x.icon == "scroll"; })
+            .filter(function (x) { return x.icon == "KickStarter_1"; })
             .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
             .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
         var text = {
@@ -2213,6 +2213,12 @@ var StateManager = (function () {
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
         log("Entering state: " + stateName);
+        if (args.phase) {
+            this.game.gameOptions.setPhase(Number(args.phase));
+        }
+        else {
+            this.game.gameOptions.setPhase(99);
+        }
         if (this.states[stateName] !== undefined) {
             this.states[stateName].onEnteringState(args.args);
             if (stateName.startsWith("client_")) {
@@ -2512,10 +2518,20 @@ var GameOptions = (function () {
     function GameOptions(game) {
         this.game = game;
         var playerBoards = document.getElementById("");
-        var html = "\n            <div class=\"player-board\">\n                <div class=\"player-board-inner\">\n                    <ul id=\"dt-phases\">\n                        <li id=\"dt-p-unkeep\"><div class=\"dt-icon i-unkeep-phase\"></div><div class=\"dt-phase-name\">Choose a New Spell</div></li>\n                        <li id=\"dt-p-unkeep\"><div class=\"dt-icon i-unkeep-phase\"></div><div class=\"dt-phase-name\">Spell Cool Down</div></li>\n                        <li id=\"dt-p-main_1\"><div class=\"dt-icon i-cards\"></div><div class=\"dt-phase-name\">Gain 3 Mana</div></li>\n                        <li id=\"dt-p-offensive\"><div class=\"dt-icon i-main-phase\"></div><div class=\"dt-phase-name\">Cast Spells</div></li>\n                        <li id=\"dt-p-targeting\"><div class=\"dt-icon i-roll-phase\"></div><div class=\"dt-phase-name\">Basic Attack</div></li>\n                    </ul>\n                </div>\n            </div>";
+        var _a = {
+            phase1: _("Choose a New Spell"),
+            phase2: _("Spell Cool Down"),
+            phase3: _("Gain 3 Mana"),
+            phase4: _("Cast Spells"),
+            phase5: _("Basic Attack"),
+        }, phase1 = _a.phase1, phase2 = _a.phase2, phase3 = _a.phase3, phase4 = _a.phase4, phase5 = _a.phase5;
+        var html = "\n            <div class=\"player-board\">\n                <div class=\"player-board-inner\">\n                    <div id=\"wg-phase-selector\" data-phase=\"1\"></div>\n                    <ul id=\"wg-phases\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ".concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
         dojo.place(html, "player_boards");
         this.game.updatePlayerOrdering();
     }
+    GameOptions.prototype.setPhase = function (phase) {
+        document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
+    };
     return GameOptions;
 }());
 var CastSpellStates = (function () {
