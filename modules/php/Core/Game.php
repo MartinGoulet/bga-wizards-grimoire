@@ -4,7 +4,6 @@ namespace WizardsGrimoire\Core;
 
 use APP_DbObject;
 use WizardsGrimoire;
-use WizardsGrimoire\Objects\CardLocation;
 
 /*
  * Game: a wrapper over table object to allow more generic modules

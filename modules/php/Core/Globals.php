@@ -7,7 +7,7 @@ use WizardsGrimoire;
 use WizardsGrimoire\Objects\CardLocation;
 
 /*
- * Game: a wrapper over table object to allow more generic modules
+ * Globals: Access to global variables
  */
 
 class Globals extends APP_DbObject {

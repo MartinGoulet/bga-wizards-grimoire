@@ -116,7 +116,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
     "js_actions" => ["actionSelectManaFrom", "actionSelectManaTo"],
   ],
   10 => [
@@ -150,7 +150,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionShackledMotion",
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   13 => [
     "name" => clienttranslate("Living wind"),

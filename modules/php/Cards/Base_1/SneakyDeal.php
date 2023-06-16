@@ -3,10 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use BgaSystemException;
 use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
 
 class SneakyDeal extends BaseCard {
 
@@ -16,14 +13,7 @@ class SneakyDeal extends BaseCard {
             $this->dealDamage(1);
         } else {
             $position = intval(array_shift($args));
-            $card = ManaCard::getOnTopOnManaCoolDown($position);
-            if ($card == null) {
-                throw new BgaSystemException("No card found under that spell");
-            }
-            ManaCard::addOnTopOfDiscard($card['id']);
-            $card_after = ManaCard::get($card['id']);
-
-            Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
+            ManaCard::discardManaFromSpell($position);
         }
     }
 }

@@ -85,6 +85,21 @@ class ManaCard {
         Notifications::moveManaCard($player_id, [$card], [$card_after]);
     }
 
+    public static function discardManaFromSpell(int $position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $card = ManaCard::getOnTopOnManaCoolDown($position);
+        if ($card == null) {
+            throw new BgaSystemException("No card found under that spell");
+        }
+        ManaCard::addOnTopOfDiscard($card['id']);
+        $card_after = ManaCard::get($card['id']);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
+
+        Events::onManaDiscarded($card, $position, $player_id);
+    }
+
     public static function get(int $card_id) {
         return Game::get()->deck_manas->getCard($card_id);
     }
