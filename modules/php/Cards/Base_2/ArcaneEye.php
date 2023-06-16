@@ -21,7 +21,7 @@ class ArcaneEye extends BaseCard {
         $cards_after = [];
 
         foreach ($spells as $card_id => $spell) {
-            $card_type = Spell::getCardInfo($spell);
+            $card_type = SpellCard::getCardInfo($spell);
             if (intval($card_type['cost']) >= 3) {
                 $pos = intval($spell['location_arg']);
                 $card = ManaCard::getOnTopOnManaCoolDown($pos);

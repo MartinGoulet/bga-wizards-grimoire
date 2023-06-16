@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class SilentSupport extends BaseCard {
 
-    // TODO
+    // Each time you discard off this spell, pick up a mana off 1 of your other spells
 
 }

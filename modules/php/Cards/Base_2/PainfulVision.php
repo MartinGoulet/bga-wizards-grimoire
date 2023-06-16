@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class PainfulVision extends BaseCard {
 
-    // TODO
+    // Deal 5 damage. Place a mana from the mana deck on all your spells with 1 mana card on them
 
 }

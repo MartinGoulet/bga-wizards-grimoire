@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Possessed extends BaseCard {
 
-    // TODO
+    // Deal 5 damage. Your opponent may give you a mana from their hand. If they do, reduce your damage by the mana's power
 
 }

@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class SoulPact extends BaseCard {
 
-    // TODO
+    // If the previous spell you cast this turn was an instant attack spell, gain mana equal to the damage dealt by that spell
 
 }

@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Contamination extends BaseCard {
 
-    // TODO
+    // Place 2 mana cards from your hand on the mana deck. If you do, deal 4 damage
 
 }

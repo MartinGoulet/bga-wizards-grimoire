@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class DanceOfPain extends BaseCard {
 
-    // TODO
+    // Deal 3 damage. Discard or gain mana until you have 2 mana cards in your hand
 
 }

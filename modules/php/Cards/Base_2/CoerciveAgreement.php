@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class CoerciveAgreement extends BaseCard {
 
-    // TODO
+    // Choose 1: Take up to 3 randomly selected mana from your opponent's hand, or discard a mana card off 2 of your other spells.
 
 }

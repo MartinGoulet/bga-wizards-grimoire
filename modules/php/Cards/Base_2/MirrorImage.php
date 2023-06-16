@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class MirrorImage extends BaseCard {
 
-    // TODO
+    // Gain mana equal to the quantity of mana cards on 1 of your spells
 
 }

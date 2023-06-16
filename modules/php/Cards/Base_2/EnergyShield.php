@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class EnergyShield extends BaseCard {
 
-    // TODO
+    // Pick up a mana card off 1 of your other spells. Place a mana card from the mana deck on 1 of your opponent's spells.
 
 }

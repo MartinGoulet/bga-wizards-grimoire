@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class BattleVision extends BaseCard {
 
-    // TODO
+    // When your opponent basic attacks, you may discard a mana card of the same power from your hand to block the damage
 
 }

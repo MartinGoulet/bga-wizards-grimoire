@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Growth extends BaseCard {
 
-    // TODO
+    // During your turn, increase the power of all mana by 1
 
 }

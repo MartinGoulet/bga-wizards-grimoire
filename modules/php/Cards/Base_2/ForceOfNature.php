@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class ForceOfNature extends BaseCard {
 
-    // TODO
+    // Deal 4 damage, minus 1 damage for each of your other attack spells that have mana on them
 
 }

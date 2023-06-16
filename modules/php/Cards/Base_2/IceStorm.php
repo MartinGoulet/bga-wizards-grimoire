@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class IceStorm extends BaseCard {
 
-    // TODO
+    // Deal 1 damage for each of your spells with exactly 1 mana card on them.
 
 }

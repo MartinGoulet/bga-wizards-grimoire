@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Puppetmaster extends BaseCard {
 
-    // TODO
+    // In order to basic attack, your opponent must use a mana of the same power as you did during the previous basic attack phase
 
 }
