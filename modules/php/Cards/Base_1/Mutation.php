@@ -1,6 +1,6 @@
 <?php
 
-namespace WizardsGrimoire\Cards;
+namespace WizardsGrimoire\Cards\Base_1;
 
 class Mutation extends BaseCard {
 

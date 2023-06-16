@@ -1,6 +1,6 @@
 <?php
 
-namespace WizardsGrimoire\Cards;
+namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
