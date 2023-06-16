@@ -41,7 +41,7 @@ class SpellCard {
         // Get info of the card
         $card_type = Game::get()->card_types[$card['type']];
         // Create the class for the card logic
-        $className = "WizardsGrimoire\\Cards\\" . $card_type['class'];
+        $className = "WizardsGrimoire\\Cards\\" . $card_type['icon'] . "\\" . $card_type['class'];
         /** @var BaseCard */
         $cardClass = new $className();
         return $cardClass;

@@ -37,7 +37,7 @@ interface CardType {
    type: "red" | "green" | "purple";
    activation: "instant" | "delayed" | "ongoing";
    cost: number;
-   icon: "+" | "++" | "scroll";
+   icon: "Base_1" | "Base_2" | "KickStarter_1";
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
    debug: "red" | "yellow" | "green";

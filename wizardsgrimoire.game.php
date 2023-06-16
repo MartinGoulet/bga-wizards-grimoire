@@ -82,6 +82,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_DISCOUNT_ATTACK_SPELL => 16,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
+            WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
         ));
 
         self::$instance = $this;
@@ -148,19 +149,28 @@ class WizardsGrimoire extends Table {
 
         // TODO: setup the initial game situation here
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
+        $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
+
         $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
         $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty) {
             if ($gameOptionDifficulty == WG_DIFFICULTY_BEGINNER) {
-                return $card_type['icon'] == WG_ICON_BEGINNER;
-            } elseif ($gameOptionDifficulty == WG_DIFFICULTY_NORMAL) {
-                return $card_type['icon'] == WG_ICON_BEGINNER
-                    || $card_type['icon'] == WG_ICON_INTERMEDIATE;
+                return $card_type['icon'] == WG_ICON_SET_BASE_1;
+            } elseif ($gameOptionDifficulty == WG_DIFFICULTY_ADVANCED) {
+                return $card_type['icon'] == WG_ICON_SET_BASE_1
+                    || $card_type['icon'] == WG_ICON_SET_BASE_2;
             } else {
-                return true;
+                return false;
             }
         });
+
+        if ($gameOptionKickStarter1 == WG_OPTION_YES) {
+            $cards_types_kickstarter_1 = array_filter($this->card_types, function ($card_type) {
+                return $card_type['icon'] == WG_ICON_SET_KICKSTARTER_1;
+            });
+            $cards_types = array_merge($cards_types, $cards_types_kickstarter_1);
+        }
 
         $cards = [];
         foreach ($cards_types as $id => $card) {
@@ -428,7 +438,7 @@ class WizardsGrimoire extends Table {
         // $from_version is the current version of this game database, in numerical form.
         // For example, if the game was running with a release of your game named "140430-1345",
         // $from_version is equal to 1404301345
-        
+
         // Example:
         //        if( $from_version <= 1404301345 )
         //        {

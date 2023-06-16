@@ -3,11 +3,17 @@
 /*
  * Game options 
  */
+define('WG_OPTION_NO', 1);
+define('WG_OPTION_YES', 2);
+
 define('WG_GAME_OPTION_DIFFICULTY_ID', 100);
 define('WG_GAME_OPTION_DIFFICULTY', 'gameOptionDifficulty');
 define('WG_DIFFICULTY_BEGINNER', 1);
-define('WG_DIFFICULTY_NORMAL', 2);
-define('WG_DIFFICULTY_ADVANCED', 3);
+define('WG_DIFFICULTY_ADVANCED', 2);
+
+define('WG_GAME_OPTION_EXT_KICKSTARTER_1_ID', 100);
+define('WG_GAME_OPTION_EXT_KICKSTARTER_1', 'gameOptionKickStarter1');
+
 
 /*
  * Game variables
@@ -71,6 +77,6 @@ define('WG_SPELL_TYPE_UTILITY', 'purple');
 /**
  * Spell Icon
  */
-define('WG_ICON_BEGINNER', '+');
-define('WG_ICON_INTERMEDIATE', '++');
-define('WG_ICON_ADVANCE', 'scroll');
+define('WG_ICON_SET_BASE_1', 'Base_1');
+define('WG_ICON_SET_BASE_2', 'Base_2');
+define('WG_ICON_SET_KICKSTARTER_1', 'KickStarter_1');

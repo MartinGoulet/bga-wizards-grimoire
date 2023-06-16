@@ -29,17 +29,12 @@ require_once("modules/php/constants.inc.php");
 $game_options = [
     WG_GAME_OPTION_DIFFICULTY_ID => [
         'name' => totranslate('Difficulty'),
-        'default' => WG_DIFFICULTY_NORMAL,
+        'default' => WG_DIFFICULTY_ADVANCED,
         'values' => [
             WG_DIFFICULTY_BEGINNER => [
                 'name' => totranslate('Beginner'),
                 'tmdisplay' => totranslate('Beginner'),
                 'description' => totranslate('Spell pool of 8 cards, only cards with 1 star')
-            ],
-            WG_DIFFICULTY_NORMAL => [
-                'name' => totranslate('Normal'),
-                'tmdisplay' => totranslate('Normal'),
-                'description' => totranslate('Spell pool of 10 cards, only cards with 1 or 2 stars')
             ],
             WG_DIFFICULTY_ADVANCED => [
                 'name' => totranslate('Advanced'),
@@ -47,7 +42,22 @@ $game_options = [
                 'description' => totranslate('Spell pool of 10 cards, all cards are available')
             ],
         ]
-    ]
+    ],
+    WG_GAME_OPTION_EXT_KICKSTARTER_1 => [
+        'name' => totranslate('Mini expansion 1'),
+        'default' => WG_OPTION_NO,
+        'values' => [
+            WG_OPTION_YES => [
+                'name' => totranslate('Yes'),
+                'tmdisplay' => totranslate('Mini expansion 1'),
+                'description' => totranslate('Add a mini expansion of 10 spell cards from the first kickstarter campaign')
+            ],
+            WG_OPTION_NO => [
+                'name' => totranslate('No'),
+            ],
+        ]
+        
+    ],
 ];
 
 

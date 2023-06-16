@@ -88,17 +88,17 @@ class WizardsGrimoire
       Object.keys(gamedatas.card_types).forEach((index) => arrCardType.push(gamedatas.card_types[index]));
 
       const level1 = arrCardType
-         .filter((x) => x.icon == "+")
+         .filter((x) => x.icon == "Base_1")
          .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
          .map((x) => `${x.debug} : ${x.name}`);
 
       const level2 = arrCardType
-         .filter((x) => x.icon == "++")
+         .filter((x) => x.icon == "Base_2")
          .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
          .map((x) => `${x.debug} : ${x.name}`);
 
       const expansion = arrCardType
-         .filter((x) => x.icon == "scroll")
+         .filter((x) => x.icon == "KickStarter_1")
          .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
          .map((x) => `${x.debug} : ${x.name}`);
 
