@@ -152,6 +152,104 @@ var ZoomManager = (function () {
     };
     return ZoomManager;
 }());
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+var JumpToEntry = (function () {
+    function JumpToEntry(label, targetId, data) {
+        if (data === void 0) { data = {}; }
+        this.label = label;
+        this.targetId = targetId;
+        this.data = data;
+    }
+    return JumpToEntry;
+}());
+var JumpToManager = (function () {
+    function JumpToManager(game, settings) {
+        var _a, _b, _c;
+        this.game = game;
+        this.settings = settings;
+        var entries = __spreadArray(__spreadArray([], ((_a = settings === null || settings === void 0 ? void 0 : settings.topEntries) !== null && _a !== void 0 ? _a : []), true), ((_b = settings === null || settings === void 0 ? void 0 : settings.playersEntries) !== null && _b !== void 0 ? _b : this.createEntries(Object.values(game.gamedatas.players))), true);
+        this.createPlayerJumps(entries);
+        var folded = (_c = settings === null || settings === void 0 ? void 0 : settings.defaultFolded) !== null && _c !== void 0 ? _c : false;
+        if (settings === null || settings === void 0 ? void 0 : settings.localStorageFoldedKey) {
+            var localStorageValue = localStorage.getItem(settings.localStorageFoldedKey);
+            if (localStorageValue) {
+                folded = localStorageValue == 'true';
+            }
+        }
+        document.getElementById('bga-jump-to_controls').classList.toggle('folded', folded);
+    }
+    JumpToManager.prototype.createPlayerJumps = function (entries) {
+        var _this = this;
+        var _a, _b, _c, _d;
+        document.getElementById("game_play_area_wrap").insertAdjacentHTML('afterend', "\n        <div id=\"bga-jump-to_controls\">        \n            <div id=\"bga-jump-to_toggle\" class=\"bga-jump-to_link ".concat((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.entryClasses) !== null && _b !== void 0 ? _b : '', " toggle\" style=\"--color: ").concat((_d = (_c = this.settings) === null || _c === void 0 ? void 0 : _c.toggleColor) !== null && _d !== void 0 ? _d : 'black', "\">\n                \u21D4\n            </div>\n        </div>"));
+        document.getElementById("bga-jump-to_toggle").addEventListener('click', function () { return _this.jumpToggle(); });
+        entries.forEach(function (entry) {
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+            var html = "<div id=\"bga-jump-to_".concat(entry.targetId, "\" class=\"bga-jump-to_link ").concat((_b = (_a = _this.settings) === null || _a === void 0 ? void 0 : _a.entryClasses) !== null && _b !== void 0 ? _b : '', "\">");
+            if ((_d = (_c = _this.settings) === null || _c === void 0 ? void 0 : _c.showEye) !== null && _d !== void 0 ? _d : true) {
+                html += "<div class=\"eye\"></div>";
+            }
+            if (((_f = (_e = _this.settings) === null || _e === void 0 ? void 0 : _e.showAvatar) !== null && _f !== void 0 ? _f : true) && ((_g = entry.data) === null || _g === void 0 ? void 0 : _g.id)) {
+                var cssUrl = (_h = entry.data) === null || _h === void 0 ? void 0 : _h.avatarUrl;
+                if (!cssUrl) {
+                    var img = document.getElementById("avatar_".concat(entry.data.id));
+                    var url = img === null || img === void 0 ? void 0 : img.src;
+                    if (url) {
+                        cssUrl = "url('".concat(url, "')");
+                    }
+                }
+                if (cssUrl) {
+                    html += "<div class=\"bga-jump-to_avatar\" style=\"--avatar-url: ".concat(cssUrl, ";\"></div>");
+                }
+            }
+            html += "\n                <span class=\"bga-jump-to_label\">".concat(entry.label, "</span>\n            </div>");
+            document.getElementById("bga-jump-to_controls").insertAdjacentHTML('beforeend', html);
+            var entryDiv = document.getElementById("bga-jump-to_".concat(entry.targetId));
+            Object.getOwnPropertyNames((_j = entry.data) !== null && _j !== void 0 ? _j : []).forEach(function (key) {
+                entryDiv.dataset[key] = entry.data[key];
+                entryDiv.style.setProperty("--".concat(key), entry.data[key]);
+            });
+            entryDiv.addEventListener('click', function () { return _this.jumpTo(entry.targetId); });
+        });
+        var jumpDiv = document.getElementById("bga-jump-to_controls");
+        jumpDiv.style.marginTop = "-".concat(Math.round(jumpDiv.getBoundingClientRect().height / 2), "px");
+    };
+    JumpToManager.prototype.jumpToggle = function () {
+        var _a;
+        var jumpControls = document.getElementById('bga-jump-to_controls');
+        jumpControls.classList.toggle('folded');
+        if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.localStorageFoldedKey) {
+            localStorage.setItem(this.settings.localStorageFoldedKey, jumpControls.classList.contains('folded').toString());
+        }
+    };
+    JumpToManager.prototype.jumpTo = function (targetId) {
+        document.getElementById(targetId).scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    };
+    JumpToManager.prototype.getOrderedPlayers = function (unorderedPlayers) {
+        var _this = this;
+        var players = unorderedPlayers.sort(function (a, b) { return Number(a.playerNo) - Number(b.playerNo); });
+        var playerIndex = players.findIndex(function (player) { return Number(player.id) === Number(_this.game.player_id); });
+        var orderedPlayers = playerIndex > 0 ? __spreadArray(__spreadArray([], players.slice(playerIndex), true), players.slice(0, playerIndex), true) : players;
+        return orderedPlayers;
+    };
+    JumpToManager.prototype.createEntries = function (players) {
+        var orderedPlayers = this.getOrderedPlayers(players);
+        return orderedPlayers.map(function (player) { return new JumpToEntry(player.name, "player-table-".concat(player.id), {
+            'color': '#' + player.color,
+            'colorback': player.color_back ? '#' + player.color_back : null,
+            'id': player.id,
+        }); });
+    };
+    return JumpToManager;
+}());
 var BgaAnimation = (function () {
     function BgaAnimation(animationFunction, settings) {
         this.animationFunction = animationFunction;
@@ -394,15 +492,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var AnimationManager = (function () {
     function AnimationManager(game, settings) {
@@ -1364,6 +1453,7 @@ function sortFunction() {
 var isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
+var LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = 'wizards-grimoire-jump-to-folded';
 var arrayRange = function (start, end) { return Array.from(Array(end - start + 1).keys()).map(function (x) { return x + start; }); };
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
@@ -1377,6 +1467,15 @@ var WizardsGrimoire = (function () {
         this.manasManager = new ManaCardManager(this);
         this.stateManager = new StateManager(this);
         this.actionManager = new ActionManager(this);
+        new JumpToManager(this, {
+            localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
+            topEntries: [
+                new JumpToEntry(_('Spell Pool'), 'spell-pool', { 'color': 'darkblue' }),
+                new JumpToEntry(_('Decks'), 'table-center', { 'color': '#224757' })
+            ],
+            entryClasses: 'triangle-point',
+            defaultFolded: true,
+        });
         this.gameOptions = new GameOptions(this);
         this.tableCenter = new TableCenter(this);
         this.createPlayerTables(gamedatas);

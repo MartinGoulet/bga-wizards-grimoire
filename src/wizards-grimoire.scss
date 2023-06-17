@@ -1,6 +1,7 @@
 @import "cards";
 @import "../node_modules/bga-zoom/bga-zoom";
 @import "../node_modules/bga-cards/bga-cards";
+@import "../node_modules/bga-jump-to/bga-jump-to";
 @import "table-center";
 @import "player-table";
 @import "game-options";
@@ -102,4 +103,16 @@
       color: #9090af;
       text-shadow: none;
    }
+}
+
+#bga-jump-to_controls {
+   display: flex;
+   flex-direction: column;
+}
+
+#bga-jump-to_spell-pool {
+   order: 50;
+}
+#bga-jump-to_table-center {
+   order: 51;
 }

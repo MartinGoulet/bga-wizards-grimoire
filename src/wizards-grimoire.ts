@@ -1,12 +1,13 @@
 const isDebug =
    window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
-const log = isDebug ? console.log.bind(window.console) : function () {};
+const log = isDebug ? console.log.bind(window.console) : function () { };
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
+const LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = 'wizards-grimoire-jump-to-folded';
 const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
 
 interface WizardsGrimoire
    extends ebg.core.gamegui,
-      BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas> {
+   BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas> {
    dontPreloadImage(image_file_name: string): void;
    ensureSpecificGameImageLoading(image_file_names_array: string[]);
    displayScoring(
@@ -39,7 +40,7 @@ class WizardsGrimoire
    public playersTables: PlayerTable[] = [];
    public zoomManager: ZoomManager;
 
-   constructor() {}
+   constructor() { }
 
    /*
         setup:
@@ -61,6 +62,16 @@ class WizardsGrimoire
       this.manasManager = new ManaCardManager(this);
       this.stateManager = new StateManager(this);
       this.actionManager = new ActionManager(this);
+
+      new JumpToManager(this, {
+         localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
+         topEntries: [
+            new JumpToEntry(_('Spell Pool'), 'spell-pool', { 'color': 'darkblue' }),
+            new JumpToEntry(_('Decks'), 'table-center', { 'color': '#224757' })
+         ],
+         entryClasses: 'triangle-point',
+         defaultFolded: true,
+      });
 
       this.gameOptions = new GameOptions(this);
       this.tableCenter = new TableCenter(this);
@@ -272,8 +283,8 @@ class WizardsGrimoire
    ) {
       data = data || {};
       data.lock = true;
-      onSuccess = onSuccess ?? function (result: any) {};
-      onComplete = onComplete ?? function (is_error: boolean) {};
+      onSuccess = onSuccess ?? function (result: any) { };
+      onComplete = onComplete ?? function (is_error: boolean) { };
       (this as any).ajaxcall(
          `/wizardsgrimoire/wizardsgrimoire/${action}.html`,
          data,
@@ -320,7 +331,7 @@ class WizardsGrimoire
             if (args.nbr_mana_card !== undefined) {
                args.nbr_mana_card = `<div class="wg-icon-log i-cards"><span>${args.nbr_mana_card} </span></div>`;
             }
-            
+
             if (args.mana_values !== undefined) {
                args.mana_values = args.mana_values
                   .map((value) => `<div class="wg-icon-log i-mana-x">${value}</div>`)
