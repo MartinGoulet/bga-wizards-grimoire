@@ -5,7 +5,7 @@ namespace WizardsGrimoire\Core;
 class Notifications {
 
     static function basicAttack(int $player_id, int $damage, int $life_remaining) {
-        $message = clienttranslate('${player_name} received ${damage} damages from a basic attack');
+        $message = clienttranslate('${player_name} received ${damage} from a basic attack');
 
         self::notifyAll('onHealthChanged', $message, [
             'player_id' => intval($player_id),
@@ -46,11 +46,11 @@ class Notifications {
     }
 
     static function drawManaCards($player_id, $cards) {
-        $msg = clienttranslate('${player_name} draws ${nbr} mana cards');
+        $msg = clienttranslate('${player_name} draws ${nbr_mana_card}');
         $args = [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
-            'nbr' => sizeof($cards),
+            'nbr_mana_card' => sizeof($cards),
         ];
 
         $args['cards'] = array_values($cards);
@@ -97,7 +97,7 @@ class Notifications {
     }
 
     public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {
-        $message = clienttranslate('${player_name} received ${damage} damages from ${card_name}');
+        $message = clienttranslate('${player_name} received ${damage} from ${card_name}');
 
         self::notifyAll('onHealthChanged', $message, [
             'player_id' => intval($player_id),

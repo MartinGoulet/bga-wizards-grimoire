@@ -25,6 +25,7 @@ define('WG_VAR_SPELL_PLAYED', 'spell_played');
 define('WG_VAR_SKIP_INTERACTION', 'skip_interaction');
 define('WG_VAR_DISCOUNT_NEXT_SPELL', 'discount_next_spell');
 define('WG_VAR_DISCOUNT_ATTACK_SPELL', 'discount_attack_spell');
+define('WG_VAR_AMNESIA', 'amnesia');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 

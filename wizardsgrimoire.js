@@ -374,7 +374,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -929,28 +929,27 @@ var CardStock = (function () {
 var SlideAndBackAnimation = (function (_super) {
     __extends(SlideAndBackAnimation, _super);
     function SlideAndBackAnimation(manager, element, tempElement) {
-        var _this = this;
         var distance = (manager.getCardWidth() + manager.getCardHeight()) / 2;
         var angle = Math.random() * Math.PI * 2;
         var fromDelta = {
             x: distance * Math.cos(angle),
             y: distance * Math.sin(angle),
         };
-        _this = _super.call(this, {
+        return _super.call(this, {
             animations: [
                 new BgaSlideToAnimation({ element: element, fromDelta: fromDelta, duration: 250 }),
                 new BgaSlideAnimation({ element: element, fromDelta: fromDelta, duration: 250, animationEnd: tempElement ? (function () { return element.remove(); }) : undefined }),
             ]
         }) || this;
-        return _this;
     }
     return SlideAndBackAnimation;
 }(BgaCumulatedAnimation));
 var Deck = (function (_super) {
     __extends(Deck, _super);
     function Deck(manager, element, settings) {
+        var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-        var _this = _super.call(this, manager, element) || this;
+        _this = _super.call(this, manager, element) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('deck');
@@ -1090,8 +1089,9 @@ var Deck = (function (_super) {
 var LineStock = (function (_super) {
     __extends(LineStock, _super);
     function LineStock(manager, element, settings) {
+        var _this = this;
         var _a, _b, _c, _d;
-        var _this = _super.call(this, manager, element, settings) || this;
+        _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('line-stock');
@@ -1106,8 +1106,9 @@ var LineStock = (function (_super) {
 var SlotStock = (function (_super) {
     __extends(SlotStock, _super);
     function SlotStock(manager, element, settings) {
+        var _this = this;
         var _a, _b;
-        var _this = _super.call(this, manager, element, settings) || this;
+        _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         _this.slotsIds = [];
@@ -1554,9 +1555,15 @@ var WizardsGrimoire = (function () {
                 if (args.card_name !== undefined) {
                     args.card_name = "<b>" + _(args.card_name) + "</b>";
                 }
+                if (args.damage !== undefined) {
+                    args.damage = "<div class=\"wg-icon-log i-dmg_undef\"><span>".concat(args.damage, "</span></div>");
+                }
+                if (args.nbr_mana_card !== undefined) {
+                    args.nbr_mana_card = "<div class=\"wg-icon-log i-cards\"><span>".concat(args.nbr_mana_card, " </span></div>");
+                }
                 if (args.mana_values !== undefined) {
                     args.mana_values = args.mana_values
-                        .map(function (value) { return "<span class=\"wg-icon-log i-mana-x\">".concat(value, "</span>"); })
+                        .map(function (value) { return "<div class=\"wg-icon-log i-mana-x\">".concat(value, "</div>"); })
                         .join(" ");
                 }
             }

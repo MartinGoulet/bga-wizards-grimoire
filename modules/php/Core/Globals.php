@@ -3,8 +3,6 @@
 namespace WizardsGrimoire\Core;
 
 use APP_DbObject;
-use WizardsGrimoire;
-use WizardsGrimoire\Objects\CardLocation;
 
 /*
  * Globals: Access to global variables
@@ -12,6 +10,17 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Globals extends APP_DbObject {
 
+    public static function getAmnesiaCount() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_AMNESIA));
+    }
+
+    public static function incAmnesiaCount() {
+        return intval(Game::get()->incGameStateValue(WG_VAR_AMNESIA, 1));
+    }
+
+    public static function setAmnesiaCount(int $value) {
+        Game::get()->setGameStateValue(WG_VAR_AMNESIA, $value);
+    }
 
     /** @return array */
     public static function getCoolDownDelayedSpell() {

@@ -25,6 +25,7 @@ trait StateTrait {
 
         Globals::setDiscountAttackSpell(0);
         Globals::setDiscountNextSpell(0);
+        Globals::setAmnesiaCount(0);
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);

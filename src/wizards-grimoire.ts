@@ -313,9 +313,17 @@ class WizardsGrimoire
                args.card_name = "<b>" + _(args.card_name) + "</b>";
             }
 
+            if (args.damage !== undefined) {
+               args.damage = `<div class="wg-icon-log i-dmg_undef"><span>${args.damage}</span></div>`;
+            }
+
+            if (args.nbr_mana_card !== undefined) {
+               args.nbr_mana_card = `<div class="wg-icon-log i-cards"><span>${args.nbr_mana_card} </span></div>`;
+            }
+            
             if (args.mana_values !== undefined) {
                args.mana_values = args.mana_values
-                  .map((value) => `<span class="wg-icon-log i-mana-x">${value}</span>`)
+                  .map((value) => `<div class="wg-icon-log i-mana-x">${value}</div>`)
                   .join(" ");
             }
          }

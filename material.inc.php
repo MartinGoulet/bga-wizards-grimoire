@@ -305,7 +305,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
   28 => [
     "name" => clienttranslate("Possessed"),
@@ -441,7 +441,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "yellow",
   ],
 
   41 => [
@@ -594,7 +594,7 @@ $this->card_types = [
     "activation_auto" => true,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "debug" => "yellow",
   ],
 
 
@@ -637,7 +637,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
 
   59 => [
