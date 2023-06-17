@@ -21,6 +21,14 @@ abstract class BaseCard {
         throw new BgaSystemException('Not implemented : castSpellCallback of ' . get_class($this));
     }
 
+    public function isOngoingSpellActive(bool $value) {
+        
+    }
+
+    public function onManaDiscard($mana, $spell) {
+        throw new BgaSystemException('Not implemented : onManaDiscard of ' . get_class($this));
+    }
+
     public function onAfterBasicAttack($mana_id) {
 
     }

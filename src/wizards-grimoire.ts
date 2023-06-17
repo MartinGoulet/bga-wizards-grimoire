@@ -79,6 +79,11 @@ class WizardsGrimoire
       // Setting up player boards
       this.createPlayerTables(gamedatas);
 
+      this.gamedatas.ongoing_spells.forEach((value) => {
+         this.toggleOngoingSpell(value);
+         
+      })
+
       this.zoomManager = new ZoomManager({
          element: document.getElementById("table"),
          smooth: false,
@@ -92,6 +97,10 @@ class WizardsGrimoire
       this.setupNotifications();
 
       this.setupDebug(gamedatas);
+   }
+
+   toggleOngoingSpell(value: OngoingSpell) {
+      document.getElementById('table').classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
    }
 
    setupDebug(gamedatas: WizardsGrimoireGamedatas) {

@@ -23,7 +23,7 @@ class TrapAttack extends BaseCard {
 
         Notifications::moveManaCard($player_id, [$card], [$card_after]);
 
-        $power = intval($card['type']);
+        $power = ManaCard::getPower($card);
         $this->dealDamage($power);
     }
 }

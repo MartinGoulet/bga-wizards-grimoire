@@ -26,7 +26,7 @@ class EnergyReserve extends BaseCard {
         $card_after = ManaCard::get($card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
 
-        $mana_power = intval($card['type']);
+        $mana_power = ManaCard::getPower($card);
         $this->drawManaCards($mana_power);
     }
 }

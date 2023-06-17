@@ -29,7 +29,7 @@ class BadFortune extends BaseCard {
 
     public function moveManaCardEqualOne($reveled_cards, $position) {
         $power_1_cards = array_filter($reveled_cards, function($card) {
-            return intval($card['type']) == 1;
+            return ManaCard::getPower($card) == 1;
         });
 
         $cards_after = [];
@@ -43,7 +43,7 @@ class BadFortune extends BaseCard {
 
     public function moveManaCardOverOne($reveled_cards) {
         $power_others  = array_filter($reveled_cards, function($card) {
-            return intval($card['type']) > 1;
+            return ManaCard::getPower($card) > 1;
         });
 
         $cards_after = [];

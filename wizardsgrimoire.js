@@ -1461,6 +1461,7 @@ var WizardsGrimoire = (function () {
         this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
+        var _this = this;
         log(gamedatas);
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
@@ -1479,6 +1480,9 @@ var WizardsGrimoire = (function () {
         this.gameOptions = new GameOptions(this);
         this.tableCenter = new TableCenter(this);
         this.createPlayerTables(gamedatas);
+        this.gamedatas.ongoing_spells.forEach(function (value) {
+            _this.toggleOngoingSpell(value);
+        });
         this.zoomManager = new ZoomManager({
             element: document.getElementById("table"),
             smooth: false,
@@ -1490,6 +1494,9 @@ var WizardsGrimoire = (function () {
         });
         this.setupNotifications();
         this.setupDebug(gamedatas);
+    };
+    WizardsGrimoire.prototype.toggleOngoingSpell = function (value) {
+        document.getElementById('table').classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
     };
     WizardsGrimoire.prototype.setupDebug = function (gamedatas) {
         var arrCardType = [];
@@ -2268,6 +2275,7 @@ var NotificationManager = (function () {
         this.subscribeEvent("onMoveManaCards", 1000, true);
         this.subscribeEvent("onManaDeckShuffle", 2500);
         this.subscribeEvent("onHealthChanged", 500);
+        this.subscribeEvent("onOngoingSpellActive", 0);
         this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
     NotificationManager.prototype.subscribeEvent = function (eventName, time, setIgnore) {
@@ -2324,6 +2332,11 @@ var NotificationManager = (function () {
         for (var index = 0; index < nbr; index++) {
             _loop_3(index);
         }
+    };
+    NotificationManager.prototype.notif_onOngoingSpellActive = function (notif) {
+        var _a = notif.args, name = _a.variable, active = _a.value;
+        log("notif_onOngoingSpellActive", name, active);
+        this.game.toggleOngoingSpell({ name: name, active: active });
     };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);

@@ -139,7 +139,7 @@ class ManaCard {
             return 0;
         }
         return max(array_values(array_map(function ($card) {
-            return $card['type'];
+            return ManaCard::getPower($card);
         }, $cards)));
     }
 
@@ -152,6 +152,14 @@ class ManaCard {
 
     public static function getOnTopOfDeck() {
         return Game::get()->deck_manas->getCardOnTop(CardLocation::Deck());
+    }
+
+    public static function getPower($card) {
+        $power = ManaCard::getPower($card);
+        if(Globals::getIsActiveGrowth()) {
+            $power++;
+        }
+        return $power;
     }
 
     public static function hasUnderSpell(int $deck_position, int $player_id = 0) {

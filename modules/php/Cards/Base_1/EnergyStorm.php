@@ -12,7 +12,7 @@ class EnergyStorm extends BaseCard {
         $mana_cards = ManaCard::getHand();
 
         $nbr_4_powers = sizeof(array_filter($mana_cards, function ($card) {
-            return $card['type'] == 4;
+            return ManaCard::getPower($card) == 4;
         }));
 
         $this->dealDamage(3 + $nbr_4_powers);

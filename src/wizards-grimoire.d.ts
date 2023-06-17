@@ -15,6 +15,12 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    player_board: PlayerBoardObject;
    players_order: number[];
    opponent_id: number;
+   ongoing_spells: OngoingSpell[],
+}
+
+interface OngoingSpell {
+   name: string;
+   active: boolean;
 }
 
 interface PlayerBoardInfo {
@@ -100,6 +106,11 @@ interface NotifMoveManaCardsArgs {
    nbr: number;
    cards_before: ManaCard[];
    cards_after: ManaCard[];
+}
+
+interface NotifOngoingSpellActive {
+   variable: string;
+   value: boolean;
 }
 
 interface NotifRevealManaCardArgs {

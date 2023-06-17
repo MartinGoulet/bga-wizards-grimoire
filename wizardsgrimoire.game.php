@@ -41,7 +41,7 @@ require_once('modules/php/constants.inc.php');
 use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
@@ -82,6 +82,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_DISCOUNT_NEXT_SPELL => 15,
             WG_VAR_DISCOUNT_ATTACK_SPELL => 16,
             WG_VAR_AMNESIA => 17,
+            WG_VAR_IS_ACTIVE_GROWTH => 18,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -142,6 +143,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_NEXT_SPELL, 0);
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_ATTACK_SPELL, 0);
         self::setGameStateInitialValue(WG_VAR_AMNESIA, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_GROWTH, 0);
 
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -268,6 +270,9 @@ class WizardsGrimoire extends Table {
         $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
 
         $result['opponent_id'] = Players::getOpponentId();
+
+        $result['ongoing_spells'] = [];
+        $result['ongoing_spells'][] = ["name" => WG_ONGOING_SPELL_ACTIVE_GROWTH, "active" => Globals::getIsActiveGrowth()];
 
         return $result;
     }
@@ -473,5 +478,8 @@ class WizardsGrimoire extends Table {
     public function debugNotif() {
         // $cards = $this->deck_manas->getCardsOnTop(3, CardLocation::Deck());
         // Notifications::revealManaCard($this->getActivePlayerId(), $cards);
+        $spell = SpellCard::get(65);
+        $cardClass = SpellCard::getInstanceOfCard($spell);
+        $cardClass->isOngoingSpellActive(true);
     }
 }

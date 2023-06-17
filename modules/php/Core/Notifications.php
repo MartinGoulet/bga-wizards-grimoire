@@ -68,6 +68,13 @@ class Notifications {
         ]);
     }
 
+    static function ongoingSpellActive($variable, $value) {
+        self::notifyAll('onOngoingSpellActive', '', [
+            "variable" => $variable,
+            "value" => $value,
+        ]);
+    }
+
     static function manaDeckShuffle($cards) {
         $msg = clienttranslate("Mana deck reshuffle because it's empty");
         self::notifyAll('onManaDeckShuffle', $msg, [
@@ -120,7 +127,7 @@ class Notifications {
 
     static function revealManaCard(int $player_id, array $cards) {
         $values = array_map(function ($card) {
-            return intval($card['type']);
+            return ManaCard::getPower($card);
         }, $cards);
 
         self::message('${player_name} reveals ${mana_values} from mana deck', [

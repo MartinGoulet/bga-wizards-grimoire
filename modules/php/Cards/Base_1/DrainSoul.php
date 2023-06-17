@@ -21,7 +21,7 @@ class DrainSoul extends BaseCard {
 
         $max_value = ManaCard::getMaxValue($opponent_hand);
         $cards = array_filter($opponent_hand, function ($card) use ($max_value) {
-            return intval($card['type']) == $max_value;
+            return ManaCard::getPower($card) == $max_value;
         });
 
         $first_card = array_shift($cards);

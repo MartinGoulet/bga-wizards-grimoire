@@ -160,7 +160,11 @@ trait ActionTrait {
 
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
-        if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
+        if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+            $cardClass = SpellCard::getInstanceOfCard($spell);
+            $cardClass->isOngoingSpellActive(true);
+            $this->gamestate->nextState("cast");
+        } else if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
             Globals::setSpellPlayed(intval($spell['id']));
             $cardClass = SpellCard::getInstanceOfCard($spell);
             // Execute the ability of the card
@@ -224,7 +228,7 @@ trait ActionTrait {
         $player_id = Players::getPlayerId();
         $opponent_id = Players::getOpponentId();
         $card = ManaCard::isInHand($mana_id, $player_id);
-        $damage = intval($card['type']);
+        $damage = ManaCard::getPower($card);
 
         ManaCard::addOnTopOfDiscard($mana_id);
         $card_after = ManaCard::get($mana_id);

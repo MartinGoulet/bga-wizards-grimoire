@@ -442,7 +442,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
 
   41 => [

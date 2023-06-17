@@ -55,6 +55,15 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_INTERACTION_PLAYER, $player_id);
     }
 
+    public static function getIsActiveGrowth() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH)) == Players::getPlayerId();
+    }
+
+    public static function setIsActiveGrowth(bool $isActive) {
+        $value = $isActive ? Players::getPlayerId() : 0;
+        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
+    }
+
     public static function getSkipInteraction() {
         return intval(Game::get()->getGameStateValue(WG_VAR_SKIP_INTERACTION)) == 1;
     }
