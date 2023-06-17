@@ -538,7 +538,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "js_actions" => "actionSelectManaCardFromHand",
+    "js_actions" => "actionGuiltyBond",
     "debug" => "lightgreen",
   ],
   50 => [

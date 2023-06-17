@@ -1770,53 +1770,6 @@ var ActionManager = (function () {
         };
         this.game.takeAction(this.take_action, data, null, handleError);
     };
-    ActionManager.prototype.actionCastMana = function () {
-        var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost, type = _a.type;
-        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
-        if (type == "red") {
-            modifiedCost = Math.max(modifiedCost - player_table.getDiscountNextAttack(), 0);
-        }
-        var msg = _("${you} must pay ${nbr} mana card").replace("${nbr}", modifiedCost.toString());
-        this.game.setClientState(states.client.castSpellWithMana, {
-            descriptionmyturn: _(name) + " : " + msg,
-            args: {
-                card: this.current_card,
-                cost: modifiedCost,
-            },
-        });
-    };
-    ActionManager.prototype.actionGiveManaFromHandToOpponent = function () {
-        var msg = _("${you} may select ${nbr} mana card to give to your opponent");
-        this.selectManaHand(1, msg, false, {
-            skip: {
-                label: _("Pass"),
-                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
-            },
-        });
-    };
-    ActionManager.prototype.actionSelectManaCardFromHand = function () {
-        var msg = _("${you} may select ${nbr} mana card from your hand");
-        this.selectManaHand(1, msg, true);
-    };
-    ActionManager.prototype.actionMistOfPain = function () {
-        var msg = _("${you} may discard up to ${nbr} mana card from your hand");
-        this.selectManaHand(4, msg, false, { canCancel: false });
-    };
-    ActionManager.prototype.actionWrath = function () {
-        var msg = _("${you} may discard ${nbr} mana card from your hand");
-        this.selectManaHand(2, msg, true, {
-            canCancel: false,
-            skip: {
-                label: _("Pass"),
-                message: _("Are you sure that you didn't want to discard mana cards?"),
-            },
-        });
-    };
-    ActionManager.prototype.actionFriendlyTruce = function () {
-        var msg = _("${you} may give ${nbr} cards from your hand or pass");
-        this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
-    };
     ActionManager.prototype.actionArcaneTactics = function () {
         var msg = _("${you} may select ${nbr} mana card from your hand");
         this.returnManaCardToDeck(msg, 4, false);
@@ -1838,6 +1791,39 @@ var ActionManager = (function () {
                         _this.selectManaDeck(1, _("Select an opponent's spell deck"), true, {
                             player_id: _this.game.getOpponentId(),
                         });
+                    },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionFriendlyTruce = function () {
+        var msg = _("${you} may give ${nbr} cards from your hand or pass");
+        this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
+    };
+    ActionManager.prototype.actionGuiltyBond = function () {
+        var msg = _("${you} may select ${nbr} mana card from your hand");
+        this.selectManaHand(1, msg, true);
+    };
+    ActionManager.prototype.actionMistOfPain = function () {
+        var msg = _("${you} may discard up to ${nbr} mana card from your hand");
+        this.selectManaHand(4, msg, false, { canCancel: false });
+    };
+    ActionManager.prototype.actionRejuvenation = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Gain 4 mana cards"),
+                    action: function () {
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: _("Take 2 mana cards of any power from the discard pile"),
+                    action: function () {
+                        _this.actions.push("actionSelectTwoManaCardFromDiscard");
+                        _this.activateNextAction();
                     },
                 },
             ],
@@ -1865,9 +1851,6 @@ var ActionManager = (function () {
             ],
         });
     };
-    ActionManager.prototype.actionTrapAttack = function () {
-        this.actionSelectManaFrom();
-    };
     ActionManager.prototype.actionSneakyDeal = function () {
         var _this = this;
         this.question({
@@ -1889,15 +1872,45 @@ var ActionManager = (function () {
             ],
         });
     };
-    ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
-        var msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
-        var name = this.game.getCardType(this.current_card).name;
-        this.game.setClientState(states.client.selectManaDiscard, {
+    ActionManager.prototype.actionTimeDistortion = function () {
+        var msg = _("${you} may select up to ${nbr} mana card");
+        this.selectMana(2, msg, false);
+    };
+    ActionManager.prototype.actionTrapAttack = function () {
+        this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionWrath = function () {
+        var msg = _("${you} may discard ${nbr} mana card from your hand");
+        this.selectManaHand(2, msg, true, {
+            canCancel: false,
+            skip: {
+                label: _("Pass"),
+                message: _("Are you sure that you didn't want to discard mana cards?"),
+            },
+        });
+    };
+    ActionManager.prototype.actionCastMana = function () {
+        var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost, type = _a.type;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
+        if (type == "red") {
+            modifiedCost = Math.max(modifiedCost - player_table.getDiscountNextAttack(), 0);
+        }
+        var msg = _("${you} must pay ${nbr} mana card").replace("${nbr}", modifiedCost.toString());
+        this.game.setClientState(states.client.castSpellWithMana, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
-                player_id: this.game.getPlayerId(),
-                count: 2,
-                exact: true,
+                card: this.current_card,
+                cost: modifiedCost,
+            },
+        });
+    };
+    ActionManager.prototype.actionGiveManaFromHandToOpponent = function () {
+        var msg = _("${you} may select ${nbr} mana card to give to your opponent");
+        this.selectManaHand(1, msg, false, {
+            skip: {
+                label: _("Pass"),
+                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
             },
         });
     };
@@ -1933,29 +1946,16 @@ var ActionManager = (function () {
         var msg = _("${you} must select ${nbr} mana card - destination");
         this.selectManaDeck(1, msg, true, argsSuppl);
     };
-    ActionManager.prototype.actionTimeDistortion = function () {
-        var msg = _("${you} may select up to ${nbr} mana card");
-        this.selectMana(2, msg, false);
-    };
-    ActionManager.prototype.actionRejuvenation = function () {
-        var _this = this;
-        this.question({
-            cancel: true,
-            options: [
-                {
-                    label: _("Gain 4 mana cards"),
-                    action: function () {
-                        _this.activateNextAction();
-                    },
-                },
-                {
-                    label: _("Take 2 mana cards of any power from the discard pile"),
-                    action: function () {
-                        _this.actions.push("actionSelectTwoManaCardFromDiscard");
-                        _this.activateNextAction();
-                    },
-                },
-            ],
+    ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
+        var msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
+        var name = this.game.getCardType(this.current_card).name;
+        this.game.setClientState(states.client.selectManaDiscard, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                count: 2,
+                exact: true,
+            },
         });
     };
     ActionManager.prototype.question = function (args) {
