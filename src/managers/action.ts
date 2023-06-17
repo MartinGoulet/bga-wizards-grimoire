@@ -276,6 +276,58 @@ class ActionManager {
       });
    }
 
+   private actionSelectManaCoolDownPlayer() {
+      const msg = _("Select a mana card under one of your spell")
+      const { name } = this.game.getCardType(this.current_card);
+
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const exclude: number[] = [];
+      for (let index = 1; index <= 6; index++) {
+         if (player_table.mana_cooldown[index].getCards().length == 0 || index == Number(this.current_card.location_arg)) {
+            exclude.push(index);
+         }
+      }
+
+      const args: SelectManaDeckArgs = {
+         player_id: this.game.getPlayerId(),
+         card: this.current_card,
+         count: 1,
+         exact: true,
+         exclude,
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args,
+      });
+   }
+
+   private actionSelectManaCoolDownOpponent() {
+      const msg = _("Select a mana card under one of your opponent's spell")
+      const { name } = this.game.getCardType(this.current_card);
+
+      const player_table = this.game.getPlayerTable(this.game.getOpponentId());
+      const exclude: number[] = [];
+      for (let index = 1; index <= 6; index++) {
+         if (player_table.mana_cooldown[index].getCards().length == 0) {
+            exclude.push(index);
+         }
+      }
+
+      const args = {
+         player_id: this.game.getOpponentId(),
+         card: this.current_card,
+         count: 1,
+         exact: true,
+         exclude
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args,
+      });
+   }
+
    private actionSelectManaFrom() {
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
 

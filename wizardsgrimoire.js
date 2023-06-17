@@ -1914,6 +1914,50 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionSelectManaCoolDownPlayer = function () {
+        var msg = _("Select a mana card under one of your spell");
+        var name = this.game.getCardType(this.current_card).name;
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        var exclude = [];
+        for (var index = 1; index <= 6; index++) {
+            if (player_table.mana_cooldown[index].getCards().length == 0 || index == Number(this.current_card.location_arg)) {
+                exclude.push(index);
+            }
+        }
+        var args = {
+            player_id: this.game.getPlayerId(),
+            card: this.current_card,
+            count: 1,
+            exact: true,
+            exclude: exclude,
+        };
+        this.game.setClientState(states.client.selectManaDeck, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: args,
+        });
+    };
+    ActionManager.prototype.actionSelectManaCoolDownOpponent = function () {
+        var msg = _("Select a mana card under one of your opponent's spell");
+        var name = this.game.getCardType(this.current_card).name;
+        var player_table = this.game.getPlayerTable(this.game.getOpponentId());
+        var exclude = [];
+        for (var index = 1; index <= 6; index++) {
+            if (player_table.mana_cooldown[index].getCards().length == 0) {
+                exclude.push(index);
+            }
+        }
+        var args = {
+            player_id: this.game.getOpponentId(),
+            card: this.current_card,
+            count: 1,
+            exact: true,
+            exclude: exclude
+        };
+        this.game.setClientState(states.client.selectManaDeck, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: args,
+        });
+    };
     ActionManager.prototype.actionSelectManaFrom = function () {
         var _this = this;
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -2968,7 +3012,6 @@ var SelectManaDeckStates = (function () {
             return;
         var exclude = args.exclude, player_id = args.player_id, count = args.count;
         this.player_table = this.game.getPlayerTable(player_id);
-        debugger;
         var decks = this.player_table.getManaDeckWithSpellOver(exclude);
         var handleChange = function (lastDeck) {
             var nbr_decks_selected = decks.filter(function (x) { return x.isDeckSelected; }).length;
@@ -3211,7 +3254,6 @@ var SelectManaReturnDeckStates = (function () {
                         return [4, this.moveCardFromManaDeckToHand()];
                     case 1:
                         _a.sent();
-                        debugger;
                         return [3, 0];
                     case 2: return [2];
                 }

@@ -346,7 +346,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "js_actions" => ["actionSelectManaCoolDownPlayer", "actionSelectManaCoolDownOpponent"],
+    "debug" => "lightgreen",
   ],
   32 => [
     "name" => clienttranslate("Growth"),

@@ -61,6 +61,18 @@ class ManaCard {
         }
     }
 
+    public static function drawFromManaCoolDown(int $position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $card = Game::get()->deck_manas->pickCardForLocation(
+            CardLocation::PlayerManaCoolDown($player_id, $position),
+            CardLocation::Hand(),
+            $player_id,
+        );
+        return $card;
+    }
+
     public static function reshuffle() {
         $deck = Game::get()->deck_manas;
         $deck->moveAllCardsInLocation(CardLocation::Discard(), CardLocation::Deck());
@@ -136,6 +148,10 @@ class ManaCard {
             $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $position));
+    }
+
+    public static function getOnTopOfDeck() {
+        return Game::get()->deck_manas->getCardOnTop(CardLocation::Deck());
     }
 
     public static function hasUnderSpell(int $deck_position, int $player_id = 0) {

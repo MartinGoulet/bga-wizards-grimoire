@@ -2,7 +2,7 @@ class SelectManaReturnDeckStates implements StateHandler {
    private mana_cards: ManaCard[];
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: WizardsGrimoire) { }
 
    onEnteringState(args: SelectManaReturnDeckStatesArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -61,7 +61,6 @@ class SelectManaReturnDeckStates implements StateHandler {
    private async restore() {
       while (this.mana_cards.length > 0) {
          await this.moveCardFromManaDeckToHand();
-         debugger;
       }
    }
 

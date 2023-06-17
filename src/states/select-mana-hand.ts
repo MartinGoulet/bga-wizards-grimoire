@@ -1,9 +1,9 @@
 class SelectManaHandStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: WizardsGrimoire) { }
 
-   onEnteringState(args: SelectManaArgs): void {
+   onEnteringState(args: SelectManaDeckArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
 
       const { card, player_id, count } = args;
@@ -27,7 +27,7 @@ class SelectManaHandStates implements StateHandler {
       this.player_table.hand.onSelectionChange = null;
    }
 
-   onUpdateActionButtons(args: SelectManaArgs): void {
+   onUpdateActionButtons(args: SelectManaDeckArgs): void {
       const handleConfirm = () => {
          const selected_card_ids = this.player_table.hand.getSelection().map((x) => x.id);
          if (selected_card_ids.length < args.count) {
@@ -64,10 +64,10 @@ class SelectManaHandStates implements StateHandler {
       this.game.toggleButtonEnable("btn_confirm", !args.exact);
    }
 
-   restoreGameState() {}
+   restoreGameState() { }
 }
 
-interface SelectManaArgs {
+interface SelectManaDeckArgs {
    player_id: number;
    card: SpellCard;
    count: number;

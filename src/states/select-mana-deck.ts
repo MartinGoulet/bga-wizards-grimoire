@@ -1,15 +1,14 @@
 class SelectManaDeckStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: WizardsGrimoire) { }
 
-   onEnteringState(args: SelectManaArgs): void {
+   onEnteringState(args: SelectManaDeckArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
 
       const { exclude, player_id, count } = args;
       this.player_table = this.game.getPlayerTable(player_id);
 
-      debugger;
       const decks = this.player_table.getManaDeckWithSpellOver(exclude);
 
       const handleChange = (lastDeck: ManaDeck) => {
@@ -44,7 +43,7 @@ class SelectManaDeckStates implements StateHandler {
       });
    }
 
-   onUpdateActionButtons(args: SelectManaArgs): void {
+   onUpdateActionButtons(args: SelectManaDeckArgs): void {
       const handleConfirm = () => {
          const decks = this.player_table.getManaDeckWithSpellOver(args.exclude);
          const selected_decks = decks.filter((x) => x.isDeckSelected).map((x) => x.location);
@@ -83,7 +82,7 @@ class SelectManaDeckStates implements StateHandler {
    }
 }
 
-interface SelectManaArgs {
+interface SelectManaDeckArgs {
    player_id: number;
    card: SpellCard;
    count: number;
