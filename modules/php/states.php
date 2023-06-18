@@ -62,7 +62,7 @@ trait StateTrait {
         if (sizeof($spell_delayed) == 0) {
             $this->gamestate->nextState('next');
         } else {
-            Globals::setCoolDownDelayedSpell($spell_delayed);
+            Globals::setCoolDownDelayedSpellIds($spell_delayed);
             $this->gamestate->nextState('delayed');
         }
     }

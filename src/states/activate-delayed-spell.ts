@@ -6,7 +6,9 @@ class ActivateDelayedSpellStates implements StateHandler {
       if (!this.game.isCurrentPlayerActive()) return;
       this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
 
-      const handleSelection = (selection: SpellCard[], lastChange: SpellCard) => {};
+      const handleSelection = (selection: SpellCard[], lastChange: SpellCard) => {
+         this.game.toggleButtonEnable("btn_confirm", selection.length == 1);
+      };
 
       this.player_table.spell_repertoire.setSelectionMode("single");
       this.player_table.spell_repertoire.onSelectionChange = handleSelection;
@@ -20,7 +22,10 @@ class ActivateDelayedSpellStates implements StateHandler {
    onLeavingState(): void {}
    onUpdateActionButtons(args: ActivateDelayedSpellArgs): void {
       const handleConfirm = () => {
-         alert("confirm");
+         const selection = this.player_table.spell_repertoire.getSelection()[0];
+         this.game.actionManager.setup("activateDelayedSpell");
+         this.game.actionManager.addActionDelayed(selection);
+         this.game.actionManager.activateNextAction();
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);

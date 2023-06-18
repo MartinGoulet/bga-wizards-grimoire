@@ -15,7 +15,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    player_board: PlayerBoardObject;
    players_order: number[];
    opponent_id: number;
-   ongoing_spells: OngoingSpell[],
+   ongoing_spells: OngoingSpell[];
 }
 
 interface OngoingSpell {
@@ -46,6 +46,7 @@ interface CardType {
    icon: "Base_1" | "Base_2" | "KickStarter_1";
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
+   js_actions_delayed?: string[] | string;
    debug: "red" | "yellow" | "lightgreen";
 }
 

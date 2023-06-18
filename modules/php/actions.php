@@ -16,6 +16,32 @@ trait ActionTrait {
         (note: each method below must match an input method in nicodemus.action.php)
     */
 
+    public function activateDelayedSpell(int $card_id, array $args) {
+        $this->checkAction('activateDelayedSpell');
+        $spell = SpellCard::isInRepertoire($card_id);
+        $delayed_spells_ids = Globals::getCoolDownDelayedSpellIds();
+        $is_authorize = in_array($spell['id'], $delayed_spells_ids);
+        if (!$is_authorize) {
+            throw new BgaSystemException("Card not authorize");
+        }
+
+        $filter = array_filter($delayed_spells_ids, function ($ids) use ($spell) {
+            return $ids != $spell['id'];
+        });
+        Globals::setCoolDownDelayedSpellIds($filter);
+
+        $cardClass = SpellCard::getInstanceOfCard($spell);
+        $cardClass->castSpell($args);
+
+        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else if(sizeof($filter) > 0) {
+            $this->gamestate->nextState('cast');
+        } else {
+            $this->gamestate->nextState('pass');
+        }
+    }
+
     public function discardMana(array $card_ids) {
         $this->checkAction('discardMana');
 

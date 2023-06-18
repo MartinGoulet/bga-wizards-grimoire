@@ -271,9 +271,6 @@ class WizardsGrimoire extends Table {
 
         $result['opponent_id'] = Players::getOpponentId();
 
-        $result['ongoing_spells'] = [];
-        $result['ongoing_spells'][] = ["name" => WG_ONGOING_SPELL_ACTIVE_GROWTH, "active" => Globals::getIsActiveGrowth()];
-
         return $result;
     }
 

@@ -3,10 +3,10 @@
 namespace WizardsGrimoire\Core;
 
 trait ArgsTrait {
-    
-//////////////////////////////////////////////////////////////////////////////
-//////////// Game state arguments
-////////////
+
+    //////////////////////////////////////////////////////////////////////////////
+    //////////// Game state arguments
+    ////////////
 
     /*
         Here, you can create methods defined as "game state arguments" (see "args" property in states.inc.php).
@@ -14,23 +14,41 @@ trait ArgsTrait {
         game state.
     */
 
+    function argBase() {
+        return $this->getArgsBase();
+    }
+
     function argActivateDelayedSpell() {
-        return [
-            "spells" => Globals::getCoolDownDelayedSpell(true)
-        ];
+        $args = $this->getArgsBase();
+        $args["spells"] = Globals::getCoolDownDelayedSpellIds(true);
+        return $args;
     }
 
     function argCastSpell() {
-        return [
-            "discount_attack_spell" => Globals::getDiscountAttackSpell(true),
-            "discount_next_spell" => Globals::getDiscountNextSpell(true),
-        ];
+        $args = $this->getArgsBase();
+        $args["discount_attack_spell"] = Globals::getDiscountAttackSpell(true);
+        $args["discount_next_spell"] = Globals::getDiscountNextSpell(true);
+        return $args;
     }
 
     function argCastSpellInteraction() {
-        return [
-            "spell" => SpellCard::get(Globals::getSpellPlayed()),
-        ];
+        $args = $this->getArgsBase();
+        $args["discount_atspelltack_spell"] = SpellCard::get(Globals::getSpellPlayed());
+        return $args;
     }
 
+
+
+    //////////////////////////////////////////
+    // Private methods
+
+    private function getArgsBase() {
+        $result = [];
+        $result['ongoing_spells'] = [];
+        $result['ongoing_spells'][] = [
+            "name" => WG_ONGOING_SPELL_ACTIVE_GROWTH, "active" => Globals::getIsActiveGrowth()
+        ];
+
+        return $result;
+    }
 }

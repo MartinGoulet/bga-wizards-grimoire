@@ -1,7 +1,7 @@
 class SelectManaDeckStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    onEnteringState(args: SelectManaDeckArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -72,6 +72,12 @@ class SelectManaDeckStates implements StateHandler {
          this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
       }
       this.game.addActionButtonClientCancel();
+
+      if (args.exact) {
+         this.game.toggleButtonEnable("btn_confirm", args.count == 0);
+      } else {
+         this.game.toggleButtonEnable("btn_confirm", true);
+      }
    }
 
    restoreGameState() {

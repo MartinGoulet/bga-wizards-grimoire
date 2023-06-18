@@ -48,6 +48,12 @@ class StateManager {
          this.game.gameOptions.setPhase(99);
       }
 
+      if (args.args?.ongoing_spells) {
+         args.args.ongoing_spells.forEach((value) => {
+            this.game.toggleOngoingSpell(value);
+         });
+      }
+
       if (this.states[stateName] !== undefined) {
          this.states[stateName].onEnteringState(args.args);
          if (stateName.startsWith("client_")) {

@@ -20,7 +20,7 @@ class SpellCard {
     }
 
     public static function getFromRepertoire($position, int $player_id = 0) {
-        if($player_id == 0) {
+        if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
         $cards = Game::get()->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id), $position);
@@ -28,7 +28,7 @@ class SpellCard {
     }
 
     public static function getCardsFromRepertoire(int $player_id = 0) {
-        if($player_id == 0) {
+        if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
         return Game::get()->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id));
@@ -51,20 +51,20 @@ class SpellCard {
         $card_type = Game::get()->card_types[$card['type']];
         return $card_type['name'];
     }
-    
+
     public static function getOngoingActiveSpells($player_id) {
         $spells = self::getCardsFromRepertoire($player_id);
-        $ongoing_active_spell = array_filter($spells, function($card) use($player_id) {
+        $ongoing_active_spell = array_filter($spells, function ($card) use ($player_id) {
             $card_type = self::getCardInfo($card);
-            return $card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING 
+            return $card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING
                 && ManaCard::countOnTopOfManaCoolDown($card['location_arg']) > 0;
         });
         return $ongoing_active_spell;
     }
-    
+
     public static function getDelayedActiveSpells($player_id) {
         $spells = SpellCard::getCardsFromRepertoire($player_id);
-        $ongoing_active_spell = array_filter($spells, function($card) use($player_id) {
+        $ongoing_active_spell = array_filter($spells, function ($card) use ($player_id) {
             $card_type = self::getCardInfo($card);
             return $card_type['activation'] == WG_SPELL_ACTIVATION_DELAYED
                 && ManaCard::countOnTopOfManaCoolDown($card['location_arg']) > 0;
@@ -72,7 +72,10 @@ class SpellCard {
         return $ongoing_active_spell;
     }
 
-    public static function isInRepertoire($card_id, $player_id) {
+    public static function isInRepertoire(int $card_id, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
         $card = SpellCard::get($card_id);
 
         if ($card['location'] != CardLocation::PlayerSpellRepertoire($player_id)) {

@@ -472,7 +472,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -1018,27 +1018,28 @@ var CardStock = (function () {
 var SlideAndBackAnimation = (function (_super) {
     __extends(SlideAndBackAnimation, _super);
     function SlideAndBackAnimation(manager, element, tempElement) {
+        var _this = this;
         var distance = (manager.getCardWidth() + manager.getCardHeight()) / 2;
         var angle = Math.random() * Math.PI * 2;
         var fromDelta = {
             x: distance * Math.cos(angle),
             y: distance * Math.sin(angle),
         };
-        return _super.call(this, {
+        _this = _super.call(this, {
             animations: [
                 new BgaSlideToAnimation({ element: element, fromDelta: fromDelta, duration: 250 }),
                 new BgaSlideAnimation({ element: element, fromDelta: fromDelta, duration: 250, animationEnd: tempElement ? (function () { return element.remove(); }) : undefined }),
             ]
         }) || this;
+        return _this;
     }
     return SlideAndBackAnimation;
 }(BgaCumulatedAnimation));
 var Deck = (function (_super) {
     __extends(Deck, _super);
     function Deck(manager, element, settings) {
-        var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-        _this = _super.call(this, manager, element) || this;
+        var _this = _super.call(this, manager, element) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('deck');
@@ -1178,9 +1179,8 @@ var Deck = (function (_super) {
 var LineStock = (function (_super) {
     __extends(LineStock, _super);
     function LineStock(manager, element, settings) {
-        var _this = this;
         var _a, _b, _c, _d;
-        _this = _super.call(this, manager, element, settings) || this;
+        var _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('line-stock');
@@ -1195,9 +1195,8 @@ var LineStock = (function (_super) {
 var SlotStock = (function (_super) {
     __extends(SlotStock, _super);
     function SlotStock(manager, element, settings) {
-        var _this = this;
         var _a, _b;
-        _this = _super.call(this, manager, element, settings) || this;
+        var _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         _this.slotsIds = [];
@@ -1453,7 +1452,7 @@ function sortFunction() {
 var isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
-var LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = 'wizards-grimoire-jump-to-folded';
+var LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = "wizards-grimoire-jump-to-folded";
 var arrayRange = function (start, end) { return Array.from(Array(end - start + 1).keys()).map(function (x) { return x + start; }); };
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
@@ -1461,7 +1460,6 @@ var WizardsGrimoire = (function () {
         this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
-        var _this = this;
         log(gamedatas);
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
@@ -1471,18 +1469,15 @@ var WizardsGrimoire = (function () {
         new JumpToManager(this, {
             localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
             topEntries: [
-                new JumpToEntry(_('Spell Pool'), 'spell-pool', { 'color': 'darkblue' }),
-                new JumpToEntry(_('Decks'), 'table-center', { 'color': '#224757' })
+                new JumpToEntry(_("Spell Pool"), "spell-pool", { color: "darkblue" }),
+                new JumpToEntry(_("Decks"), "table-center", { color: "#224757" }),
             ],
-            entryClasses: 'triangle-point',
+            entryClasses: "triangle-point",
             defaultFolded: true,
         });
         this.gameOptions = new GameOptions(this);
         this.tableCenter = new TableCenter(this);
         this.createPlayerTables(gamedatas);
-        this.gamedatas.ongoing_spells.forEach(function (value) {
-            _this.toggleOngoingSpell(value);
-        });
         this.zoomManager = new ZoomManager({
             element: document.getElementById("table"),
             smooth: false,
@@ -1496,7 +1491,7 @@ var WizardsGrimoire = (function () {
         this.setupDebug(gamedatas);
     };
     WizardsGrimoire.prototype.toggleOngoingSpell = function (value) {
-        document.getElementById('table').classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
+        document.getElementById("table").classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
     };
     WizardsGrimoire.prototype.setupDebug = function (gamedatas) {
         var arrCardType = [];
@@ -1840,6 +1835,13 @@ var ActionManager = (function () {
         this.addActionPriv(card_type.js_actions_interaction);
         return this;
     };
+    ActionManager.prototype.addActionDelayed = function (card) {
+        this.current_card = card;
+        var card_type = this.game.getCardType(card);
+        log("actionmanager.addActionDelayed", card, card_type);
+        this.addActionPriv(card_type.js_actions_delayed);
+        return this;
+    };
     ActionManager.prototype.addActionPriv = function (actions) {
         var _this = this;
         if (!actions) {
@@ -1995,6 +1997,10 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionSilentSupport = function () {
+        this.actions.push("actionSelectManaFrom");
+        this.activateNextAction();
+    };
     ActionManager.prototype.actionCastMana = function () {
         var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost, type = _a.type;
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -2026,7 +2032,8 @@ var ActionManager = (function () {
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
         var exclude = [];
         for (var index = 1; index <= 6; index++) {
-            if (player_table.mana_cooldown[index].getCards().length == 0 || index == Number(this.current_card.location_arg)) {
+            if (player_table.mana_cooldown[index].getCards().length == 0 ||
+                index == Number(this.current_card.location_arg)) {
                 exclude.push(index);
             }
         }
@@ -2057,7 +2064,7 @@ var ActionManager = (function () {
             card: this.current_card,
             count: 1,
             exact: true,
-            exclude: exclude
+            exclude: exclude,
         };
         this.game.setClientState(states.client.selectManaDeck, {
             descriptionmyturn: _(name) + " : " + msg,
@@ -2236,6 +2243,10 @@ var ManaCardManager = (function (_super) {
             setupFrontDiv: function (card, div) {
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-mana-front");
+                var growthID = "".concat(_this.getId(card), "-growth-id");
+                if (!document.getElementById(growthID)) {
+                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>"));
+                }
             },
             setupBackDiv: function (card, div) {
                 div.classList.add("wg-card-mana-back");
@@ -2387,12 +2398,19 @@ var StateManager = (function () {
             _a);
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
+        var _this = this;
+        var _a;
         log("Entering state: " + stateName);
         if (args.phase) {
             this.game.gameOptions.setPhase(Number(args.phase));
         }
         else {
             this.game.gameOptions.setPhase(99);
+        }
+        if ((_a = args.args) === null || _a === void 0 ? void 0 : _a.ongoing_spells) {
+            args.args.ongoing_spells.forEach(function (value) {
+                _this.game.toggleOngoingSpell(value);
+            });
         }
         if (this.states[stateName] !== undefined) {
             this.states[stateName].onEnteringState(args.args);
@@ -2559,14 +2577,13 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.onMoveManaCard = function (before, after) {
         return __awaiter(this, void 0, void 0, function () {
-            var stockBeforeManager, stockBefore, stockAfter, newCard;
+            var stockBeforeManager, stockAfter, newCard;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         stockBeforeManager = this.game.manasManager.getCardStock(before);
-                        stockBefore = this.getStock(before);
                         stockAfter = this.getStock(after);
-                        if (stockBefore !== stockBeforeManager) {
+                        if (stockBeforeManager === stockAfter) {
                             return [2];
                         }
                         if (!!stockAfter.contains(after)) return [3, 2];
@@ -2920,10 +2937,13 @@ var ActivateDelayedSpellStates = (function () {
         this.game = game;
     }
     ActivateDelayedSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
         if (!this.game.isCurrentPlayerActive())
             return;
         this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
-        var handleSelection = function (selection, lastChange) { };
+        var handleSelection = function (selection, lastChange) {
+            _this.game.toggleButtonEnable("btn_confirm", selection.length == 1);
+        };
         this.player_table.spell_repertoire.setSelectionMode("single");
         this.player_table.spell_repertoire.onSelectionChange = handleSelection;
         var selectable_cards = this.player_table.spell_repertoire
@@ -2933,8 +2953,12 @@ var ActivateDelayedSpellStates = (function () {
     };
     ActivateDelayedSpellStates.prototype.onLeavingState = function () { };
     ActivateDelayedSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
         var handleConfirm = function () {
-            alert("confirm");
+            var selection = _this.player_table.spell_repertoire.getSelection()[0];
+            _this.game.actionManager.setup("activateDelayedSpell");
+            _this.game.actionManager.addActionDelayed(selection);
+            _this.game.actionManager.activateNextAction();
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         this.game.disableButton("btn_confirm");
@@ -3181,6 +3205,12 @@ var SelectManaDeckStates = (function () {
             this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
         }
         this.game.addActionButtonClientCancel();
+        if (args.exact) {
+            this.game.toggleButtonEnable("btn_confirm", args.count == 0);
+        }
+        else {
+            this.game.toggleButtonEnable("btn_confirm", true);
+        }
     };
     SelectManaDeckStates.prototype.restoreGameState = function () {
         this.player_table.getManaDecks().forEach(function (deck) {

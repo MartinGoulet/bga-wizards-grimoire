@@ -1,4 +1,4 @@
-type TakeActionType = "castSpell" | "castSpellInteraction";
+type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpell";
 
 class ActionManager {
    private actions: string[] = [];
@@ -6,7 +6,7 @@ class ActionManager {
    private current_card: SpellCard;
    private take_action: TakeActionType;
 
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    public setup(takeAction: TakeActionType = "castSpell", newAction?: string) {
       log("actionmanager.reset");
@@ -43,6 +43,14 @@ class ActionManager {
       const card_type = this.game.getCardType(card);
       log("actionmanager.addActionInteraction", card, card_type);
       this.addActionPriv(card_type.js_actions_interaction);
+      return this;
+   }
+
+   public addActionDelayed(card: SpellCard) {
+      this.current_card = card;
+      const card_type = this.game.getCardType(card);
+      log("actionmanager.addActionDelayed", card, card_type);
+      this.addActionPriv(card_type.js_actions_delayed);
       return this;
    }
 
@@ -88,13 +96,13 @@ class ActionManager {
    }
 
    /////////////////////////////////////////////////////////////
-   //     _____              _       ____                   __ 
+   //     _____              _       ____                   __
    //    / ____|            | |     |  _ \                 /_ |
    //   | |     __ _ _ __ __| |___  | |_) | __ _ ___  ___   | |
    //   | |    / _` | '__/ _` / __| |  _ < / _` / __|/ _ \  | |
    //   | |___| (_| | | | (_| \__ \ | |_) | (_| \__ \  __/  | |
    //    \_____\__,_|_|  \__,_|___/ |____/ \__,_|___/\___|  |_|
-   //                                                          
+   //
    /////////////////////////////////////////////////////////////
 
    private actionArcaneTactics() {
@@ -224,27 +232,29 @@ class ActionManager {
    }
 
    /////////////////////////////////////////////////////////////
-   //     _____              _       ____                   ___  
-   //    / ____|            | |     |  _ \                 |__ \ 
+   //     _____              _       ____                   ___
+   //    / ____|            | |     |  _ \                 |__ \
    //   | |     __ _ _ __ __| |___  | |_) | __ _ ___  ___     ) |
-   //   | |    / _` | '__/ _` / __| |  _ < / _` / __|/ _ \   / / 
-   //   | |___| (_| | | | (_| \__ \ | |_) | (_| \__ \  __/  / /_ 
+   //   | |    / _` | '__/ _` / __| |  _ < / _` / __|/ _ \   / /
+   //   | |___| (_| | | | (_| \__ \ | |_) | (_| \__ \  __/  / /_
    //    \_____\__,_|_|  \__,_|___/ |____/ \__,_|___/\___| |____|
-   //                                                            
+   //
    /////////////////////////////////////////////////////////////
 
-
+   private actionSilentSupport() {
+      this.actions.push("actionSelectManaFrom");
+      this.activateNextAction();
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////
-   //     _____                      _                         _   _                 
-   //    / ____|                    (_)              /\       | | (_)                
-   //   | |  __  ___ _ __   ___ _ __ _  ___ ___     /  \   ___| |_ _  ___  _ __  ___ 
+   //     _____                      _                         _   _
+   //    / ____|                    (_)              /\       | | (_)
+   //   | |  __  ___ _ __   ___ _ __ _  ___ ___     /  \   ___| |_ _  ___  _ __  ___
    //   | | |_ |/ _ \ '_ \ / _ \ '__| |/ __/ __|   / /\ \ / __| __| |/ _ \| '_ \/ __|
    //   | |__| |  __/ | | |  __/ |  | | (__\__ \  / ____ \ (__| |_| | (_) | | | \__ \
    //    \_____|\___|_| |_|\___|_|  |_|\___|___/ /_/    \_\___|\__|_|\___/|_| |_|___/
-   //                                                                                
+   //
    ///////////////////////////////////////////////////////////////////////////////////
-
 
    private actionCastMana() {
       const { name, cost, type } = this.game.getCardType(this.current_card);
@@ -277,13 +287,16 @@ class ActionManager {
    }
 
    private actionSelectManaCoolDownPlayer() {
-      const msg = _("Select a mana card under one of your spell")
+      const msg = _("Select a mana card under one of your spell");
       const { name } = this.game.getCardType(this.current_card);
 
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
       const exclude: number[] = [];
       for (let index = 1; index <= 6; index++) {
-         if (player_table.mana_cooldown[index].getCards().length == 0 || index == Number(this.current_card.location_arg)) {
+         if (
+            player_table.mana_cooldown[index].getCards().length == 0 ||
+            index == Number(this.current_card.location_arg)
+         ) {
             exclude.push(index);
          }
       }
@@ -303,7 +316,7 @@ class ActionManager {
    }
 
    private actionSelectManaCoolDownOpponent() {
-      const msg = _("Select a mana card under one of your opponent's spell")
+      const msg = _("Select a mana card under one of your opponent's spell");
       const { name } = this.game.getCardType(this.current_card);
 
       const player_table = this.game.getPlayerTable(this.game.getOpponentId());
@@ -319,7 +332,7 @@ class ActionManager {
          card: this.current_card,
          count: 1,
          exact: true,
-         exclude
+         exclude,
       };
 
       this.game.setClientState(states.client.selectManaDeck, {
@@ -383,18 +396,14 @@ class ActionManager {
    }
 
    /////////////////////////////////////////////////////////////
-   //    _    _  _    _  _  _  _    _            
-   //   | |  | || |  (_)| |(_)| |  (_)           
-   //   | |  | || |_  _ | | _ | |_  _   ___  ___ 
+   //    _    _  _    _  _  _  _    _
+   //   | |  | || |  (_)| |(_)| |  (_)
+   //   | |  | || |_  _ | | _ | |_  _   ___  ___
    //   | |  | || __|| || || || __|| | / _ \/ __|
    //   | |__| || |_ | || || || |_ | ||  __/\__ \
    //    \____/  \__||_||_||_| \__||_| \___||___/
-   //                                            
+   //
    /////////////////////////////////////////////////////////////
-
-
-
-
 
    private question(args: QuestionArgs) {
       const { name } = this.game.getCardType(this.current_card);

@@ -23,12 +23,12 @@ class Globals extends APP_DbObject {
     }
 
     /** @return array */
-    public static function getCoolDownDelayedSpell() {
+    public static function getCoolDownDelayedSpellIds() {
         return Globals::get(WG_GV_COOLDOWN_DELAYED_SPELLS, true);
     }
 
-    public static function setCoolDownDelayedSpell(array $spell_delayed) {
-        return Globals::set(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed);
+    public static function setCoolDownDelayedSpellIds(array $spell_delayed_ids) {
+        return Globals::set(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed_ids);
     }
 
     public static function getDiscountAttackSpell() {

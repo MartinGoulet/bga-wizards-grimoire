@@ -155,7 +155,7 @@ class ManaCard {
     }
 
     public static function getPower($card) {
-        $power = ManaCard::getPower($card);
+        $power = intval($card['type']);
         if(Globals::getIsActiveGrowth()) {
             $power++;
         }
@@ -210,7 +210,7 @@ class ManaCard {
             $topCard = Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $i));
 
             if ($topCard && $topCard['id'] == $card['id']) {
-                return true;
+                return $i;
             }
         }
 

@@ -85,6 +85,14 @@ class ManaCardManager extends CardManager<ManaCard> {
          setupFrontDiv: (card: ManaCard, div: HTMLElement) => {
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-mana-front");
+
+            const growthID = `${this.getId(card)}-growth-id`;
+            if (!document.getElementById(growthID)) {
+               div.insertAdjacentHTML(
+                  "afterbegin",
+                  `<div id="${growthID}" class="wg-mana-icon wg-icon-growth">+1</div>`,
+               );
+            }
          },
          setupBackDiv: (card: ManaCard, div: HTMLElement) => {
             div.classList.add("wg-card-mana-back");

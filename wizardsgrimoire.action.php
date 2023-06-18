@@ -37,6 +37,17 @@ class action_wizardsgrimoire extends APP_GameAction {
 
    // TODO: defines your action entry points there
 
+   public function activateDelayedSpell() {
+      self::setAjaxMode();
+
+      $card_id = self::getArg("card_id", AT_posint, true);
+      $args = $this->getArrayArgs();
+
+      $this->game->activateDelayedSpell($card_id, $args);
+
+      self::ajaxResponse();
+   }
+
    public function discardMana() {
       self::setAjaxMode();
 

@@ -660,7 +660,8 @@ $this->card_types = [
     "activation_auto" => false,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "js_actions_delayed" => "actionSilentSupport",
+    "debug" => "lightgreen",
   ],
 
 

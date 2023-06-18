@@ -1,13 +1,13 @@
 const isDebug =
    window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
-const log = isDebug ? console.log.bind(window.console) : function () { };
+const log = isDebug ? console.log.bind(window.console) : function () {};
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
-const LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = 'wizards-grimoire-jump-to-folded';
+const LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = "wizards-grimoire-jump-to-folded";
 const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
 
 interface WizardsGrimoire
    extends ebg.core.gamegui,
-   BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas> {
+      BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas> {
    dontPreloadImage(image_file_name: string): void;
    ensureSpecificGameImageLoading(image_file_names_array: string[]);
    displayScoring(
@@ -40,7 +40,7 @@ class WizardsGrimoire
    public playersTables: PlayerTable[] = [];
    public zoomManager: ZoomManager;
 
-   constructor() { }
+   constructor() {}
 
    /*
         setup:
@@ -66,10 +66,10 @@ class WizardsGrimoire
       new JumpToManager(this, {
          localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
          topEntries: [
-            new JumpToEntry(_('Spell Pool'), 'spell-pool', { 'color': 'darkblue' }),
-            new JumpToEntry(_('Decks'), 'table-center', { 'color': '#224757' })
+            new JumpToEntry(_("Spell Pool"), "spell-pool", { color: "darkblue" }),
+            new JumpToEntry(_("Decks"), "table-center", { color: "#224757" }),
          ],
-         entryClasses: 'triangle-point',
+         entryClasses: "triangle-point",
          defaultFolded: true,
       });
 
@@ -78,11 +78,6 @@ class WizardsGrimoire
 
       // Setting up player boards
       this.createPlayerTables(gamedatas);
-
-      this.gamedatas.ongoing_spells.forEach((value) => {
-         this.toggleOngoingSpell(value);
-         
-      })
 
       this.zoomManager = new ZoomManager({
          element: document.getElementById("table"),
@@ -100,7 +95,7 @@ class WizardsGrimoire
    }
 
    toggleOngoingSpell(value: OngoingSpell) {
-      document.getElementById('table').classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
+      document.getElementById("table").classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
    }
 
    setupDebug(gamedatas: WizardsGrimoireGamedatas) {
@@ -292,8 +287,8 @@ class WizardsGrimoire
    ) {
       data = data || {};
       data.lock = true;
-      onSuccess = onSuccess ?? function (result: any) { };
-      onComplete = onComplete ?? function (is_error: boolean) { };
+      onSuccess = onSuccess ?? function (result: any) {};
+      onComplete = onComplete ?? function (is_error: boolean) {};
       (this as any).ajaxcall(
          `/wizardsgrimoire/wizardsgrimoire/${action}.html`,
          data,
