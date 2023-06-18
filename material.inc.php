@@ -747,7 +747,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "interaction" => "player",
     "js_actions_interaction" => "actionAfterShock",
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
 
   69 => [
