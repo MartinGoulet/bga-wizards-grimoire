@@ -46,6 +46,7 @@
         "src/table-center.ts",
         "src/game-options.ts",
 
+        "src/states/discard-mana.ts",
         "src/states/cast-spell.ts",
         "src/states/cast-spell-interaction.ts",
         "src/states/choose-new-spell.ts",

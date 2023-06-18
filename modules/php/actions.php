@@ -50,10 +50,14 @@ trait ActionTrait {
             throw new BgaSystemException("Not enough mana discarded");
         }
 
+        $cards_before = [];
+        $cards_after = [];
         foreach ($card_ids as $card_id) {
-            ManaCard::isInHand($card_id);
+            $cards_before[] = ManaCard::isInHand($card_id);
             ManaCard::addOnTopOfDiscard($card_id);
+            $cards_after[] = ManaCard::get($card_id);
         }
+        Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after);
 
         $this->gamestate->nextState();
     }

@@ -2359,6 +2359,7 @@ var states = {
         selectManaReturnDeck: "client_selectManaReturnDeck",
     },
     server: {
+        discardMana: "discardMana",
         castSpell: "castSpell",
         castSpellInteraction: "castSpellInteraction",
         chooseNewSpell: "chooseNewSpell",
@@ -2380,6 +2381,7 @@ var StateManager = (function () {
             _a[states.client.selectManaHand] = new SelectManaHandStates(game),
             _a[states.client.selectManaReturnDeck] = new SelectManaReturnDeckStates(game),
             _a[states.server.activateDelayedSpell] = new ActivateDelayedSpellStates(game),
+            _a[states.server.discardMana] = new DiscardManaStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
@@ -2714,6 +2716,43 @@ var GameOptions = (function () {
         document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
     };
     return GameOptions;
+}());
+var DiscardManaStates = (function () {
+    function DiscardManaStates(game) {
+        this.game = game;
+    }
+    DiscardManaStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        this.nbr_cards_to_discard = this.player_table.hand.getCards().length - 10;
+        var handleChange = function () {
+            var nbr_cards_selected = _this.player_table.hand.getSelection().length;
+            _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected == _this.nbr_cards_to_discard);
+        };
+        this.player_table.hand.setSelectionMode("multiple");
+        this.player_table.hand.onSelectionChange = handleChange;
+    };
+    DiscardManaStates.prototype.onLeavingState = function () {
+        this.player_table.hand.setSelectionMode("none");
+        this.player_table.hand.onSelectionChange = null;
+        this.nbr_cards_to_discard = 0;
+    };
+    DiscardManaStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var selected_card_ids = _this.player_table.hand.getSelection().map(function (x) { return x.id; });
+            if (selected_card_ids.length == _this.nbr_cards_to_discard) {
+                _this.game.takeAction("discardMana", {
+                    args: selected_card_ids.join(";"),
+                });
+            }
+        };
+        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
+    };
+    DiscardManaStates.prototype.restoreGameState = function () { };
+    return DiscardManaStates;
 }());
 var CastSpellStates = (function () {
     function CastSpellStates(game) {
