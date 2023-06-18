@@ -33,7 +33,7 @@ trait ArgsTrait {
 
     function argCastSpellInteraction() {
         $args = $this->getArgsBase();
-        $args["discount_atspelltack_spell"] = SpellCard::get(Globals::getSpellPlayed());
+        $args["spell"] = SpellCard::get(Globals::getSpellPlayed());
         return $args;
     }
 

@@ -1496,31 +1496,15 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.setupDebug = function (gamedatas) {
         var arrCardType = [];
         Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
-        var level1 = arrCardType
-            .filter(function (x) { return x.icon == "Base_1"; })
-            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
-            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
-        var level2 = arrCardType
-            .filter(function (x) { return x.icon == "Base_2"; })
-            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
-            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
-        var expansion = arrCardType
-            .filter(function (x) { return x.icon == "KickStarter_1"; })
-            .sort(function (a, b) { return a.debug.localeCompare(b.debug); })
-            .map(function (x) { return "".concat(x.debug, " : ").concat(x.name); });
-        var text = {
-            level1: level1,
-            level2: level2,
-            expansion: expansion,
-        };
+        log("----------------");
         arrCardType
-            .filter(function (x) { return x.icon == "Base_1" && x.debug !== "lightgreen"; })
+            .filter(function (x) { return x.debug !== "lightgreen"; })
             .sort(function (a, b) { return a.name.localeCompare(b.name); })
+            .sort(function (a, b) { return a.icon.localeCompare(b.icon); })
             .forEach(function (card) {
-            log(card.name);
-            log(card.description);
-            log("----------------");
+            log(card.name, ",", card.icon, ",", card.debug);
         });
+        log("----------------");
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
@@ -1995,6 +1979,11 @@ var ActionManager = (function () {
                 label: _("Pass"),
                 message: _("Are you sure that you didn't want to discard mana cards?"),
             },
+        });
+    };
+    ActionManager.prototype.actionAfterShock = function () {
+        this.selectManaHand(1, _("Select ${nbr} mana cards to return on top of the mana deck"), true, {
+            canCancel: false,
         });
     };
     ActionManager.prototype.actionSilentSupport = function () {

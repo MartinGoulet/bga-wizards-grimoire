@@ -43,13 +43,26 @@ trait StateTrait {
             if ($mana_card) {
                 $spell = SpellCard::getFromRepertoire($i);
                 $spell_info = SpellCard::getCardInfo($spell);
-                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
-                    if ($spell_info['activation_auto'] == true) {
-                        $instance = SpellCard::getInstanceOfCard($spell);
-                        $instance->castSpell($mana_card);
-                    } else {
-                        $spell_delayed[] = $spell['id'];
-                    }
+                $instance = SpellCard::getInstanceOfCard($spell);
+
+                switch ($spell_info['activation']) {
+                    case WG_SPELL_ACTIVATION_DELAYED:
+                        if ($spell_info['activation_auto'] == true) {
+                            $instance->castSpell($mana_card);
+                        } else {
+                            $spell_delayed[] = $spell['id'];
+                        }
+                        break;
+
+                    case WG_SPELL_ACTIVATION_ONGOING:
+                        if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
+                            $instance->isOngoingSpellActive(false);
+                        }
+                        break;
+
+                    default:
+                        # code...
+                        break;
                 }
                 $cards_before[] = $mana_card;
                 ManaCard::addOnTopOfDiscard($mana_card['id']);

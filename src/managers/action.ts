@@ -241,6 +241,12 @@ class ActionManager {
    //
    /////////////////////////////////////////////////////////////
 
+   private actionAfterShock() {
+      this.selectManaHand(1, _("Select ${nbr} mana cards to return on top of the mana deck"), true, {
+         canCancel: false,
+      });
+   }
+
    private actionSilentSupport() {
       this.actions.push("actionSelectManaFrom");
       this.activateNextAction();

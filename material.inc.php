@@ -181,7 +181,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   16 => [
     "name" => clienttranslate("Haste"),
@@ -357,7 +357,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "debug" => "green",
   ],
   33 => [
     "name" => clienttranslate("Fury"),
@@ -745,6 +745,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
+    "interaction" => "player",
+    "js_actions_interaction" => "actionAfterShock",
     "debug" => "red",
   ],
 
