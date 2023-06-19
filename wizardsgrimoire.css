@@ -929,6 +929,7 @@ body > .card {
   display: flex;
   align-items: center;
   column-gap: 5px;
+  height: 19px;
 }
 #wg-phases .wg-icon {
   background-size: 20px 20px;
