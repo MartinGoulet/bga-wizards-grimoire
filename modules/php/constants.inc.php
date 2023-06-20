@@ -11,7 +11,7 @@ define('WG_GAME_OPTION_DIFFICULTY', 'gameOptionDifficulty');
 define('WG_DIFFICULTY_BEGINNER', 1);
 define('WG_DIFFICULTY_ADVANCED', 2);
 
-define('WG_GAME_OPTION_EXT_KICKSTARTER_1_ID', 100);
+define('WG_GAME_OPTION_EXT_KICKSTARTER_1_ID', 101);
 define('WG_GAME_OPTION_EXT_KICKSTARTER_1', 'gameOptionKickStarter1');
 
 

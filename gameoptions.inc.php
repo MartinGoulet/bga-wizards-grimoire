@@ -43,7 +43,7 @@ $game_options = [
             ],
         ]
     ],
-    WG_GAME_OPTION_EXT_KICKSTARTER_1 => [
+    WG_GAME_OPTION_EXT_KICKSTARTER_1_ID => [
         'name' => totranslate('Mini expansion 1'),
         'default' => WG_OPTION_NO,
         'values' => [

@@ -651,7 +651,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "red",
+    "debug" => "yellow",
   ],
   60 => [
     "name" => clienttranslate("Silent support"),
