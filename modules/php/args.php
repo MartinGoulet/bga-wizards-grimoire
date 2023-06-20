@@ -37,6 +37,12 @@ trait ArgsTrait {
         return $args;
     }
 
+    function argBattleVision() {
+        $args = $this->getArgsBase();
+        $args["value_to_discard"] = Globals::getPreviousBasicAttackPower();
+        return $args;
+    }
+
 
 
     //////////////////////////////////////////

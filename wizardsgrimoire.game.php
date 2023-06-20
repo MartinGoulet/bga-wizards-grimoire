@@ -83,6 +83,15 @@ class WizardsGrimoire extends Table {
             WG_VAR_DISCOUNT_ATTACK_SPELL => 16,
             WG_VAR_AMNESIA => 17,
             WG_VAR_IS_ACTIVE_GROWTH => 18,
+            WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST => 19,
+            WG_VAR_IS_ACTIVE_PUPPETMASTER => 20,
+            WG_VAR_PREVIOUS_BASIC_ATTACK_POWER => 21,
+            WG_VAR_IS_ACTIVE_SECRET_OATH => 22,
+            WG_VAR_PREVIOUS_SPELL_PLAYED => 23,
+            WG_VAR_PREVIOUS_SPELL_DAMAGE => 24,
+            WG_VAR_IS_ACTIVE_POWER_HUNGRY => 25,
+            WG_VAR_IS_ACTIVE_BATTLE_VISION => 26,
+            WG_VAR_CURRENT_BASIC_ATTACK_POWER => 27,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -143,7 +152,16 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_NEXT_SPELL, 0);
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_ATTACK_SPELL, 0);
         self::setGameStateInitialValue(WG_VAR_AMNESIA, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_BATTLE_VISION, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_GROWTH, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_PUPPETMASTER, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_SECRET_OATH, 0);
+        self::setGameStateInitialValue(WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST, 0);
+        self::setGameStateInitialValue(WG_VAR_CURRENT_BASIC_ATTACK_POWER, 0);
+        self::setGameStateInitialValue(WG_VAR_PREVIOUS_BASIC_ATTACK_POWER, 0);
+        self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_PLAYED, 0);
+        self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_DAMAGE, 0);
 
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)

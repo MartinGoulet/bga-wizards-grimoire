@@ -21,7 +21,7 @@ class RenewedFervor extends BaseCard {
             $card_type = SpellCard::getCardInfo($card);
             $isInstantAttackSpellWithCostTwoOrLess =
                 $card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT &&
-                $card_type['type'] == WG_SPELL_TYPE_DAMAGE &&
+                $card_type['type'] == WG_SPELL_TYPE_ATTACK &&
                 $card_type['cost'] <= 2;
 
             return $isInstantAttackSpellWithCostTwoOrLess;

@@ -3,11 +3,9 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
 
 class SharedPower extends BaseCard {
 
@@ -27,7 +25,7 @@ class SharedPower extends BaseCard {
 
         // Give opponent 1 mana
         
-        Game::get()->deck_manas->moveCard($mana_id, CardLocation::Hand(), $opponent_id);
+        ManaCard::addToHand($mana_id, $opponent_id);
         $cardAfter = ManaCard::get($mana_id);
         Notifications::moveManaCard($opponent_id, [$card], [$cardAfter]);
 

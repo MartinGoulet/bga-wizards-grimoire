@@ -26,7 +26,16 @@ define('WG_VAR_SKIP_INTERACTION', 'skip_interaction');
 define('WG_VAR_DISCOUNT_NEXT_SPELL', 'discount_next_spell');
 define('WG_VAR_DISCOUNT_ATTACK_SPELL', 'discount_attack_spell');
 define('WG_VAR_AMNESIA', 'amnesia');
+define('WG_VAR_IS_ACTIVE_BATTLE_VISION', 'is_active_battle_vision');
 define('WG_VAR_IS_ACTIVE_GROWTH', 'is_active_growth');
+define('WG_VAR_IS_ACTIVE_POWER_HUNGRY', 'is_active_power_hungry');
+define('WG_VAR_IS_ACTIVE_PUPPETMASTER', 'is_active_puppetmaster');
+define('WG_VAR_IS_ACTIVE_SECRET_OATH', 'is_active_secret_oath');
+define('WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST', 'cons_attk_spell');
+define('WG_VAR_PREVIOUS_BASIC_ATTACK_POWER', 'prev_basic_attack');
+define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
+define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
+define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
@@ -58,6 +67,10 @@ define('ST_CAST_SPELL_SWITCH_OPPONENT', 52);
 define('ST_CAST_SPELL_RETURN_CURRENT_PLAYER', 53);
 
 define('ST_BASIC_ATTACK', 6);
+define('ST_BASIC_ATTACK_DAMAGE', 61);
+define('ST_BASIC_ATTACK_BATTLE_VISION', 62);
+define('ST_BASIC_ATTACK_SWITCH_OPPONENT', 63);
+define('ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER', 64);
 
 define('ST_NEXT_PLAYER', 7);
 
@@ -77,7 +90,7 @@ define('WG_SPELL_ACTIVATION_ONGOING', 'ongoing');
 /**
  * Spell Type
  */
-define('WG_SPELL_TYPE_DAMAGE', 'red');
+define('WG_SPELL_TYPE_ATTACK', 'red');
 define('WG_SPELL_TYPE_REGENERATION', 'green');
 define('WG_SPELL_TYPE_UTILITY', 'purple');
 

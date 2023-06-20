@@ -3,11 +3,9 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
 
 class DrainSoul extends BaseCard {
 
@@ -25,7 +23,7 @@ class DrainSoul extends BaseCard {
         });
 
         $first_card = array_shift($cards);
-        Game::get()->deck_manas->moveCard($first_card['id'], CardLocation::Hand(), Players::getPlayerId());
+        ManaCard::addToHand($first_card['id']);
         $card_after = ManaCard::get($first_card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$first_card], [$card_after]);
 

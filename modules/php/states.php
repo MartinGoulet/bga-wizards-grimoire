@@ -23,9 +23,7 @@ trait StateTrait {
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
 
-        Globals::setDiscountAttackSpell(0);
-        Globals::setDiscountNextSpell(0);
-        Globals::setAmnesiaCount(0);
+        Globals::resetOnNewTurn();
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
@@ -85,12 +83,12 @@ trait StateTrait {
         $this->gamestate->nextState();
     }
 
-    function stCastSpellSwitchOpponent() {
+    function stSwitchToOpponent() {
         Game::get()->gamestate->changeActivePlayer(Globals::getInteractionPlayer());
         Game::get()->gamestate->nextState();
     }
 
-    function stCastSpellReturnCurrentPlayer() {
+    function stReturnToCurrentPlayer() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
         }
@@ -104,9 +102,12 @@ trait StateTrait {
     }
 
     function stNextPlayer() {
+        $this->giveExtraTime(Players::getPlayerId());
+        
         $player_id = intval($this->getActivePlayerId());
-        $this->giveExtraTime($player_id);
-        $this->activeNextPlayer();
+        if($player_id == Players::getPlayerId()) {
+            $this->activeNextPlayer();
+        }
 
         $this->gamestate->nextState();
     }

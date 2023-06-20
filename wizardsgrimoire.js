@@ -1498,7 +1498,7 @@ var WizardsGrimoire = (function () {
         Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
         log("----------------");
         arrCardType
-            .filter(function (x) { return x.debug !== "lightgreen"; })
+            .filter(function (x) { return x.debug == "red"; })
             .sort(function (a, b) { return a.name.localeCompare(b.name); })
             .sort(function (a, b) { return a.icon.localeCompare(b.icon); })
             .forEach(function (card) {

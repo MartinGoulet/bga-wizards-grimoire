@@ -126,7 +126,7 @@ class WizardsGrimoire
       // console.log(text);
       log("----------------");
       arrCardType
-         .filter((x) => x.debug !== "lightgreen")
+         .filter((x) => x.debug == "red")
          .sort((a: CardType, b: CardType) => a.name.localeCompare(b.name))
          .sort((a: CardType, b: CardType) => a.icon.localeCompare(b.icon))
          .forEach((card) => {

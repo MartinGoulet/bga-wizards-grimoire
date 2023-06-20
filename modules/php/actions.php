@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Core;
 
 use BgaSystemException;
+use BgaUserException;
 use WizardsGrimoire\Objects\CardLocation;
 
 trait ActionTrait {
@@ -33,9 +34,9 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         $cardClass->castSpell($args);
 
-        if(Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
-        } else if(sizeof($filter) > 0) {
+        } else if (sizeof($filter) > 0) {
             $this->gamestate->nextState('cast');
         } else {
             $this->gamestate->nextState('pass');
@@ -160,7 +161,7 @@ trait ActionTrait {
 
         $cost = max($cost - Globals::getDiscountNextSpell(), 0);
         Globals::setDiscountNextSpell(0);
-        if ($card_type['type'] == WG_SPELL_TYPE_DAMAGE) {
+        if ($card_type['type'] == WG_SPELL_TYPE_ATTACK) {
             $cost = max($cost - Globals::getDiscountNextSpell(), 0);
             Globals::setDiscountAttackSpell(0);
         }
@@ -187,44 +188,61 @@ trait ActionTrait {
             $mana_cards_after = [];
         }
 
-
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
-        if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
-            $cardClass = SpellCard::getInstanceOfCard($spell);
-            $cardClass->isOngoingSpellActive(true);
-            $this->gamestate->nextState("cast");
-        } else if ($card_type['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
-            Globals::setSpellPlayed(intval($spell['id']));
-            $cardClass = SpellCard::getInstanceOfCard($spell);
-            // Execute the ability of the card
-            $cardClass->castSpell($args);
+        switch ($card_type['type']) {
+            case WG_SPELL_TYPE_ATTACK:
+                Globals::incConsecutivelyAttackSpellCount(1);
+                break;
 
-            if (Globals::getSkipInteraction()) {
-                Globals::setSkipInteraction(false);
-                $this->castOrEndGame();
-                return;
-            }
+            default:
+                Globals::setConsecutivelyAttackSpellCount(0);
+                break;
+        }
 
-            $card_interaction = $card_type['interaction'] ?? "";
+        Globals::setPreviousSpellPlayed(Globals::getSpellPlayed());
+        Globals::setSpellPlayed(intval($spell['id']));
 
-            switch ($card_interaction) {
-                case 'player':
-                    Globals::setInteractionPlayer(Players::getPlayerId());
-                    $this->gamestate->nextState("player");
-                    break;
+        switch ($card_type['activation']) {
+            case WG_SPELL_ACTIVATION_ONGOING:
+                $cardClass = SpellCard::getInstanceOfCard($spell);
+                $cardClass->isOngoingSpellActive(true);
+                $this->gamestate->nextState("cast");
+                break;
 
-                case 'opponent':
-                    Globals::setInteractionPlayer(Players::getOpponentId());
-                    $this->gamestate->nextState("opponent");
-                    break;
+            case WG_SPELL_ACTIVATION_INSTANT:
+                $cardClass = SpellCard::getInstanceOfCard($spell);
+                // Execute the ability of the card
+                $cardClass->castSpell($args);
 
-                default:
+                if (Globals::getSkipInteraction()) {
+                    Globals::setSkipInteraction(false);
                     $this->castOrEndGame();
-                    break;
-            }
-        } else {
-            $this->gamestate->nextState("cast");
+                    return;
+                }
+
+                $card_interaction = $card_type['interaction'] ?? "";
+
+                switch ($card_interaction) {
+                    case 'player':
+                        Globals::setInteractionPlayer(Players::getPlayerId());
+                        $this->gamestate->nextState("player");
+                        break;
+
+                    case 'opponent':
+                        Globals::setInteractionPlayer(Players::getOpponentId());
+                        $this->gamestate->nextState("opponent");
+                        break;
+
+                    default:
+                        $this->castOrEndGame();
+                        break;
+                }
+                break;
+
+            default:
+                $this->gamestate->nextState("cast");
+                break;
         }
     }
 
@@ -259,33 +277,47 @@ trait ActionTrait {
         $opponent_id = Players::getOpponentId();
         $card = ManaCard::isInHand($mana_id, $player_id);
         $damage = ManaCard::getPower($card);
+        Globals::setCurrentBasicAttackPower($damage);
 
-        ManaCard::addOnTopOfDiscard($mana_id);
-        $card_after = ManaCard::get($mana_id);
-        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
+        // Puppetmaster verification
+        if (Globals::getIsPuppetmaster() && Globals::getPreviousBasicAttackPower() != $damage) {
+            throw new BgaUserException("The power not match the previous attack");
+        }
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
 
-        $player_ongoing_spells = SpellCard::getOngoingActiveSpells($player_id);
-        $opponent_ongoing_spells = SpellCard::getOngoingActiveSpells($opponent_id);
-
-        foreach ($player_ongoing_spells as $card_id => $card) {
-            $spell = SpellCard::getInstanceOfCard($card);
-            $spell->owner = $player_id;
-            $spell->onAfterBasicAttack($mana_id);
+        if (Globals::getIsActivePowerHungry()) {
+            ManaCard::addToHand($mana_id);
+        } else {
+            ManaCard::addOnTopOfDiscard($mana_id);
         }
 
-        foreach ($opponent_ongoing_spells as $card_id => $card) {
-            $spell = SpellCard::getInstanceOfCard($card);
-            $spell->owner = $opponent_id;
-            $spell->onAfterBasicAttack($mana_id);
-        }
+        $card_after = ManaCard::get($mana_id);
+        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else {
             $this->gamestate->nextState('attack');
+        }
+
+        Globals::setCurrentBasicAttackPower(0);
+        Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
+    }
+
+    public function blockBasicAttack($mana_id) {
+        $this->checkAction('blockBasicAttack');
+        $card = ManaCard::isInHand($mana_id);
+        $damage = ManaCard::getPower($card);
+
+        if ($damage == Globals::getCurrentBasicAttackPower()) {
+            ManaCard::addOnTopOfDiscard($mana_id);
+            $card_after = ManaCard::get($mana_id);
+            Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
+            Game::get()->gamestate->nextState("block");
+        } else {
+            throw new BgaUserException(_("Wrong Mana Power"));
         }
     }
 

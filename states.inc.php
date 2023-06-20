@@ -187,7 +187,7 @@ $castSpellsStates = [
         "phase" => 4,
         "name" => "castSpellSwitchOpponent",
         "type" => "game",
-        "action" => "stCastSpellSwitchOpponent",
+        "action" => "stSwitchToOpponent",
         "transitions" => [
             "" => ST_CAST_SPELL_INTERACTION,
         ]
@@ -211,7 +211,7 @@ $castSpellsStates = [
         "phase" => 4,
         "name" => "castSpellReturnCurrentPlayer",
         "type" => "game",
-        "action" => "stCastSpellReturnCurrentPlayer",
+        "action" => "stReturnToCurrentPlayer",
         "transitions" => [
             "" => ST_CAST_SPELL,
         ]
@@ -228,8 +228,52 @@ $basicAttackStates = [
         "type" => "activeplayer",
         "possibleactions" => ["basicAttack", "pass"],
         "transitions" => [
-            "attack" => ST_NEXT_PLAYER,
+            "attack" => ST_BASIC_ATTACK_DAMAGE,
             "pass" => ST_NEXT_PLAYER,
+            "battle_vision" => ST_BASIC_ATTACK_BATTLE_VISION,
+        ]
+    ],
+
+    ST_BASIC_ATTACK_SWITCH_OPPONENT => [
+        "phase" => 5,
+        "name" => "basicAttackSwitchOpponent",
+        "type" => "game",
+        "action" => "stSwitchToOpponent",
+        "transitions" => [
+            "" => ST_BASIC_ATTACK_BATTLE_VISION,
+        ]
+    ],
+
+    ST_BASIC_ATTACK_BATTLE_VISION => [
+        "phase" => 5,
+        "name" => "basicAttack",
+        "description" => clienttranslate('${actplayer} may discard a mana card to block the damage'),
+        "descriptionmyturn" => clienttranslate('${you} may discard a mana card to block the damage'),
+        "args" => "argBattleVision",
+        "type" => "activeplayer",
+        "possibleactions" => ["blockBasicAttack", "pass"],
+        "transitions" => [
+            "pass" => ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER,
+            "block" => ST_NEXT_PLAYER,
+        ]
+    ],
+
+    ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER => [
+        "phase" => 4,
+        "name" => "basicAttackReturnCurrentPlayer",
+        "type" => "game",
+        "action" => "stReturnToCurrentPlayer",
+        "transitions" => [
+            "" => ST_BASIC_ATTACK_DAMAGE,
+        ]
+    ],
+
+    ST_BASIC_ATTACK_DAMAGE => [
+        "phase" => 5,
+        "name" => "basicAttackDamage",
+        "type" => "game",
+        "transitions" => [
+            "attack" => ST_NEXT_PLAYER,
             "dead" => ST_PRE_END_OF_GAME,
         ]
     ],

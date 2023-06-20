@@ -48,6 +48,16 @@ class action_wizardsgrimoire extends APP_GameAction {
       self::ajaxResponse();
    }
 
+   public function blockBasicAttack() {
+      self::setAjaxMode();
+
+      $card_id = self::getArg("card_id", AT_posint, true);
+      
+      $this->game->blockBasicAttack($card_id);
+
+      self::ajaxResponse();
+   }
+
    public function discardMana() {
       self::setAjaxMode();
 

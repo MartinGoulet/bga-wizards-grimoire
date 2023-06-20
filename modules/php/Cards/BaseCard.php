@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards;
 
 use BgaSystemException;
 use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -49,6 +50,8 @@ abstract class BaseCard {
             $damage,
             $life_remaining
         );
+
+        Globals::setPreviousSpellDamage($damage);
     }
 
     protected function drawManaCards(int $nbr, int $player_id = 0) 

@@ -3,11 +3,9 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
 
 class ToxicGift extends BaseCard {
 
@@ -20,7 +18,7 @@ class ToxicGift extends BaseCard {
         $card_id = intval(array_shift($args));
         $card = ManaCard::isInHand($card_id);
 
-        Game::get()->deck_manas->moveCard($card["id"], CardLocation::Hand(), Players::getOpponentId());
+        ManaCard::addToHand($card["id"], Players::getOpponentId());
         $card_after = ManaCard::get($card_id);
         Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
 
