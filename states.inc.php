@@ -259,7 +259,7 @@ $basicAttackStates = [
     ],
 
     ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER => [
-        "phase" => 4,
+        "phase" => 5,
         "name" => "basicAttackReturnCurrentPlayer",
         "type" => "game",
         "action" => "stReturnToCurrentPlayer",
