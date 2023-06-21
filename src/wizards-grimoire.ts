@@ -131,8 +131,8 @@ class WizardsGrimoire
          .sort((a: CardType, b: CardType) => a.icon.localeCompare(b.icon))
          .forEach((card) => {
             log(card.name, ",", card.icon, ",", card.debug);
-            // log(card.description);
-            // log("----------------");
+            log(card.description);
+            log("----------------");
          });
       log("----------------");
    }

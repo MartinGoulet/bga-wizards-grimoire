@@ -84,4 +84,31 @@ class SpellCard {
 
         return $card;
     }
+
+    public static function replaceSpell($old_spell, $new_spell) {
+        $player_id = Players::getPlayerId();
+
+        // Discard old spell
+        Game::get()->deck_spells->insertCardOnExtremePosition($old_spell['id'], CardLocation::Discard(), true);
+        $discarded_card = SpellCard::get($old_spell['id']);
+        Notifications::discardSpell($player_id, $discarded_card);
+
+        // Choose spell
+        Game::get()->deck_spells->moveCard(
+            $new_spell['id'],
+            CardLocation::PlayerSpellRepertoire($player_id),
+            $old_spell['location_arg']
+        );
+
+        $card = SpellCard::get($new_spell['id']);
+        Notifications::chooseSpell($player_id, $card);
+
+        $newSpell = Game::get()->deck_spells->pickCardForLocation(
+            CardLocation::Deck(),
+            CardLocation::SpellSlot(),
+            $new_spell['location_arg'],
+        );
+
+        Notifications::refillSpell($player_id, $newSpell);
+    }
 }

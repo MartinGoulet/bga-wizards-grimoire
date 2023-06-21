@@ -1503,6 +1503,8 @@ var WizardsGrimoire = (function () {
             .sort(function (a, b) { return a.icon.localeCompare(b.icon); })
             .forEach(function (card) {
             log(card.name, ",", card.icon, ",", card.debug);
+            log(card.description);
+            log("----------------");
         });
         log("----------------");
     };

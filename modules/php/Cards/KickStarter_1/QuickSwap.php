@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class QuickSwap extends BaseCard {
 
-    // TODO
+    // Each time you discard off this spell, choose 1: deal 1 damage, or discard this spell and replace it with a new spell
 
 }

@@ -455,7 +455,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "yellow",
   ],
   42 => [
     "name" => clienttranslate("Wild bloom"),
@@ -486,7 +486,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "blue",
   ],
 
 

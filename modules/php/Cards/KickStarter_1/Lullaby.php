@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Lullaby extends BaseCard {
 
-    // TODO
+    // As long as there is mana on this spell, if you have 0 mana cards in your hand, gain 2 mana cards
 
 }

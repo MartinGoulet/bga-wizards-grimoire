@@ -8,6 +8,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class WildBloom extends BaseCard {
 
-    // TODO
+    // When you discard the last mana off this spell, you may immediately cast an instant spell of yours that has 0 mana on it for no cost
 
 }

@@ -122,28 +122,7 @@ trait ActionTrait {
             throw new BgaSystemException("Cards not found");
         }
 
-        // Discard old spell
-        Game::get()->deck_spells->insertCardOnExtremePosition($old_card_id, CardLocation::Discard(), true);
-        $discarded_card = SpellCard::get($old_card_id);
-        Notifications::discardSpell($player_id, $discarded_card);
-
-        // Choose spell
-        $this->deck_spells->moveCard(
-            $new_card_id,
-            CardLocation::PlayerSpellRepertoire($player_id),
-            $old_card['location_arg']
-        );
-
-        $card = SpellCard::get($new_card_id);
-        Notifications::chooseSpell($player_id, $card);
-
-        $newSpell = Game::get()->deck_spells->pickCardForLocation(
-            CardLocation::Deck(),
-            CardLocation::SpellSlot(),
-            $new_card['location_arg'],
-        );
-
-        Notifications::refillSpell($player_id, $newSpell);
+        SpellCard::replaceSpell($old_card, $new_card);
 
         $this->gamestate->nextState('end');
     }

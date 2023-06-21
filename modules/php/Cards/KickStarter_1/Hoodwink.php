@@ -3,11 +3,13 @@
 namespace WizardsGrimoire\Cards\KickStarter_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoire\Core\Globals;
 
 class Hoodwink extends BaseCard {
 
-    // TODO
-
+    public function castSpell($args)
+    {
+        // Deal 7 damage, minus the damage your opponent dealt their last basic attack phase
+        $this->dealDamage(7 - Globals::getPreviousBasicAttackPower());
+    }
 }
