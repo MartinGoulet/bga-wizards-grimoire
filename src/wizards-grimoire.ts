@@ -229,6 +229,14 @@ class WizardsGrimoire
       return this.gamedatas.card_types[card.type];
    }
 
+   public getPower(card: ManaCard): number {
+      let value = Number(card["type"]);
+      if (document.getElementById("table").classList.contains("wg-ongoing-spell-growth")) {
+         value++;
+      }
+      return value;
+   }
+
    public getOpponentId(): number {
       return Number(this.gamedatas.opponent_id);
    }

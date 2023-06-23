@@ -110,6 +110,20 @@ class ActionManager {
       this.returnManaCardToDeck(msg, 4, false);
    }
 
+   private actionBadFortune() {
+      const msg = _(
+         "${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order",
+      );
+
+      const { name } = this.game.getCardType(this.current_card);
+      this.game.setClientState(states.client.badFortune, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            spell: this.current_card,
+         } as BadFortuneArgs,
+      });
+   }
+
    private actionFreeze() {
       this.question({
          cancel: true,

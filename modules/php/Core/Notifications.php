@@ -4,6 +4,15 @@ namespace WizardsGrimoire\Core;
 
 class Notifications {
 
+    static function basicAttackCard(int $player_id, $mana_card) {
+        $msg = clienttranslate('${player_name} discard a ${mana_values} for is basic attack');
+        self::message($msg, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "mana_values" => [ManaCard::getPower($mana_card)],
+        ]);
+    }
+
     static function basicAttack(int $player_id, int $damage, int $life_remaining) {
         $message = clienttranslate('${player_name} received ${damage} from a basic attack');
 
@@ -46,15 +55,22 @@ class Notifications {
     }
 
     static function drawManaCards($player_id, $cards) {
+        $msg = clienttranslate('${player_name} draws ${mana_values}');
+        $args = [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_values' => self::getPowerValues($cards),
+        ];
+
+        $args['cards'] = array_values($cards);
+        self::notify($player_id, 'onDrawManaCards', $msg, $args);
+
         $msg = clienttranslate('${player_name} draws ${nbr_mana_card}');
         $args = [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
             'nbr_mana_card' => sizeof($cards),
         ];
-
-        $args['cards'] = array_values($cards);
-        self::notify($player_id, 'onDrawManaCards', $msg, $args);
 
         $args['cards'] = array_values(Game::anonynizeCards($cards));
         self::notifyAll('onDrawManaCards', $msg, $args, $player_id);
@@ -126,14 +142,10 @@ class Notifications {
     }
 
     static function revealManaCard(int $player_id, array $cards) {
-        $values = array_map(function ($card) {
-            return ManaCard::getPower($card);
-        }, $cards);
-
         self::message('${player_name} reveals ${mana_values} from mana deck', [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
-            "mana_values" => $values,
+            "mana_values" => self::getPowerValues($cards),
         ]);
     }
 
@@ -166,5 +178,11 @@ class Notifications {
 
     protected static function getPlayerName($player_id) {
         return Game::get()->getPlayerNameById($player_id);
+    }
+
+    private static function getPowerValues(array $cards) {
+        return array_map(function ($card) {
+            return ManaCard::getPower($card);
+        }, $cards);
     }
 }

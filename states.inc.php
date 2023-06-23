@@ -86,6 +86,7 @@ $chooseSpellStates = [
         "phase" => 1,
         "name" => "playerNewTurn",
         "type" => "game",
+        "args" => "argPlayerNewTurn",
         "action" => "stNewTurn",
         "transitions" => [
             "spell" => ST_CHOOSE_NEW_SPELL,
@@ -102,7 +103,7 @@ $chooseSpellStates = [
         "type" => "activeplayer",
         "possibleactions" => ["discardMana"],
         "transitions" => [
-            "" => ST_NEXT_PLAYER,
+            "" => ST_CHOOSE_NEW_SPELL,
         ]
     ],
 
@@ -224,7 +225,7 @@ $basicAttackStates = [
         "name" => "basicAttack",
         "description" => clienttranslate('${actplayer} may discard a mana card to deal damage'),
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to deal damage'),
-        "args" => "argBase",
+        "args" => "argBasicAttack",
         "type" => "activeplayer",
         "possibleactions" => ["basicAttack", "pass"],
         "transitions" => [
@@ -272,6 +273,7 @@ $basicAttackStates = [
         "phase" => 5,
         "name" => "basicAttackDamage",
         "type" => "game",
+        "action" => "stBasicAttackDamage",
         "transitions" => [
             "attack" => ST_NEXT_PLAYER,
             "dead" => ST_PRE_END_OF_GAME,

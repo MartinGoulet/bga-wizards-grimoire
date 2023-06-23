@@ -16,6 +16,9 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    players_order: number[];
    opponent_id: number;
    ongoing_spells: OngoingSpell[];
+   globals: {
+      previous_basic_attack: number;
+   };
 }
 
 interface OngoingSpell {
@@ -65,6 +68,8 @@ interface SpellInfo {
 interface ManaInfo {
    deck: ManaCard[];
    discard: ManaCard[];
+   attack: ManaCard[];
+   revealed: ManaCard[];
 }
 
 /////////////////////////////////////////////

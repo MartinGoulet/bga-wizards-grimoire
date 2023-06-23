@@ -37,7 +37,7 @@ class PlayerTable {
       const pCurrent = this.current_player.toString();
 
       const html = `
-            <div style="--color: #${pColor}" data-color="${pColor}">
+            <div style="--color: #${pColor}" data-color="${pColor}" data-current-player="${pCurrent}">
                <div id="player-table-${pId}" class="player-table whiteblock" data-discount-next-spell="0" data-discount-next-attack="0">
                   <span class="wg-title">${_("Spell Repertoire")}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
@@ -52,11 +52,17 @@ class PlayerTable {
                </div>
                <div class="player-table whiteblock player-hand">
                   <span class="wg-title">${_("Hand")}</span>
-                  <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-current-player="${pCurrent}" data-my-hand="${pCurrent}"></div>
+                  <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-my-hand="${pCurrent}"></div>
+                  <div id="player-table-${pId}-extra-icons" class="player-table-extra-icons"></div>
                </div>
             </div>`;
 
       dojo.place(html, "tables");
+
+      if (this.current_player) {
+         this.setupPuppetMaster();
+      }
+      this.setupGrowth();
 
       this.spell_repertoire = new SlotStock(
          game.spellsManager,
@@ -189,6 +195,14 @@ class PlayerTable {
          return this.game.tableCenter.manaDiscard;
       }
 
+      if (card.location == "manarevealed") {
+         return this.game.tableCenter.manaRevealed;
+      }
+
+      if (card.location == "basicattack") {
+         return this.game.tableCenter.basicAttack;
+      }
+
       const index = Number(card.location.substring(card.location.length - 1));
       return this.mana_cooldown[index];
    }
@@ -209,7 +223,52 @@ class PlayerTable {
       this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
    }
 
+   setPreviousBasicAttack(value: number) {
+      const id = `puppetmaster_icon_${this.player_id}`;
+      const el = document.getElementById(id);
+      if (el == null) return;
+      el.innerText = value.toString();
+   }
+
    private getPlayerTableDiv() {
       return document.getElementById(`player-table-${this.player_id}`);
+   }
+
+   private setupPuppetMaster() {
+      const id = `puppetmaster_icon_${this.player_id}`;
+
+      dojo.place(
+         `<div id="${id}" class="puppetmaster_icon icon"></div>`,
+         `player-table-${this.player_id}-extra-icons`,
+      );
+      this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
+      this.game.setTooltip(
+         id,
+         `<div>
+               <h3>${_("Puppetmaster")}</h3>
+               <span>${_("You must use a mana of the same power as the previous basic attack phase")}</span>
+            </div>`,
+      );
+      document.getElementById(id).addEventListener("click", () => {
+         (this.game as any).tooltips[id].open(id);
+      });
+   }
+
+   private setupGrowth() {
+      const id = `growth_icon_${this.player_id}`;
+      dojo.place(
+         `<div id="${id}" class="growth_icon icon"></div>`,
+         `player-table-${this.player_id}-extra-icons`,
+      );
+      this.game.setTooltip(
+         id,
+         `<div>
+               <h3>${_("Growth")}</h3>
+               <span>${_("Increase the power of all mana by 1")}</span>
+            </div>`,
+      );
+      document.getElementById(id).addEventListener("click", () => {
+         (this.game as any).tooltips[id].open(id);
+      });
    }
 }

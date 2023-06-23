@@ -104,11 +104,11 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, $value);
     }
 
-    public static function getIsPuppetmaster() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER)) == Players::getPlayerId();
+    public static function getIsActivePuppetmaster() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER)) == Players::getOpponentId();
     }
 
-    public static function setIsPuppetmaster(bool $isActive) {
+    public static function setIsActivePuppetmaster(bool $isActive) {
         $value = $isActive ? Players::getPlayerId() : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER, $value);
     }

@@ -20,6 +20,8 @@ class DiscardManaStates implements StateHandler {
    }
 
    onLeavingState(): void {
+      if (!this.game.isCurrentPlayerActive()) return;
+
       this.player_table.hand.setSelectionMode("none");
       this.player_table.hand.onSelectionChange = null;
       this.nbr_cards_to_discard = 0;

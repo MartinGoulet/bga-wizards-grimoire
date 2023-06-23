@@ -19,6 +19,14 @@ class CardLocation {
         return 'slot';
     }
 
+    static function ManaRevelead() {
+        return 'manarevealed';
+    }
+
+    static function BasicAttack() {
+        return 'basicattack';
+    }
+
     static function PlayerSpellRepertoire(int $player_id) {
         return "spr_$player_id";
     }

@@ -42,6 +42,7 @@ use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
+use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
@@ -261,6 +262,12 @@ class WizardsGrimoire extends Table {
             'discard' => array_values(
                 $this->deck_manas->getCardsInLocation(CardLocation::Discard())
             ),
+            "attack" => array_values(
+                $this->deck_manas->getCardsInLocation(CardLocation::BasicAttack())
+            ),
+            "revealed" => array_values(
+                $this->deck_manas->getCardsInLocation(CardLocation::ManaRevelead())
+            )
         ];
 
         $players = self::loadPlayersBasicInfos();
@@ -288,6 +295,10 @@ class WizardsGrimoire extends Table {
         $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
 
         $result['opponent_id'] = Players::getOpponentId();
+
+        $result['globals'] = [
+            "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
+        ];
 
         return $result;
     }
@@ -493,8 +504,20 @@ class WizardsGrimoire extends Table {
     public function debugNotif() {
         // $cards = $this->deck_manas->getCardsOnTop(3, CardLocation::Deck());
         // Notifications::revealManaCard($this->getActivePlayerId(), $cards);
-        $spell = SpellCard::get(65);
-        $cardClass = SpellCard::getInstanceOfCard($spell);
-        $cardClass->isOngoingSpellActive(true);
+
+        // $spell = SpellCard::get(65);
+        // $cardClass = SpellCard::getInstanceOfCard($spell);
+        // $cardClass->isOngoingSpellActive(true);
+
+        // foreach ($this->deck_manas->getCardsOnTop(46, CardLocation::Deck()) as $card_id => $card) {
+        //     ManaCard::addOnTopOfDiscard($card['id']);
+        // }
+        // ManaCard::Draw(3);
+
+        // Globals::setIsActiveGrowth(false);
+        // Globals::setIsActivePuppetmaster(true);
+
+        ManaCard::discardManaFromSpell(1);
+        ManaCard::discardManaFromSpell(1);
     }
 }

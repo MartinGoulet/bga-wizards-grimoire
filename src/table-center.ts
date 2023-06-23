@@ -11,8 +11,15 @@ class TableCenter {
    public spellPool: SlotStock<SpellCard>;
 
    public manaDiscardDisplay: LineStock<ManaCard>;
+   public manaRevealed: LineStock<ManaCard>;
+   public basicAttack: LineStock<ManaCard>;
 
    constructor(private game: WizardsGrimoire) {
+      dojo.place(`<span class="wg-title">${_("Basic Attack")}</span>`, "basic-attack-wrapper");
+      dojo.place(`<div id="basic-attack"></div>`, "basic-attack-wrapper");
+      dojo.place(`<span class="wg-title">${_("Revealed Mana")}</span>`, "mana-revealed-wrapper");
+      dojo.place(`<div id="mana-revealed"></div>`, "mana-revealed-wrapper");
+
       this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
       this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
       this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
@@ -30,6 +37,11 @@ class TableCenter {
          document.getElementById("mana-discard-display"),
          { gap: "2px" },
       );
+      this.manaRevealed = new LineStock(game.manasManager, document.getElementById("mana-revealed"), {
+         gap: "10px",
+      });
+      this.basicAttack = new LineStock(game.manasManager, document.getElementById("basic-attack"));
+
       this.manaDiscardDisplay.setSelectionMode("multiple");
 
       game.gamedatas.spells.deck.forEach((card) => {
@@ -41,6 +53,9 @@ class TableCenter {
       game.gamedatas.spells.discard.forEach((card) => {
          this.spellDiscard.addCard(card);
       });
+      this.basicAttack.addCards(game.gamedatas.manas.attack);
+      this.manaRevealed.addCards(game.gamedatas.manas.revealed);
+
       const sortAscending = (a: ManaCard, b: ManaCard) => Number(a.location_arg) - Number(b.location_arg);
       game.gamedatas.manas.discard.sort(sortAscending).forEach((card) => {
          this.manaDiscard.addCard(card);

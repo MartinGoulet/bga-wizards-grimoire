@@ -542,7 +542,7 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionGuiltyBond",
-    "debug" => "lightgreen",
+    "debug" => "blue",
   ],
   50 => [
     "name" => clienttranslate("Trance state"),
@@ -630,7 +630,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   58 => [
     "name" => clienttranslate("Mirror image"),
@@ -696,7 +696,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "blue",
+    "debug" => "lightgreen",
   ],
   64 => [
     "name" => clienttranslate("Contamination"),
@@ -760,7 +760,9 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "blue",
+    "interaction" => "player",
+    "js_actions_interaction" => "actionBadFortune",
+    "debug" => "lightgreen",
   ],
   70 => [
     "name" => clienttranslate("Force of nature"),
@@ -770,7 +772,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "blue",
+    "debug" => "yellow",
   ],
 ];
 

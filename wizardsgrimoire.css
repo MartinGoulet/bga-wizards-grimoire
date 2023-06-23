@@ -843,24 +843,60 @@ body > .card {
 }
 
 #mana-discard-display {
-  display: none;
-}
-
-.gamestate_client_selectManaDiscard #mana-discard-display {
   --width: 100px;
   --height: 140px;
-  display: flex;
+  display: none;
   width: 100%;
   row-gap: 10px;
   border: 2px solid black;
   padding: 25px 25px 25px 50px;
   border-radius: 10px;
 }
-.gamestate_client_selectManaDiscard #mana-discard-display .wg-card {
+#mana-discard-display .wg-card {
   margin-left: -25px;
 }
-.gamestate_client_selectManaDiscard #mana-discard-display .wg-card:hover {
+#mana-discard-display .wg-card:hover {
   z-index: 1000;
+}
+
+.gamestate_client_selectManaDiscard #mana-discard-display {
+  display: flex;
+}
+
+#zones {
+  display: flex;
+  width: 100%;
+  column-gap: 10px;
+}
+
+#basic-attack-wrapper,
+#mana-revealed-wrapper {
+  --color: black;
+  padding-top: 25px;
+  border: 2px solid black;
+  border-radius: 10px;
+  row-gap: 10px;
+  min-height: 150px;
+  --width: 100px;
+  --height: 140px;
+}
+#basic-attack-wrapper .wg-card:hover,
+#mana-revealed-wrapper .wg-card:hover {
+  z-index: 1000;
+}
+
+#basic-attack-wrapper {
+  width: 140px;
+}
+#basic-attack-wrapper #basic-attack {
+  margin-top: 5px;
+}
+
+#mana-revealed-wrapper {
+  flex-grow: 1;
+}
+#mana-revealed-wrapper #mana-revealed {
+  margin-top: 5px;
 }
 
 .player-table {
@@ -908,12 +944,49 @@ body > .card {
 }
 .player-table.player-hand {
   margin-top: 20px;
+  position: relative;
 }
 .player-table .hand {
   --width: 100px;
   --height: 140px;
   min-height: 150px;
   margin-top: 20px;
+}
+
+.player-table-extra-icons {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  top: -7px;
+  right: 20px;
+  margin: -10px 0 0 0;
+}
+.player-table-extra-icons .icon {
+  width: 40px;
+  height: 40px;
+  background-image: url("img/spell-front.jpg");
+  background-size: 1000px 980px;
+  border-radius: 10px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: none;
+}
+
+.wg-ongoing-spell-puppetmaster [data-current-player=true] .puppetmaster_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -230px;
+  background-position-y: -855px;
+}
+
+.wg-ongoing-spell-growth .growth_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -130px;
+  background-position-y: -427px;
 }
 
 #wg-phases-wrapper {
@@ -1206,12 +1279,4 @@ body > .card {
 #bga-jump-to_controls {
   display: flex;
   flex-direction: column;
-}
-
-#bga-jump-to_spell-pool {
-  order: 50;
-}
-
-#bga-jump-to_table-center {
-  order: 51;
 }

@@ -25,27 +25,70 @@
 }
 
 #mana-discard-display {
+   --width: 100px;
+   --height: 140px;
    display: none;
-}
+   width: 100%;
+   row-gap: 10px;
+   border: 2px solid black;
+   padding: 25px 25px 25px 50px;
+   border-radius: 10px;
 
-.gamestate_client_selectManaDiscard {
+   .wg-card {
+      margin-left: -25px;
 
-   #mana-discard-display {
-      --width: 100px;
-      --height: 140px;
-      display: flex;
-      width: 100%;
-      row-gap: 10px;
-      border: 2px solid black;
-      padding: 25px 25px 25px 50px;
-      border-radius: 10px;
-
-      .wg-card {
-         margin-left: -25px;
-
-         &:hover {
-            z-index: 1000;
-         }
+      &:hover {
+         z-index: 1000;
       }
    }
 }
+
+.gamestate_client_selectManaDiscard {
+   #mana-discard-display {
+      display: flex;
+   }
+}
+
+#zones {
+   display: flex;
+   width: 100%;
+   column-gap: 10px;
+}
+
+#basic-attack-wrapper,
+#mana-revealed-wrapper {
+   --color: black;
+   padding-top: 25px;
+   border: 2px solid black;
+   border-radius: 10px;
+   row-gap: 10px;
+   min-height: 150px;
+   --width: 100px;
+   --height: 140px;
+
+   .wg-card {
+      // margin-left: -25px;
+
+      &:hover {
+         z-index: 1000;
+      }
+   }
+}
+
+#basic-attack-wrapper {
+   width: 140px;
+   #basic-attack {
+      margin-top: 5px;
+   }
+}
+
+#mana-revealed-wrapper {
+   flex-grow: 1;
+   #mana-revealed {
+      margin-top: 5px;
+   }
+}
+
+// #table[data-phase="5"] #basic-attack-wrapper {
+//    display: block;
+// }

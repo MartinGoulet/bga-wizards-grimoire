@@ -1,5 +1,6 @@
 const states = {
    client: {
+      badFortune: "client_badFortune",
       castSpellWithMana: "client_castSpellWithMana",
       question: "client_question",
       selectMana: "client_selectMana",
@@ -15,6 +16,7 @@ const states = {
       chooseNewSpell: "chooseNewSpell",
       basicAttack: "basicAttack",
       activateDelayedSpell: "activateDelayedSpell",
+      playerNewTurn: "playerNewTurn",
    },
 };
 
@@ -24,6 +26,7 @@ class StateManager {
 
    constructor(private game: WizardsGrimoire) {
       this.states = {
+         [states.client.badFortune]: new BadFortuneStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
          [states.client.question]: new QuestionStates(game),
          [states.client.selectMana]: new SelectManaStates(game),
@@ -38,6 +41,7 @@ class StateManager {
          [states.server.castSpell]: new CastSpellStates(game),
          [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
+         [states.server.playerNewTurn]: new PlayerNewTurnStates(game),
       };
    }
 
@@ -52,6 +56,7 @@ class StateManager {
 
       if (args.args?.ongoing_spells) {
          args.args.ongoing_spells.forEach((value) => {
+            if (value.active) log(value);
             this.game.toggleOngoingSpell(value);
          });
       }

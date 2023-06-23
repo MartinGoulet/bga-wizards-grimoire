@@ -31,5 +31,6 @@ class GameOptions {
 
    public setPhase(phase: number) {
       document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
+      document.getElementById("table").dataset.phase = phase.toString();
    }
 }

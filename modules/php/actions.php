@@ -253,36 +253,22 @@ trait ActionTrait {
     public function basicAttack(int $mana_id) {
         $this->checkAction('basicAttack');
         $player_id = Players::getPlayerId();
-        $opponent_id = Players::getOpponentId();
         $card = ManaCard::isInHand($mana_id, $player_id);
         $damage = ManaCard::getPower($card);
-        Globals::setCurrentBasicAttackPower($damage);
 
         // Puppetmaster verification
-        if (Globals::getIsPuppetmaster() && Globals::getPreviousBasicAttackPower() != $damage) {
+        if (Globals::getIsActivePuppetmaster() && Globals::getPreviousBasicAttackPower() != $damage) {
             throw new BgaUserException("The power not match the previous attack");
         }
 
-        $life_remaining = Players::dealDamage($damage, $opponent_id);
-        Notifications::basicAttack($opponent_id, $damage, $life_remaining);
+        Globals::setCurrentBasicAttackPower($damage);
 
-        if (Globals::getIsActivePowerHungry()) {
-            ManaCard::addToHand($mana_id);
-        } else {
-            ManaCard::addOnTopOfDiscard($mana_id);
-        }
-
+        Game::get()->deck_manas->moveCard($mana_id, CardLocation::BasicAttack());
         $card_after = ManaCard::get($mana_id);
-        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
+        Notifications::basicAttackCard($player_id, $card);
+        Notifications::moveManaCard($player_id, [$card], [$card_after], "@@@", false);
 
-        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
-            $this->gamestate->nextState('dead');
-        } else {
-            $this->gamestate->nextState('attack');
-        }
-
-        Globals::setCurrentBasicAttackPower(0);
-        Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
+        $this->gamestate->nextState(Globals::getIsActiveBattleVision() ? "battle_vision" : "attack");
     }
 
     public function blockBasicAttack($mana_id) {
@@ -302,6 +288,11 @@ trait ActionTrait {
 
     public function pass() {
         $this->checkAction('pass');
+
+        if($this->gamestate->state_id() == ST_BASIC_ATTACK) {
+            Globals::setPreviousBasicAttackPower(0);
+        }
+
         $this->gamestate->nextState('pass');
     }
 

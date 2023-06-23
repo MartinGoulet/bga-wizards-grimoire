@@ -39,11 +39,6 @@ define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
-/**
- * Ongoing spell variables
- */
-define('WG_ONGOING_SPELL_ACTIVE_GROWTH', 'growth');
-
 /*
  * State constants
  */

@@ -53,8 +53,10 @@
         "src/states/basic-attack.ts",
 
         "src/states/activate-delayed-spell.ts",
+        "src/states/bad-fortune.ts",
         "src/states/cast-spell-with-mana.ts",
         "src/states/question.ts",
+        "src/states/player-new-turn.ts",
         "src/states/select-mana.ts",
         "src/states/select-mana-deck.ts",
         "src/states/select-mana-discard.ts",

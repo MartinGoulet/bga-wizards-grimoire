@@ -1,12 +1,15 @@
 class BasicAttackStates implements StateHandler {
    constructor(private game: WizardsGrimoire) {}
 
-   onEnteringState(args: any): void {
+   onEnteringState(args: BasicAttackStates): void {
       if (!this.game.isCurrentPlayerActive()) return;
       const player_table = this.game.getPlayerTable(this.game.getPlayerId());
       const { hand } = player_table;
 
       hand.setSelectionMode("single");
+      debugger;
+      hand.setSelectableCards(args.allowed_manas);
+
       hand.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
          this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
       };
@@ -18,7 +21,7 @@ class BasicAttackStates implements StateHandler {
       hand.onSelectionChange = null;
    }
 
-   onUpdateActionButtons(args: any): void {
+   onUpdateActionButtons(args: BasicAttackStates): void {
       const handleCastSpell = () => {
          const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
          const selectedMana: SpellCard = hand.getSelection()[0];
@@ -32,4 +35,8 @@ class BasicAttackStates implements StateHandler {
    }
 
    restoreGameState() {}
+}
+
+interface BasicAttackStates {
+   allowed_manas: ManaCard[];
 }

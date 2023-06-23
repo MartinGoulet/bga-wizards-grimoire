@@ -101,6 +101,35 @@ trait StateTrait {
         $this->gamestate->setPlayersMultiactive([$player_id], 'next', true);
     }
 
+    function stBasicAttackDamage() {
+        $opponent_id = Players::getOpponentId();
+        $player_id = Players::getPlayerId();
+        $damage = Globals::getCurrentBasicAttackPower();
+
+        $card = ManaCard::getBasicAttack();
+
+        $life_remaining = Players::dealDamage($damage, $opponent_id);
+        Notifications::basicAttack($opponent_id, $damage, $life_remaining);
+
+        if (Globals::getIsActivePowerHungry()) {
+            ManaCard::addToHand($card['id']);
+        } else {
+            ManaCard::addOnTopOfDiscard($card['id']);
+        }
+
+        $card_after = ManaCard::get($card['id']);
+        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
+
+        Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
+        Globals::setCurrentBasicAttackPower(0);
+
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->gamestate->nextState('attack');
+        }
+    }
+
     function stNextPlayer() {
         $this->giveExtraTime(Players::getPlayerId());
         

@@ -123,6 +123,11 @@ class ManaCard {
         return Game::get()->deck_manas->getCard($card_id);
     }
 
+    public static function getBasicAttack() {
+        $cards = Game::get()->deck_manas->getCardsInLocation(CardLocation::BasicAttack());
+        return array_shift($cards);
+    }
+
     public static function getCards($card_ids) {
         return Game::get()->deck_manas->getCards($card_ids);
     }
@@ -225,8 +230,37 @@ class ManaCard {
     }
 
     public static function revealFromDeck($count) {
-        $cards = Game::get()->deck_manas->getCardsOnTop($count, CardLocation::Deck());
-        Notifications::revealManaCard(Players::getPlayerId(), $cards);
-        return $cards;
+        $deck = Game::get()->deck_manas;
+        $card_left = $deck->countCardInLocation(CardLocation::Deck());
+        
+        
+        if ($card_left >= $count) {
+            $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
+            $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
+            Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
+            $cards_after = $deck->getCardsInLocation(CardLocation::ManaRevelead());
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+            return $mana_cards;
+
+        } else {
+            $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
+            $mana_cards_1 = $deck->pickCardsForLocation($card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
+            Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_1);
+            $cards_after = $deck->getCardsInLocation(CardLocation::ManaRevelead());
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+
+            self::reshuffle();
+
+            $cards_before = $deck->getCardsOnTop($count - $card_left, CardLocation::Deck());
+            $mana_cards_2 = $deck->pickCardsForLocation($count - $card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
+            Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_2);
+            $card_ids = array_values(array_map(function($card) { return $card['id'];}, $cards_before));
+            $cards_after = $deck->getCards($card_ids);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+
+            return array_merge($mana_cards_1, $mana_cards_2);
+        }
+
+
     }
 }

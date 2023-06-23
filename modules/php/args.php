@@ -18,6 +18,12 @@ trait ArgsTrait {
         return $this->getArgsBase();
     }
 
+    function argPlayerNewTurn() {
+        return [
+            "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
+        ];
+    }
+
     function argActivateDelayedSpell() {
         $args = $this->getArgsBase();
         $args["spells"] = Globals::getCoolDownDelayedSpellIds(true);
@@ -43,17 +49,47 @@ trait ArgsTrait {
         return $args;
     }
 
-
+    function argBasicAttack() {
+        $cards = ManaCard::getHand();
+        if(Globals::getIsActivePuppetmaster()) {
+            $value = Globals::getPreviousBasicAttackPower();
+            $cards = array_filter($cards, function($card) use($value) {
+                return ManaCard::getPower($card) == $value;
+            });
+        }
+        $args = $this->getArgsBase();
+        $args["allowed_manas"] = array_values($cards);
+        return $args;
+    }
 
     //////////////////////////////////////////
     // Private methods
 
     private function getArgsBase() {
-        $result = [];
-        $result['ongoing_spells'] = [];
-        $result['ongoing_spells'][] = [
-            "name" => WG_ONGOING_SPELL_ACTIVE_GROWTH, "active" => Globals::getIsActiveGrowth()
+        $ongoing_spell = [
+            [
+                "name" => "battlevision",
+                "active" => Globals::getIsActiveBattleVision(),
+            ],
+            [
+                "name" => "growth",
+                "active" => Globals::getIsActiveGrowth(),
+            ],
+            [
+                "name" => "puppetmaster",
+                "active" => Globals::getIsActivePuppetmaster(),
+            ],
+            [
+                "name" => "powerhungry",
+                "active" => Globals::getIsActivePowerHungry(),
+            ],
+            [
+                "name" => "secretoath",
+                "active" => Globals::getIsActiveSecretOath(),
+            ]
         ];
+
+        $result = ['ongoing_spells' => array_values($ongoing_spell)];
 
         return $result;
     }

@@ -1578,6 +1578,13 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.getCardType = function (card) {
         return this.gamedatas.card_types[card.type];
     };
+    WizardsGrimoire.prototype.getPower = function (card) {
+        var value = Number(card["type"]);
+        if (document.getElementById("table").classList.contains("wg-ongoing-spell-growth")) {
+            value++;
+        }
+        return value;
+    };
     WizardsGrimoire.prototype.getOpponentId = function () {
         return Number(this.gamedatas.opponent_id);
     };
@@ -1867,6 +1874,16 @@ var ActionManager = (function () {
     ActionManager.prototype.actionArcaneTactics = function () {
         var msg = _("${you} may select ${nbr} mana card from your hand");
         this.returnManaCardToDeck(msg, 4, false);
+    };
+    ActionManager.prototype.actionBadFortune = function () {
+        var msg = _("${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order");
+        var name = this.game.getCardType(this.current_card).name;
+        this.game.setClientState(states.client.badFortune, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                spell: this.current_card,
+            },
+        });
     };
     ActionManager.prototype.actionFreeze = function () {
         var _this = this;
@@ -2352,6 +2369,7 @@ var NotificationManager = (function () {
 }());
 var states = {
     client: {
+        badFortune: "client_badFortune",
         castSpellWithMana: "client_castSpellWithMana",
         question: "client_question",
         selectMana: "client_selectMana",
@@ -2367,6 +2385,7 @@ var states = {
         chooseNewSpell: "chooseNewSpell",
         basicAttack: "basicAttack",
         activateDelayedSpell: "activateDelayedSpell",
+        playerNewTurn: "playerNewTurn",
     },
 };
 var StateManager = (function () {
@@ -2375,6 +2394,7 @@ var StateManager = (function () {
         this.game = game;
         this.client_states = [];
         this.states = (_a = {},
+            _a[states.client.badFortune] = new BadFortuneStates(game),
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
             _a[states.client.question] = new QuestionStates(game),
             _a[states.client.selectMana] = new SelectManaStates(game),
@@ -2388,6 +2408,7 @@ var StateManager = (function () {
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
+            _a[states.server.playerNewTurn] = new PlayerNewTurnStates(game),
             _a);
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
@@ -2402,6 +2423,8 @@ var StateManager = (function () {
         }
         if ((_a = args.args) === null || _a === void 0 ? void 0 : _a.ongoing_spells) {
             args.args.ongoing_spells.forEach(function (value) {
+                if (value.active)
+                    log(value);
                 _this.game.toggleOngoingSpell(value);
             });
         }
@@ -2472,8 +2495,12 @@ var PlayerTable = (function () {
         this.current_player = this.player_id == this.game.getPlayerId();
         var pId = player.id, pName = player.name, pColor = player.color;
         var pCurrent = this.current_player.toString();
-        var html = "\n            <div style=\"--color: #".concat(pColor, "\" data-color=\"").concat(pColor, "\">\n               <div id=\"player-table-").concat(pId, "\" class=\"player-table whiteblock\" data-discount-next-spell=\"0\" data-discount-next-attack=\"0\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-current-player=\"").concat(pCurrent, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n               </div>\n            </div>");
+        var html = "\n            <div style=\"--color: #".concat(pColor, "\" data-color=\"").concat(pColor, "\" data-current-player=\"").concat(pCurrent, "\">\n               <div id=\"player-table-").concat(pId, "\" class=\"player-table whiteblock\" data-discount-next-spell=\"0\" data-discount-next-attack=\"0\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         dojo.place(html, "tables");
+        if (this.current_player) {
+            this.setupPuppetMaster();
+        }
+        this.setupGrowth();
         this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
             slotsIds: [1, 2, 3, 4, 5, 6],
             slotClasses: ["wg-spell-slot"],
@@ -2608,6 +2635,12 @@ var PlayerTable = (function () {
         if (card.location == "discard") {
             return this.game.tableCenter.manaDiscard;
         }
+        if (card.location == "manarevealed") {
+            return this.game.tableCenter.manaRevealed;
+        }
+        if (card.location == "basicattack") {
+            return this.game.tableCenter.basicAttack;
+        }
         var index = Number(card.location.substring(card.location.length - 1));
         return this.mana_cooldown[index];
     };
@@ -2623,8 +2656,34 @@ var PlayerTable = (function () {
     PlayerTable.prototype.setDiscountNextSpell = function (amount) {
         this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
     };
+    PlayerTable.prototype.setPreviousBasicAttack = function (value) {
+        var id = "puppetmaster_icon_".concat(this.player_id);
+        var el = document.getElementById(id);
+        if (el == null)
+            return;
+        el.innerText = value.toString();
+    };
     PlayerTable.prototype.getPlayerTableDiv = function () {
         return document.getElementById("player-table-".concat(this.player_id));
+    };
+    PlayerTable.prototype.setupPuppetMaster = function () {
+        var _this = this;
+        var id = "puppetmaster_icon_".concat(this.player_id);
+        dojo.place("<div id=\"".concat(id, "\" class=\"puppetmaster_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
+        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Puppetmaster"), "</h3>\n               <span>").concat(_("You must use a mana of the same power as the previous basic attack phase"), "</span>\n            </div>"));
+        document.getElementById(id).addEventListener("click", function () {
+            _this.game.tooltips[id].open(id);
+        });
+    };
+    PlayerTable.prototype.setupGrowth = function () {
+        var _this = this;
+        var id = "growth_icon_".concat(this.player_id);
+        dojo.place("<div id=\"".concat(id, "\" class=\"growth_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Growth"), "</h3>\n               <span>").concat(_("Increase the power of all mana by 1"), "</span>\n            </div>"));
+        document.getElementById(id).addEventListener("click", function () {
+            _this.game.tooltips[id].open(id);
+        });
     };
     return PlayerTable;
 }());
@@ -2634,6 +2693,10 @@ var TableCenter = (function () {
     function TableCenter(game) {
         var _this = this;
         this.game = game;
+        dojo.place("<span class=\"wg-title\">".concat(_("Basic Attack"), "</span>"), "basic-attack-wrapper");
+        dojo.place("<div id=\"basic-attack\"></div>", "basic-attack-wrapper");
+        dojo.place("<span class=\"wg-title\">".concat(_("Revealed Mana"), "</span>"), "mana-revealed-wrapper");
+        dojo.place("<div id=\"mana-revealed\"></div>", "mana-revealed-wrapper");
         this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
         this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
         this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
@@ -2645,6 +2708,10 @@ var TableCenter = (function () {
             direction: "column",
         });
         this.manaDiscardDisplay = new LineStock(game.manasManager, document.getElementById("mana-discard-display"), { gap: "2px" });
+        this.manaRevealed = new LineStock(game.manasManager, document.getElementById("mana-revealed"), {
+            gap: "10px",
+        });
+        this.basicAttack = new LineStock(game.manasManager, document.getElementById("basic-attack"));
         this.manaDiscardDisplay.setSelectionMode("multiple");
         game.gamedatas.spells.deck.forEach(function (card) {
             _this.spellDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
@@ -2655,6 +2722,8 @@ var TableCenter = (function () {
         game.gamedatas.spells.discard.forEach(function (card) {
             _this.spellDiscard.addCard(card);
         });
+        this.basicAttack.addCards(game.gamedatas.manas.attack);
+        this.manaRevealed.addCards(game.gamedatas.manas.revealed);
         var sortAscending = function (a, b) { return Number(a.location_arg) - Number(b.location_arg); };
         game.gamedatas.manas.discard.sort(sortAscending).forEach(function (card) {
             _this.manaDiscard.addCard(card);
@@ -2716,6 +2785,7 @@ var GameOptions = (function () {
     }
     GameOptions.prototype.setPhase = function (phase) {
         document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
+        document.getElementById("table").dataset.phase = phase.toString();
     };
     return GameOptions;
 }());
@@ -2737,6 +2807,8 @@ var DiscardManaStates = (function () {
         this.player_table.hand.onSelectionChange = handleChange;
     };
     DiscardManaStates.prototype.onLeavingState = function () {
+        if (!this.game.isCurrentPlayerActive())
+            return;
         this.player_table.hand.setSelectionMode("none");
         this.player_table.hand.onSelectionChange = null;
         this.nbr_cards_to_discard = 0;
@@ -2938,6 +3010,8 @@ var BasicAttackStates = (function () {
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
         var hand = player_table.hand;
         hand.setSelectionMode("single");
+        debugger;
+        hand.setSelectableCards(args.allowed_manas);
         hand.onSelectionChange = function (selection, lastChange) {
             _this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
         };
@@ -2998,6 +3072,76 @@ var ActivateDelayedSpellStates = (function () {
     };
     ActivateDelayedSpellStates.prototype.restoreGameState = function () { };
     return ActivateDelayedSpellStates;
+}());
+var BadFortuneStates = (function () {
+    function BadFortuneStates(game) {
+        this.game = game;
+    }
+    BadFortuneStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.deck_cards = [];
+        this.spell_cards = [];
+        this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        this.spell_cooldown = this.player_table.mana_cooldown[Number(args.spell.location_arg)];
+        var handleManaRevealedClick = function (card) {
+            if (_this.game.getPower(card) == 1) {
+                _this.spell_cooldown.addCard(card);
+                _this.spell_cards.push(card);
+            }
+            else {
+                _this.game.tableCenter.manaDeck.addCard(card);
+                _this.deck_cards.push(card);
+            }
+            _this.game.enableButton("btnCancel", "gray");
+            _this.game.toggleButtonEnable("btnConfirm", _this.isAllManaCardDistributed(), "blue");
+        };
+        var handleReturn = function (cards) {
+            if (cards.length == 0)
+                return;
+            var card = cards.pop();
+            _this.game.tableCenter.manaRevealed.addCard(card);
+            _this.game.toggleButtonEnable("btnCancel", _this.spell_cards.length > 0 || _this.deck_cards.length > 0, "gray");
+            _this.game.toggleButtonEnable("btnConfirm", _this.isAllManaCardDistributed(), "blue");
+        };
+        this.game.tableCenter.manaRevealed.onCardClick = handleManaRevealedClick;
+        this.game.tableCenter.manaDeck.onCardClick = function () { return handleReturn(_this.deck_cards); };
+        this.spell_cooldown.onCardClick = function () { return handleReturn(_this.spell_cards); };
+    };
+    BadFortuneStates.prototype.onLeavingState = function () {
+        this.deck_cards = [];
+        this.spell_cards = [];
+        this.game.tableCenter.manaRevealed.onCardClick = null;
+        this.game.tableCenter.manaDeck.onCardClick = null;
+        this.spell_cooldown.onCardClick = null;
+    };
+    BadFortuneStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            if (!_this.isAllManaCardDistributed())
+                return;
+            var cards = __spreadArray(__spreadArray([], _this.spell_cards, true), _this.deck_cards, true);
+            _this.game.actionManager.addArgument(cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        var handleCancel = function () {
+            _this.game.tableCenter.manaRevealed.addCards(_this.spell_cards.splice(0, _this.spell_cards.length));
+            _this.game.tableCenter.manaRevealed.addCards(_this.deck_cards.splice(0, _this.deck_cards.length));
+            _this.game.disableButton("btnConfirm");
+        };
+        this.game.addActionButton("btnConfirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonGray("btnCancel", _("Cancel"), handleCancel);
+        this.game.disableButton("btnConfirm");
+        this.game.disableButton("btnCancel");
+    };
+    BadFortuneStates.prototype.restoreGameState = function () {
+        throw new Error("Method not implemented.");
+    };
+    BadFortuneStates.prototype.isAllManaCardDistributed = function () {
+        return this.spell_cards.length + this.deck_cards.length == 3;
+    };
+    return BadFortuneStates;
 }());
 var CastSpellWithManaStates = (function () {
     function CastSpellWithManaStates(game) {
@@ -3098,6 +3242,22 @@ var QuestionStates = (function () {
     };
     QuestionStates.prototype.restoreGameState = function () { };
     return QuestionStates;
+}());
+var PlayerNewTurnStates = (function () {
+    function PlayerNewTurnStates(game) {
+        this.game = game;
+    }
+    PlayerNewTurnStates.prototype.onEnteringState = function (args) {
+        this.game.playersTables.forEach(function (table) {
+            table.setPreviousBasicAttack(args.previous_basic_attack);
+        });
+        if (!this.game.isCurrentPlayerActive())
+            return;
+    };
+    PlayerNewTurnStates.prototype.onLeavingState = function () { };
+    PlayerNewTurnStates.prototype.onUpdateActionButtons = function (args) { };
+    PlayerNewTurnStates.prototype.restoreGameState = function () { };
+    return PlayerNewTurnStates;
 }());
 var SelectManaStates = (function () {
     function SelectManaStates(game) {
