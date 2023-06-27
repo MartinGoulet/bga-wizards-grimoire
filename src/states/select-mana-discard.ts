@@ -43,8 +43,11 @@ class SelectManaDiscardStates implements StateHandler {
       this.game.addActionButtonClientCancel();
    }
    restoreGameState() {
-      this.game.tableCenter.moveManaDiscardPile(false);
-      this.game.tableCenter.manaDiscardDisplay.onSelectionChange = null;
+      return new Promise<boolean>((resolve) => {
+         this.game.tableCenter.moveManaDiscardPile(false);
+         this.game.tableCenter.manaDiscardDisplay.onSelectionChange = null;
+         resolve(true);
+      });
    }
 }
 

@@ -24,6 +24,7 @@ trait StateTrait {
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
 
         Globals::resetOnNewTurn();
+        Events::onPlayerNewTurn();
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
@@ -79,7 +80,7 @@ trait StateTrait {
     }
 
     function stGainMana() {
-        ManaCard::Draw(3);
+        ManaCard::draw(3);
         $this->gamestate->nextState();
     }
 
@@ -111,15 +112,16 @@ trait StateTrait {
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
 
-        if (Globals::getIsActivePowerHungry()) {
-            ManaCard::addToHand($card['id']);
-        } else {
-            ManaCard::addOnTopOfDiscard($card['id']);
-        }
+        // if (Globals::getIsActivePowerHungry()) {
+        //     ManaCard::addToHand($card['id']);
+        // } else {
+        //     ManaCard::addOnTopOfDiscard($card['id']);
+        // }
 
-        $card_after = ManaCard::get($card['id']);
-        Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
+        // $card_after = ManaCard::get($card['id']);
+        // Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
 
+        
         Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
         Globals::setCurrentBasicAttackPower(0);
 
@@ -128,6 +130,21 @@ trait StateTrait {
         } else {
             $this->gamestate->nextState('attack');
         }
+    }
+
+    function stBasicAttackEnd() {
+        $card = ManaCard::getBasicAttack();
+
+        if (Globals::getIsActivePowerHungry()) {
+            ManaCard::addToHand($card['id']);
+        } else {
+            ManaCard::addOnTopOfDiscard($card['id']);
+        }
+
+        $card_after = ManaCard::get($card['id']);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "", false);
+
+        $this->gamestate->nextState();
     }
 
     function stNextPlayer() {

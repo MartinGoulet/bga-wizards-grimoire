@@ -13,7 +13,7 @@ class Wrath extends BaseCard {
 
     public function castSpell($args) {
         // Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage.
-        if(ManaCard::getHandCount(Players::getOpponentId()) < 2) {
+        if (ManaCard::getHandCount(Players::getOpponentId()) < 2) {
             Globals::setSkipInteraction(true);
             $this->castSpellInteraction(null);
         }
@@ -22,7 +22,7 @@ class Wrath extends BaseCard {
     public function castSpellInteraction($args) {
         if ($args != null && $args != "") {
             $mana_ids = explode(",", array_shift($args));
-            if(sizeof($mana_ids) !== 2) {
+            if (sizeof($mana_ids) !== 2) {
                 throw new BgaSystemException("You must select exactly 2 mana cards");
             }
             $opponent_id = Players::getOpponentId();
@@ -40,6 +40,5 @@ class Wrath extends BaseCard {
         } else {
             $this->dealDamage(2);
         }
-
     }
 }

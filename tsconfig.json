@@ -51,6 +51,7 @@
         "src/states/cast-spell-interaction.ts",
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
+        "src/states/basic-attack-battle-vision.ts",
 
         "src/states/activate-delayed-spell.ts",
         "src/states/bad-fortune.ts",

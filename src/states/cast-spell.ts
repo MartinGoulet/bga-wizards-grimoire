@@ -51,7 +51,9 @@ class CastSpellStates implements StateHandler {
       }
    }
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 
    hasSpellAvailable() {
       const nbr_empty_deck = this.game

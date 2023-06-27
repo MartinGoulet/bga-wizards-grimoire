@@ -81,9 +81,12 @@ class SelectManaDeckStates implements StateHandler {
    }
 
    restoreGameState() {
-      this.player_table.getManaDecks().forEach((deck) => {
-         deck.setDeckIsSelectable(false);
-         deck.onDeckSelectionChanged = null;
+      return new Promise<boolean>((resolve) => {
+         this.player_table.getManaDecks().forEach((deck) => {
+            deck.setDeckIsSelectable(false);
+            deck.onDeckSelectionChanged = null;
+         });
+         resolve(true);
       });
    }
 }

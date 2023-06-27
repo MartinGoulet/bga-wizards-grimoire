@@ -231,7 +231,7 @@ $basicAttackStates = [
         "transitions" => [
             "attack" => ST_BASIC_ATTACK_DAMAGE,
             "pass" => ST_NEXT_PLAYER,
-            "battle_vision" => ST_BASIC_ATTACK_BATTLE_VISION,
+            "battle_vision" => ST_BASIC_ATTACK_SWITCH_OPPONENT,
         ]
     ],
 
@@ -247,7 +247,7 @@ $basicAttackStates = [
 
     ST_BASIC_ATTACK_BATTLE_VISION => [
         "phase" => 5,
-        "name" => "basicAttack",
+        "name" => "basicAttackBattleVision",
         "description" => clienttranslate('${actplayer} may discard a mana card to block the damage'),
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to block the damage'),
         "args" => "argBattleVision",
@@ -255,7 +255,7 @@ $basicAttackStates = [
         "possibleactions" => ["blockBasicAttack", "pass"],
         "transitions" => [
             "pass" => ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER,
-            "block" => ST_NEXT_PLAYER,
+            "block" => ST_BASIC_ATTACK_END,
         ]
     ],
 
@@ -275,8 +275,19 @@ $basicAttackStates = [
         "type" => "game",
         "action" => "stBasicAttackDamage",
         "transitions" => [
-            "attack" => ST_NEXT_PLAYER,
+            "attack" => ST_BASIC_ATTACK_END,
             "dead" => ST_PRE_END_OF_GAME,
+        ]
+    ],
+
+
+    ST_BASIC_ATTACK_END => [
+        "phase" => 5,
+        "name" => "basicAttackDamageEnd",
+        "type" => "game",
+        "action" => "stBasicAttackEnd",
+        "transitions" => [
+            "" => ST_NEXT_PLAYER,
         ]
     ],
 

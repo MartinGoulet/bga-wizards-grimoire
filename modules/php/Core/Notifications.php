@@ -149,6 +149,14 @@ class Notifications {
         ]);
     }
 
+    static function revealManaCardHand(int $player_id, array $cards) {
+        self::message('${player_name} reveals ${mana_values} from his hand', [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "mana_values" => self::getPowerValues($cards),
+        ]);
+    }
+
     static function spellNoEffect() {
         self::message(clienttranslate("The spell has no effect since requirement was not met"));
     }

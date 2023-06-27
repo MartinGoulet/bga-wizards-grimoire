@@ -73,7 +73,7 @@ class BadFortuneStates implements StateHandler {
    }
 
    restoreGameState() {
-      throw new Error("Method not implemented.");
+      return new Promise<boolean>((resolve) => resolve(true));
    }
 
    isAllManaCardDistributed() {

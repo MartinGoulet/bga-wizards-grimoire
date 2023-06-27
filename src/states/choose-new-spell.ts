@@ -87,7 +87,9 @@ class ChooseNewSpellStates implements StateHandler {
       }
    }
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 
    clearSelectionMode(): void {
       this.game.tableCenter.spellPool.setSelectionMode("none");

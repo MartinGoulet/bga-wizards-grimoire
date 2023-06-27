@@ -1,7 +1,7 @@
 class SelectManaStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    onEnteringState(args: SelectManaDeckArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -69,7 +69,10 @@ class SelectManaStates implements StateHandler {
    }
 
    restoreGameState() {
-      this.player_table.getManaDecks().forEach((deck) => deck.unselectAll());
+      return new Promise<boolean>((resolve) => {
+         this.player_table.getManaDecks().forEach((deck) => deck.unselectAll());
+         resolve(true);
+      });
    }
 }
 

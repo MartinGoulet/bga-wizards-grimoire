@@ -21,7 +21,7 @@ class DanceOfPain extends BaseCard {
         } else if ($hand_count < 2) {
             $this->drawManaCards(2 - $hand_count);
         } else {
-            $card_ids = explode(",", $args);
+            $card_ids = explode(",", array_shift($args));
             if (sizeof($card_ids) != ($hand_count - 2)) {
                 $nbr_to_discard = $hand_count - 2;
                 throw new BgaSystemException("Must discard " . $nbr_to_discard  . " cards");
@@ -29,12 +29,11 @@ class DanceOfPain extends BaseCard {
 
             $cards = ManaCard::getCards($card_ids);
             $cards_after = [];
-            foreach ($cards as $card_id) {
-                ManaCard::addOnTopOfDiscard($card_id);
-                $cards_after[] =  ManaCard::get($card_id);
+            foreach ($cards as $card_id => $card) {
+                ManaCard::addOnTopOfDiscard($card['id']);
+                $cards_after[] =  ManaCard::get($card['id']);
             }
             Notifications::moveManaCard(Players::getPlayerId(), $cards, $cards_after);
-            
         }
     }
 }

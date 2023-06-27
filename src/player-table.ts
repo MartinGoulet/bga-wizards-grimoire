@@ -37,8 +37,8 @@ class PlayerTable {
       const pCurrent = this.current_player.toString();
 
       const html = `
-            <div style="--color: #${pColor}" data-color="${pColor}" data-current-player="${pCurrent}">
-               <div id="player-table-${pId}" class="player-table whiteblock" data-discount-next-spell="0" data-discount-next-attack="0">
+            <div id="player-table-${pId}" style="--color: #${pColor}" data-color="${pColor}" data-current-player="${pCurrent}" data-discount-next-spell="0" data-discount-next-attack="0">
+               <div class="player-table whiteblock">
                   <span class="wg-title">${_("Spell Repertoire")}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
                   <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
@@ -60,9 +60,13 @@ class PlayerTable {
       dojo.place(html, "tables");
 
       if (this.current_player) {
+         this.setupSecondStrike();
+         this.setupBattleVision();
          this.setupPuppetMaster();
+         this.setupSecretOath();
+         this.setupGrowth();
+         this.setupPowerHungry();
       }
-      this.setupGrowth();
 
       this.spell_repertoire = new SlotStock(
          game.spellsManager,
@@ -234,23 +238,13 @@ class PlayerTable {
       return document.getElementById(`player-table-${this.player_id}`);
    }
 
-   private setupPuppetMaster() {
-      const id = `puppetmaster_icon_${this.player_id}`;
-
-      dojo.place(
-         `<div id="${id}" class="puppetmaster_icon icon"></div>`,
-         `player-table-${this.player_id}-extra-icons`,
-      );
-      this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
-      this.game.setTooltip(
-         id,
-         `<div>
-               <h3>${_("Puppetmaster")}</h3>
-               <span>${_("You must use a mana of the same power as the previous basic attack phase")}</span>
-            </div>`,
-      );
-      document.getElementById(id).addEventListener("click", () => {
-         (this.game as any).tooltips[id].open(id);
+   private setupBattleVision() {
+      this.setupIcon({
+         id: "battlevision",
+         title: _("Battle vision"),
+         gametext: _(
+            "When you basic attacks, your opponent may discard a mana card of the same power from his hand to block the damage",
+         ),
       });
    }
 
@@ -271,4 +265,79 @@ class PlayerTable {
          (this.game as any).tooltips[id].open(id);
       });
    }
+
+   private setupPuppetMaster() {
+      const id = `puppetmaster_icon_${this.player_id}`;
+
+      dojo.place(
+         `<div id="${id}" class="puppetmaster_icon icon"></div>`,
+         `player-table-${this.player_id}-extra-icons`,
+      );
+      this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
+      this.game.setTooltip(
+         id,
+         `<div>
+               <h3>${_("Puppetmaster")}</h3>
+               <span>${_("You must use a mana of the same power as the previous basic attack phase")}</span>
+            </div>`,
+      );
+      document.getElementById(id).addEventListener("click", () => {
+         (this.game as any).tooltips[id].open(id);
+      });
+   }
+
+   private setupPowerHungry() {
+      this.setupIcon({
+         id: "powerhungry",
+         title: _("Power hungry"),
+         gametext: _("Your basic attack mana card go to the opponent's hand instead of the discard pile"),
+      });
+   }
+
+   private setupSecondStrike() {
+      this.setupIcon({
+         id: "secondstrike",
+         title: _("Second strike"),
+         gametext: _("The next time you cast an attack spell this turn, it costs 1 less."),
+      });
+   }
+
+   private setupSecretOath() {
+      const id = `secretoath_icon_${this.player_id}`;
+      dojo.place(
+         `<div id="${id}" class="secretoath_icon icon"></div>`,
+         `player-table-${this.player_id}-extra-icons`,
+      );
+      this.game.setTooltip(
+         id,
+         `<div>
+               <h3>${_("Secret Oath")}</h3>
+               <span>${_(
+                  "If you have a 4 power mana in your hand, you must give it to your opponent immediately",
+               )}</span>
+            </div>`,
+      );
+      document.getElementById(id).addEventListener("click", () => {
+         (this.game as any).tooltips[id].open(id);
+      });
+   }
+
+   private setupIcon({ id, title, gametext }: SetupIconArgs) {
+      const cssClass = id;
+      id = `${id}_${this.player_id}`;
+      dojo.place(
+         `<div id="${id}" class="${cssClass}_icon icon"></div>`,
+         `player-table-${this.player_id}-extra-icons`,
+      );
+      this.game.setTooltip(id, `<div><h3>${title}</h3><span>${_(gametext)}</span></div>`);
+      document.getElementById(id).addEventListener("click", () => {
+         (this.game as any).tooltips[id].open(id);
+      });
+   }
+}
+
+interface SetupIconArgs {
+   id: string;
+   title: string;
+   gametext: string;
 }

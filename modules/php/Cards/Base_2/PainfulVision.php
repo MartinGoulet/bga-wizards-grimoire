@@ -16,7 +16,7 @@ class PainfulVision extends BaseCard {
         foreach ($spells as $spell_id => $spell) {
             $position = SpellCard::getPositionInRepertoire($spell);
             $count = ManaCard::countOnTopOfManaCoolDown($position);
-            if($count == 1) {
+            if ($count == 1) {
                 ManaCard::dealFromDeckToManaCoolDown($position);
             }
         }

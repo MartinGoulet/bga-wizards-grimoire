@@ -141,14 +141,14 @@ trait ActionTrait {
         $cost = max($cost - Globals::getDiscountNextSpell(), 0);
         Globals::setDiscountNextSpell(0);
         if ($card_type['type'] == WG_SPELL_TYPE_ATTACK) {
-            $cost = max($cost - Globals::getDiscountNextSpell(), 0);
+            $cost = max($cost - Globals::getDiscountAttackSpell(), 0);
             Globals::setDiscountAttackSpell(0);
         }
 
         if ($cost == 0 && sizeof($mana_ids) == 1 && $mana_ids[0] == "") {
             // Free card
         } else if (sizeof($mana_ids) !== $cost) {
-            throw new BgaSystemException("Not the right amount of mana required" . sizeof($mana_ids) . " : " . $cost);
+            throw new BgaSystemException("Not the right amount of mana required " . sizeof($mana_ids) . " : " . $cost);
         }
 
         if ($cost > 0) {
@@ -268,18 +268,24 @@ trait ActionTrait {
         Notifications::basicAttackCard($player_id, $card);
         Notifications::moveManaCard($player_id, [$card], [$card_after], "@@@", false);
 
-        $this->gamestate->nextState(Globals::getIsActiveBattleVision() ? "battle_vision" : "attack");
+        if (Globals::getIsActiveBattleVision()) {
+            Globals::setInteractionPlayer(Players::getOpponentId());
+            $this->gamestate->nextState("battle_vision");
+        } else {
+            $this->gamestate->nextState("attack");
+        }
     }
 
     public function blockBasicAttack($mana_id) {
         $this->checkAction('blockBasicAttack');
-        $card = ManaCard::isInHand($mana_id);
+        $card = ManaCard::isInHand($mana_id, Players::getOpponentId());
         $damage = ManaCard::getPower($card);
 
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
             $card_after = ManaCard::get($mana_id);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
+
             Game::get()->gamestate->nextState("block");
         } else {
             throw new BgaUserException(_("Wrong Mana Power"));
@@ -289,7 +295,7 @@ trait ActionTrait {
     public function pass() {
         $this->checkAction('pass');
 
-        if($this->gamestate->state_id() == ST_BASIC_ATTACK) {
+        if ($this->gamestate->state_id() == ST_BASIC_ATTACK) {
             Globals::setPreviousBasicAttackPower(0);
         }
 

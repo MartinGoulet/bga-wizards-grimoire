@@ -9,22 +9,21 @@ use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 
 class Contamination extends BaseCard {
-    
-    public function castSpell($args)
-    {
+
+    public function castSpell($args) {
         // Place 2 mana cards from your hand on the mana deck. If you do, deal 4 damage
-        if($args == null || $args = "") {
+        if (sizeof($args) < 1) {
             Notifications::spellNoEffect();
             return;
         }
 
-        $card_ids = explode(",", $args);
+        $card_ids = explode(",", array_shift($args));
         $cards = [];
-        foreach($card_ids as $card_id) {
-            $cards == ManaCard::isInHand($card_id);
+        foreach ($card_ids as $card_id) {
+            $cards[] = ManaCard::isInHand($card_id);
         }
 
-        if(sizeof($cards) != 2) {
+        if (sizeof($cards) != 2) {
             throw new BgaSystemException("Need 2 cards");
         }
 
@@ -35,5 +34,6 @@ class Contamination extends BaseCard {
         }
 
         Notifications::moveManaCard(Players::getPlayerId(), $cards, $cards_after);
+        $this->dealDamage(4);
     }
 }

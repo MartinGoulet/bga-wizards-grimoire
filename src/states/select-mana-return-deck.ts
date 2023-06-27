@@ -2,7 +2,7 @@ class SelectManaReturnDeckStates implements StateHandler {
    private mana_cards: ManaCard[];
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    onEnteringState(args: SelectManaReturnDeckStatesArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -15,13 +15,15 @@ class SelectManaReturnDeckStates implements StateHandler {
          this.game.tableCenter.manaDeck.addCard({ ...card, type: null, isHidden: true });
          this.game.toggleButtonEnable("btnConfirm", this.mana_cards.length === count);
          this.game.toggleButtonEnable("btnCancelAction", this.mana_cards.length > 0, "gray");
+         this.game.toggleButtonEnable("btn_pass", this.mana_cards.length == 0, "red");
       };
 
       const handleDeckCardClick = (card: ManaCard) => {
          if (this.mana_cards.length > 0) {
             this.moveCardFromManaDeckToHand();
             this.game.toggleButtonEnable("btnConfirm", this.mana_cards.length === count);
-            this.game.toggleButtonEnable("btnCancelAction", this.mana_cards.length > 0);
+            this.game.toggleButtonEnable("btnCancelAction", this.mana_cards.length > 0, "gray");
+            this.game.toggleButtonEnable("btn_pass", this.mana_cards.length == 0, "red");
          }
       };
 
@@ -42,6 +44,14 @@ class SelectManaReturnDeckStates implements StateHandler {
       };
 
       this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+
+      if (args.canPass) {
+         const handlePass = () => {
+            this.game.actionManager.activateNextAction();
+         };
+         this.game.addActionButtonRed("btn_pass", _("Pass"), handlePass);
+      }
+
       if (args.canCancel) {
          this.game.addActionButtonClientCancel();
       } else {
@@ -53,9 +63,12 @@ class SelectManaReturnDeckStates implements StateHandler {
    }
 
    restoreGameState() {
-      this.restore();
-      this.game.disableButton("btnConfirm");
-      this.game.disableButton("btnCancelAction");
+      return new Promise<boolean>(async (resolve) => {
+         await this.restore();
+         this.game.disableButton("btnConfirm");
+         this.game.disableButton("btnCancelAction");
+         resolve(true);
+      });
    }
 
    private async restore() {
@@ -79,4 +92,5 @@ interface SelectManaReturnDeckStatesArgs {
    count: number;
    exact: boolean;
    canCancel: boolean;
+   canPass: boolean;
 }

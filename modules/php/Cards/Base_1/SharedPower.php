@@ -13,7 +13,7 @@ class SharedPower extends BaseCard {
 
         // You may give your opponent 1 mana card from your hand. 
         // If you do, gain 4 mana cards
-        if(sizeof($args) == 0) {
+        if (sizeof($args) == 0) {
             Notifications::spellNoEffect();
             return;
         }
@@ -24,7 +24,7 @@ class SharedPower extends BaseCard {
         $card = ManaCard::isInHand($mana_id);
 
         // Give opponent 1 mana
-        
+
         ManaCard::addToHand($mana_id, $opponent_id);
         $cardAfter = ManaCard::get($mana_id);
         Notifications::moveManaCard($opponent_id, [$card], [$cardAfter]);

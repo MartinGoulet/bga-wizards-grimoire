@@ -15,6 +15,7 @@ const states = {
       castSpellInteraction: "castSpellInteraction",
       chooseNewSpell: "chooseNewSpell",
       basicAttack: "basicAttack",
+      basicAttackBattleVision: "basicAttackBattleVision",
       activateDelayedSpell: "activateDelayedSpell",
       playerNewTurn: "playerNewTurn",
    },
@@ -38,6 +39,7 @@ class StateManager {
          [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.discardMana]: new DiscardManaStates(game),
          [states.server.basicAttack]: new BasicAttackStates(game),
+         [states.server.basicAttackBattleVision]: new BasicAttackBattleVisionStates(game),
          [states.server.castSpell]: new CastSpellStates(game),
          [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
@@ -92,10 +94,13 @@ class StateManager {
       }
    }
 
-   restoreGameState() {
-      while (this.client_states.length > 0) {
-         const state = this.client_states.pop();
-         state.restoreGameState();
-      }
+   async restoreGameState() {
+      return new Promise(async (resolve) => {
+         while (this.client_states.length > 0) {
+            const state = this.client_states.pop();
+            await state.restoreGameState();
+         }
+         resolve(true);
+      });
    }
 }

@@ -2,9 +2,9 @@
 
 namespace WizardsGrimoire\Cards\Base_2;
 
-use ValueError;
 use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 
 class Possessed extends BaseCard {
@@ -18,7 +18,13 @@ class Possessed extends BaseCard {
             $this->dealDamage(5);
         } else {
             $card_id = intval(array_shift($args));
+
             $card = ManaCard::isInHand($card_id, Players::getOpponentId());
+            ManaCard::addToHand($card_id);
+
+            $card_after = ManaCard::get($card_id);
+            Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
+
             $this->dealDamage(5 - ManaCard::getPower($card));
         }
     }

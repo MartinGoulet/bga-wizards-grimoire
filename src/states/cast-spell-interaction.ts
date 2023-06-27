@@ -15,7 +15,9 @@ class CastSpellInteractionStates implements StateHandler {
 
    onUpdateActionButtons(args: CastSpellInteractionArgs): void {}
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }
 
 interface CastSpellInteractionArgs {

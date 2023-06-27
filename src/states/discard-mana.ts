@@ -40,5 +40,7 @@ class DiscardManaStates implements StateHandler {
       this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
    }
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }

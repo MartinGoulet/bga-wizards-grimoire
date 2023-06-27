@@ -51,7 +51,7 @@ class action_wizardsgrimoire extends APP_GameAction {
    public function blockBasicAttack() {
       self::setAjaxMode();
 
-      $card_id = self::getArg("card_id", AT_posint, true);
+      $card_id = self::getArg("id", AT_posint, true);
       
       $this->game->blockBasicAttack($card_id);
 

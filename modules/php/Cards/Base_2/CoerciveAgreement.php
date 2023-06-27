@@ -28,12 +28,18 @@ class CoerciveAgreement extends BaseCard {
             }, $random_cards);
             Game::get()->deck_manas->moveCards($ids, CardLocation::Hand(), Players::getPlayerId());
             $cards_after = ManaCard::getCards($ids);
-            Notifications::moveManaCard($opponent_id, $random_cards, $cards_after);
+            Notifications::moveManaCard($opponent_id, $random_cards, $cards_after, "@@@", false);
         } else {
-            $position = intval(array_shift($args));
-            ManaCard::discardManaFromSpell($position);
-            $position = intval(array_shift($args));
-            ManaCard::discardManaFromSpell($position);
+            $values = explode(',', array_shift($args));
+
+            if (sizeof($values) > 0) {
+                $position = intval(array_shift($values));
+                ManaCard::discardManaFromSpell($position);
+            }
+            if (sizeof($values) > 0) {
+                $position = intval(array_shift($values));
+                ManaCard::discardManaFromSpell($position);
+            }
         }
     }
 }

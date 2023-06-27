@@ -261,6 +261,56 @@ class ActionManager {
       });
    }
 
+   private actionCoerciveAgreement() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Take up to 3 randomly selected mana from your opponent's hand"),
+               action: () => {
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Discard a mana card off 2 of your other spells"),
+               action: () => {
+                  this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card"), false);
+               },
+            },
+         ],
+      });
+   }
+
+   private actionContamination() {
+      const msg = _("${you} may select ${nbr} mana card from your hand to your deck");
+      this.returnManaCardToDeck(msg, 2, true, true);
+   }
+
+   private actionDanceOfPain() {
+      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      if (player_table.hand.getCards().length <= 2) {
+         this.activateNextAction();
+         return;
+      }
+
+      const count = player_table.hand.getCards().length - 2;
+      this.selectManaHand(count, _("${you} must select ${nbr} mana card to discard"), true);
+   }
+
+   private actionDelusion() {
+      this.actionSelectManaCoolDownOpponent(true);
+   }
+
+   private actionPossessed() {
+      this.selectManaHand(1, _("${you} may give ${nbr} mana card from your hand to reduce damage"), true, {
+         canCancel: false,
+         skip: {
+            label: _("Pass"),
+            message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+         },
+      });
+   }
+
    private actionSilentSupport() {
       this.actions.push("actionSelectManaFrom");
       this.activateNextAction();
@@ -335,7 +385,7 @@ class ActionManager {
       });
    }
 
-   private actionSelectManaCoolDownOpponent() {
+   private actionSelectManaCoolDownOpponent(canIgnore: boolean = false) {
       const msg = _("Select a mana card under one of your opponent's spell");
       const { name } = this.game.getCardType(this.current_card);
 
@@ -353,7 +403,14 @@ class ActionManager {
          count: 1,
          exact: true,
          exclude,
+         ignore: null,
       };
+
+      if (canIgnore) {
+         args.ignore = () => {
+            this.activateNextAction();
+         };
+      }
 
       this.game.setClientState(states.client.selectManaDeck, {
          descriptionmyturn: _(name) + " : " + msg,
@@ -495,10 +552,10 @@ class ActionManager {
       });
    }
 
-   private returnManaCardToDeck(msg: string, count: number, canCancel: boolean) {
+   private returnManaCardToDeck(msg: string, count: number, canCancel: boolean, canPass: boolean = false) {
       msg = msg.replace("${nbr}", count.toString());
 
-      const args = { count, canCancel, exact: true };
+      const args = { count, canCancel, exact: true, canPass } as SelectManaReturnDeckStatesArgs;
 
       const { name } = this.game.getCardType(this.current_card);
       this.game.setClientState(states.client.selectManaReturnDeck, {

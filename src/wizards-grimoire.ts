@@ -102,37 +102,15 @@ class WizardsGrimoire
       const arrCardType: CardType[] = [];
       Object.keys(gamedatas.card_types).forEach((index) => arrCardType.push(gamedatas.card_types[index]));
 
-      // const level1 = arrCardType
-      //    .filter((x) => x.icon == "Base_1")
-      //    .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
-      //    .map((x) => `${x.debug} : ${x.name}`);
-
-      // const level2 = arrCardType
-      //    .filter((x) => x.icon == "Base_2")
-      //    .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
-      //    .map((x) => `${x.debug} : ${x.name}`);
-
-      // const expansion = arrCardType
-      //    .filter((x) => x.icon == "KickStarter_1")
-      //    .sort((a: CardType, b: CardType) => a.debug.localeCompare(b.debug))
-      //    .map((x) => `${x.debug} : ${x.name}`);
-
-      // const text = {
-      //    level1,
-      //    level2,
-      //    expansion,
-      // };
-
-      // console.log(text);
       log("----------------");
       arrCardType
-         .filter((x) => x.debug == "red")
+         .filter((x) => x.debug !== "lightgreen")
          .sort((a: CardType, b: CardType) => a.name.localeCompare(b.name))
          .sort((a: CardType, b: CardType) => a.icon.localeCompare(b.icon))
          .forEach((card) => {
             log(card.name, ",", card.icon, ",", card.debug);
-            log(card.description);
-            log("----------------");
+            // log(card.description);
+            // log("----------------");
          });
       log("----------------");
    }
@@ -254,10 +232,10 @@ class WizardsGrimoire
       div.classList.add("wg-selected");
    }
 
-   restoreGameState() {
+   async restoreGameState() {
       log("restoreGameState");
       this.actionManager.reset();
-      this.stateManager.restoreGameState();
+      await this.stateManager.restoreGameState();
       this.clearSelection();
       this.restoreServerGameState();
    }
@@ -364,9 +342,4 @@ class WizardsGrimoire
       let value = rawText.replace(",", ",<br />").replace(":", ":<br />");
       return "<p>" + value.split(".").join(".</p><p>") + "</p>";
    }
-}
-
-let cardId = 200000;
-function getCardId() {
-   return cardId++;
 }

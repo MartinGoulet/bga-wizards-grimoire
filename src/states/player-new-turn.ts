@@ -13,7 +13,9 @@ class PlayerNewTurnStates implements StateHandler {
 
    onUpdateActionButtons(args: any): void {}
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }
 
 interface PlayerNewTurnArgs {

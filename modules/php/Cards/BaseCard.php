@@ -26,14 +26,6 @@ abstract class BaseCard {
         
     }
 
-    public function onManaDiscard($mana, $spell) {
-        throw new BgaSystemException('Not implemented : onManaDiscard of ' . get_class($this));
-    }
-
-    public function onAfterBasicAttack($mana_id) {
-
-    }
-
     protected function dealDamage(int $damage, int $opponent_id = -1) {
 
         if($opponent_id <= 0) {
@@ -56,7 +48,7 @@ abstract class BaseCard {
 
     protected function drawManaCards(int $nbr, int $player_id = 0) 
     {
-        return ManaCard::Draw($nbr, $player_id);
+        return ManaCard::draw($nbr, $player_id);
     }
 
     protected function getCardName() {

@@ -43,7 +43,7 @@ class ManaCard {
         return Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
 
-    public static function Draw($count, $player_id = 0) {
+    public static function draw($count, $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -54,7 +54,7 @@ class ManaCard {
         if ($card_left >= $count) {
             $mana_cards = $deck->pickCards($count, CardLocation::Deck(), $player_id);
             Notifications::drawManaCards($player_id, $mana_cards);
-            return $mana_cards;
+            $result = $mana_cards;
         } else {
             $mana_cards_1 = $deck->pickCards($card_left, CardLocation::Deck(), $player_id);
             Notifications::drawManaCards($player_id, $mana_cards_1);
@@ -64,8 +64,12 @@ class ManaCard {
             $mana_cards_2 = $deck->pickCards($count - $card_left, CardLocation::Deck(), $player_id);
             Notifications::drawManaCards($player_id, $mana_cards_2);
 
-            return array_merge($mana_cards_1, $mana_cards_2);
+            $result = array_merge($mana_cards_1, $mana_cards_2);
         }
+
+        $result = Events::onManaDrawed($result);
+
+        return $result;
     }
 
     public static function drawFromManaCoolDown(int $position, int $player_id = 0) {
@@ -232,8 +236,8 @@ class ManaCard {
     public static function revealFromDeck($count) {
         $deck = Game::get()->deck_manas;
         $card_left = $deck->countCardInLocation(CardLocation::Deck());
-        
-        
+
+
         if ($card_left >= $count) {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
             $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
@@ -241,7 +245,6 @@ class ManaCard {
             $cards_after = $deck->getCardsInLocation(CardLocation::ManaRevelead());
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
             return $mana_cards;
-
         } else {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
             $mana_cards_1 = $deck->pickCardsForLocation($card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
@@ -254,13 +257,13 @@ class ManaCard {
             $cards_before = $deck->getCardsOnTop($count - $card_left, CardLocation::Deck());
             $mana_cards_2 = $deck->pickCardsForLocation($count - $card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_2);
-            $card_ids = array_values(array_map(function($card) { return $card['id'];}, $cards_before));
+            $card_ids = array_values(array_map(function ($card) {
+                return $card['id'];
+            }, $cards_before));
             $cards_after = $deck->getCards($card_ids);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
 
             return array_merge($mana_cards_1, $mana_cards_2);
         }
-
-
     }
 }

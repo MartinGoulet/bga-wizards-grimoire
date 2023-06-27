@@ -12,7 +12,7 @@ class IceStorm extends BaseCard {
         $total = 0;
         for ($i = 1; $i <= 6; $i++) {
             $count = ManaCard::countOnTopOfManaCoolDown($i);
-            if ($count > 0) {
+            if ($count == 1) {
                 $total++;
             }
         }

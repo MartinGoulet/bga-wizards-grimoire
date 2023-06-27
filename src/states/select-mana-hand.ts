@@ -1,7 +1,7 @@
 class SelectManaHandStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    onEnteringState(args: SelectManaDeckArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -64,7 +64,11 @@ class SelectManaHandStates implements StateHandler {
       this.game.toggleButtonEnable("btn_confirm", !args.exact);
    }
 
-   restoreGameState() { }
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => {
+         resolve(true);
+      });
+   }
 }
 
 interface SelectManaDeckArgs {

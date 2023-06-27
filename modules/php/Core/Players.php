@@ -32,6 +32,9 @@ class Players extends \APP_DbObject {
         $player_id = self::getPlayerId();
         return intval(Game::get()->getNextPlayerTable()[$player_id]);
     }
+    public static function getOpponentIdOf(int $player_id) {
+        return intval(Game::get()->getNextPlayerTable()[$player_id]);
+    }
 
     public static function getPlayerLife(int $player_id) {
         $sql = "SELECT player_score FROM player WHERE player_id = $player_id";

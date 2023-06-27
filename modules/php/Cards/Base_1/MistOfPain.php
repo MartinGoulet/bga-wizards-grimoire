@@ -25,7 +25,7 @@ class MistOfPain extends BaseCard {
 
         if ($args != null && $args != "") {
             $mana_ids = explode(",", array_shift($args));
-            if(sizeof($mana_ids) > 4) {
+            if (sizeof($mana_ids) > 4) {
                 throw new BgaSystemException("Too much cards");
             }
             $count = sizeof($mana_ids);

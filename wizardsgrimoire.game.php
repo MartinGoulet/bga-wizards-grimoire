@@ -35,6 +35,7 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
 require_once('modules/php/actions.php');
 require_once('modules/php/args.php');
+require_once('modules/php/debug.php');
 require_once('modules/php/states.php');
 require_once('modules/php/constants.inc.php');
 
@@ -46,12 +47,14 @@ use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
+use WizardsGrimoire\DebugTrait;
 use WizardsGrimoire\Objects\CardLocation;
 
 class WizardsGrimoire extends Table {
     use ActionTrait;
     use ArgsTrait;
     use StateTrait;
+    use DebugTrait;
 
     /** @var WizardsGrimoire */
     public static $instance = null;
@@ -499,25 +502,5 @@ class WizardsGrimoire extends Table {
     // Exposing protected method translation
     public static function translate($text) {
         return self::_($text);
-    }
-
-    public function debugNotif() {
-        // $cards = $this->deck_manas->getCardsOnTop(3, CardLocation::Deck());
-        // Notifications::revealManaCard($this->getActivePlayerId(), $cards);
-
-        // $spell = SpellCard::get(65);
-        // $cardClass = SpellCard::getInstanceOfCard($spell);
-        // $cardClass->isOngoingSpellActive(true);
-
-        // foreach ($this->deck_manas->getCardsOnTop(46, CardLocation::Deck()) as $card_id => $card) {
-        //     ManaCard::addOnTopOfDiscard($card['id']);
-        // }
-        // ManaCard::Draw(3);
-
-        // Globals::setIsActiveGrowth(false);
-        // Globals::setIsActivePuppetmaster(true);
-
-        ManaCard::discardManaFromSpell(1);
-        ManaCard::discardManaFromSpell(1);
     }
 }

@@ -90,13 +90,18 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH)) == Players::getPlayerId();
     }
 
+    public static function getIsActiveGrowthPlayer() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH));
+    }
+
     public static function setIsActiveGrowth(bool $isActive) {
         $value = $isActive ? Players::getPlayerId() : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
+        Events::onIsActiveGrowthChanged();
     }
     
     public static function getIsActivePowerHungry() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) == Players::getPlayerId();
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) > 0;
     }
     
     public static function setIsActivePowerHungry(bool $isActive) {
@@ -114,12 +119,17 @@ class Globals extends APP_DbObject {
     }
 
     public static function getIsActiveSecretOath() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH)) == Players::getPlayerId();
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH)) > 0;
+    }
+
+    public static function getIsActiveSecretOathPlayer() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH));
     }
 
     public static function setIsActiveSecretOath(bool $isActive) {
         $value = $isActive ? Players::getPlayerId() : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH, $value);
+        Events::onIsActiveSecretOathChanged();
     }
 
     public static function getCurrentBasicAttackPower() {

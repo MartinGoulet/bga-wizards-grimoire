@@ -7,7 +7,6 @@ class BasicAttackStates implements StateHandler {
       const { hand } = player_table;
 
       hand.setSelectionMode("single");
-      debugger;
       hand.setSelectableCards(args.allowed_manas);
 
       hand.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
@@ -24,7 +23,7 @@ class BasicAttackStates implements StateHandler {
    onUpdateActionButtons(args: BasicAttackStates): void {
       const handleCastSpell = () => {
          const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
-         const selectedMana: SpellCard = hand.getSelection()[0];
+         const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
             this.game.takeAction("basicAttack", { id: selectedMana.id });
          }
@@ -34,7 +33,9 @@ class BasicAttackStates implements StateHandler {
       this.game.addActionButtonPass();
    }
 
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }
 
 interface BasicAttackStates {

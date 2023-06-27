@@ -6,6 +6,12 @@
 @import "player-table";
 @import "game-options";
 
+#game_play_area {
+   #bga-zoom-wrapper {
+      padding-top: 40px;
+   }
+}
+
 .player-board {
    .break {
       flex-basis: 100%;

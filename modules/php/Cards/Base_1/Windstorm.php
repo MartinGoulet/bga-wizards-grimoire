@@ -3,13 +3,11 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
-use WizardsGrimoire\Objects\CardLocation;
 
 class Windstorm extends BaseCard {
 
@@ -20,7 +18,8 @@ class Windstorm extends BaseCard {
         $this->dealDamage(2);
 
         $player_id = Players::getPlayerId();
-        $topCard = array_shift(ManaCard::revealFromDeck(1));
+        $cards = ManaCard::revealFromDeck(1);
+        $topCard = array_shift($cards);
         $value = ManaCard::getPower($topCard);
 
         if ($value == 1) {

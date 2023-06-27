@@ -1498,13 +1498,11 @@ var WizardsGrimoire = (function () {
         Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
         log("----------------");
         arrCardType
-            .filter(function (x) { return x.debug == "red"; })
+            .filter(function (x) { return x.debug !== "lightgreen"; })
             .sort(function (a, b) { return a.name.localeCompare(b.name); })
             .sort(function (a, b) { return a.icon.localeCompare(b.icon); })
             .forEach(function (card) {
             log(card.name, ",", card.icon, ",", card.debug);
-            log(card.description);
-            log("----------------");
         });
         log("----------------");
     };
@@ -1599,11 +1597,21 @@ var WizardsGrimoire = (function () {
         div.classList.add("wg-selected");
     };
     WizardsGrimoire.prototype.restoreGameState = function () {
-        log("restoreGameState");
-        this.actionManager.reset();
-        this.stateManager.restoreGameState();
-        this.clearSelection();
-        this.restoreServerGameState();
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        log("restoreGameState");
+                        this.actionManager.reset();
+                        return [4, this.stateManager.restoreGameState()];
+                    case 1:
+                        _a.sent();
+                        this.clearSelection();
+                        this.restoreServerGameState();
+                        return [2];
+                }
+            });
+        });
     };
     WizardsGrimoire.prototype.clearSelection = function () {
         log("clearSelection");
@@ -1675,10 +1683,6 @@ var WizardsGrimoire = (function () {
     };
     return WizardsGrimoire;
 }());
-var cardId = 200000;
-function getCardId() {
-    return cardId++;
-}
 var HiddenDeck = (function (_super) {
     __extends(HiddenDeck, _super);
     function HiddenDeck(manager, element) {
@@ -2005,6 +2009,51 @@ var ActionManager = (function () {
             canCancel: false,
         });
     };
+    ActionManager.prototype.actionCoerciveAgreement = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Take up to 3 randomly selected mana from your opponent's hand"),
+                    action: function () {
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: _("Discard a mana card off 2 of your other spells"),
+                    action: function () {
+                        _this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card"), false);
+                    },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionContamination = function () {
+        var msg = _("${you} may select ${nbr} mana card from your hand to your deck");
+        this.returnManaCardToDeck(msg, 2, true, true);
+    };
+    ActionManager.prototype.actionDanceOfPain = function () {
+        var player_table = this.game.getPlayerTable(this.game.getPlayerId());
+        if (player_table.hand.getCards().length <= 2) {
+            this.activateNextAction();
+            return;
+        }
+        var count = player_table.hand.getCards().length - 2;
+        this.selectManaHand(count, _("${you} must select ${nbr} mana card to discard"), true);
+    };
+    ActionManager.prototype.actionDelusion = function () {
+        this.actionSelectManaCoolDownOpponent(true);
+    };
+    ActionManager.prototype.actionPossessed = function () {
+        this.selectManaHand(1, _("${you} may give ${nbr} mana card from your hand to reduce damage"), true, {
+            canCancel: false,
+            skip: {
+                label: _("Pass"),
+                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+            },
+        });
+    };
     ActionManager.prototype.actionSilentSupport = function () {
         this.actions.push("actionSelectManaFrom");
         this.activateNextAction();
@@ -2057,7 +2106,9 @@ var ActionManager = (function () {
             args: args,
         });
     };
-    ActionManager.prototype.actionSelectManaCoolDownOpponent = function () {
+    ActionManager.prototype.actionSelectManaCoolDownOpponent = function (canIgnore) {
+        var _this = this;
+        if (canIgnore === void 0) { canIgnore = false; }
         var msg = _("Select a mana card under one of your opponent's spell");
         var name = this.game.getCardType(this.current_card).name;
         var player_table = this.game.getPlayerTable(this.game.getOpponentId());
@@ -2073,7 +2124,13 @@ var ActionManager = (function () {
             count: 1,
             exact: true,
             exclude: exclude,
+            ignore: null,
         };
+        if (canIgnore) {
+            args.ignore = function () {
+                _this.activateNextAction();
+            };
+        }
         this.game.setClientState(states.client.selectManaDeck, {
             descriptionmyturn: _(name) + " : " + msg,
             args: args,
@@ -2168,9 +2225,10 @@ var ActionManager = (function () {
             args: args,
         });
     };
-    ActionManager.prototype.returnManaCardToDeck = function (msg, count, canCancel) {
+    ActionManager.prototype.returnManaCardToDeck = function (msg, count, canCancel, canPass) {
+        if (canPass === void 0) { canPass = false; }
         msg = msg.replace("${nbr}", count.toString());
-        var args = { count: count, canCancel: canCancel, exact: true };
+        var args = { count: count, canCancel: canCancel, exact: true, canPass: canPass };
         var name = this.game.getCardType(this.current_card).name;
         this.game.setClientState(states.client.selectManaReturnDeck, {
             descriptionmyturn: _(name) + " : " + msg,
@@ -2384,6 +2442,7 @@ var states = {
         castSpellInteraction: "castSpellInteraction",
         chooseNewSpell: "chooseNewSpell",
         basicAttack: "basicAttack",
+        basicAttackBattleVision: "basicAttackBattleVision",
         activateDelayedSpell: "activateDelayedSpell",
         playerNewTurn: "playerNewTurn",
     },
@@ -2405,6 +2464,7 @@ var StateManager = (function () {
             _a[states.server.activateDelayedSpell] = new ActivateDelayedSpellStates(game),
             _a[states.server.discardMana] = new DiscardManaStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
+            _a[states.server.basicAttackBattleVision] = new BasicAttackBattleVisionStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
@@ -2458,10 +2518,28 @@ var StateManager = (function () {
         }
     };
     StateManager.prototype.restoreGameState = function () {
-        while (this.client_states.length > 0) {
-            var state = this.client_states.pop();
-            state.restoreGameState();
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2, new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+                        var state;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!(this.client_states.length > 0)) return [3, 2];
+                                    state = this.client_states.pop();
+                                    return [4, state.restoreGameState()];
+                                case 1:
+                                    _a.sent();
+                                    return [3, 0];
+                                case 2:
+                                    resolve(true);
+                                    return [2];
+                            }
+                        });
+                    }); })];
+            });
+        });
     };
     return StateManager;
 }());
@@ -2495,12 +2573,16 @@ var PlayerTable = (function () {
         this.current_player = this.player_id == this.game.getPlayerId();
         var pId = player.id, pName = player.name, pColor = player.color;
         var pCurrent = this.current_player.toString();
-        var html = "\n            <div style=\"--color: #".concat(pColor, "\" data-color=\"").concat(pColor, "\" data-current-player=\"").concat(pCurrent, "\">\n               <div id=\"player-table-").concat(pId, "\" class=\"player-table whiteblock\" data-discount-next-spell=\"0\" data-discount-next-attack=\"0\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
+        var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" data-color=\"").concat(pColor, "\" data-current-player=\"").concat(pCurrent, "\" data-discount-next-spell=\"0\" data-discount-next-attack=\"0\">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         dojo.place(html, "tables");
         if (this.current_player) {
+            this.setupSecondStrike();
+            this.setupBattleVision();
             this.setupPuppetMaster();
+            this.setupSecretOath();
+            this.setupGrowth();
+            this.setupPowerHungry();
         }
-        this.setupGrowth();
         this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
             slotsIds: [1, 2, 3, 4, 5, 6],
             slotClasses: ["wg-spell-slot"],
@@ -2666,6 +2748,22 @@ var PlayerTable = (function () {
     PlayerTable.prototype.getPlayerTableDiv = function () {
         return document.getElementById("player-table-".concat(this.player_id));
     };
+    PlayerTable.prototype.setupBattleVision = function () {
+        this.setupIcon({
+            id: "battlevision",
+            title: _("Battle vision"),
+            gametext: _("When you basic attacks, your opponent may discard a mana card of the same power from his hand to block the damage"),
+        });
+    };
+    PlayerTable.prototype.setupGrowth = function () {
+        var _this = this;
+        var id = "growth_icon_".concat(this.player_id);
+        dojo.place("<div id=\"".concat(id, "\" class=\"growth_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Growth"), "</h3>\n               <span>").concat(_("Increase the power of all mana by 1"), "</span>\n            </div>"));
+        document.getElementById(id).addEventListener("click", function () {
+            _this.game.tooltips[id].open(id);
+        });
+    };
     PlayerTable.prototype.setupPuppetMaster = function () {
         var _this = this;
         var id = "puppetmaster_icon_".concat(this.player_id);
@@ -2676,11 +2774,36 @@ var PlayerTable = (function () {
             _this.game.tooltips[id].open(id);
         });
     };
-    PlayerTable.prototype.setupGrowth = function () {
+    PlayerTable.prototype.setupPowerHungry = function () {
+        this.setupIcon({
+            id: "powerhungry",
+            title: _("Power hungry"),
+            gametext: _("Your basic attack mana card go to the opponent's hand instead of the discard pile"),
+        });
+    };
+    PlayerTable.prototype.setupSecondStrike = function () {
+        this.setupIcon({
+            id: "secondstrike",
+            title: _("Second strike"),
+            gametext: _("The next time you cast an attack spell this turn, it costs 1 less."),
+        });
+    };
+    PlayerTable.prototype.setupSecretOath = function () {
         var _this = this;
-        var id = "growth_icon_".concat(this.player_id);
-        dojo.place("<div id=\"".concat(id, "\" class=\"growth_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
-        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Growth"), "</h3>\n               <span>").concat(_("Increase the power of all mana by 1"), "</span>\n            </div>"));
+        var id = "secretoath_icon_".concat(this.player_id);
+        dojo.place("<div id=\"".concat(id, "\" class=\"secretoath_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Secret Oath"), "</h3>\n               <span>").concat(_("If you have a 4 power mana in your hand, you must give it to your opponent immediately"), "</span>\n            </div>"));
+        document.getElementById(id).addEventListener("click", function () {
+            _this.game.tooltips[id].open(id);
+        });
+    };
+    PlayerTable.prototype.setupIcon = function (_a) {
+        var _this = this;
+        var id = _a.id, title = _a.title, gametext = _a.gametext;
+        var cssClass = id;
+        id = "".concat(id, "_").concat(this.player_id);
+        dojo.place("<div id=\"".concat(id, "\" class=\"").concat(cssClass, "_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        this.game.setTooltip(id, "<div><h3>".concat(title, "</h3><span>").concat(_(gametext), "</span></div>"));
         document.getElementById(id).addEventListener("click", function () {
             _this.game.tooltips[id].open(id);
         });
@@ -2825,7 +2948,9 @@ var DiscardManaStates = (function () {
         };
         this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
     };
-    DiscardManaStates.prototype.restoreGameState = function () { };
+    DiscardManaStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return DiscardManaStates;
 }());
 var CastSpellStates = (function () {
@@ -2876,7 +3001,9 @@ var CastSpellStates = (function () {
             this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
         }
     };
-    CastSpellStates.prototype.restoreGameState = function () { };
+    CastSpellStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     CastSpellStates.prototype.hasSpellAvailable = function () {
         var nbr_empty_deck = this.game
             .getPlayerTable(this.game.getPlayerId())
@@ -2903,7 +3030,9 @@ var CastSpellInteractionStates = (function () {
     };
     CastSpellInteractionStates.prototype.onLeavingState = function () { };
     CastSpellInteractionStates.prototype.onUpdateActionButtons = function (args) { };
-    CastSpellInteractionStates.prototype.restoreGameState = function () { };
+    CastSpellInteractionStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return CastSpellInteractionStates;
 }());
 var ChooseNewSpellStates = (function () {
@@ -2988,7 +3117,9 @@ var ChooseNewSpellStates = (function () {
             this.game.addActionButtonPass();
         }
     };
-    ChooseNewSpellStates.prototype.restoreGameState = function () { };
+    ChooseNewSpellStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     ChooseNewSpellStates.prototype.clearSelectionMode = function () {
         this.game.tableCenter.spellPool.setSelectionMode("none");
         this.game.tableCenter.spellPool.onSelectionChange = null;
@@ -3010,7 +3141,6 @@ var BasicAttackStates = (function () {
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
         var hand = player_table.hand;
         hand.setSelectionMode("single");
-        debugger;
         hand.setSelectableCards(args.allowed_manas);
         hand.onSelectionChange = function (selection, lastChange) {
             _this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
@@ -3033,8 +3163,45 @@ var BasicAttackStates = (function () {
         this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
         this.game.addActionButtonPass();
     };
-    BasicAttackStates.prototype.restoreGameState = function () { };
+    BasicAttackStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return BasicAttackStates;
+}());
+var BasicAttackBattleVisionStates = (function () {
+    function BasicAttackBattleVisionStates(game) {
+        this.game = game;
+    }
+    BasicAttackBattleVisionStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var hand = this.game.getPlayerTable(this.game.getPlayerId()).hand;
+        var cards = hand.getCards();
+        var cardsFiltered = cards.filter(function (card) { return card.type === args.value.toString(); });
+        hand.setSelectionMode("single");
+        hand.setSelectableCards(cardsFiltered);
+        hand.onSelectionChange = function (selection, lastChange) {
+            _this.game.toggleButtonEnable("btn_block", selection && selection.length === 1);
+        };
+    };
+    BasicAttackBattleVisionStates.prototype.onLeavingState = function () { };
+    BasicAttackBattleVisionStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleSelect = function () {
+            var hand = _this.game.getPlayerTable(_this.game.getPlayerId()).hand;
+            var selectedMana = hand.getSelection()[0];
+            if (selectedMana) {
+                _this.game.takeAction("blockBasicAttack", { id: selectedMana.id });
+            }
+        };
+        this.game.addActionButtonDisabled("btn_block", _("Block"), handleSelect);
+        this.game.addActionButtonPass();
+    };
+    BasicAttackBattleVisionStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    return BasicAttackBattleVisionStates;
 }());
 var ActivateDelayedSpellStates = (function () {
     function ActivateDelayedSpellStates(game) {
@@ -3070,7 +3237,9 @@ var ActivateDelayedSpellStates = (function () {
             this.game.addActionButtonPass();
         }
     };
-    ActivateDelayedSpellStates.prototype.restoreGameState = function () { };
+    ActivateDelayedSpellStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return ActivateDelayedSpellStates;
 }());
 var BadFortuneStates = (function () {
@@ -3136,7 +3305,7 @@ var BadFortuneStates = (function () {
         this.game.disableButton("btnCancel");
     };
     BadFortuneStates.prototype.restoreGameState = function () {
-        throw new Error("Method not implemented.");
+        return new Promise(function (resolve) { return resolve(true); });
     };
     BadFortuneStates.prototype.isAllManaCardDistributed = function () {
         return this.spell_cards.length + this.deck_cards.length == 3;
@@ -3190,7 +3359,18 @@ var CastSpellWithManaStates = (function () {
         this.game.toggleButtonEnable("btnConfirm", args.cost == 0);
     };
     CastSpellWithManaStates.prototype.restoreGameState = function () {
-        this.restore();
+        var _this = this;
+        return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.restore()];
+                    case 1:
+                        _a.sent();
+                        resolve(true);
+                        return [2];
+                }
+            });
+        }); });
     };
     CastSpellWithManaStates.prototype.restore = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -3240,7 +3420,9 @@ var QuestionStates = (function () {
             this.game.addActionButtonClientCancel();
         }
     };
-    QuestionStates.prototype.restoreGameState = function () { };
+    QuestionStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return QuestionStates;
 }());
 var PlayerNewTurnStates = (function () {
@@ -3256,7 +3438,9 @@ var PlayerNewTurnStates = (function () {
     };
     PlayerNewTurnStates.prototype.onLeavingState = function () { };
     PlayerNewTurnStates.prototype.onUpdateActionButtons = function (args) { };
-    PlayerNewTurnStates.prototype.restoreGameState = function () { };
+    PlayerNewTurnStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
     return PlayerNewTurnStates;
 }());
 var SelectManaStates = (function () {
@@ -3324,7 +3508,11 @@ var SelectManaStates = (function () {
         this.game.addActionButtonClientCancel();
     };
     SelectManaStates.prototype.restoreGameState = function () {
-        this.player_table.getManaDecks().forEach(function (deck) { return deck.unselectAll(); });
+        var _this = this;
+        return new Promise(function (resolve) {
+            _this.player_table.getManaDecks().forEach(function (deck) { return deck.unselectAll(); });
+            resolve(true);
+        });
     };
     return SelectManaStates;
 }());
@@ -3403,9 +3591,13 @@ var SelectManaDeckStates = (function () {
         }
     };
     SelectManaDeckStates.prototype.restoreGameState = function () {
-        this.player_table.getManaDecks().forEach(function (deck) {
-            deck.setDeckIsSelectable(false);
-            deck.onDeckSelectionChanged = null;
+        var _this = this;
+        return new Promise(function (resolve) {
+            _this.player_table.getManaDecks().forEach(function (deck) {
+                deck.setDeckIsSelectable(false);
+                deck.onDeckSelectionChanged = null;
+            });
+            resolve(true);
         });
     };
     return SelectManaDeckStates;
@@ -3452,8 +3644,12 @@ var SelectManaDiscardStates = (function () {
         this.game.addActionButtonClientCancel();
     };
     SelectManaDiscardStates.prototype.restoreGameState = function () {
-        this.game.tableCenter.moveManaDiscardPile(false);
-        this.game.tableCenter.manaDiscardDisplay.onSelectionChange = null;
+        var _this = this;
+        return new Promise(function (resolve) {
+            _this.game.tableCenter.moveManaDiscardPile(false);
+            _this.game.tableCenter.manaDiscardDisplay.onSelectionChange = null;
+            resolve(true);
+        });
     };
     return SelectManaDiscardStates;
 }());
@@ -3521,7 +3717,11 @@ var SelectManaHandStates = (function () {
         }
         this.game.toggleButtonEnable("btn_confirm", !args.exact);
     };
-    SelectManaHandStates.prototype.restoreGameState = function () { };
+    SelectManaHandStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) {
+            resolve(true);
+        });
+    };
     return SelectManaHandStates;
 }());
 var SelectManaReturnDeckStates = (function () {
@@ -3539,12 +3739,14 @@ var SelectManaReturnDeckStates = (function () {
             _this.game.tableCenter.manaDeck.addCard(__assign(__assign({}, card), { type: null, isHidden: true }));
             _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
             _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0, "gray");
+            _this.game.toggleButtonEnable("btn_pass", _this.mana_cards.length == 0, "red");
         };
         var handleDeckCardClick = function (card) {
             if (_this.mana_cards.length > 0) {
                 _this.moveCardFromManaDeckToHand();
                 _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
-                _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0);
+                _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0, "gray");
+                _this.game.toggleButtonEnable("btn_pass", _this.mana_cards.length == 0, "red");
             }
         };
         this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
@@ -3562,6 +3764,12 @@ var SelectManaReturnDeckStates = (function () {
             _this.game.actionManager.activateNextAction();
         };
         this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+        if (args.canPass) {
+            var handlePass = function () {
+                _this.game.actionManager.activateNextAction();
+            };
+            this.game.addActionButtonRed("btn_pass", _("Pass"), handlePass);
+        }
         if (args.canCancel) {
             this.game.addActionButtonClientCancel();
         }
@@ -3573,9 +3781,20 @@ var SelectManaReturnDeckStates = (function () {
         }
     };
     SelectManaReturnDeckStates.prototype.restoreGameState = function () {
-        this.restore();
-        this.game.disableButton("btnConfirm");
-        this.game.disableButton("btnCancelAction");
+        var _this = this;
+        return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.restore()];
+                    case 1:
+                        _a.sent();
+                        this.game.disableButton("btnConfirm");
+                        this.game.disableButton("btnCancelAction");
+                        resolve(true);
+                        return [2];
+                }
+            });
+        }); });
     };
     SelectManaReturnDeckStates.prototype.restore = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -3604,6 +3823,13 @@ var SelectManaReturnDeckStates = (function () {
     };
     return SelectManaReturnDeckStates;
 }());
-define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
-    return declare("bgagame.wizardsgrimoire", ebg.core.gamegui, new WizardsGrimoire());
+define([
+    "dojo",
+    "dojo/_base/declare",
+    "ebg/core/gamegui",
+    "ebg/counter",
+    "ebg/stock",
+    g_gamethemeurl + "modules/js/core_patch_tooltip_position.js",
+], function (dojo, declare) {
+    return declare("bgagame.wizardsgrimoire", [ebg.core.gamegui, ebg.core.core_patch_tooltip_position], new WizardsGrimoire());
 });

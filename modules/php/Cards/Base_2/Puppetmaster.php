@@ -7,8 +7,7 @@ use WizardsGrimoire\Core\Globals;
 
 class Puppetmaster extends BaseCard {
 
-    public function isOngoingSpellActive(bool $value)
-    {
+    public function isOngoingSpellActive(bool $value) {
         // In order to basic attack, your opponent must use a mana of the same power as you did during the previous basic attack phase
         Globals::setIsActivePuppetMaster($value);
     }

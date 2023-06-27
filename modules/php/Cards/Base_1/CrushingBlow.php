@@ -12,5 +12,4 @@ class CrushingBlow extends BaseCard {
         // Deal 6 damage
         $this->dealDamage(6);
     }
-
 }

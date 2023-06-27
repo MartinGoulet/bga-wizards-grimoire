@@ -12,7 +12,9 @@ class QuestionStates implements StateHandler {
          this.game.addActionButtonClientCancel();
       }
    }
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }
 
 interface QuestionArgs {

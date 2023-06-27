@@ -60,7 +60,10 @@ class CastSpellWithManaStates implements StateHandler {
    }
 
    restoreGameState() {
-      this.restore();
+      return new Promise<boolean>(async (resolve) => {
+         await this.restore();
+         resolve(true);
+      });
    }
 
    private async restore() {

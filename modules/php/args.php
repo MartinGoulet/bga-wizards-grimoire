@@ -45,15 +45,16 @@ trait ArgsTrait {
 
     function argBattleVision() {
         $args = $this->getArgsBase();
-        $args["value_to_discard"] = Globals::getPreviousBasicAttackPower();
+        $card = ManaCard::getBasicAttack();
+        $args["value"] = intval($card['type']);
         return $args;
     }
 
     function argBasicAttack() {
         $cards = ManaCard::getHand();
-        if(Globals::getIsActivePuppetmaster()) {
+        if (Globals::getIsActivePuppetmaster()) {
             $value = Globals::getPreviousBasicAttackPower();
-            $cards = array_filter($cards, function($card) use($value) {
+            $cards = array_filter($cards, function ($card) use ($value) {
                 return ManaCard::getPower($card) == $value;
             });
         }

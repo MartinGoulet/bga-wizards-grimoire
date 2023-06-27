@@ -35,7 +35,9 @@ class ActivateDelayedSpellStates implements StateHandler {
          this.game.addActionButtonPass();
       }
    }
-   restoreGameState() {}
+   restoreGameState() {
+      return new Promise<boolean>((resolve) => resolve(true));
+   }
 }
 
 interface ActivateDelayedSpellArgs {

@@ -975,11 +975,11 @@ body > .card {
   display: none;
 }
 
-.wg-ongoing-spell-puppetmaster [data-current-player=true] .puppetmaster_icon {
+.wg-ongoing-spell-battlevision .battlevision_icon {
   display: flex;
   border: 2px solid white;
-  background-position-x: -230px;
-  background-position-y: -855px;
+  background-position-x: -840px;
+  background-position-y: -730px;
 }
 
 .wg-ongoing-spell-growth .growth_icon {
@@ -987,6 +987,34 @@ body > .card {
   border: 2px solid white;
   background-position-x: -130px;
   background-position-y: -427px;
+}
+
+.wg-ongoing-spell-powerhungry .powerhungry_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -45px;
+  background-position-y: -849px;
+}
+
+.wg-ongoing-spell-puppetmaster [data-current-player=true] .puppetmaster_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -230px;
+  background-position-y: -855px;
+}
+
+.wg-ongoing-spell-secretoath [data-current-player=false] .secretoath_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -736px;
+  background-position-y: -150px;
+}
+
+[data-discount-next-attack="1"] .secondstrike_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -37px;
+  background-position-y: -296px;
 }
 
 #wg-phases-wrapper {
@@ -1187,6 +1215,10 @@ body > .card {
 }
 #wg-phase-selector[data-phase="5"] {
   top: 119px;
+}
+
+#game_play_area #bga-zoom-wrapper {
+  padding-top: 40px;
 }
 
 .player-board .break {
