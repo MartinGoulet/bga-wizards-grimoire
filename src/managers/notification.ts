@@ -1,7 +1,5 @@
-const ANIMATION_MS = 1500;
-
 class NotificationManager {
-   constructor(private game: WizardsGrimoire) { }
+   constructor(private game: WizardsGrimoire) {}
 
    setup() {
       this.subscribeEvent("onChooseSpell", 500);
@@ -11,7 +9,6 @@ class NotificationManager {
       this.subscribeEvent("onMoveManaCards", 1000, true);
       this.subscribeEvent("onManaDeckShuffle", 2500);
       this.subscribeEvent("onHealthChanged", 500);
-      this.subscribeEvent("onOngoingSpellActive", 0);
 
       this.game.notifqueue.setIgnoreNotificationCheck(
          "message",
@@ -74,12 +71,6 @@ class NotificationManager {
          const after = cards_after.find((x) => x.id == before.id);
          this.game.getPlayerTable(player_id).onMoveManaCard(before, after);
       }
-   }
-
-   private notif_onOngoingSpellActive(notif: INotification<NotifOngoingSpellActive>) {
-      const { variable: name, value: active } = notif.args;
-      log("notif_onOngoingSpellActive", name, active);
-      this.game.toggleOngoingSpell({ name, active });
    }
 
    private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {

@@ -90,29 +90,6 @@ class WizardsGrimoire
       });
 
       this.setupNotifications();
-
-      this.setupDebug(gamedatas);
-   }
-
-   toggleOngoingSpell(value: OngoingSpell) {
-      document.getElementById("table").classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
-   }
-
-   setupDebug(gamedatas: WizardsGrimoireGamedatas) {
-      const arrCardType: CardType[] = [];
-      Object.keys(gamedatas.card_types).forEach((index) => arrCardType.push(gamedatas.card_types[index]));
-
-      log("----------------");
-      arrCardType
-         .filter((x) => x.debug !== "lightgreen")
-         .sort((a: CardType, b: CardType) => a.name.localeCompare(b.name))
-         .sort((a: CardType, b: CardType) => a.icon.localeCompare(b.icon))
-         .forEach((card) => {
-            log(card.name, ",", card.icon, ",", card.debug);
-            // log(card.description);
-            // log("----------------");
-         });
-      log("----------------");
    }
 
    ///////////////////////////////////////////////////
@@ -285,6 +262,10 @@ class WizardsGrimoire
          onSuccess,
          onComplete,
       );
+   }
+
+   toggleOngoingSpell(value: OngoingSpell) {
+      document.getElementById("table").classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
    }
 
    ///////////////////////////////////////////////////

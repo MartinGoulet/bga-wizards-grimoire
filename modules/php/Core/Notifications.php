@@ -84,13 +84,6 @@ class Notifications {
         ]);
     }
 
-    static function ongoingSpellActive($variable, $value) {
-        self::notifyAll('onOngoingSpellActive', '', [
-            "variable" => $variable,
-            "value" => $value,
-        ]);
-    }
-
     static function manaDeckShuffle($cards) {
         $msg = clienttranslate("Mana deck reshuffle because it's empty");
         self::notifyAll('onManaDeckShuffle', $msg, [

@@ -111,16 +111,6 @@ trait StateTrait {
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
-
-        // if (Globals::getIsActivePowerHungry()) {
-        //     ManaCard::addToHand($card['id']);
-        // } else {
-        //     ManaCard::addOnTopOfDiscard($card['id']);
-        // }
-
-        // $card_after = ManaCard::get($card['id']);
-        // Notifications::moveManaCard($player_id, [$card], [$card_after], "", false);
-
         
         Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
         Globals::setCurrentBasicAttackPower(0);

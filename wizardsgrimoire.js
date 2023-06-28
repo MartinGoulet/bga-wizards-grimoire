@@ -1488,23 +1488,6 @@ var WizardsGrimoire = (function () {
             zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
         });
         this.setupNotifications();
-        this.setupDebug(gamedatas);
-    };
-    WizardsGrimoire.prototype.toggleOngoingSpell = function (value) {
-        document.getElementById("table").classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
-    };
-    WizardsGrimoire.prototype.setupDebug = function (gamedatas) {
-        var arrCardType = [];
-        Object.keys(gamedatas.card_types).forEach(function (index) { return arrCardType.push(gamedatas.card_types[index]); });
-        log("----------------");
-        arrCardType
-            .filter(function (x) { return x.debug !== "lightgreen"; })
-            .sort(function (a, b) { return a.name.localeCompare(b.name); })
-            .sort(function (a, b) { return a.icon.localeCompare(b.icon); })
-            .forEach(function (card) {
-            log(card.name, ",", card.icon, ",", card.debug);
-        });
-        log("----------------");
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
@@ -1645,6 +1628,9 @@ var WizardsGrimoire = (function () {
         onSuccess = onSuccess !== null && onSuccess !== void 0 ? onSuccess : function (result) { };
         onComplete = onComplete !== null && onComplete !== void 0 ? onComplete : function (is_error) { };
         this.ajaxcall("/wizardsgrimoire/wizardsgrimoire/".concat(action, ".html"), data, this, onSuccess, onComplete);
+    };
+    WizardsGrimoire.prototype.toggleOngoingSpell = function (value) {
+        document.getElementById("table").classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
     };
     WizardsGrimoire.prototype.setupNotifications = function () {
         log("notifications subscriptions setup");
@@ -2338,7 +2324,6 @@ var ManaCardManager = (function (_super) {
     };
     return ManaCardManager;
 }(CardManager));
-var ANIMATION_MS = 1500;
 var NotificationManager = (function () {
     function NotificationManager(game) {
         this.game = game;
@@ -2352,7 +2337,6 @@ var NotificationManager = (function () {
         this.subscribeEvent("onMoveManaCards", 1000, true);
         this.subscribeEvent("onManaDeckShuffle", 2500);
         this.subscribeEvent("onHealthChanged", 500);
-        this.subscribeEvent("onOngoingSpellActive", 0);
         this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
     NotificationManager.prototype.subscribeEvent = function (eventName, time, setIgnore) {
@@ -2409,11 +2393,6 @@ var NotificationManager = (function () {
         for (var index = 0; index < nbr; index++) {
             _loop_3(index);
         }
-    };
-    NotificationManager.prototype.notif_onOngoingSpellActive = function (notif) {
-        var _a = notif.args, name = _a.variable, active = _a.value;
-        log("notif_onOngoingSpellActive", name, active);
-        this.game.toggleOngoingSpell({ name: name, active: active });
     };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);
