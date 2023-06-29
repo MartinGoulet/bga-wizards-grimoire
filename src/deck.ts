@@ -104,3 +104,68 @@ class ManaDeck extends Deck<ManaCard> {
       this.element.classList.toggle("wg-deck-selected", this.isDeckSelected);
    }
 }
+
+class SpellRepertoire extends SlotStock<SpellCard> {
+   constructor(
+      protected manager: CardManager<SpellCard>,
+      protected element: HTMLElement,
+      private player_table: PlayerTable,
+   ) {
+      super(manager, element, {
+         slotsIds: [1, 2, 3, 4, 5, 6],
+         slotClasses: ["wg-spell-slot"],
+         mapCardToSlot: (card) => card.location_arg,
+      });
+   }
+   public addCard(
+      card: SpellCard,
+      animation?: CardAnimation<SpellCard>,
+      settings?: AddCardToSlotSettings,
+   ): Promise<boolean> {
+      this.setDataset(card, true);
+      return super.addCard(card, animation, settings);
+   }
+
+   public removeCard(card: SpellCard, settings?: RemoveCardSettings): void {
+      this.setDataset(card, false);
+      return super.removeCard(card, settings);
+   }
+
+   private setDataset(card: SpellCard, value: boolean) {
+      const card_type = this.player_table.game.getCardType(card);
+      const element = this.element.parentElement.parentElement;
+      switch (card_type["class"]) {
+         case "BattleVision":
+            element.dataset.battle_vision = "" + value;
+            break;
+         case "Puppetmaster":
+            element.dataset.puppetmaster = "" + value;
+            break;
+         case "SecretOath":
+            element.dataset.secret_oath = "" + value;
+            break;
+      }
+   }
+}
+
+class Hand extends LineStock<ManaCard> {
+   constructor(manager: CardManager<ManaCard>, element: HTMLElement, protected current_player: boolean) {
+      super(manager, element, {
+         center: true,
+         wrap: "wrap",
+         sort: sortFunction("type", "type_arg"),
+      });
+   }
+
+   public addCard(
+      card: ManaCard,
+      animation?: CardAnimation<ManaCard>,
+      settings?: AddCardSettings,
+   ): Promise<boolean> {
+      const copy: ManaCard = { ...card, isHidden: !this.current_player };
+      if (!this.current_player) {
+         copy.type = null;
+      }
+      return super.addCard(copy, animation, settings);
+   }
+}

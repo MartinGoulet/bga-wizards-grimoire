@@ -1779,6 +1779,64 @@ var ManaDeck = (function (_super) {
     };
     return ManaDeck;
 }(Deck));
+var SpellRepertoire = (function (_super) {
+    __extends(SpellRepertoire, _super);
+    function SpellRepertoire(manager, element, player_table) {
+        var _this = _super.call(this, manager, element, {
+            slotsIds: [1, 2, 3, 4, 5, 6],
+            slotClasses: ["wg-spell-slot"],
+            mapCardToSlot: function (card) { return card.location_arg; },
+        }) || this;
+        _this.manager = manager;
+        _this.element = element;
+        _this.player_table = player_table;
+        return _this;
+    }
+    SpellRepertoire.prototype.addCard = function (card, animation, settings) {
+        this.setDataset(card, true);
+        return _super.prototype.addCard.call(this, card, animation, settings);
+    };
+    SpellRepertoire.prototype.removeCard = function (card, settings) {
+        this.setDataset(card, false);
+        return _super.prototype.removeCard.call(this, card, settings);
+    };
+    SpellRepertoire.prototype.setDataset = function (card, value) {
+        var card_type = this.player_table.game.getCardType(card);
+        var element = this.element.parentElement.parentElement;
+        switch (card_type["class"]) {
+            case "BattleVision":
+                element.dataset.battle_vision = "" + value;
+                break;
+            case "Puppetmaster":
+                element.dataset.puppetmaster = "" + value;
+                break;
+            case "SecretOath":
+                element.dataset.secret_oath = "" + value;
+                break;
+        }
+    };
+    return SpellRepertoire;
+}(SlotStock));
+var Hand = (function (_super) {
+    __extends(Hand, _super);
+    function Hand(manager, element, current_player) {
+        var _this = _super.call(this, manager, element, {
+            center: true,
+            wrap: "wrap",
+            sort: sortFunction("type", "type_arg"),
+        }) || this;
+        _this.current_player = current_player;
+        return _this;
+    }
+    Hand.prototype.addCard = function (card, animation, settings) {
+        var copy = __assign(__assign({}, card), { isHidden: !this.current_player });
+        if (!this.current_player) {
+            copy.type = null;
+        }
+        return _super.prototype.addCard.call(this, copy, animation, settings);
+    };
+    return Hand;
+}(LineStock));
 var ActionManager = (function () {
     function ActionManager(game) {
         this.game = game;
@@ -2522,64 +2580,6 @@ var StateManager = (function () {
     };
     return StateManager;
 }());
-var SpellRepertoire = (function (_super) {
-    __extends(SpellRepertoire, _super);
-    function SpellRepertoire(manager, element, player_table) {
-        var _this = _super.call(this, manager, element, {
-            slotsIds: [1, 2, 3, 4, 5, 6],
-            slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: function (card) { return card.location_arg; },
-        }) || this;
-        _this.manager = manager;
-        _this.element = element;
-        _this.player_table = player_table;
-        return _this;
-    }
-    SpellRepertoire.prototype.addCard = function (card, animation, settings) {
-        this.setDataset(card, true);
-        return _super.prototype.addCard.call(this, card, animation, settings);
-    };
-    SpellRepertoire.prototype.removeCard = function (card, settings) {
-        this.setDataset(card, false);
-        return _super.prototype.removeCard.call(this, card, settings);
-    };
-    SpellRepertoire.prototype.setDataset = function (card, value) {
-        var card_type = this.player_table.game.getCardType(card);
-        var element = this.element.parentElement.parentElement;
-        switch (card_type["class"]) {
-            case "BattleVision":
-                element.dataset.battle_vision = "" + value;
-                break;
-            case "Puppetmaster":
-                element.dataset.puppetmaster = "" + value;
-                break;
-            case "SecretOath":
-                element.dataset.secret_oath = "" + value;
-                break;
-        }
-    };
-    return SpellRepertoire;
-}(SlotStock));
-var Hand = (function (_super) {
-    __extends(Hand, _super);
-    function Hand(manager, element, current_player) {
-        var _this = _super.call(this, manager, element, {
-            center: true,
-            wrap: "wrap",
-            sort: sortFunction("type", "type_arg"),
-        }) || this;
-        _this.current_player = current_player;
-        return _this;
-    }
-    Hand.prototype.addCard = function (card, animation, settings) {
-        var copy = __assign(__assign({}, card), { isHidden: !this.current_player });
-        if (!this.current_player) {
-            copy.type = null;
-        }
-        return _super.prototype.addCard.call(this, copy, animation, settings);
-    };
-    return Hand;
-}(LineStock));
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
         var _this = this;
