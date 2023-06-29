@@ -86,11 +86,13 @@
 }
 
 .wg-ongoing-spell-battlevision {
-   .battlevision_icon {
-      display: flex;
-      border: 2px solid white;
-      background-position-x: -840px;
-      background-position-y: -730px;
+   [data-battle_vision="false"] {
+      .battlevision_icon {
+         display: flex;
+         border: 2px solid white;
+         background-position-x: -840px;
+         background-position-y: -730px;
+      }
    }
 }
 
@@ -113,7 +115,7 @@
 }
 
 .wg-ongoing-spell-puppetmaster {
-   [data-current-player="true"] {
+   [data-battle_vision="false"] {
       .puppetmaster_icon {
          display: flex;
          border: 2px solid white;
@@ -124,7 +126,7 @@
 }
 
 .wg-ongoing-spell-secretoath {
-   [data-current-player="false"] {
+   [data-battle_vision="false"] {
       .secretoath_icon {
          display: flex;
          border: 2px solid white;
@@ -141,4 +143,18 @@
       background-position-x: -37px;
       background-position-y: -296px;
    }
+}
+
+[data-discount-next-spell="2"] {
+   .haste_icon {
+      display: flex;
+      border: 2px solid white;
+      background-position-x: -555px;
+      background-position-y: -150px;
+   }
+}
+
+.player-table-icon-tooltip {
+   min-width: 250px;
+   max-width: 350px;
 }

@@ -2522,6 +2522,44 @@ var StateManager = (function () {
     };
     return StateManager;
 }());
+var SpellRepertoire = (function (_super) {
+    __extends(SpellRepertoire, _super);
+    function SpellRepertoire(manager, element, player_table) {
+        var _this = _super.call(this, manager, element, {
+            slotsIds: [1, 2, 3, 4, 5, 6],
+            slotClasses: ["wg-spell-slot"],
+            mapCardToSlot: function (card) { return card.location_arg; },
+        }) || this;
+        _this.manager = manager;
+        _this.element = element;
+        _this.player_table = player_table;
+        return _this;
+    }
+    SpellRepertoire.prototype.addCard = function (card, animation, settings) {
+        this.setDataset(card, true);
+        return _super.prototype.addCard.call(this, card, animation, settings);
+    };
+    SpellRepertoire.prototype.removeCard = function (card, settings) {
+        this.setDataset(card, false);
+        return _super.prototype.removeCard.call(this, card, settings);
+    };
+    SpellRepertoire.prototype.setDataset = function (card, value) {
+        var card_type = this.player_table.game.getCardType(card);
+        var element = this.element.parentElement.parentElement;
+        switch (card_type["class"]) {
+            case "BattleVision":
+                element.dataset.battle_vision = "" + value;
+                break;
+            case "Puppetmaster":
+                element.dataset.puppetmaster = "" + value;
+                break;
+            case "SecretOath":
+                element.dataset.secret_oath = "" + value;
+                break;
+        }
+    };
+    return SpellRepertoire;
+}(SlotStock));
 var Hand = (function (_super) {
     __extends(Hand, _super);
     function Hand(manager, element, current_player) {
@@ -2550,11 +2588,21 @@ var PlayerTable = (function () {
         this.mana_cooldown = {};
         this.player_id = Number(player.id);
         this.current_player = this.player_id == this.game.getPlayerId();
-        var pId = player.id, pName = player.name, pColor = player.color;
+        var pId = player.id, pColor = player.color;
         var pCurrent = this.current_player.toString();
-        var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" data-color=\"").concat(pColor, "\" data-current-player=\"").concat(pCurrent, "\" data-discount-next-spell=\"0\" data-discount-next-attack=\"0\">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
+        var dataset = [
+            "data-color=\"".concat(pColor, "\""),
+            "data-current-player=\"".concat(pCurrent, "\""),
+            "data-discount-next-spell=\"0\"",
+            "data-discount-next-attack=\"0\"",
+            "data-battle_vision=\"false\"",
+            "data-puppetmaster=\"false\"",
+            "data-secret_oath=\"false\"",
+        ];
+        var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         dojo.place(html, "tables");
         if (this.current_player) {
+            this.setupHaste();
             this.setupSecondStrike();
             this.setupBattleVision();
             this.setupPuppetMaster();
@@ -2562,11 +2610,7 @@ var PlayerTable = (function () {
             this.setupGrowth();
             this.setupPowerHungry();
         }
-        this.spell_repertoire = new SlotStock(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), {
-            slotsIds: [1, 2, 3, 4, 5, 6],
-            slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: function (card) { return card.location_arg; },
-        });
+        this.spell_repertoire = new SpellRepertoire(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), this);
         for (var index = 1; index <= 6; index++) {
             var divDeck = document.getElementById("player_table-".concat(pId, "-mana-deck-").concat(index));
             this.mana_cooldown[index] = new ManaDeck(game.manasManager, divDeck, index);
@@ -2735,22 +2779,24 @@ var PlayerTable = (function () {
         });
     };
     PlayerTable.prototype.setupGrowth = function () {
-        var _this = this;
-        var id = "growth_icon_".concat(this.player_id);
-        dojo.place("<div id=\"".concat(id, "\" class=\"growth_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
-        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Growth"), "</h3>\n               <span>").concat(_("Increase the power of all mana by 1"), "</span>\n            </div>"));
-        document.getElementById(id).addEventListener("click", function () {
-            _this.game.tooltips[id].open(id);
+        this.setupIcon({
+            id: "growth",
+            title: _("Growth"),
+            gametext: _("Increase the power of all mana by 1"),
+        });
+    };
+    PlayerTable.prototype.setupHaste = function () {
+        this.setupIcon({
+            id: "haste",
+            title: _("Haste"),
+            gametext: _("The next time you cast a spell this turn, it costs 2 less"),
         });
     };
     PlayerTable.prototype.setupPuppetMaster = function () {
-        var _this = this;
-        var id = "puppetmaster_icon_".concat(this.player_id);
-        dojo.place("<div id=\"".concat(id, "\" class=\"puppetmaster_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
-        this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
-        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Puppetmaster"), "</h3>\n               <span>").concat(_("You must use a mana of the same power as the previous basic attack phase"), "</span>\n            </div>"));
-        document.getElementById(id).addEventListener("click", function () {
-            _this.game.tooltips[id].open(id);
+        this.setupIcon({
+            id: "puppetmaster",
+            title: _("Puppetmaster"),
+            gametext: _("You must use a mana of the same power as the previous basic attack phase"),
         });
     };
     PlayerTable.prototype.setupPowerHungry = function () {
@@ -2764,16 +2810,14 @@ var PlayerTable = (function () {
         this.setupIcon({
             id: "secondstrike",
             title: _("Second strike"),
-            gametext: _("The next time you cast an attack spell this turn, it costs 1 less."),
+            gametext: _("The next time you cast an attack spell this turn, it costs 1 less"),
         });
     };
     PlayerTable.prototype.setupSecretOath = function () {
-        var _this = this;
-        var id = "secretoath_icon_".concat(this.player_id);
-        dojo.place("<div id=\"".concat(id, "\" class=\"secretoath_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
-        this.game.setTooltip(id, "<div>\n               <h3>".concat(_("Secret Oath"), "</h3>\n               <span>").concat(_("If you have a 4 power mana in your hand, you must give it to your opponent immediately"), "</span>\n            </div>"));
-        document.getElementById(id).addEventListener("click", function () {
-            _this.game.tooltips[id].open(id);
+        this.setupIcon({
+            id: "secretoath",
+            title: _("Secret oath"),
+            gametext: _("If you have a 4 power mana in your hand, you must give it to your opponent immediately"),
         });
     };
     PlayerTable.prototype.setupIcon = function (_a) {
@@ -2782,7 +2826,7 @@ var PlayerTable = (function () {
         var cssClass = id;
         id = "".concat(id, "_").concat(this.player_id);
         dojo.place("<div id=\"".concat(id, "\" class=\"").concat(cssClass, "_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
-        this.game.setTooltip(id, "<div><h3>".concat(title, "</h3><span>").concat(_(gametext), "</span></div>"));
+        this.game.setTooltip(id, "<div class=\"player-table-icon-tooltip\"><h3>".concat(title, "</h3><div>").concat(_(gametext), "</div></div>"));
         document.getElementById(id).addEventListener("click", function () {
             _this.game.tooltips[id].open(id);
         });

@@ -975,7 +975,7 @@ body > .card {
   display: none;
 }
 
-.wg-ongoing-spell-battlevision .battlevision_icon {
+.wg-ongoing-spell-battlevision [data-battle_vision=false] .battlevision_icon {
   display: flex;
   border: 2px solid white;
   background-position-x: -840px;
@@ -996,14 +996,14 @@ body > .card {
   background-position-y: -849px;
 }
 
-.wg-ongoing-spell-puppetmaster [data-current-player=true] .puppetmaster_icon {
+.wg-ongoing-spell-puppetmaster [data-battle_vision=false] .puppetmaster_icon {
   display: flex;
   border: 2px solid white;
   background-position-x: -230px;
   background-position-y: -855px;
 }
 
-.wg-ongoing-spell-secretoath [data-current-player=false] .secretoath_icon {
+.wg-ongoing-spell-secretoath [data-battle_vision=false] .secretoath_icon {
   display: flex;
   border: 2px solid white;
   background-position-x: -736px;
@@ -1015,6 +1015,18 @@ body > .card {
   border: 2px solid white;
   background-position-x: -37px;
   background-position-y: -296px;
+}
+
+[data-discount-next-spell="2"] .haste_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -555px;
+  background-position-y: -150px;
+}
+
+.player-table-icon-tooltip {
+  min-width: 250px;
+  max-width: 350px;
 }
 
 #wg-phases-wrapper {

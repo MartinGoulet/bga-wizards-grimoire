@@ -1,3 +1,62 @@
+// const CARD_TYPE_BATTLE_VISION: number = 59;
+// const CARD_TYPE_GROWTH: number = 32;
+// const CARD_TYPE_POWER_HUNGRY: number = 61;
+// const CARD_TYPE_PUPPETMASTER: number = 63;
+// const CARD_TYPE_SECOND_STRIKE: number = 29;
+// const CARD_TYPE_SECRET_OATH: number = 18;
+
+class SpellRepertoire extends SlotStock<SpellCard> {
+   constructor(
+      protected manager: CardManager<SpellCard>,
+      protected element: HTMLElement,
+      private player_table: PlayerTable,
+   ) {
+      super(manager, element, {
+         slotsIds: [1, 2, 3, 4, 5, 6],
+         slotClasses: ["wg-spell-slot"],
+         mapCardToSlot: (card) => card.location_arg,
+      });
+   }
+   public addCard(
+      card: SpellCard,
+      animation?: CardAnimation<SpellCard>,
+      settings?: AddCardToSlotSettings,
+   ): Promise<boolean> {
+      this.setDataset(card, true);
+      return super.addCard(card, animation, settings);
+   }
+
+   public removeCard(card: SpellCard, settings?: RemoveCardSettings): void {
+      this.setDataset(card, false);
+      return super.removeCard(card, settings);
+   }
+
+   private setDataset(card: SpellCard, value: boolean) {
+      const card_type = this.player_table.game.getCardType(card);
+      const element = this.element.parentElement.parentElement;
+      switch (card_type["class"]) {
+         case "BattleVision":
+            element.dataset.battle_vision = "" + value;
+            break;
+         // case "Growth":
+         //    element.dataset.growth = "" + value;
+         //    break;
+         // case "PowerHungry":
+         //    element.dataset.power_hungry = "" + value;
+         //    break;
+         case "Puppetmaster":
+            element.dataset.puppetmaster = "" + value;
+            break;
+         // case "SecondStrike":
+         //    element.dataset.second_strike = "" + value;
+         //    break;
+         case "SecretOath":
+            element.dataset.secret_oath = "" + value;
+            break;
+      }
+   }
+}
+
 class Hand extends LineStock<ManaCard> {
    constructor(manager: CardManager<ManaCard>, element: HTMLElement, protected current_player: boolean) {
       super(manager, element, {
@@ -23,21 +82,31 @@ class Hand extends LineStock<ManaCard> {
 class PlayerTable {
    public player_id: number;
 
-   public spell_repertoire: SlotStock<SpellCard>;
+   public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: LineStock<ManaCard>;
 
    private current_player: boolean;
 
-   constructor(private game: WizardsGrimoire, player: WizardsGrimoirePlayerData) {
+   constructor(public game: WizardsGrimoire, player: WizardsGrimoirePlayerData) {
       this.player_id = Number(player.id);
       this.current_player = this.player_id == this.game.getPlayerId();
 
-      const { id: pId, name: pName, color: pColor } = player;
+      const { id: pId, color: pColor } = player;
       const pCurrent = this.current_player.toString();
 
+      const dataset: string[] = [
+         `data-color="${pColor}"`,
+         `data-current-player="${pCurrent}"`,
+         `data-discount-next-spell="0"`,
+         `data-discount-next-attack="0"`,
+         `data-battle_vision="false"`,
+         `data-puppetmaster="false"`,
+         `data-secret_oath="false"`,
+      ];
+
       const html = `
-            <div id="player-table-${pId}" style="--color: #${pColor}" data-color="${pColor}" data-current-player="${pCurrent}" data-discount-next-spell="0" data-discount-next-attack="0">
+            <div id="player-table-${pId}" style="--color: #${pColor}" ${dataset.join(" ")}>
                <div class="player-table whiteblock">
                   <span class="wg-title">${_("Spell Repertoire")}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
@@ -60,6 +129,7 @@ class PlayerTable {
       dojo.place(html, "tables");
 
       if (this.current_player) {
+         this.setupHaste();
          this.setupSecondStrike();
          this.setupBattleVision();
          this.setupPuppetMaster();
@@ -68,14 +138,10 @@ class PlayerTable {
          this.setupPowerHungry();
       }
 
-      this.spell_repertoire = new SlotStock(
+      this.spell_repertoire = new SpellRepertoire(
          game.spellsManager,
          document.getElementById(`player-table-${this.player_id}-spell-repertoire`),
-         {
-            slotsIds: [1, 2, 3, 4, 5, 6],
-            slotClasses: ["wg-spell-slot"],
-            mapCardToSlot: (card) => card.location_arg,
-         },
+         this,
       );
 
       for (let index = 1; index <= 6; index++) {
@@ -249,40 +315,26 @@ class PlayerTable {
    }
 
    private setupGrowth() {
-      const id = `growth_icon_${this.player_id}`;
-      dojo.place(
-         `<div id="${id}" class="growth_icon icon"></div>`,
-         `player-table-${this.player_id}-extra-icons`,
-      );
-      this.game.setTooltip(
-         id,
-         `<div>
-               <h3>${_("Growth")}</h3>
-               <span>${_("Increase the power of all mana by 1")}</span>
-            </div>`,
-      );
-      document.getElementById(id).addEventListener("click", () => {
-         (this.game as any).tooltips[id].open(id);
+      this.setupIcon({
+         id: "growth",
+         title: _("Growth"),
+         gametext: _("Increase the power of all mana by 1"),
+      });
+   }
+
+   private setupHaste() {
+      this.setupIcon({
+         id: "haste",
+         title: _("Haste"),
+         gametext: _("The next time you cast a spell this turn, it costs 2 less"),
       });
    }
 
    private setupPuppetMaster() {
-      const id = `puppetmaster_icon_${this.player_id}`;
-
-      dojo.place(
-         `<div id="${id}" class="puppetmaster_icon icon"></div>`,
-         `player-table-${this.player_id}-extra-icons`,
-      );
-      this.setPreviousBasicAttack(this.game.gamedatas.globals.previous_basic_attack);
-      this.game.setTooltip(
-         id,
-         `<div>
-               <h3>${_("Puppetmaster")}</h3>
-               <span>${_("You must use a mana of the same power as the previous basic attack phase")}</span>
-            </div>`,
-      );
-      document.getElementById(id).addEventListener("click", () => {
-         (this.game as any).tooltips[id].open(id);
+      this.setupIcon({
+         id: "puppetmaster",
+         title: _("Puppetmaster"),
+         gametext: _("You must use a mana of the same power as the previous basic attack phase"),
       });
    }
 
@@ -298,27 +350,17 @@ class PlayerTable {
       this.setupIcon({
          id: "secondstrike",
          title: _("Second strike"),
-         gametext: _("The next time you cast an attack spell this turn, it costs 1 less."),
+         gametext: _("The next time you cast an attack spell this turn, it costs 1 less"),
       });
    }
 
    private setupSecretOath() {
-      const id = `secretoath_icon_${this.player_id}`;
-      dojo.place(
-         `<div id="${id}" class="secretoath_icon icon"></div>`,
-         `player-table-${this.player_id}-extra-icons`,
-      );
-      this.game.setTooltip(
-         id,
-         `<div>
-               <h3>${_("Secret Oath")}</h3>
-               <span>${_(
-                  "If you have a 4 power mana in your hand, you must give it to your opponent immediately",
-               )}</span>
-            </div>`,
-      );
-      document.getElementById(id).addEventListener("click", () => {
-         (this.game as any).tooltips[id].open(id);
+      this.setupIcon({
+         id: "secretoath",
+         title: _("Secret oath"),
+         gametext: _(
+            "If you have a 4 power mana in your hand, you must give it to your opponent immediately",
+         ),
       });
    }
 
@@ -329,7 +371,10 @@ class PlayerTable {
          `<div id="${id}" class="${cssClass}_icon icon"></div>`,
          `player-table-${this.player_id}-extra-icons`,
       );
-      this.game.setTooltip(id, `<div><h3>${title}</h3><span>${_(gametext)}</span></div>`);
+      this.game.setTooltip(
+         id,
+         `<div class="player-table-icon-tooltip"><h3>${title}</h3><div>${_(gametext)}</div></div>`,
+      );
       document.getElementById(id).addEventListener("click", () => {
          (this.game as any).tooltips[id].open(id);
       });
