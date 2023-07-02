@@ -28,7 +28,6 @@ class RenewedFervor extends BaseCard {
         });
 
         $cards_before = [];
-        $cards_after = [];
         foreach ($spells as $card_id => $card) {
             $position = intval($card['location_arg']);
             $card = ManaCard::getOnTopOnManaCoolDown($position);
@@ -38,8 +37,7 @@ class RenewedFervor extends BaseCard {
                 CardLocation::Hand(),
                 $player_id
             );
-            $cards_after[] = ManaCard::get($card['id']);
         }
-        Notifications::moveManaCard($player_id, $cards_before, $cards_after);
+        Notifications::moveManaCard($player_id, $cards_before);
     }
 }

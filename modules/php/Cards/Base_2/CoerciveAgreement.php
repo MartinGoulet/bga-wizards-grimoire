@@ -11,7 +11,6 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class CoerciveAgreement extends BaseCard {
 
-
     public function castSpell($args) {
         // Choose 1: Take up to 3 randomly selected mana from your opponent's hand, or discard a mana card off 2 of your other spells.
         if ($args == null || $args == "") {
@@ -27,8 +26,7 @@ class CoerciveAgreement extends BaseCard {
                 return $card['id'];
             }, $random_cards);
             Game::get()->deck_manas->moveCards($ids, CardLocation::Hand(), Players::getPlayerId());
-            $cards_after = ManaCard::getCards($ids);
-            Notifications::moveManaCard($opponent_id, $random_cards, $cards_after, "@@@", false);
+            Notifications::moveManaCard($opponent_id, $random_cards, false);
         } else {
             $values = explode(',', array_shift($args));
 

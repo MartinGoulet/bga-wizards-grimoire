@@ -19,8 +19,7 @@ class ToxicGift extends BaseCard {
         $card = ManaCard::isInHand($card_id);
 
         ManaCard::addToHand($card["id"], Players::getOpponentId());
-        $card_after = ManaCard::get($card_id);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
 
         $damage = ManaCard::getPower($card);
         $this->dealDamage($damage);

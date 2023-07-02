@@ -17,17 +17,17 @@ class Windstorm extends BaseCard {
 
         $this->dealDamage(2);
 
-        $player_id = Players::getPlayerId();
         $cards = ManaCard::revealFromDeck(1);
         $topCard = array_shift($cards);
-        $value = ManaCard::getPower($topCard);
 
-        if ($value == 1) {
+        if (ManaCard::getPower($topCard) == 1) {
             $spell = SpellCard::get(Globals::getSpellPlayed());
             $position = SpellCard::getPositionInRepertoire($spell);
-            ManaCard::addOnTopOfManaCoolDown($topCard['id'], $position, $player_id);
-            $card_after = ManaCard::get($topCard['id']);
-            Notifications::moveManaCard($player_id, [$topCard], [$card_after]);
+            ManaCard::addOnTopOfManaCoolDown($topCard['id'], $position);
+        } else {
+            ManaCard::addOnTopOfDeck($topCard['id']);
         }
+        
+        Notifications::moveManaCard(Players::getPlayerId(), [$topCard]);
     }
 }

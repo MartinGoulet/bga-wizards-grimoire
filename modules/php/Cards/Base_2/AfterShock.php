@@ -18,8 +18,7 @@ class AfterShock extends BaseCard {
         $card_id = intval(array_shift($args));
         $card = ManaCard::isInHand($card_id);
         ManaCard::addOnTopOfDeck($card_id);
-        $card_after = ManaCard::Get($card_id);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
         $this->dealDamage(ManaCard::getPower($card));
     }
 }

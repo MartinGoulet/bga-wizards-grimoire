@@ -315,7 +315,11 @@ class WizardsGrimoire
       } catch (e) {
          console.error(log, args, "Exception thrown", e.stack);
       }
-      return this.inherited(arguments);
+      try {
+         return this.inherited(arguments);
+      } catch {
+         debugger;
+      }
    }
 
    formatGametext(rawText: string) {

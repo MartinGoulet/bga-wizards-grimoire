@@ -16,7 +16,11 @@ class BasicAttackBattleVisionStates implements StateHandler {
       };
    }
 
-   onLeavingState(): void {}
+   onLeavingState(): void {
+      const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+      hand.setSelectionMode("none");
+      hand.onSelectionChange = null;
+   }
 
    onUpdateActionButtons(args: BasicAttackBattleVisionArgs): void {
       const handleSelect = () => {

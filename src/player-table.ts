@@ -149,7 +149,7 @@ class PlayerTable {
 
    public async onMoveManaCard(before: ManaCard, after: ManaCard) {
       // TODO check before can be removed
-      const stockBeforeManager = this.game.manasManager.getCardStock(before);
+      const stockBeforeManager = this.game.manasManager.getCardStock(after);
       const stockAfter = this.getStock(after);
 
       if (stockBeforeManager === stockAfter) {

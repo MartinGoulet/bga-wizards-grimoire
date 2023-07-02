@@ -14,12 +14,10 @@ class FireBlast extends BaseCard {
         $player_id = Players::getPlayerId();
         $cards = ManaCard::getHand();
 
-        $cards_after = [];
         foreach ($cards as $card_id => $card) {
             ManaCard::addOnTopOfDiscard($card_id);
-            $cards_after[] = ManaCard::get($card_id);
         }
-        Notifications::moveManaCard($player_id, $cards, $cards_after);
+        Notifications::moveManaCard($player_id, $cards);
 
         $this->dealDamage(7);
     }

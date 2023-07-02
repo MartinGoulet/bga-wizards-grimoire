@@ -25,8 +25,7 @@ class TimeDistortion extends BaseCard {
 
         Game::get()->deck_manas->moveCards($mana_cards_id, CardLocation::Hand(), $player_id);
         // Actualize mana card
-        $mana_cards_after = ManaCard::getCards($mana_cards_id);
 
-        Notifications::moveManaCard($player_id, $mana_cards_before, $mana_cards_after);
+        Notifications::moveManaCard($player_id, $mana_cards_before);
     }
 }

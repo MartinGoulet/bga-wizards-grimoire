@@ -34,7 +34,6 @@ class BadFortune extends BaseCard {
             }
         }
 
-        $cards_after = ManaCard::getCards($card_ids);
-        Notifications::moveManaCard(Players::getPlayerId(), $cards, $cards_after);
+        Notifications::moveManaCard(Players::getPlayerId(), $cards);
     }
 }

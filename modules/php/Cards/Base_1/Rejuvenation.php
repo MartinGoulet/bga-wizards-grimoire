@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -24,8 +24,7 @@ class Rejuvenation extends BaseCard {
             }, $mana_ids);
 
             Game::get()->deck_manas->moveCards($mana_ids, CardLocation::Hand(), $player_id);
-            $cards_after = ManaCard::getCards($mana_ids);
-            Notifications::moveManaCard($player_id, $cards_before, $cards_after);
+            Notifications::moveManaCard($player_id, $cards_before);
         } else {
             throw new BgaSystemException("Arguments error " . sizeof($args));
         }

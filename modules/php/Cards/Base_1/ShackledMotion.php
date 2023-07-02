@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -21,12 +21,10 @@ class ShackledMotion extends BaseCard {
             case 2:
                 $opponent_id = Players::getOpponentId();
                 $cards_before = ManaCard::getHand($opponent_id);
-                $cards_after = [];
                 foreach ($cards_before as $card_id => $card) {
                     ManaCard::addOnTopOfDiscard($card_id);
-                    $cards_after[] = ManaCard::get($card_id);
                 }
-                Notifications::moveManaCard($opponent_id, $cards_before, $cards_after, "@@@", false);
+                Notifications::moveManaCard($opponent_id, $cards_before,  false);
                 break;
 
             default:

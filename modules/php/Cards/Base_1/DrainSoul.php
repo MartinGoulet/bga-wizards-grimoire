@@ -24,8 +24,7 @@ class DrainSoul extends BaseCard {
 
         $first_card = array_shift($cards);
         ManaCard::addToHand($first_card['id']);
-        $card_after = ManaCard::get($first_card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$first_card], [$card_after]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$first_card]);
 
         $this->dealDamage($max_value);
     }

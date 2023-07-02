@@ -50,7 +50,7 @@ interface CardType {
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
    js_actions_delayed?: string[] | string;
-   debug: "red" | "yellow" | "lightgreen";
+   debug: "red" | "yellow" | "darkorange";
 }
 
 interface SpellCard extends Card {
@@ -109,8 +109,9 @@ interface NotifManaDeckShuffleArgs {
 
 interface NotifMoveManaCardsArgs {
    player_id: number;
-   nbr: number;
-   cards_before: ManaCard[];
+   // nbr: number;
+   // cards_before: ManaCard[];
+   // cards_after: ManaCard[];
    cards_after: ManaCard[];
 }
 

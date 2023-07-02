@@ -64,13 +64,12 @@ class NotificationManager {
    }
 
    private notif_onMoveManaCards(notif: INotification<NotifMoveManaCardsArgs>) {
-      const { player_id, cards_before, cards_after, nbr } = notif.args;
-      log("onMoveManaCards", cards_before, cards_after);
-      for (let index = 0; index < nbr; index++) {
-         const before = cards_before[index];
-         const after = cards_after.find((x) => x.id == before.id);
-         this.game.getPlayerTable(player_id).onMoveManaCard(before, after);
-      }
+      debugger;
+      const { player_id, cards_after: cards } = notif.args;
+      log("onMoveManaCards", cards);
+      cards.forEach((card) => {
+         this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
+      });
    }
 
    private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {

@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -20,8 +20,7 @@ class EnergyReserve extends BaseCard {
         }
 
         ManaCard::addToHand($card['id']);
-        $card_after = ManaCard::get($card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
 
         $mana_power = ManaCard::getPower($card);
         $this->drawManaCards($mana_power);

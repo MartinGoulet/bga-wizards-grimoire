@@ -51,14 +51,12 @@ trait ActionTrait {
             throw new BgaSystemException("Not enough mana discarded");
         }
 
-        $cards_before = [];
-        $cards_after = [];
+        $cards = [];
         foreach ($card_ids as $card_id) {
-            $cards_before[] = ManaCard::isInHand($card_id);
+            $cards[] = ManaCard::isInHand($card_id);
             ManaCard::addOnTopOfDiscard($card_id);
-            $cards_after[] = ManaCard::get($card_id);
         }
-        Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after);
+        Notifications::moveManaCard(Players::getPlayerId(), $cards);
 
         $this->gamestate->nextState();
     }
@@ -264,9 +262,8 @@ trait ActionTrait {
         Globals::setCurrentBasicAttackPower($damage);
 
         Game::get()->deck_manas->moveCard($mana_id, CardLocation::BasicAttack());
-        $card_after = ManaCard::get($mana_id);
         Notifications::basicAttackCard($player_id, $card);
-        Notifications::moveManaCard($player_id, [$card], [$card_after], "@@@", false);
+        Notifications::moveManaCard($player_id, [$card], false);
 
         if (Globals::getIsActiveBattleVision()) {
             Globals::setInteractionPlayer(Players::getOpponentId());
@@ -283,8 +280,7 @@ trait ActionTrait {
 
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
-            $card_after = ManaCard::get($mana_id);
-            Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "@@@", false);
+            Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
 
             Game::get()->gamestate->nextState("block");
         } else {

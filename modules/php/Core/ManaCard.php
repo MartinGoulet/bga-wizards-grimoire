@@ -67,7 +67,7 @@ class ManaCard {
             $result = array_merge($mana_cards_1, $mana_cards_2);
         }
 
-        $result = Events::onManaDrawed($result);
+        Events::onManaDrawed($result);
 
         return $result;
     }
@@ -104,8 +104,7 @@ class ManaCard {
         $card = $deck->getCardOnTop(CardLocation::Deck());
         $deck->pickCardForLocation(CardLocation::Deck(), "temp");
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
-        $card_after = self::get($card['id']);
-        Notifications::moveManaCard($player_id, [$card], [$card_after]);
+        Notifications::moveManaCard($player_id, [$card]);
     }
 
     public static function discardManaFromSpell(int $position, int $player_id = 0) {
@@ -117,8 +116,7 @@ class ManaCard {
             throw new BgaSystemException("No card found under that spell");
         }
         ManaCard::addOnTopOfDiscard($card['id']);
-        $card_after = ManaCard::get($card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
 
         Events::onManaDiscarded($card, $position, $player_id);
     }
@@ -242,15 +240,13 @@ class ManaCard {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
             $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
-            $cards_after = $deck->getCardsInLocation(CardLocation::ManaRevelead());
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
             return $mana_cards;
         } else {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
             $mana_cards_1 = $deck->pickCardsForLocation($card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_1);
-            $cards_after = $deck->getCardsInLocation(CardLocation::ManaRevelead());
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
 
             self::reshuffle();
 
@@ -260,8 +256,7 @@ class ManaCard {
             $card_ids = array_values(array_map(function ($card) {
                 return $card['id'];
             }, $cards_before));
-            $cards_after = $deck->getCards($card_ids);
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before,  false);
 
             return array_merge($mana_cards_1, $mana_cards_2);
         }

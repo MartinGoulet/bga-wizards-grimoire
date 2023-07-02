@@ -103,6 +103,10 @@ class Globals extends APP_DbObject {
     public static function getIsActivePowerHungry() {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) > 0;
     }
+
+    public static function getIsActivePowerHungryPlayer() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY));
+    }
     
     public static function setIsActivePowerHungry(bool $isActive) {
         $value = $isActive ? Players::getPlayerId() : 0;

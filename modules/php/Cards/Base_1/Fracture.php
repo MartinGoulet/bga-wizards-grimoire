@@ -20,14 +20,12 @@ class Fracture extends BaseCard {
             $src_deck_pos = intval(array_shift($args));
             $dest_deck_pos = intval(array_shift($args));
             $player_id = Players::getPlayerId();
-            $deck_mana = Game::get()->deck_manas;
 
             $src_top_card = ManaCard::hasUnderSpell($src_deck_pos);
 
             ManaCard::addOnTopOfManaCoolDown($src_top_card['id'], $dest_deck_pos);
-            $dest_top_card = $deck_mana->getCard($src_top_card['id']);
 
-            Notifications::moveManaCard($player_id, [$src_top_card], [$dest_top_card]);
+            Notifications::moveManaCard($player_id, [$src_top_card]);
         }
     }
 }

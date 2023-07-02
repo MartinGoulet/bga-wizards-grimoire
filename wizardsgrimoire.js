@@ -1659,7 +1659,12 @@ var WizardsGrimoire = (function () {
         catch (e) {
             console.error(log, args, "Exception thrown", e.stack);
         }
-        return this.inherited(arguments);
+        try {
+            return this.inherited(arguments);
+        }
+        catch (_a) {
+            debugger;
+        }
     };
     WizardsGrimoire.prototype.formatGametext = function (rawText) {
         if (!rawText)
@@ -2440,17 +2445,13 @@ var NotificationManager = (function () {
         this.game.tableCenter.shuffleManaDeck(notif.args.cards);
     };
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
-        var _a = notif.args, player_id = _a.player_id, cards_before = _a.cards_before, cards_after = _a.cards_after, nbr = _a.nbr;
-        log("onMoveManaCards", cards_before, cards_after);
-        var _loop_3 = function (index) {
-            var before = cards_before[index];
-            var after = cards_after.find(function (x) { return x.id == before.id; });
-            this_1.game.getPlayerTable(player_id).onMoveManaCard(before, after);
-        };
-        var this_1 = this;
-        for (var index = 0; index < nbr; index++) {
-            _loop_3(index);
-        }
+        var _this = this;
+        debugger;
+        var _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
+        log("onMoveManaCards", cards);
+        cards.forEach(function (card) {
+            _this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
+        });
     };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);
@@ -2706,7 +2707,7 @@ var PlayerTable = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        stockBeforeManager = this.game.manasManager.getCardStock(before);
+                        stockBeforeManager = this.game.manasManager.getCardStock(after);
                         stockAfter = this.getStock(after);
                         if (stockBeforeManager === stockAfter) {
                             return [2];
@@ -3164,7 +3165,7 @@ var BasicAttackStates = (function () {
         var player_table = this.game.getPlayerTable(this.game.getPlayerId());
         var hand = player_table.hand;
         hand.setSelectionMode("single");
-        hand.setSelectableCards(args.allowed_manas);
+        hand.setSelectableCards(args._private.allowed_manas);
         hand.onSelectionChange = function (selection, lastChange) {
             _this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
         };
@@ -3208,7 +3209,11 @@ var BasicAttackBattleVisionStates = (function () {
             _this.game.toggleButtonEnable("btn_block", selection && selection.length === 1);
         };
     };
-    BasicAttackBattleVisionStates.prototype.onLeavingState = function () { };
+    BasicAttackBattleVisionStates.prototype.onLeavingState = function () {
+        var hand = this.game.getPlayerTable(this.game.getPlayerId()).hand;
+        hand.setSelectionMode("none");
+        hand.onSelectionChange = null;
+    };
     BasicAttackBattleVisionStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleSelect = function () {

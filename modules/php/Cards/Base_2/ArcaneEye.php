@@ -3,12 +3,10 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
-use WizardsGrimoire\Objects\CardLocation;
 
 class ArcaneEye extends BaseCard {
 
@@ -18,7 +16,6 @@ class ArcaneEye extends BaseCard {
         $spells = SpellCard::getCardsFromRepertoire();
 
         $cards_before = [];
-        $cards_after = [];
 
         foreach ($spells as $card_id => $spell) {
             $card_type = SpellCard::getCardInfo($spell);
@@ -27,11 +24,10 @@ class ArcaneEye extends BaseCard {
                 $card = ManaCard::getOnTopOnManaCoolDown($pos);
                 if ($card != null) {
                     $cards_before[] = $card;
-                    $cards_after[] = Game::get()->deck_manas->pickCard(CardLocation::PlayerManaCoolDown($player_id, $pos), $player_id);
                 }
             }
         }
 
-        Notifications::moveManaCard($player_id, $cards_before, $cards_after);
+        Notifications::moveManaCard($player_id, $cards_before);
     }
 }

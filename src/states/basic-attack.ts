@@ -7,7 +7,7 @@ class BasicAttackStates implements StateHandler {
       const { hand } = player_table;
 
       hand.setSelectionMode("single");
-      hand.setSelectableCards(args.allowed_manas);
+      hand.setSelectableCards(args._private.allowed_manas);
 
       hand.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
          this.game.toggleButtonEnable("btn_attack", selection && selection.length === 1);
@@ -39,5 +39,7 @@ class BasicAttackStates implements StateHandler {
 }
 
 interface BasicAttackStates {
-   allowed_manas: ManaCard[];
+   _private: {
+      allowed_manas: ManaCard[];
+   };
 }

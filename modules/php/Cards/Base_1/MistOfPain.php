@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
+use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -37,9 +37,8 @@ class MistOfPain extends BaseCard {
             foreach ($mana_ids as $card_id) {
                 ManaCard::addOnTopOfDiscard($card_id);
             }
-            $cards_after = ManaCard::getCards($mana_ids);
 
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, $cards_after, "@@@", false);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
         }
 
         $this->dealDamage(4 - $count);

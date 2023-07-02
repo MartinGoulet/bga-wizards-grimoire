@@ -14,7 +14,6 @@ class SilentSupport extends BaseCard {
 
         $position = intval(array_shift($args));
         $player_card = ManaCard::hasUnderSpell($position);
-        $player_card_after = ManaCard::drawFromManaCoolDown($position);
-        Notifications::moveManaCard(Players::getPlayerId(), [$player_card], [$player_card_after]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$player_card]);
     }
 }

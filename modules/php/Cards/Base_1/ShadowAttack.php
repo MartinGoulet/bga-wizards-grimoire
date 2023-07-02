@@ -19,8 +19,7 @@ class ShadowAttack extends BaseCard {
 
         ManaCard::addOnTopOfDiscard($card['id']);
 
-        $cardAfter = ManaCard::get($card['id']);
-        Notifications::moveManaCard($player_id, [$card], [$cardAfter]);
+        Notifications::moveManaCard($player_id, [$card]);
 
         $power = ManaCard::getPower($card);
 

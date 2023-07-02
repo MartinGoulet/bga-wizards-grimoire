@@ -34,7 +34,6 @@ trait StateTrait {
         $player_id = intval($this->getActivePlayerId());
 
         $cards_before = [];
-        $cards_after = [];
         $spell_delayed = [];
 
         for ($i = 1; $i <= 6; $i++) {
@@ -65,11 +64,10 @@ trait StateTrait {
                 }
                 $cards_before[] = $mana_card;
                 ManaCard::addOnTopOfDiscard($mana_card['id']);
-                $cards_after[] = ManaCard::get($mana_card['id']);
             }
         }
 
-        Notifications::moveManaCard($player_id, $cards_before, $cards_after, "@@@", false);
+        Notifications::moveManaCard($player_id, $cards_before, false);
 
         if (sizeof($spell_delayed) == 0) {
             $this->gamestate->nextState('next');
@@ -126,13 +124,12 @@ trait StateTrait {
         $card = ManaCard::getBasicAttack();
 
         if (Globals::getIsActivePowerHungry()) {
-            ManaCard::addToHand($card['id']);
+            ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
         }
 
-        $card_after = ManaCard::get($card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], [$card_after], "", false);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
 
         $this->gamestate->nextState();
     }

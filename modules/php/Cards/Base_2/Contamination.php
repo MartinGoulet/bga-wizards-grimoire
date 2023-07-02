@@ -27,13 +27,11 @@ class Contamination extends BaseCard {
             throw new BgaSystemException("Need 2 cards");
         }
 
-        $cards_after = [];
         foreach ($cards as $_ => $card) {
             ManaCard::addOnTopOfDeck($card['id']);
-            $cards_after[] = ManaCard::get($card['id']);
         }
 
-        Notifications::moveManaCard(Players::getPlayerId(), $cards, $cards_after);
+        Notifications::moveManaCard(Players::getPlayerId(), $cards);
         $this->dealDamage(4);
     }
 }

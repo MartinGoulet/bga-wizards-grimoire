@@ -18,7 +18,7 @@ class TrapAttack extends BaseCard {
         $card = ManaCard::hasUnderSpell($position, $player_id);
         $card_after = ManaCard::drawFromManaCoolDown($position, $player_id);
 
-        Notifications::moveManaCard($player_id, [$card], [$card_after]);
+        Notifications::moveManaCard($player_id, [$card]);
 
         $power = ManaCard::getPower($card);
         $this->dealDamage($power);

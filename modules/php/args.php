@@ -59,7 +59,12 @@ trait ArgsTrait {
             });
         }
         $args = $this->getArgsBase();
-        $args["allowed_manas"] = array_values($cards);
+        $args['_private'] = [
+            'active' => [
+                'allowed_manas' => array_values($cards),
+            ],
+        ];
+        // $args["allowed_manas"] = array_values($cards);
         return $args;
     }
 
