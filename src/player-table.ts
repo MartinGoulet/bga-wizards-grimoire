@@ -136,19 +136,7 @@ class PlayerTable {
       });
    }
 
-   public async onDrawManaCard(cards: ManaCard[]) {
-      for (let index = 0; index < cards.length; index++) {
-         const card = cards[index];
-         const topHiddenCard: ManaCard = { ...card, isHidden: true };
-
-         const { manaDeck } = this.game.tableCenter;
-         manaDeck.setCardNumber(manaDeck.getCardNumber(), topHiddenCard);
-         await this.hand.addCard(card);
-      }
-   }
-
    public async onMoveManaCard(before: ManaCard, after: ManaCard) {
-      // TODO check before can be removed
       const stockBeforeManager = this.game.manasManager.getCardStock(after);
       const stockAfter = this.getStock(after);
 

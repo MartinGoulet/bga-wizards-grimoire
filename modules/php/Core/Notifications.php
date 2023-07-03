@@ -147,6 +147,17 @@ class Notifications {
         ]);
     }
 
+    static function secretOath(int $player_id, $cards) {
+        self::message('${card_name} : ${player_name} must gives ${mana_values} to ${player_name2}', [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "player_name2" => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            "mana_values" => self::getPowerValues(array_values($cards)),
+            "card_name" => _("Secret Oath"),
+            "i18n" => ["card_name"],
+        ]);
+    }
+
     static function spellNoEffect() {
         self::message(clienttranslate("The spell has no effect since requirement was not met"));
     }

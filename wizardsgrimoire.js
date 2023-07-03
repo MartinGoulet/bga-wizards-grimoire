@@ -2396,7 +2396,7 @@ var NotificationManager = (function () {
         this.subscribeEvent("onChooseSpell", 500);
         this.subscribeEvent("onDiscardSpell", 500);
         this.subscribeEvent("onRefillSpell", 500);
-        this.subscribeEvent("onDrawManaCards", 1000, true);
+        this.subscribeEvent("onDrawManaCards", 650, true);
         this.subscribeEvent("onMoveManaCards", 1000, true);
         this.subscribeEvent("onManaDeckShuffle", 2500);
         this.subscribeEvent("onHealthChanged", 500);
@@ -2438,7 +2438,7 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onDrawManaCards = function (notif) {
         var _a = notif.args, player_id = _a.player_id, cards = _a.cards;
         log("onDrawManaCards", cards);
-        this.game.getPlayerTable(player_id).onDrawManaCard(cards);
+        this.game.getPlayerTable(player_id).hand.addCards(cards);
     };
     NotificationManager.prototype.notif_onManaDeckShuffle = function (notif) {
         log("onManaDeckShuffle");
@@ -2446,7 +2446,6 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         var _this = this;
-        debugger;
         var _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
         log("onMoveManaCards", cards);
         cards.forEach(function (card) {
@@ -2673,32 +2672,6 @@ var PlayerTable = (function () {
     PlayerTable.prototype.onChooseSpell = function (card) {
         this.spell_repertoire.addCard(card, {
             fromStock: this.game.tableCenter.spellPool,
-        });
-    };
-    PlayerTable.prototype.onDrawManaCard = function (cards) {
-        return __awaiter(this, void 0, void 0, function () {
-            var index, card, topHiddenCard, manaDeck;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        index = 0;
-                        _a.label = 1;
-                    case 1:
-                        if (!(index < cards.length)) return [3, 4];
-                        card = cards[index];
-                        topHiddenCard = __assign(__assign({}, card), { isHidden: true });
-                        manaDeck = this.game.tableCenter.manaDeck;
-                        manaDeck.setCardNumber(manaDeck.getCardNumber(), topHiddenCard);
-                        return [4, this.hand.addCard(card)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3:
-                        index++;
-                        return [3, 1];
-                    case 4: return [2];
-                }
-            });
         });
     };
     PlayerTable.prototype.onMoveManaCard = function (before, after) {

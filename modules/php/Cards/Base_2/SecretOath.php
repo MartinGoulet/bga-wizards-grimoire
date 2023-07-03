@@ -25,8 +25,9 @@ class SecretOath extends BaseCard {
         if (sizeof($mana_power_4) > 0) {
             foreach ($mana_power_4 as $card_id => $card) {
                 ManaCard::addToHand($card['id'], Globals::getIsActiveSecretOathPlayer());
-                Notifications::moveManaCard(Players::getOpponentId(), [$card], false);
             }
+            Notifications::moveManaCard(Players::getOpponentId(), $mana_power_4, false);
+            Notifications::secretOath(Players::getPlayerId(), $mana_power_4);
         }
         return $result;
     }
