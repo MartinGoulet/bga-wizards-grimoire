@@ -132,6 +132,8 @@ $gameinfos = array(
     // Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
     // A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
     'presentation' => array(
+        totranslate("In this two player strategy card game, you must fulfill your destiny and become the Keeper of the Grimoire. Defeat your opponent by drafting new spells from the magical Grimoire, casting them, managing your cooldowns, and dealing massive damage."),
+        totranslate("Each turn, draft one new spell to be added to your spell repertoire. But be warned! Your opponent has access to the same spells as you do, so choose the spells you want before your opponent does! Continue updating your spell repertoire throughout the game to optimize your deck and counter your opponent.")
         //    totranslate("This wonderful game is about geometric shapes!"),
         //    totranslate("It was awarded best triangle game of the year in 2005 and nominated for the Spiel des Jahres."),
         //    ...
