@@ -4,6 +4,7 @@ class PlayerTable {
    public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: LineStock<ManaCard>;
+   public health: ebg.counter;
 
    private current_player: boolean;
 
@@ -36,6 +37,10 @@ class PlayerTable {
                      <div id="player_table-${pId}-mana-deck-4" class="mana-deck"></div>
                      <div id="player_table-${pId}-mana-deck-5" class="mana-deck"></div>
                      <div id="player_table-${pId}-mana-deck-6" class="mana-deck"></div>
+                  </div>
+                  <div id="player-table-${pId}-health" class="wg-health">
+                     <div id="player-table-${pId}-health-value"></div>
+                     <div class="wg-health-icon"></div>
                   </div>
                </div>
                <div class="player-table whiteblock player-hand">
@@ -84,6 +89,10 @@ class PlayerTable {
          this.current_player,
       );
       this.hand.addCards(board.hand ?? []);
+
+      this.health = new ebg.counter();
+      this.health.create(`player-table-${pId}-health-value`);
+      this.health.setValue(Number(this.game.gamedatas.players[pId].score));
    }
 
    public canCast(card: SpellCard): boolean {
