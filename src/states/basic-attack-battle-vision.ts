@@ -3,7 +3,7 @@ class BasicAttackBattleVisionStates implements StateHandler {
 
    onEnteringState(args: BasicAttackBattleVisionArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
-      const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+      const { hand } = this.game.getCurrentPlayerTable();
 
       const cards = hand.getCards();
       const cardsFiltered = cards.filter((card) => card.type === args.value.toString());
@@ -17,14 +17,14 @@ class BasicAttackBattleVisionStates implements StateHandler {
    }
 
    onLeavingState(): void {
-      const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+      const { hand } = this.game.getCurrentPlayerTable();
       hand.setSelectionMode("none");
       hand.onSelectionChange = null;
    }
 
    onUpdateActionButtons(args: BasicAttackBattleVisionArgs): void {
       const handleSelect = () => {
-         const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+         const { hand } = this.game.getCurrentPlayerTable();
          const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
             this.game.takeAction("blockBasicAttack", { id: selectedMana.id });

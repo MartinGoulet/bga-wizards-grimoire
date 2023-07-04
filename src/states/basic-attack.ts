@@ -3,7 +3,7 @@ class BasicAttackStates implements StateHandler {
 
    onEnteringState(args: BasicAttackStates): void {
       if (!this.game.isCurrentPlayerActive()) return;
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
       const { hand } = player_table;
 
       hand.setSelectionMode("single");
@@ -15,14 +15,14 @@ class BasicAttackStates implements StateHandler {
    }
 
    onLeavingState(): void {
-      const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+      const { hand } = this.game.getCurrentPlayerTable();
       hand.setSelectionMode("none");
       hand.onSelectionChange = null;
    }
 
    onUpdateActionButtons(args: BasicAttackStates): void {
       const handleCastSpell = () => {
-         const { hand } = this.game.getPlayerTable(this.game.getPlayerId());
+         const { hand } = this.game.getCurrentPlayerTable();
          const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
             this.game.takeAction("basicAttack", { id: selectedMana.id });

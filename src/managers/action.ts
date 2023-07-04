@@ -287,7 +287,7 @@ class ActionManager {
    }
 
    private actionDanceOfPain() {
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
       if (player_table.hand.getCards().length <= 2) {
          this.activateNextAction();
          return;
@@ -328,7 +328,7 @@ class ActionManager {
 
    private actionCastMana() {
       const { name, cost, type } = this.game.getCardType(this.current_card);
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
 
       let modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
       if (type == "red") {
@@ -360,7 +360,7 @@ class ActionManager {
       const msg = _("Select a mana card under one of your spell");
       const { name } = this.game.getCardType(this.current_card);
 
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
       const exclude: number[] = [];
       for (let index = 1; index <= 6; index++) {
          if (
@@ -419,7 +419,7 @@ class ActionManager {
    }
 
    private actionSelectManaFrom() {
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
 
       const emptyDecks = player_table
          .getManaDeckWithSpellOver()
@@ -448,7 +448,7 @@ class ActionManager {
 
    private actionSelectManaTo() {
       const manaDeckPosition: number = Number(this.actions_args[this.actions_args.length - 1]);
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
       player_table.mana_cooldown[manaDeckPosition].forceSelected();
 
       const argsSuppl = {

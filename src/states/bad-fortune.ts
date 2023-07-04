@@ -12,7 +12,7 @@ class BadFortuneStates implements StateHandler {
 
       this.deck_cards = [];
       this.spell_cards = [];
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
       this.spell_cooldown = this.player_table.mana_cooldown[Number(args.spell.location_arg)];
 
       const handleManaRevealedClick = (card: ManaCard) => {

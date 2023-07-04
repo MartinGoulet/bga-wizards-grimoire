@@ -13,7 +13,7 @@ class CastSpellWithManaStates implements StateHandler {
 
       let { cost, type } = this.game.getCardType(this.spell);
 
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
       this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
 
       cost = Math.max(cost - this.player_table.getDiscountNextSpell(), 0);

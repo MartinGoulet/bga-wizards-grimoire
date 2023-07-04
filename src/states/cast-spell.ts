@@ -4,7 +4,7 @@ class CastSpellStates implements StateHandler {
    onEnteringState(args: CastSpellArgs): void {
       this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
-      const player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      const player_table = this.game.getCurrentPlayerTable();
       const repertoire = player_table.spell_repertoire;
 
       player_table.setDiscountNextAttack(args.discount_attack_spell);
@@ -23,14 +23,14 @@ class CastSpellStates implements StateHandler {
    }
 
    onLeavingState(): void {
-      const repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
+      const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
       repertoire.setSelectionMode("none");
       repertoire.onSelectionChange = null;
    }
 
    onUpdateActionButtons(args: CastSpellArgs): void {
       const handleCastSpell = () => {
-         const repertoire = this.game.getPlayerTable(this.game.getPlayerId()).spell_repertoire;
+         const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
          const selectedSpell: SpellCard = repertoire.getSelection()[0];
 
          this.game.markCardAsSelected(selectedSpell);

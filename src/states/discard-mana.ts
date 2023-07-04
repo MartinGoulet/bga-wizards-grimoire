@@ -7,7 +7,7 @@ class DiscardManaStates implements StateHandler {
    onEnteringState(args: any): void {
       if (!this.game.isCurrentPlayerActive()) return;
 
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
       this.nbr_cards_to_discard = this.player_table.hand.getCards().length - 10;
 
       const handleChange = () => {

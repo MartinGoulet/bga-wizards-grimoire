@@ -204,6 +204,10 @@ class WizardsGrimoire
       return this.playersTables.find((playerTable) => playerTable.player_id === playerId);
    }
 
+   public getCurrentPlayerTable() {
+      return this.getPlayerTable(this.getPlayerId());
+   }
+
    public markCardAsSelected(card: SpellCard) {
       const div = this.spellsManager.getCardElement(card);
       div.classList.add("wg-selected");

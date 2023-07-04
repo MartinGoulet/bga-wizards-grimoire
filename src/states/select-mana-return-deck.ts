@@ -27,7 +27,7 @@ class SelectManaReturnDeckStates implements StateHandler {
          }
       };
 
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
       this.player_table.hand.onCardClick = handleHandCardClick;
       this.game.tableCenter.manaDeck.onCardClick = handleDeckCardClick;
    }

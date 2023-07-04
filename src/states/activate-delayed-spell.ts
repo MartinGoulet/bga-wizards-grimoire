@@ -4,7 +4,7 @@ class ActivateDelayedSpellStates implements StateHandler {
    constructor(private game: WizardsGrimoire) {}
    onEnteringState(args: ActivateDelayedSpellArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
 
       const handleSelection = (selection: SpellCard[], lastChange: SpellCard) => {
          this.game.toggleButtonEnable("btn_confirm", selection.length == 1);

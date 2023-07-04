@@ -6,7 +6,7 @@ class ChooseNewSpellStates implements StateHandler {
    onEnteringState(args: any): void {
       if (!this.game.isCurrentPlayerActive()) return;
 
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
 
       if (this.player_table.getSpellSlotAvailables().length == 0) {
          this.clearSelectionMode();
@@ -55,7 +55,7 @@ class ChooseNewSpellStates implements StateHandler {
       this.clearSelectionMode();
    }
    onUpdateActionButtons(args: any): void {
-      this.player_table = this.game.getPlayerTable(this.game.getPlayerId());
+      this.player_table = this.game.getCurrentPlayerTable();
 
       const handleConfirm = () => {
          const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
