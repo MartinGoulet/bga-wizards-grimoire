@@ -125,11 +125,13 @@ trait StateTrait {
 
         if (Globals::getIsActivePowerHungry()) {
             ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
+            Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+            Events::onAddCardToHand();
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
+            Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
         }
 
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
 
         $this->gamestate->nextState();
     }

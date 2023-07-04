@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -21,8 +22,8 @@ class Possessed extends BaseCard {
 
             $card = ManaCard::isInHand($card_id, Players::getOpponentId());
             ManaCard::addToHand($card_id);
-
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+            Events::onAddCardToHand();
 
             $this->dealDamage(5 - ManaCard::getPower($card));
         }

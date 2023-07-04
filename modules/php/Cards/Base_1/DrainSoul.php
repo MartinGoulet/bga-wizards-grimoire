@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -25,6 +26,7 @@ class DrainSoul extends BaseCard {
         $first_card = array_shift($cards);
         ManaCard::addToHand($first_card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$first_card]);
+        Events::onAddCardToHand();
 
         $this->dealDamage($max_value);
     }

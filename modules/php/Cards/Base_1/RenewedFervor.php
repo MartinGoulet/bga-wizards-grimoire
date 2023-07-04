@@ -3,12 +3,11 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
-use WizardsGrimoire\Objects\CardLocation;
 
 class RenewedFervor extends BaseCard {
 
@@ -27,17 +26,13 @@ class RenewedFervor extends BaseCard {
             return $isInstantAttackSpellWithCostTwoOrLess;
         });
 
-        $cards_before = [];
-        foreach ($spells as $card_id => $card) {
-            $position = intval($card['location_arg']);
-            $card = ManaCard::getOnTopOnManaCoolDown($position);
-            $cards_before[] = $card;
-            Game::get()->deck_manas->pickCardForLocation(
-                CardLocation::PlayerManaCoolDown($player_id, $position),
-                CardLocation::Hand(),
-                $player_id
-            );
+        $cards = [];
+        foreach ($spells as $card_id => $spell) {
+            $position = intval($spell['location_arg']);
+            $cards[] = ManaCard::drawFromManaCoolDown($position);
+            
         }
-        Notifications::moveManaCard($player_id, $cards_before);
+        Notifications::moveManaCard($player_id, $cards);
+        Events::onAddCardToHand();
     }
 }

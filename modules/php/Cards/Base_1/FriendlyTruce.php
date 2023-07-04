@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
@@ -36,6 +37,7 @@ class FriendlyTruce extends BaseCard {
 
             Game::get()->deck_manas->moveCards($mana_ids, CardLocation::Hand(), Players::getPlayerId());
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
+            Events::onAddCardToHand();
         } else {
             $this->drawManaCards(5);
         }

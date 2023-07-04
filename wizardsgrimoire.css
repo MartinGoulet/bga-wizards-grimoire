@@ -823,7 +823,8 @@ body > .card {
   justify-content: center;
   flex-wrap: wrap;
   width: 732px;
-  gap: 20px;
+  column-gap: 40px;
+  row-gap: 20px;
 }
 
 #spell-pool {

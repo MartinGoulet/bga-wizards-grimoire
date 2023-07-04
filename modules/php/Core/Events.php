@@ -41,6 +41,10 @@ class Events {
         return $cards;
     }
 
+    public static function onAddCardToHand() {
+        self::checkSecretOathHand();
+    }
+
     public static function onPlayerNewTurn() {
         self::checkSecretOathHand();
     }

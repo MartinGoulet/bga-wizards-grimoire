@@ -18,6 +18,16 @@ class ManaCard {
         Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
     }
 
+    public static function addCardsToHand($cards, $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $card_ids = array_values(array_map(function($card) { return $card['id'];}, $cards));
+        Game::get()->deck_manas->moveCards($card_ids, CardLocation::Hand(), $player_id);
+        Notifications::moveManaCard($player_id, $cards);
+        Events::onAddCardToHand();
+    }
+
     public static function addToHand($card_id, $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();

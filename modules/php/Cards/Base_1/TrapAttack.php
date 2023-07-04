@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -15,10 +16,10 @@ class TrapAttack extends BaseCard {
         $position = intval(array_shift($args));
         $player_id = Players::getPlayerId();
 
-        $card = ManaCard::hasUnderSpell($position, $player_id);
-        $card_after = ManaCard::drawFromManaCoolDown($position, $player_id);
-
+        ManaCard::hasUnderSpell($position, $player_id);
+        $card = ManaCard::drawFromManaCoolDown($position, $player_id);
         Notifications::moveManaCard($player_id, [$card]);
+        Events::onAddCardToHand();
 
         $power = ManaCard::getPower($card);
         $this->dealDamage($power);

@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -27,6 +28,7 @@ class SharedPower extends BaseCard {
 
         ManaCard::addToHand($mana_id, $opponent_id);
         Notifications::moveManaCard($opponent_id, [$card]);
+        Events::onAddCardToHand();
 
         // Gain 4 mana cards
         $this->drawManaCards(4);
