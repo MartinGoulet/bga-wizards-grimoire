@@ -22,6 +22,7 @@
 
 
 $this->card_types = [
+  // --- gen php begin ---
   1 => [
     "name" => clienttranslate("Touch the void"),
     "class" => "TouchTheVoid",
@@ -30,7 +31,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   2 => [
     "name" => clienttranslate("Overload"),
@@ -72,7 +73,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionMistOfPain",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   6 => [
     "name" => clienttranslate("Arcane tactics"),
@@ -84,7 +85,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "player",
     "js_actions_interaction" => "actionArcaneTactics",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   7 => [
     "name" => clienttranslate("Freeze"),
@@ -105,7 +106,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "js_actions" => "actionSelectManaFrom",
+    "js_actions" => "actionEnergyReserve",
     "debug" => "darkorange",
   ],
   9 => [
@@ -116,8 +117,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
+    "js_actions" => "actionFracture",
     "debug" => "darkorange",
-    "js_actions" => ["actionSelectManaFrom", "actionSelectManaTo"],
   ],
   10 => [
     "name" => clienttranslate("Gleam of hope"),
@@ -129,7 +130,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "debug" => "lightgreen",
   ],
-
   11 => [
     "name" => clienttranslate("Rejuvenation"),
     "class" => "Rejuvenation",
@@ -173,7 +173,6 @@ $this->card_types = [
     "js_actions" => "actionCoerciveAgreement",
     "debug" => "darkorange",
   ],
-
   15 => [
     "name" => clienttranslate("Arcane eye"),
     "class" => "ArcaneEye",
@@ -222,8 +221,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
     "js_actions" => "actionTimeDistortion",
+    "debug" => "darkorange",
   ],
   20 => [
     "name" => clienttranslate("Betrayal"),
@@ -235,7 +234,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "debug" => "darkorange",
   ],
-
   21 => [
     "name" => clienttranslate("Blood lust"),
     "class" => "BloodLust",
@@ -244,7 +242,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   22 => [
     "name" => clienttranslate("Delusion"),
@@ -278,7 +276,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "debug" => "darkorange",
   ],
-
   25 => [
     "name" => clienttranslate("Energy storm"),
     "class" => "EnergyStorm",
@@ -350,8 +347,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "js_actions" => ["actionSelectManaCoolDownPlayer", "actionSelectManaCoolDownOpponent"],
-    "debug" => "darkorange",
+    "js_actions" => "actionEnergyShield",
+    "debug" => "lightgreen",
   ],
   32 => [
     "name" => clienttranslate("Growth"),
@@ -383,8 +380,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "debug" => "darkorange",
   ],
-
-
   35 => [
     "name" => clienttranslate("Shadow attack"),
     "class" => "ShadowAttack",
@@ -393,8 +388,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
+    "js_actions" => "actionShadowAttack",
     "debug" => "darkorange",
-    "js_actions" => "actionSelectManaFrom",
   ],
   36 => [
     "name" => clienttranslate("Crushing blow"),
@@ -404,7 +399,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 5,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   37 => [
     "name" => clienttranslate("False face"),
@@ -427,7 +422,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "debug" => "red",
   ],
-
   39 => [
     "name" => clienttranslate("Lullaby"),
     "class" => "Lullaby",
@@ -448,7 +442,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "debug" => "darkorange",
   ],
-
   41 => [
     "name" => clienttranslate("Hoodwink"),
     "class" => "Hoodwink",
@@ -490,8 +483,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "debug" => "blue",
   ],
-
-
   45 => [
     "name" => clienttranslate("Fatal flaw"),
     "class" => "FatalFlaw",
@@ -534,7 +525,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "debug" => "lightgreen",
   ],
-
   49 => [
     "name" => clienttranslate("Guilty bond"),
     "class" => "GuiltyBond",
@@ -556,7 +546,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "debug" => "darkorange",
   ],
-
   51 => [
     "name" => clienttranslate("Renewal"),
     "class" => "Renewal",
@@ -575,7 +564,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "js_actions" => "actionGiveManaFromHandToOpponent",
+    "js_actions" => "actionToxicGift",
     "debug" => "darkorange",
   ],
   53 => [
@@ -588,7 +577,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionWrath",
-    "debug" => "darkorange",
+    "debug" => "yellow",
   ],
   54 => [
     "name" => clienttranslate("Reckless attack"),
@@ -601,8 +590,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "debug" => "darkorange",
   ],
-
-
   55 => [
     "name" => clienttranslate("Shared power"),
     "class" => "SharedPower",
@@ -611,8 +598,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
-    "js_actions" => "actionGiveManaFromHandToOpponent",
+    "js_actions" => "actionShadowPower",
+    "debug" => "lightgreen",
   ],
   56 => [
     "name" => clienttranslate("Sleight of hand"),
@@ -632,7 +619,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   58 => [
     "name" => clienttranslate("Mirror image"),
@@ -644,7 +631,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "debug" => "darkorange",
   ],
-
   59 => [
     "name" => clienttranslate("Battle vision"),
     "class" => "BattleVision",
@@ -667,8 +653,6 @@ $this->card_types = [
     "js_actions_delayed" => "actionSilentSupport",
     "debug" => "darkorange",
   ],
-
-
   61 => [
     "name" => clienttranslate("Power hungry"),
     "class" => "PowerHungry",
@@ -711,7 +695,6 @@ $this->card_types = [
     "js_actions" => "actionContamination",
     "debug" => "darkorange",
   ],
-
   65 => [
     "name" => clienttranslate("Dance of pain"),
     "class" => "DanceOfPain",
@@ -753,9 +736,8 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "interaction" => "player",
     "js_actions_interaction" => "actionAfterShock",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
-
   69 => [
     "name" => clienttranslate("Bad fortune"),
     "class" => "BadFortune",
@@ -778,6 +760,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "debug" => "darkorange",
   ],
+  // --- gen php end --- 
 ];
 
 $this->mana_cards = [
