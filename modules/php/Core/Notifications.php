@@ -21,6 +21,7 @@ class Notifications {
             "player_name" => self::getPlayerName($player_id),
             "life_remaining" => $life_remaining,
             "damage" => $damage,
+            "nbr_damage" => $damage,
         ]);
     }
 
@@ -117,6 +118,7 @@ class Notifications {
             "player_name" => self::getPlayerName($player_id),
             "life_remaining" => $life_remaining,
             "damage" => $damage,
+            "nbr_damage" => $damage,
             "card_name" => $card_name,
             "i18n" => ["card_name"],
         ]);

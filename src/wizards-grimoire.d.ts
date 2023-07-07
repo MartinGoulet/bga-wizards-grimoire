@@ -128,5 +128,5 @@ interface NotifRevealManaCardArgs {
 interface NotifHealthChangedArgs {
    player_id: number;
    life_remaining: number;
-   damage: number;
+   nbr_damage: number;
 }

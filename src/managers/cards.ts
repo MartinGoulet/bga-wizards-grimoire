@@ -1,6 +1,13 @@
 const card_width: number = 120;
 const card_height: number = 168;
 
+function formatGametext2(rawText: string) {
+   if (!rawText) return "";
+   let value = rawText.replace(":", ":<br />");
+   // return "<p>" + value.split(".").join(".</p><p>") + "</p>";
+   return "<p>" + value + "</p>";
+}
+
 class SpellCardManager extends CardManager<SpellCard> {
    constructor(public game: WizardsGrimoire) {
       super(game, {
@@ -17,6 +24,18 @@ class SpellCardManager extends CardManager<SpellCard> {
             div.classList.add("wg-card-spell-front");
 
             if (div.childNodes.length == 1 && card.type) {
+               const card_type = this.game.getCardType(card);
+               const { name, description } = card_type;
+               const gametext = formatGametext2(description);
+
+               div.insertAdjacentHTML(
+                  "afterbegin",
+                  `<div class="wg-card-gametext">
+                     <div class="wg-card-gametext-title">${name}</div>
+                     <div class="wg-card-gametext-divider"></div>
+                     <div class="wg-card-gametext-text">${gametext}</div>
+                  </div>`,
+               );
                const helpMarkerId = `${this.getId(card)}-help-marker`;
                // TODO : Remove before production
                const color = !isDebug ? "white" : this.game.getCardType(card).debug;
@@ -58,7 +77,8 @@ class SpellCardManager extends CardManager<SpellCard> {
       const card_type = this.game.getCardType(card);
       const { name, cost, description } = card_type;
 
-      const gametext = this.game.formatGametext(description);
+      // const gametext = this.game.formatGametext(description);
+      const gametext = formatGametext2(description);
 
       let html = `<div class="wg-tooltip-card">
          <div class="wg-tooltip-left">

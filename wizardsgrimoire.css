@@ -27,6 +27,38 @@
 .wg-card .wg-card-mana-front[data-type="4"] {
   background-position: -300% 0%;
 }
+.wg-card .wg-card-gametext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  width: 88px;
+  height: 48px;
+  top: 121px;
+  left: 18px;
+  gap: 2px;
+}
+.wg-card .wg-card-gametext .wg-card-gametext-title {
+  font-family: RoughAntiquaAllCaps;
+  font-size: 6px;
+  line-height: 6px;
+  text-align: center;
+}
+.wg-card .wg-card-gametext .wg-card-gametext-divider {
+  height: 4px;
+  background-image: url(img/spritesheet.png);
+  background-size: 300px 20px;
+  width: 53px;
+}
+.wg-card .wg-card-gametext .wg-card-gametext-text {
+  font-family: BrushSerifEdward;
+  font-size: 5px;
+  line-height: 6px;
+  text-align: center;
+}
+.wg-card .wg-card-gametext .wg-card-gametext-text p {
+  margin: 2px 0 0 0;
+}
 .wg-card .wg-card-mana-back {
   background: url("img/mana-back.jpg");
   background-size: var(--width) var(--height);
@@ -330,34 +362,32 @@
 
 .wg-tooltip-card {
   display: contents;
-  min-width: 250px;
-  max-width: 300px;
   gap: 15px;
   --width: 160px;
   --height: 224px;
 }
 .wg-tooltip-card .wg-tooltip-left {
+  max-width: 260px;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-header {
-  font-size: 18px;
-  font-style: italic;
-  font-weight: bold;
+  font-family: RoughAntiquaAllCaps;
+  font-size: 16px;
   border-bottom: 2px solid black;
-  text-transform: uppercase;
+  text-align: center;
+  padding: 3px;
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-cost {
   font-size: 14px;
-  font-weight: bold;
-  font-style: italic;
+  font-family: BrushSerifEdward;
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-gametext {
-  padding: 0 5px;
+  padding: 0 3px;
   border-radius: 5px;
   text-align: center;
-  max-width: 200px;
+  font-family: BrushSerifEdward;
 }
 
 .bga-cards_selected-card .front {
@@ -1250,6 +1280,14 @@ body > .card {
   top: 119px;
 }
 
+@font-face {
+  font-family: "BrushSerifEdward";
+  src: url("img/Brush_Serif_-_Edward.otf") format("opentype");
+}
+@font-face {
+  font-family: "RoughAntiquaAllCaps";
+  src: url("img/RoughAntiquaAllCaps.otf") format("opentype");
+}
 #game_play_area #bga-zoom-wrapper {
   padding-top: 40px;
 }

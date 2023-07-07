@@ -10,15 +10,18 @@ class CastSpellStates implements StateHandler {
       player_table.setDiscountNextAttack(args.discount_attack_spell);
       player_table.setDiscountNextSpell(args.discount_next_spell);
 
-      repertoire.setSelectionMode("single");
-      repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
-         const canSelect =
-            selection &&
-            selection.length === 1 &&
-            player_table.canCast(selection[0]) &&
-            player_table.mana_cooldown[lastChange.location_arg].getCardNumber() == 0;
+      const selectableCards = repertoire
+         .getCards()
+         .filter(
+            (card) =>
+               player_table.canCast(card) &&
+               player_table.mana_cooldown[card.location_arg].getCardNumber() == 0,
+         );
 
-         this.game.toggleButtonEnable("btn_cast", canSelect);
+      repertoire.setSelectionMode("single");
+      repertoire.setSelectableCards(selectableCards);
+      repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
+         this.game.toggleButtonEnable("btn_cast", selection && selection.length === 1);
       };
    }
 

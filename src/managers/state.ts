@@ -8,6 +8,7 @@ const states = {
       selectManaDiscard: "client_selectManaDiscard",
       selectManaHand: "client_selectManaHand",
       selectManaReturnDeck: "client_selectManaReturnDeck",
+      selectSpell: "client_selectSpell",
    },
    server: {
       discardMana: "discardMana",
@@ -35,6 +36,7 @@ class StateManager {
          [states.client.selectManaDiscard]: new SelectManaDiscardStates(game),
          [states.client.selectManaHand]: new SelectManaHandStates(game),
          [states.client.selectManaReturnDeck]: new SelectManaReturnDeckStates(game),
+         [states.client.selectSpell]: new SelectSpellStates(game),
 
          [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.discardMana]: new DiscardManaStates(game),

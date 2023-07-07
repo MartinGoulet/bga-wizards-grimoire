@@ -23,7 +23,6 @@ class CastSpellWithManaStates implements StateHandler {
 
       const handleHandCardClick = (card: ManaCard) => {
          this.mana_cards.push(card);
-         // card.isHidden = true;
          this.mana_deck.addCard(card);
 
          this.game.toggleButtonEnable("btnConfirm", this.mana_cards.length === cost);

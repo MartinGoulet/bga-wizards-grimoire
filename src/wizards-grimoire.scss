@@ -6,6 +6,16 @@
 @import "player-table";
 @import "game-options";
 
+@font-face {
+   font-family: "BrushSerifEdward";
+   src: url("img/Brush_Serif_-_Edward.otf") format("opentype");
+}
+
+@font-face {
+   font-family: "RoughAntiquaAllCaps";
+   src: url("img/RoughAntiquaAllCaps.otf") format("opentype");
+}
+
 #game_play_area {
    #bga-zoom-wrapper {
       padding-top: 40px;

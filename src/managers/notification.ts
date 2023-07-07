@@ -75,11 +75,11 @@ class NotificationManager {
 
    private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {
       log("notif_onHealthChanged", notif.args);
-      const { player_id, life_remaining, damage } = notif.args;
+      const { player_id, life_remaining, nbr_damage } = notif.args;
       this.game.scoreCtrl[player_id].toValue(life_remaining);
       this.game.getPlayerTable(player_id).health.toValue(life_remaining);
-      if (damage > 0) {
-         this.game.displayScoring(`player-table-${player_id}-health`, "ff0000", -damage, 1000);
+      if (nbr_damage > 0) {
+         this.game.displayScoring(`player-table-${player_id}-health`, "ff0000", -nbr_damage, 1000);
       }
    }
 }

@@ -63,6 +63,7 @@
         "src/states/select-mana-discard.ts",
         "src/states/select-mana-hand.ts",
         "src/states/select-mana-return-deck.ts",
+        "src/states/select-spell.ts",
 
         "src/define.ts"
     ]

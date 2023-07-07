@@ -14,8 +14,9 @@ class EnergyShield extends BaseCard {
         $player_deck_position = intval(array_shift($args));
         $opponent_deck_position = intval(array_shift($args));
 
-        $player_card = ManaCard::hasUnderSpell($player_deck_position);
-        Notifications::moveManaCard(Players::getPlayerId(), [$player_card]);
+        ManaCard::hasUnderSpell($player_deck_position);
+        $card = ManaCard::drawFromManaCoolDown($player_deck_position);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
 
         ManaCard::dealFromDeckToManaCoolDown($opponent_deck_position, Players::getOpponentId());
     }

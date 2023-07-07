@@ -1488,6 +1488,20 @@ var WizardsGrimoire = (function () {
             zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
         });
         this.setupNotifications();
+        if (isDebug) {
+            this.exportToCsv(gamedatas);
+        }
+    };
+    WizardsGrimoire.prototype.exportToCsv = function (gamedatas) {
+        var values = [
+            "id;name;description;class;type;activation;cost;icon;debug;js_actions;js_actions_interaction;js_actions_delayed",
+        ];
+        Object.keys(gamedatas.card_types).forEach(function (id) {
+            var _a, _b, _c;
+            var a = gamedatas.card_types[id];
+            values.push("".concat(id, ";").concat(a.name, ";").concat(a.description, ";").concat(a.class, ";").concat(a.type, ";").concat(a.activation, ";").concat(a.cost, ";").concat(a.icon, ";").concat(a.debug, ";").concat((_a = a.js_actions) !== null && _a !== void 0 ? _a : "", ";").concat((_b = a.js_actions_interaction) !== null && _b !== void 0 ? _b : "", ";").concat((_c = a.js_actions_delayed) !== null && _c !== void 0 ? _c : ""));
+        });
+        log(values.join("\n"));
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
@@ -1941,6 +1955,13 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionEnergyReserve = function () {
+        this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionFracture = function () {
+        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+        this.activateNextAction();
+    };
     ActionManager.prototype.actionFreeze = function () {
         var _this = this;
         this.question({
@@ -1955,9 +1976,7 @@ var ActionManager = (function () {
                 {
                     label: _("Place a mana card from the mana deck on one of your opponent's spells"),
                     action: function () {
-                        _this.selectManaDeck(1, _("Select an opponent's spell deck"), true, {
-                            player_id: _this.game.getOpponentId(),
-                        });
+                        _this.actionSelectSpellOpponent();
                     },
                 },
             ],
@@ -2018,6 +2037,12 @@ var ActionManager = (function () {
             ],
         });
     };
+    ActionManager.prototype.actionShadowAttack = function () {
+        this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionShadowPower = function () {
+        this.actionGiveManaFromHandToOpponent();
+    };
     ActionManager.prototype.actionSneakyDeal = function () {
         var _this = this;
         this.question({
@@ -2042,6 +2067,9 @@ var ActionManager = (function () {
     ActionManager.prototype.actionTimeDistortion = function () {
         var msg = _("${you} may select up to ${nbr} mana card");
         this.selectMana(2, msg, false);
+    };
+    ActionManager.prototype.actionToxicGift = function () {
+        this.actionGiveManaFromHandToOpponent();
     };
     ActionManager.prototype.actionTrapAttack = function () {
         this.actionSelectManaFrom();
@@ -2096,6 +2124,10 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionDelusion = function () {
         this.actionSelectManaCoolDownOpponent(true);
+    };
+    ActionManager.prototype.actionEnergyShield = function () {
+        this.actions.push("actionSelectManaCoolDownPlayer", "actionSelectSpellOpponent");
+        this.activateNextAction();
     };
     ActionManager.prototype.actionPossessed = function () {
         this.selectManaHand(1, _("${you} may give ${nbr} mana card from your hand to reduce damage"), true, {
@@ -2232,6 +2264,16 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionSelectSpellOpponent = function () {
+        var name = this.game.getCardType(this.current_card).name;
+        var msg = _("${you} must select an opponent's spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getOpponentId(),
+            },
+        });
+    };
     ActionManager.prototype.question = function (args) {
         var name = this.game.getCardType(this.current_card).name;
         this.game.setClientState(states.client.question, {
@@ -2291,6 +2333,12 @@ var ActionManager = (function () {
 }());
 var card_width = 120;
 var card_height = 168;
+function formatGametext2(rawText) {
+    if (!rawText)
+        return "";
+    var value = rawText.replace(":", ":<br />");
+    return "<p>" + value + "</p>";
+}
 var SpellCardManager = (function (_super) {
     __extends(SpellCardManager, _super);
     function SpellCardManager(game) {
@@ -2307,6 +2355,10 @@ var SpellCardManager = (function (_super) {
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
                 if (div.childNodes.length == 1 && card.type) {
+                    var card_type = _this.game.getCardType(card);
+                    var name_1 = card_type.name, description = card_type.description;
+                    var gametext = formatGametext2(description);
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_1, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
                     var helpMarkerId_1 = "".concat(_this.getId(card), "-help-marker");
                     var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
                     div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId_1, "\" class=\"help-marker\">\n                     <svg class=\"feather feather-help-circle\" fill=\"").concat(color, "\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n                  </div>"));
@@ -2341,7 +2393,7 @@ var SpellCardManager = (function (_super) {
     SpellCardManager.prototype.getTooltip = function (card) {
         var card_type = this.game.getCardType(card);
         var name = card_type.name, cost = card_type.cost, description = card_type.description;
-        var gametext = this.game.formatGametext(description);
+        var gametext = formatGametext2(description);
         var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(name, "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost :"), " ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(gametext, "</div>\n         </div>\n      </div>");
         return html;
     };
@@ -2457,11 +2509,11 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);
-        var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining, damage = _a.damage;
+        var _a = notif.args, player_id = _a.player_id, life_remaining = _a.life_remaining, nbr_damage = _a.nbr_damage;
         this.game.scoreCtrl[player_id].toValue(life_remaining);
         this.game.getPlayerTable(player_id).health.toValue(life_remaining);
-        if (damage > 0) {
-            this.game.displayScoring("player-table-".concat(player_id, "-health"), "ff0000", -damage, 1000);
+        if (nbr_damage > 0) {
+            this.game.displayScoring("player-table-".concat(player_id, "-health"), "ff0000", -nbr_damage, 1000);
         }
     };
     return NotificationManager;
@@ -2476,6 +2528,7 @@ var states = {
         selectManaDiscard: "client_selectManaDiscard",
         selectManaHand: "client_selectManaHand",
         selectManaReturnDeck: "client_selectManaReturnDeck",
+        selectSpell: "client_selectSpell",
     },
     server: {
         discardMana: "discardMana",
@@ -2502,6 +2555,7 @@ var StateManager = (function () {
             _a[states.client.selectManaDiscard] = new SelectManaDiscardStates(game),
             _a[states.client.selectManaHand] = new SelectManaHandStates(game),
             _a[states.client.selectManaReturnDeck] = new SelectManaReturnDeckStates(game),
+            _a[states.client.selectSpell] = new SelectSpellStates(game),
             _a[states.server.activateDelayedSpell] = new ActivateDelayedSpellStates(game),
             _a[states.server.discardMana] = new DiscardManaStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
@@ -2970,13 +3024,16 @@ var CastSpellStates = (function () {
         var repertoire = player_table.spell_repertoire;
         player_table.setDiscountNextAttack(args.discount_attack_spell);
         player_table.setDiscountNextSpell(args.discount_next_spell);
+        var selectableCards = repertoire
+            .getCards()
+            .filter(function (card) {
+            return player_table.canCast(card) &&
+                player_table.mana_cooldown[card.location_arg].getCardNumber() == 0;
+        });
         repertoire.setSelectionMode("single");
+        repertoire.setSelectableCards(selectableCards);
         repertoire.onSelectionChange = function (selection, lastChange) {
-            var canSelect = selection &&
-                selection.length === 1 &&
-                player_table.canCast(selection[0]) &&
-                player_table.mana_cooldown[lastChange.location_arg].getCardNumber() == 0;
-            _this.game.toggleButtonEnable("btn_cast", canSelect);
+            _this.game.toggleButtonEnable("btn_cast", selection && selection.length === 1);
         };
     };
     CastSpellStates.prototype.onLeavingState = function () {
@@ -3552,9 +3609,16 @@ var SelectManaDeckStates = (function () {
                 _this.game.toggleButtonEnable("btn_confirm", nbr_decks_selected <= count);
             }
         };
-        decks.forEach(function (deck) {
-            deck.setDeckIsSelectable(true);
-            deck.onDeckSelectionChanged = function () { return handleChange(deck); };
+        this.player_table.getManaDecks().forEach(function (deck) {
+            if (decks.indexOf(deck) >= 0) {
+                deck.setDeckIsSelectable(true);
+                deck.onDeckSelectionChanged = function () { return handleChange(deck); };
+            }
+            else if (deck.getCards().length > 0) {
+                deck
+                    .getCards()
+                    .forEach(function (card) { return deck.getCardElement(card).classList.add("bga-cards_disabled-card"); });
+            }
         });
     };
     SelectManaDeckStates.prototype.onLeavingState = function () {
@@ -3562,6 +3626,9 @@ var SelectManaDeckStates = (function () {
             deck.setDeckIsSelectable(false);
             deck.onDeckSelectionChanged = null;
         });
+        document
+            .querySelectorAll(".bga-cards_disabled-card")
+            .forEach(function (value) { return value.classList.remove("bga-cards_disabled-card"); });
     };
     SelectManaDeckStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
@@ -3830,6 +3897,40 @@ var SelectManaReturnDeckStates = (function () {
         });
     };
     return SelectManaReturnDeckStates;
+}());
+var SelectSpellStates = (function () {
+    function SelectSpellStates(game) {
+        this.game = game;
+    }
+    SelectSpellStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.player_table = this.game.getPlayerTable(args.player_id);
+        this.player_table.spell_repertoire.setSelectionMode("single");
+        this.player_table.spell_repertoire.onSelectionChange = function (selection) {
+            _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+        };
+    };
+    SelectSpellStates.prototype.onLeavingState = function () {
+        this.player_table.spell_repertoire.setSelectionMode("none");
+        this.player_table.spell_repertoire.onSelectionChange = null;
+    };
+    SelectSpellStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var spell = _this.player_table.spell_repertoire.getSelection()[0];
+            _this.game.actionManager.addArgument(spell.location_arg.toString());
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonClientCancel();
+        this.game.disableButton("btn_confirm");
+    };
+    SelectSpellStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    return SelectSpellStates;
 }());
 define([
     "dojo",

@@ -16,11 +16,46 @@
    .wg-card-mana-front {
       background: url("img/mana-front.jpg");
       background-size: calc(var(--width) * 4) var(--height);
-      // text-align: center;
 
       @for $col from 0 through 3 {
          &[data-type="#{($col + 1)}"] {
             background-position: ($col * -100%) (0%);
+         }
+      }
+   }
+
+   .wg-card-gametext {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      width: 88px;
+      height: 48px;
+      top: 121px;
+      left: 18px;
+      gap: 2px;
+
+      .wg-card-gametext-title {
+         font-family: RoughAntiquaAllCaps;
+         font-size: 6px;
+         line-height: 6px;
+         text-align: center;
+      }
+
+      .wg-card-gametext-divider {
+         height: 4px;
+         background-image: url(img/spritesheet.png);
+         background-size: 300px 20px;
+         width: 53px;
+      }
+
+      .wg-card-gametext-text {
+         font-family: BrushSerifEdward;
+         font-size: 5px;
+         line-height: 6px;
+         text-align: center;
+         p {
+            margin: 2px 0 0 0;
          }
       }
    }
@@ -57,36 +92,35 @@
 
 .wg-tooltip-card {
    display: contents;
-   min-width: 250px;
-   max-width: 300px;
+   // max-width: 300px;
    gap: 15px;
    --width: 160px;
    --height: 224px;
 
    .wg-tooltip-left {
-      display: flex;
+   max-width: 260px;
+   display: flex;
       flex-direction: column;
       gap: 5px;
 
       .wg-tooltip-header {
-         font-size: 18px;
-         font-style: italic;
-         font-weight: bold;
+         font-family: RoughAntiquaAllCaps;
+         font-size: 16px;
          border-bottom: 2px solid black;
-         text-transform: uppercase;
+         text-align: center;
+         padding: 3px;
       }
 
       .wg-tooltip-cost {
          font-size: 14px;
-         font-weight: bold;
-         font-style: italic;
+         font-family: BrushSerifEdward;
       }
 
       .wg-tooltip-gametext {
-         padding: 0 5px;
+         padding: 0 3px;
          border-radius: 5px;
          text-align: center;
-         max-width: 200px;
+         font-family: BrushSerifEdward;
       }
    }
 }

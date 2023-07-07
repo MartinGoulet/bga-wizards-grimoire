@@ -124,6 +124,15 @@ class ActionManager {
       });
    }
 
+   private actionEnergyReserve() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionFracture() {
+      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.activateNextAction();
+   }
+
    private actionFreeze() {
       this.question({
          cancel: true,
@@ -137,9 +146,7 @@ class ActionManager {
             {
                label: _("Place a mana card from the mana deck on one of your opponent's spells"),
                action: () => {
-                  this.selectManaDeck(1, _("Select an opponent's spell deck"), true, {
-                     player_id: this.game.getOpponentId(),
-                  });
+                  this.actionSelectSpellOpponent();
                },
             },
          ],
@@ -204,6 +211,14 @@ class ActionManager {
       });
    }
 
+   private actionShadowAttack() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionShadowPower() {
+      this.actionGiveManaFromHandToOpponent();
+   }
+
    private actionSneakyDeal() {
       this.question({
          cancel: true,
@@ -228,6 +243,10 @@ class ActionManager {
    private actionTimeDistortion() {
       const msg = _("${you} may select up to ${nbr} mana card");
       this.selectMana(2, msg, false);
+   }
+
+   private actionToxicGift() {
+      this.actionGiveManaFromHandToOpponent();
    }
 
    private actionTrapAttack() {
@@ -299,6 +318,11 @@ class ActionManager {
 
    private actionDelusion() {
       this.actionSelectManaCoolDownOpponent(true);
+   }
+
+   private actionEnergyShield() {
+      this.actions.push("actionSelectManaCoolDownPlayer", "actionSelectSpellOpponent");
+      this.activateNextAction();
    }
 
    private actionPossessed() {
@@ -469,6 +493,17 @@ class ActionManager {
             count: 2,
             exact: true,
          } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionSelectSpellOpponent() {
+      const { name } = this.game.getCardType(this.current_card);
+      const msg = _("${you} must select an opponent's spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getOpponentId(),
+         } as SelectSpellArgs,
       });
    }
 
