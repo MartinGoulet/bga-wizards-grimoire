@@ -181,23 +181,16 @@ class WizardsGrimoire extends Table {
         $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
-        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty) {
-            if ($gameOptionDifficulty == WG_DIFFICULTY_BEGINNER) {
-                return $card_type['icon'] == WG_ICON_SET_BASE_1;
-            } elseif ($gameOptionDifficulty == WG_DIFFICULTY_ADVANCED) {
-                return $card_type['icon'] == WG_ICON_SET_BASE_1
-                    || $card_type['icon'] == WG_ICON_SET_BASE_2;
-            } else {
-                return false;
+        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1) {
+            switch($card_type['icon']) {
+                case WG_ICON_SET_BASE_1:
+                    return true;
+                case WG_ICON_SET_BASE_2:
+                    return $gameOptionDifficulty == WG_DIFFICULTY_ADVANCED;
+                case WG_ICON_SET_KICKSTARTER_1:
+                    return $gameOptionKickStarter1 == WG_OPTION_YES;
             }
         });
-
-        if ($gameOptionKickStarter1 == WG_OPTION_YES) {
-            $cards_types_kickstarter_1 = array_filter($this->card_types, function ($card_type) {
-                return $card_type['icon'] == WG_ICON_SET_KICKSTARTER_1;
-            });
-            $cards_types = array_merge($cards_types, $cards_types_kickstarter_1);
-        }
 
         $cards = [];
         foreach ($cards_types as $id => $card) {
