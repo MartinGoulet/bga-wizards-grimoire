@@ -125,6 +125,11 @@ interface NotifRevealManaCardArgs {
    mana_values: number[];
 }
 
+interface NotifRevealManaCardCooldown {
+   player_id: number;
+   card: ManaCard;
+}
+
 interface NotifHealthChangedArgs {
    player_id: number;
    life_remaining: number;

@@ -12,7 +12,7 @@ class PlayerTable {
       this.player_id = Number(player.id);
       this.current_player = this.player_id == this.game.getPlayerId();
 
-      const { id: pId, color: pColor } = player;
+      const { id: pId, color: pColor, name: pName } = player;
       const pCurrent = this.current_player.toString();
 
       const dataset: string[] = [
@@ -21,6 +21,7 @@ class PlayerTable {
          `data-discount-next-spell="0"`,
          `data-discount-next-attack="0"`,
          `data-battle_vision="false"`,
+         `data-lullaby="false"`,
          `data-puppetmaster="false"`,
          `data-secret_oath="false"`,
       ];
@@ -28,7 +29,7 @@ class PlayerTable {
       const html = `
             <div id="player-table-${pId}" style="--color: #${pColor}" ${dataset.join(" ")}>
                <div class="player-table whiteblock">
-                  <span class="wg-title">${_("Spell Repertoire")}</span>
+                  <span class="wg-title">${pName}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
                   <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
                      <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
@@ -42,9 +43,6 @@ class PlayerTable {
                      <div id="player-table-${pId}-health-value"></div>
                      <div class="wg-health-icon"></div>
                   </div>
-               </div>
-               <div class="player-table whiteblock player-hand">
-                  <span class="wg-title">${_("Hand")}</span>
                   <div id="player-table-${pId}-hand-cards" class="hand cards" data-player-id="${pId}" data-my-hand="${pCurrent}"></div>
                   <div id="player-table-${pId}-extra-icons" class="player-table-extra-icons"></div>
                </div>
@@ -55,6 +53,7 @@ class PlayerTable {
       if (this.current_player) {
          this.setupHaste();
          this.setupSecondStrike();
+         this.setupLullaby();
          this.setupBattleVision();
          this.setupPuppetMaster();
          this.setupSecretOath();
@@ -246,6 +245,14 @@ class PlayerTable {
       });
    }
 
+   private setupLullaby() {
+      this.setupIcon({
+         id: "lullaby",
+         title: _("Lullaby"),
+         gametext: _("if you have 0 mana cards in your hand, gain 2 mana cards"),
+      });
+   }
+
    private setupPuppetMaster() {
       this.setupIcon({
          id: "puppetmaster",
@@ -258,7 +265,9 @@ class PlayerTable {
       this.setupIcon({
          id: "powerhungry",
          title: _("Power hungry"),
-         gametext: _("Your basic attack mana card go to the opponent's hand instead of the discard pile"),
+         gametext: _(
+            "Your basic attack mana card go to the hand of Power Hungry owner instead of the discard pile",
+         ),
       });
    }
 

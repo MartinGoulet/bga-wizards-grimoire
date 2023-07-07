@@ -931,10 +931,11 @@ body > .card {
 }
 
 .player-table {
-  padding-top: 20px;
-  width: 732px;
+  padding-top: 30px;
+  width: 730px;
   border-radius: 8px;
   position: relative;
+  border: 3px solid var(--color);
 }
 .player-table .spell-repertoire {
   --width: 110px;
@@ -949,8 +950,29 @@ body > .card {
 .player-table .spell-repertoire .wg-spell-slot:not(:empty) {
   border-color: transparent;
 }
+.player-table .spell-repertoire .wg-card-gametext {
+  width: 88px;
+  height: 48px;
+  top: 111px;
+  left: 13px;
+}
+.player-table .spell-repertoire .wg-card-gametext .wg-card-gametext-title {
+  font-size: 6px;
+  line-height: 6px;
+}
+.player-table .spell-repertoire .wg-card-gametext .wg-card-gametext-divider {
+  height: 4px;
+}
+.player-table .spell-repertoire .wg-card-gametext .wg-card-gametext-text {
+  font-size: 5px;
+  line-height: 6px;
+}
 .player-table .wg-title {
   color: var(--color);
+  padding: 3px 10px;
+  margin: 0;
+  top: -15px;
+  left: 20px;
 }
 .player-table .wg-health {
   position: absolute;
@@ -1001,15 +1023,25 @@ body > .card {
   --width: 100px;
   --height: 140px;
   min-height: 150px;
-  margin-top: 20px;
+  margin: 20px 0;
+}
+.player-table .hand:has(:nth-child(10)), .player-table .hand:has(:nth-child(11)) {
+  --card-overlap: 40px !important;
+  --card-shift: 5px !important;
+  --card-inclination: 5deg !important;
+}
+.player-table .hand:has(> :nth-child(12)) {
+  --card-overlap: 50px !important;
+  --card-shift: 4px !important;
+  --card-inclination: 4deg !important;
 }
 
 .player-table-extra-icons {
   display: flex;
   gap: 4px;
   position: absolute;
-  top: -7px;
-  right: 20px;
+  top: -11px;
+  right: 95px;
   margin: -10px 0 0 0;
 }
 .player-table-extra-icons .icon {
@@ -1038,6 +1070,13 @@ body > .card {
   border: 2px solid white;
   background-position-x: -130px;
   background-position-y: -427px;
+}
+
+.wg-ongoing-spell-lullaby [data-lullaby=true] .lullaby_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -830px;
+  background-position-y: -445px;
 }
 
 .wg-ongoing-spell-powerhungry .powerhungry_icon {

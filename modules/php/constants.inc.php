@@ -28,6 +28,7 @@ define('WG_VAR_DISCOUNT_ATTACK_SPELL', 'discount_attack_spell');
 define('WG_VAR_AMNESIA', 'amnesia');
 define('WG_VAR_IS_ACTIVE_BATTLE_VISION', 'is_active_battle_vision');
 define('WG_VAR_IS_ACTIVE_GROWTH', 'is_active_growth');
+define('WG_VAR_IS_ACTIVE_LULLABY', 'is_active_lullaby');
 define('WG_VAR_IS_ACTIVE_POWER_HUNGRY', 'is_active_power_hungry');
 define('WG_VAR_IS_ACTIVE_PUPPETMASTER', 'is_active_puppetmaster');
 define('WG_VAR_IS_ACTIVE_SECRET_OATH', 'is_active_secret_oath');

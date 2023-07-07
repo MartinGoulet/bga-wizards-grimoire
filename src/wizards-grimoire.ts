@@ -92,7 +92,7 @@ class WizardsGrimoire
       this.setupNotifications();
 
       if (isDebug) {
-         this.exportToCsv(gamedatas);
+         // this.exportToCsv(gamedatas);
       }
    }
 

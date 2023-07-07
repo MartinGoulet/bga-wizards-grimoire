@@ -8,12 +8,11 @@ use WizardsGrimoire\Core\SpellCard;
 
 class TwistOfFate extends BaseCard {
 
-    public function castSpell($args)
-    {
+    public function castSpell($args) {
         // Deal 2 damage. You may discard and replace 1 of your other spells with a new spell. Move all mana on it onto the new spell
         $this->dealDamage(2);
 
-        if(!sizeof($args) == 2) {
+        if (!sizeof($args) == 2) {
             throw new BgaSystemException("Wrong number of arguments");
         }
 
@@ -25,5 +24,4 @@ class TwistOfFate extends BaseCard {
 
         SpellCard::replaceSpell($old_spell, $new_spell);
     }
-
 }

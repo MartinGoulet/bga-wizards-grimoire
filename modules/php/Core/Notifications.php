@@ -97,7 +97,7 @@ class Notifications {
             'player_id' => intval($player_id),
         ];
 
-        $cards = array_values(array_map(function($card) {
+        $cards = array_values(array_map(function ($card) {
             return ManaCard::get($card['id']);
         }, $cards_before));
 
@@ -134,15 +134,28 @@ class Notifications {
     }
 
     static function revealManaCard(int $player_id, array $cards) {
-        self::message('${player_name} reveals ${mana_values} from mana deck', [
+        $msg = clienttranslate('${player_name} reveals ${mana_values} from mana deck');
+        self::message($msg, [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "mana_values" => self::getPowerValues($cards),
         ]);
     }
 
+    static function revealManaCardCooldown(int $player_id, $card, $spell_name) {
+        $msg = clienttranslate('${player_name} reveals ${mana_values} from the mana cooldown under ${card_name}');
+        self::notifyAll('onRevealManaCardCooldown', $msg , [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "mana_values" => self::getPowerValues([$card]),
+            "card" => $card,
+            'card_name' => $spell_name,
+            'i18n' => ['card_name'],
+        ]);
+    }
+
     static function revealManaCardHand(int $player_id, array $cards) {
-        self::message('${player_name} reveals ${mana_values} from his hand', [
+        self::message(clienttranslate('${player_name} reveals ${mana_values} from his hand'), [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "mana_values" => self::getPowerValues($cards),
@@ -150,7 +163,7 @@ class Notifications {
     }
 
     static function secretOath(int $player_id, $cards) {
-        self::message('${card_name} : ${player_name} must gives ${mana_values} to ${player_name2}', [
+        self::message(clienttranslate('${card_name} : ${player_name} must gives ${mana_values} to ${player_name2}'), [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "player_name2" => self::getPlayerName(Players::getOpponentIdOf($player_id)),

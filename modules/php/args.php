@@ -82,6 +82,10 @@ trait ArgsTrait {
                 "active" => Globals::getIsActiveGrowth(),
             ],
             [
+                "name" => "lullaby",
+                "active" => Globals::getIsActiveLullaby(),
+            ],
+            [
                 "name" => "puppetmaster",
                 "active" => Globals::getIsActivePuppetmaster(),
             ],

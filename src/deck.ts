@@ -138,6 +138,9 @@ class SpellRepertoire extends SlotStock<SpellCard> {
          case "BattleVision":
             element.dataset.battle_vision = "" + value;
             break;
+         case "Lullaby":
+            element.dataset.lullaby = "" + value;
+            break;
          case "Puppetmaster":
             element.dataset.puppetmaster = "" + value;
             break;
@@ -148,11 +151,15 @@ class SpellRepertoire extends SlotStock<SpellCard> {
    }
 }
 
-class Hand extends LineStock<ManaCard> {
+class Hand extends HandStock<ManaCard> {
+   //extends LineStock<ManaCard> {
    constructor(manager: CardManager<ManaCard>, element: HTMLElement, protected current_player: boolean) {
       super(manager, element, {
-         center: true,
-         wrap: "wrap",
+         // center: true,
+         // wrap: "wrap",
+         cardOverlap: "30px",
+         cardShift: "6px",
+         inclination: 6,
          sort: sortFunction("type", "type_arg"),
       });
    }

@@ -340,6 +340,40 @@ class ActionManager {
       this.activateNextAction();
    }
 
+   /////////////////////////////////////////////////////////////
+   //   _  ___      _        _             _              __
+   //   | |/ (_)    | |      | |           | |            /_ |
+   //   | ' / _  ___| | _____| |_ __ _ _ __| |_ ___ _ __   | |
+   //   |  < | |/ __| |/ / __| __/ _` | '__| __/ _ \ '__|  | |
+   //   | . \| | (__|   <\__ \ || (_| | |  | ||  __/ |     | |
+   //   |_|\_\_|\___|_|\_\___/\__\__,_|_|   \__\___|_|     |_|
+   //
+   /////////////////////////////////////////////////////////////
+
+   private actionFatalFlaw() {
+      const canIgnore =
+         this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
+      this.actionSelectManaCoolDownOpponent(canIgnore);
+   }
+
+   private actionQuickSwap() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Deal 1 damage"),
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: _("Discard this spell and replace it with a new spell"),
+               action: () => {
+                  debugger;
+               },
+            },
+         ],
+      });
+   }
+
    ///////////////////////////////////////////////////////////////////////////////////
    //     _____                      _                         _   _
    //    / ____|                    (_)              /\       | | (_)

@@ -139,7 +139,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionRejuvenation",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   12 => [
     "name" => clienttranslate("Shackled motion"),
@@ -294,7 +294,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   27 => [
     "name" => clienttranslate("Painful vision"),
@@ -389,7 +389,7 @@ $this->card_types = [
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionShadowAttack",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   36 => [
     "name" => clienttranslate("Crushing blow"),
@@ -409,7 +409,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "lightgreen",
   ],
   38 => [
     "name" => clienttranslate("Quick swap"),
@@ -420,7 +420,8 @@ $this->card_types = [
     "activation_auto" => false,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "js_actions_delayed" => "actionQuickSwap",
+    "debug" => "orange",
   ],
   39 => [
     "name" => clienttranslate("Lullaby"),
@@ -430,7 +431,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "orange",
   ],
   40 => [
     "name" => clienttranslate("Amnesia"),
@@ -440,7 +441,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "darkorange",
+    "debug" => "yellow",
   ],
   41 => [
     "name" => clienttranslate("Hoodwink"),
@@ -461,7 +462,7 @@ $this->card_types = [
     "activation_auto" => false,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "orange",
   ],
   43 => [
     "name" => clienttranslate("Tsunami"),
@@ -471,7 +472,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   44 => [
     "name" => clienttranslate("Twist of fate"),
@@ -481,7 +482,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "blue",
+    "debug" => "orange",
   ],
   45 => [
     "name" => clienttranslate("Fatal flaw"),
@@ -491,7 +492,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "js_actions" => "actionFatalFlaw",
+    "debug" => "lightgreen",
   ],
   46 => [
     "name" => clienttranslate("Affliction"),
@@ -501,7 +503,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "red",
+    "debug" => "yellow",
   ],
   47 => [
     "name" => clienttranslate("Friendly truce"),

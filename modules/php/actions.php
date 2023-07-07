@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Core;
 
 use BgaSystemException;
 use BgaUserException;
+use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 use WizardsGrimoire\Objects\CardLocation;
 
 trait ActionTrait {
@@ -191,6 +192,7 @@ trait ActionTrait {
                 $cardClass = SpellCard::getInstanceOfCard($spell);
                 // Execute the ability of the card
                 $cardClass->castSpell($args);
+                Lullaby::check();
 
                 if (Globals::getSkipInteraction()) {
                     Globals::setSkipInteraction(false);

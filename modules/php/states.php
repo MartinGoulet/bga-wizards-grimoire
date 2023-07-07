@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;
 
@@ -26,11 +27,15 @@ trait StateTrait {
         Globals::resetOnNewTurn();
         Events::onPlayerNewTurn();
 
+        Lullaby::check();
+
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
     }
 
     function stSpellCoolDown() {
+        Lullaby::check();
+
         $player_id = intval($this->getActivePlayerId());
 
         $cards_before = [];
@@ -79,6 +84,8 @@ trait StateTrait {
 
     function stGainMana() {
         ManaCard::draw(3);
+
+        Lullaby::check();
         $this->gamestate->nextState();
     }
 
@@ -101,15 +108,16 @@ trait StateTrait {
     }
 
     function stBasicAttackDamage() {
+        Lullaby::check();
+
         $opponent_id = Players::getOpponentId();
-        $player_id = Players::getPlayerId();
         $damage = Globals::getCurrentBasicAttackPower();
 
         $card = ManaCard::getBasicAttack();
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
-        
+
         Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
         Globals::setCurrentBasicAttackPower(0);
 
@@ -121,6 +129,7 @@ trait StateTrait {
     }
 
     function stBasicAttackEnd() {
+        Lullaby::check();
         $card = ManaCard::getBasicAttack();
 
         if (Globals::getIsActivePowerHungry()) {
@@ -137,10 +146,20 @@ trait StateTrait {
     }
 
     function stNextPlayer() {
+        Lullaby::check();
+
+        $cards = SpellCard::getOngoingActiveSpells(Players::getPlayerId());
+        foreach ($cards as $card_id => $card) {
+            $instance = SpellCard::getInstanceOfCard($card);
+            if (method_exists($instance, 'onTurnEnd')) {
+                $instance->onTurnEnd();
+            }
+        }
+
         $this->giveExtraTime(Players::getPlayerId());
-        
+
         $player_id = intval($this->getActivePlayerId());
-        if($player_id == Players::getPlayerId()) {
+        if ($player_id == Players::getPlayerId()) {
             $this->activeNextPlayer();
         }
 

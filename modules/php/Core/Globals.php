@@ -99,6 +99,19 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
         Events::onIsActiveGrowthChanged();
     }
+
+    public static function getIsActiveLullaby() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_LULLABY)) > 0;
+    }
+
+    public static function getIsActiveLullabyPlayer() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_LULLABY));
+    }
+
+    public static function setIsActiveLullaby(bool $isActive) {
+        $value = $isActive ? Players::getPlayerId() : 0;
+        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_LULLABY, $value);
+    }
     
     public static function getIsActivePowerHungry() {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) > 0;

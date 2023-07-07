@@ -96,6 +96,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_IS_ACTIVE_POWER_HUNGRY => 25,
             WG_VAR_IS_ACTIVE_BATTLE_VISION => 26,
             WG_VAR_CURRENT_BASIC_ATTACK_POWER => 27,
+            WG_VAR_IS_ACTIVE_LULLABY => 28,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -158,6 +159,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_AMNESIA, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_BATTLE_VISION, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_GROWTH, 0);
+        self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_LULLABY, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_PUPPETMASTER, 0);
         self::setGameStateInitialValue(WG_VAR_IS_ACTIVE_SECRET_OATH, 0);
@@ -290,7 +292,7 @@ class WizardsGrimoire extends Table {
         // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
         $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
 
-        $result['opponent_id'] = Players::getOpponentId();
+        $result['opponent_id'] = Players::getOpponentIdOf($current_player_id);
 
         $result['globals'] = [
             "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),

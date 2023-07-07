@@ -1,8 +1,9 @@
 .player-table {
-   padding-top: 20px;
-   width: 732px;
+   padding-top: 30px;
+   width: 730px;
    border-radius: 8px;
    position: relative;
+   border: 3px solid var(--color);
 
    .spell-repertoire {
       --width: 110px;
@@ -18,10 +19,35 @@
       .wg-spell-slot:not(:empty) {
          border-color: transparent;
       }
+
+      .wg-card-gametext {
+         width: 88px;
+         height: 48px;
+         top: 111px;
+         left: 13px;
+
+         .wg-card-gametext-title {
+            font-size: 6px;
+            line-height: 6px;
+         }
+
+         .wg-card-gametext-divider {
+            height: 4px;
+         }
+
+         .wg-card-gametext-text {
+            font-size: 5px;
+            line-height: 6px;
+         }
+      }
    }
 
    .wg-title {
       color: var(--color);
+      padding: 3px 10px;
+      margin: 0;
+      top: -15px;
+      left: 20px;
    }
 
    .wg-health {
@@ -80,7 +106,20 @@
       --width: 100px;
       --height: 140px;
       min-height: 150px;
-      margin-top: 20px;
+      margin: 20px 0;
+
+      &:has(:nth-child(10)),
+      &:has(:nth-child(11)) {
+         --card-overlap: 40px !important;
+         --card-shift: 5px !important;
+         --card-inclination: 5deg !important;
+      }
+
+      &:has(> :nth-child(12)) {
+         --card-overlap: 50px !important;
+         --card-shift: 4px !important;
+         --card-inclination: 4deg !important;
+      }
    }
 }
 
@@ -88,8 +127,8 @@
    display: flex;
    gap: 4px;
    position: absolute;
-   top: -7px;
-   right: 20px;
+   top: -11px;
+   right: 95px;
    margin: -10px 0 0 0;
 
    .icon {
@@ -124,6 +163,17 @@
       border: 2px solid white;
       background-position-x: -130px;
       background-position-y: -427px;
+   }
+}
+
+.wg-ongoing-spell-lullaby {
+   [data-lullaby="true"] {
+      .lullaby_icon {
+         display: flex;
+         border: 2px solid white;
+         background-position-x: -830px;
+         background-position-y: -445px;
+      }
    }
 }
 

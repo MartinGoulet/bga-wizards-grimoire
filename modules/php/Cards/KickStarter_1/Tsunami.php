@@ -15,9 +15,11 @@ class Tsunami extends BaseCard {
 
         $hand = ManaCard::getHand();
 
-        $distinct_values = array_unique(array_values(array_filter($hand, function ($card) {
+        $values = array_values(array_map(function ($card) {
             return ManaCard::getPower($card);
-        })));
+        }, $hand));
+
+        $distinct_values = array_unique($values);
 
         $this->dealDamage(sizeof($distinct_values));
     }

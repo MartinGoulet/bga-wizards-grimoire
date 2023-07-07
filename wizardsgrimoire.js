@@ -1289,6 +1289,41 @@ var SlotStock = (function (_super) {
     };
     return SlotStock;
 }(LineStock));
+var HandStock = (function (_super) {
+    __extends(HandStock, _super);
+    function HandStock(manager, element, settings) {
+        var _a, _b, _c, _d;
+        var _this = _super.call(this, manager, element, settings) || this;
+        _this.manager = manager;
+        _this.element = element;
+        element.classList.add('hand-stock');
+        element.style.setProperty('--card-overlap', (_a = settings.cardOverlap) !== null && _a !== void 0 ? _a : '60px');
+        element.style.setProperty('--card-shift', (_b = settings.cardShift) !== null && _b !== void 0 ? _b : '15px');
+        element.style.setProperty('--card-inclination', "".concat((_c = settings.inclination) !== null && _c !== void 0 ? _c : 12, "deg"));
+        _this.inclination = (_d = settings.inclination) !== null && _d !== void 0 ? _d : 4;
+        return _this;
+    }
+    HandStock.prototype.addCard = function (card, animation, settings) {
+        var promise = _super.prototype.addCard.call(this, card, animation, settings);
+        this.updateAngles();
+        return promise;
+    };
+    HandStock.prototype.cardRemoved = function (card) {
+        _super.prototype.cardRemoved.call(this, card);
+        this.updateAngles();
+    };
+    HandStock.prototype.updateAngles = function () {
+        var _this = this;
+        var middle = (this.cards.length - 1) / 2;
+        this.cards.forEach(function (card, index) {
+            var middleIndex = index - middle;
+            var cardElement = _this.getCardElement(card);
+            cardElement.style.setProperty('--hand-stock-middle-index', "".concat(middleIndex));
+            cardElement.style.setProperty('--hand-stock-middle-index-abs', "".concat(Math.abs(middleIndex)));
+        });
+    };
+    return HandStock;
+}(CardStock));
 var CardManager = (function () {
     function CardManager(game, settings) {
         var _a;
@@ -1489,7 +1524,6 @@ var WizardsGrimoire = (function () {
         });
         this.setupNotifications();
         if (isDebug) {
-            this.exportToCsv(gamedatas);
         }
     };
     WizardsGrimoire.prototype.exportToCsv = function (gamedatas) {
@@ -1829,6 +1863,9 @@ var SpellRepertoire = (function (_super) {
             case "BattleVision":
                 element.dataset.battle_vision = "" + value;
                 break;
+            case "Lullaby":
+                element.dataset.lullaby = "" + value;
+                break;
             case "Puppetmaster":
                 element.dataset.puppetmaster = "" + value;
                 break;
@@ -1843,8 +1880,9 @@ var Hand = (function (_super) {
     __extends(Hand, _super);
     function Hand(manager, element, current_player) {
         var _this = _super.call(this, manager, element, {
-            center: true,
-            wrap: "wrap",
+            cardOverlap: "30px",
+            cardShift: "6px",
+            inclination: 6,
             sort: sortFunction("type", "type_arg"),
         }) || this;
         _this.current_player = current_player;
@@ -1858,7 +1896,7 @@ var Hand = (function (_super) {
         return _super.prototype.addCard.call(this, copy, animation, settings);
     };
     return Hand;
-}(LineStock));
+}(HandStock));
 var ActionManager = (function () {
     function ActionManager(game) {
         this.game = game;
@@ -2141,6 +2179,28 @@ var ActionManager = (function () {
     ActionManager.prototype.actionSilentSupport = function () {
         this.actions.push("actionSelectManaFrom");
         this.activateNextAction();
+    };
+    ActionManager.prototype.actionFatalFlaw = function () {
+        var canIgnore = this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
+        this.actionSelectManaCoolDownOpponent(canIgnore);
+    };
+    ActionManager.prototype.actionQuickSwap = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Deal 1 damage"),
+                    action: function () { return _this.activateNextAction(); },
+                },
+                {
+                    label: _("Discard this spell and replace it with a new spell"),
+                    action: function () {
+                        debugger;
+                    },
+                },
+            ],
+        });
     };
     ActionManager.prototype.actionCastMana = function () {
         var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost, type = _a.type;
@@ -2454,6 +2514,7 @@ var NotificationManager = (function () {
         this.subscribeEvent("onDrawManaCards", 650, true);
         this.subscribeEvent("onMoveManaCards", 1000, true);
         this.subscribeEvent("onManaDeckShuffle", 2500);
+        this.subscribeEvent("onRevealManaCardCooldown", 500);
         this.subscribeEvent("onHealthChanged", 500);
         this.game.notifqueue.setIgnoreNotificationCheck("message", function (notif) { return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id; });
     };
@@ -2506,6 +2567,18 @@ var NotificationManager = (function () {
         cards.forEach(function (card) {
             _this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
         });
+    };
+    NotificationManager.prototype.notif_onRevealManaCardCooldown = function (notif) {
+        log("notif_onRevealManaCardCooldown", notif.args);
+        var card = notif.args.card;
+        var _a = card.location.split("_"), prefix = _a[0], player_id = _a[1], position = _a[2];
+        if (Number(player_id) == this.game.getOpponentId()) {
+            var manaCooldown_1 = this.game.getPlayerTable(Number(player_id)).mana_cooldown[Number(position)];
+            manaCooldown_1.setCardVisible(card, true);
+            setTimeout(function () {
+                manaCooldown_1.setCardVisible(card, false);
+            }, 4000);
+        }
     };
     NotificationManager.prototype.notif_onHealthChanged = function (notif) {
         log("notif_onHealthChanged", notif.args);
@@ -2646,7 +2719,7 @@ var PlayerTable = (function () {
         this.mana_cooldown = {};
         this.player_id = Number(player.id);
         this.current_player = this.player_id == this.game.getPlayerId();
-        var pId = player.id, pColor = player.color;
+        var pId = player.id, pColor = player.color, pName = player.name;
         var pCurrent = this.current_player.toString();
         var dataset = [
             "data-color=\"".concat(pColor, "\""),
@@ -2654,14 +2727,16 @@ var PlayerTable = (function () {
             "data-discount-next-spell=\"0\"",
             "data-discount-next-attack=\"0\"",
             "data-battle_vision=\"false\"",
+            "data-lullaby=\"false\"",
             "data-puppetmaster=\"false\"",
             "data-secret_oath=\"false\"",
         ];
-        var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(_("Spell Repertoire"), "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-health\" class=\"wg-health\">\n                     <div id=\"player-table-").concat(pId, "-health-value\"></div>\n                     <div class=\"wg-health-icon\"></div>\n                  </div>\n               </div>\n               <div class=\"player-table whiteblock player-hand\">\n                  <span class=\"wg-title\">").concat(_("Hand"), "</span>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
+        var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(pName, "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-health\" class=\"wg-health\">\n                     <div id=\"player-table-").concat(pId, "-health-value\"></div>\n                     <div class=\"wg-health-icon\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         dojo.place(html, "tables");
         if (this.current_player) {
             this.setupHaste();
             this.setupSecondStrike();
+            this.setupLullaby();
             this.setupBattleVision();
             this.setupPuppetMaster();
             this.setupSecretOath();
@@ -2827,6 +2902,13 @@ var PlayerTable = (function () {
             gametext: _("The next time you cast a spell this turn, it costs 2 less"),
         });
     };
+    PlayerTable.prototype.setupLullaby = function () {
+        this.setupIcon({
+            id: "lullaby",
+            title: _("Lullaby"),
+            gametext: _("if you have 0 mana cards in your hand, gain 2 mana cards"),
+        });
+    };
     PlayerTable.prototype.setupPuppetMaster = function () {
         this.setupIcon({
             id: "puppetmaster",
@@ -2838,7 +2920,7 @@ var PlayerTable = (function () {
         this.setupIcon({
             id: "powerhungry",
             title: _("Power hungry"),
-            gametext: _("Your basic attack mana card go to the opponent's hand instead of the discard pile"),
+            gametext: _("Your basic attack mana card go to the hand of Power Hungry owner instead of the discard pile"),
         });
     };
     PlayerTable.prototype.setupSecondStrike = function () {

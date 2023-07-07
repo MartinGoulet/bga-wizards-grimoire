@@ -8,6 +8,7 @@ class NotificationManager {
       this.subscribeEvent("onDrawManaCards", 650, true);
       this.subscribeEvent("onMoveManaCards", 1000, true);
       this.subscribeEvent("onManaDeckShuffle", 2500);
+      this.subscribeEvent("onRevealManaCardCooldown", 500);
       this.subscribeEvent("onHealthChanged", 500);
 
       this.game.notifqueue.setIgnoreNotificationCheck(
@@ -71,6 +72,19 @@ class NotificationManager {
       cards.forEach((card) => {
          this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
       });
+   }
+
+   private notif_onRevealManaCardCooldown(notif: INotification<NotifRevealManaCardCooldown>) {
+      log("notif_onRevealManaCardCooldown", notif.args);
+      const { card } = notif.args;
+      const [prefix, player_id, position] = card.location.split("_");
+      if (Number(player_id) == this.game.getOpponentId()) {
+         const manaCooldown = this.game.getPlayerTable(Number(player_id)).mana_cooldown[Number(position)];
+         manaCooldown.setCardVisible(card, true);
+         setTimeout(() => {
+            manaCooldown.setCardVisible(card, false);
+         }, 4000);
+      }
    }
 
    private notif_onHealthChanged(notif: INotification<NotifHealthChangedArgs>) {
