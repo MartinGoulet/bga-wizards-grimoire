@@ -72,6 +72,16 @@ class SpellCard {
         return $ongoing_active_spell;
     }
 
+    public static function isInPool(int $spell_id) {
+        $card = SpellCard::get($spell_id);
+
+        if ($card['location'] != CardLocation::SpellSlot()) {
+            throw new \BgaSystemException("The card is not in the spell pool (" . $spell_id . ")");
+        }
+
+        return $card;
+    }
+
     public static function isInRepertoire(int $card_id, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();

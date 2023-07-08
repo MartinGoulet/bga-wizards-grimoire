@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\KickStarter_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Players;
 
 class Affliction extends BaseCard {
 
@@ -12,6 +13,7 @@ class Affliction extends BaseCard {
 
         $gainExtraCard = boolval(array_shift($args));
         if ($gainExtraCard) {
+            $this->dealDamage(1, Players::getPlayerId());
             $this->drawManaCards(2);
         }
     }

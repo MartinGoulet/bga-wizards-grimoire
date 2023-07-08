@@ -23,12 +23,11 @@ abstract class BaseCard {
     }
 
     public function isOngoingSpellActive(bool $value) {
-        
     }
 
     protected function dealDamage(int $damage, int $opponent_id = -1) {
 
-        if($opponent_id <= 0) {
+        if ($opponent_id <= 0) {
             $opponent_id = Players::getOpponentId();
         }
 
@@ -46,8 +45,7 @@ abstract class BaseCard {
         Globals::setPreviousSpellDamage($damage);
     }
 
-    protected function drawManaCards(int $nbr, int $player_id = 0) 
-    {
+    protected function drawManaCards(int $nbr, int $player_id = 0) {
         return ManaCard::draw($nbr, $player_id);
     }
 
@@ -60,5 +58,17 @@ abstract class BaseCard {
             })
         )[0]['name'];
         return $name;
+    }
+
+    protected function getCard() {
+        $classParts = explode('\\', get_class($this));
+        $class_name = array_pop($classParts);
+        $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
+            return array_key_exists('class', $card) && $card['class'] == $class_name;
+        });
+        $types = array_keys($card_types);
+        $type = array_shift($types);
+        $cards = Game::get()->deck_spells->getCardsOfType($type);
+        return array_shift($cards);
     }
 }

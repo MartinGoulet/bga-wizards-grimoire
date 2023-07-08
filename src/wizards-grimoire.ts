@@ -2,7 +2,7 @@ const isDebug =
    window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 const log = isDebug ? console.log.bind(window.console) : function () {};
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
-const LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = "wizards-grimoire-jump-to-folded";
+// const LOCAL_STORAGE_JUMP_TO_FOLDED_KEY = "wizards-grimoire-jump-to-folded";
 const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
 
 interface WizardsGrimoire
@@ -63,15 +63,15 @@ class WizardsGrimoire
       this.stateManager = new StateManager(this);
       this.actionManager = new ActionManager(this);
 
-      new JumpToManager(this, {
-         localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
-         topEntries: [
-            new JumpToEntry(_("Spell Pool"), "spell-pool", { color: "darkblue" }),
-            new JumpToEntry(_("Decks"), "table-center", { color: "#224757" }),
-         ],
-         entryClasses: "triangle-point",
-         defaultFolded: true,
-      });
+      // new JumpToManager(this, {
+      //    localStorageFoldedKey: LOCAL_STORAGE_JUMP_TO_FOLDED_KEY,
+      //    topEntries: [
+      //       new JumpToEntry(_("Spell Pool"), "spell-pool", { color: "darkblue" }),
+      //       new JumpToEntry(_("Decks"), "table-center", { color: "#224757" }),
+      //    ],
+      //    entryClasses: "triangle-point",
+      //    defaultFolded: true,
+      // });
 
       this.gameOptions = new GameOptions(this);
       this.tableCenter = new TableCenter(this);

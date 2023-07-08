@@ -220,13 +220,13 @@ trait ActionTrait {
                 break;
 
             default:
-                $this->gamestate->nextState("cast");
+                $this->castOrEndGame();
                 break;
         }
     }
 
     private function castOrEndGame() {
-        if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+        if (Players::getPlayerLife(Players::getOpponentId()) <= 0 || Players::getPlayerLife(Players::getPlayerId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else {
             $this->gamestate->nextState('cast');

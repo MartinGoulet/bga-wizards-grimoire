@@ -61,7 +61,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   5 => [
     "name" => clienttranslate("Mist of pain"),
@@ -160,7 +160,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   14 => [
     "name" => clienttranslate("Coercive agreement"),
@@ -222,7 +222,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionTimeDistortion",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   20 => [
     "name" => clienttranslate("Betrayal"),
@@ -431,7 +431,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "orange",
+    "debug" => "lightgreen",
   ],
   40 => [
     "name" => clienttranslate("Amnesia"),
@@ -441,7 +441,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   41 => [
     "name" => clienttranslate("Hoodwink"),
@@ -451,7 +451,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   42 => [
     "name" => clienttranslate("Wild bloom"),
@@ -482,7 +482,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "orange",
+    "js_actions" => "actionTwistOfFate",
+    "debug" => "lightgreen",
   ],
   45 => [
     "name" => clienttranslate("Fatal flaw"),
@@ -503,7 +504,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "yellow",
+    "js_actions" => "actionAffliction",
+    "debug" => "lightgreen",
   ],
   47 => [
     "name" => clienttranslate("Friendly truce"),

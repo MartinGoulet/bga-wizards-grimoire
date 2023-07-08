@@ -3,8 +3,8 @@
 namespace WizardsGrimoire\Cards\KickStarter_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\SpellCard;
 
 class QuickSwap extends BaseCard {
 
@@ -14,7 +14,11 @@ class QuickSwap extends BaseCard {
         if($args == null || $args == "") {
             $this->dealDamage(1);
         } else {
-            // TODO
+            $new_spell_id = intval(array_shift($args));
+            $old_spell = $this->getCard();
+            $new_spell = SpellCard::isInPool($new_spell_id);
+            Notifications::discardSpellCard($this->getCardName());
+            SpellCard::replaceSpell($old_spell, $new_spell);
         }
     }
 }

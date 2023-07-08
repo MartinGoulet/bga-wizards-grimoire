@@ -55,6 +55,15 @@ class Notifications {
         ]);
     }
 
+    static function discardSpellCard($card_name) {
+
+        self::message(clienttranslate('${player_name} discards ${card_name}'), [
+            'player_name' => self::getPlayerName(Players::getPlayerId()),
+            'card_name' => $card_name,
+            'i18n' => ['card_name'],
+        ]);
+    }
+
     static function drawManaCards($player_id, $cards) {
         $msg = clienttranslate('${player_name} draws ${mana_values}');
         $args = [

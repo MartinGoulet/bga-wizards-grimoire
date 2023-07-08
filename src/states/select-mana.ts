@@ -31,9 +31,15 @@ class SelectManaStates implements StateHandler {
          }
       };
 
-      this.player_table.getManaDecks(exclude).forEach((deck) => {
-         deck.setSelectionMode("single");
-         deck.onSelectionChange = handleChange;
+      this.player_table.getManaDecks().forEach((deck, index) => {
+         if (exclude.indexOf(index + 1) < 0) {
+            deck.setSelectionMode("single");
+            deck.onSelectionChange = handleChange;
+         } else {
+            deck
+               .getCards()
+               .forEach((card) => deck.getCardElement(card).classList.add("bga-cards_disabled-card"));
+         }
       });
    }
 
@@ -42,6 +48,9 @@ class SelectManaStates implements StateHandler {
          deck.setSelectionMode("none");
          deck.onSelectionChange = null;
       });
+      document
+         .querySelectorAll(".bga-cards_disabled-card")
+         .forEach((value) => value.classList.remove("bga-cards_disabled-card"));
    }
 
    onUpdateActionButtons(args: SelectManaDeckArgs): void {

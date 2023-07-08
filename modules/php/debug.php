@@ -27,8 +27,8 @@ trait DebugTrait {
     }
 
     public function resetLife() {
-        Players::setPlayerLife(Players::getPlayerId(), 100);
-        Players::setPlayerLife(Players::getOpponentId(), 100);
+        Players::setPlayerLife(Players::getPlayerId(), 1);
+        Players::setPlayerLife(Players::getOpponentId(), 1);
     }
 
     public function shuffleSpells() {

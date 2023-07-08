@@ -3,7 +3,7 @@ class PlayerTable {
 
    public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
-   public hand: LineStock<ManaCard>;
+   public hand: Hand;
    public health: ebg.counter;
 
    private current_player: boolean;

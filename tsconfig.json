@@ -17,7 +17,7 @@
         "node_modules/bga-studio-mg/counter.d.ts",
 
         "node_modules/bga-zoom/src/zoom-manager.ts",
-        "node_modules/bga-jump-to/src/jump-to-manager.ts",
+        // "node_modules/bga-jump-to/src/jump-to-manager.ts",
         "node_modules/bga-animations/src/animations.ts",
         "node_modules/bga-animations/src/animations/attach-with-animation.ts",
         "node_modules/bga-animations/src/animations/cumulated-animations.ts",
@@ -59,12 +59,14 @@
         "src/states/cast-spell-with-mana.ts",
         "src/states/question.ts",
         "src/states/player-new-turn.ts",
+        "src/states/replace-spell.ts",
         "src/states/select-mana.ts",
         "src/states/select-mana-deck.ts",
         "src/states/select-mana-discard.ts",
         "src/states/select-mana-hand.ts",
         "src/states/select-mana-return-deck.ts",
         "src/states/select-spell.ts",
+        "src/states/select-spell-pool.ts",
 
         "src/define.ts"
     ]

@@ -350,6 +350,29 @@ class ActionManager {
    //
    /////////////////////////////////////////////////////////////
 
+   private actionAffliction() {
+      this.game.markCardAsSelected(this.current_card);
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Deal 1 damage to yourself to gain 2 extra cards"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Pass"),
+               action: () => {
+                  this.addArgument("0");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
    private actionFatalFlaw() {
       const canIgnore =
          this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
@@ -357,6 +380,7 @@ class ActionManager {
    }
 
    private actionQuickSwap() {
+      this.game.markCardAsSelected(this.current_card);
       this.question({
          cancel: true,
          options: [
@@ -367,10 +391,30 @@ class ActionManager {
             {
                label: _("Discard this spell and replace it with a new spell"),
                action: () => {
-                  debugger;
+                  const msg = _("${you} must select a spell in the spell pool");
+                  const { name } = this.game.getCardType(this.current_card);
+
+                  this.game.setClientState(states.client.selectSpellPool, {
+                     descriptionmyturn: _(name) + " : " + msg,
+                     args: {},
+                  });
+
+                  this.game.markCardAsSelected(this.current_card);
                },
             },
          ],
+      });
+   }
+
+   private actionTwistOfFate() {
+      const msg = _("${you} may replace 1 of your other spells with a new spell");
+      const { name } = this.game.getCardType(this.current_card);
+
+      this.game.setClientState(states.client.replaceSpell, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            exclude: [Number(this.current_card.location_arg)],
+         },
       });
    }
 

@@ -12,7 +12,11 @@ class TwistOfFate extends BaseCard {
         // Deal 2 damage. You may discard and replace 1 of your other spells with a new spell. Move all mana on it onto the new spell
         $this->dealDamage(2);
 
-        if (!sizeof($args) == 2) {
+        if ($args == null || $args == "") {
+            return;
+        }
+
+        if (sizeof($args) != 2) {
             throw new BgaSystemException("Wrong number of arguments");
         }
 
