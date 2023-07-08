@@ -4,6 +4,16 @@ namespace WizardsGrimoire\Core;
 
 class Notifications {
 
+    static function activateSpell($player_id, $card_name) {
+        $msg = clienttranslate('${player_name} activate ${card_name}');
+        self::message($msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'card_name' => $card_name,
+            'i18n' => ['card_name'],
+        ]);
+    }
+
     static function basicAttackCard(int $player_id, $mana_card) {
         $msg = clienttranslate('${player_name} discard a ${mana_values} for is basic attack');
         self::message($msg, [

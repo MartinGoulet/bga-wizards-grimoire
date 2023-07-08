@@ -7,6 +7,8 @@ use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 
 class WildBloom extends BaseCard {
@@ -25,6 +27,8 @@ class WildBloom extends BaseCard {
             throw new BgaSystemException("Card is not an instant");
         }
 
+        $card_name = SpellCard::getName($spell);
+        Notifications::activateSpell(Players::getPlayerId(), $card_name);
         Globals::setSpellPlayed($spell['id']);
         Game::get()->activateInstantSpell($spell, $args);
     }

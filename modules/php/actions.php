@@ -32,6 +32,7 @@ trait ActionTrait {
         });
         Globals::setCoolDownDelayedSpellIds($filter);
 
+        Notifications::activateSpell(Players::getPlayerId(), SpellCard::getName($spell));
         $cardClass = SpellCard::getInstanceOfCard($spell);
         $cardClass->castSpell($args);
 
