@@ -1816,14 +1816,14 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.reset = function () {
         log("actionmanager.reset");
-        this.current_card = null;
+        this.current_card = [];
         this.take_action = null;
         this.actions = [];
         this.actions_args = [];
         return this;
     };
     ActionManager.prototype.addAction = function (card) {
-        this.current_card = card;
+        this.current_card.push(card);
         var card_type = this.game.getCardType(card);
         log("actionmanager.addAction", card, card_type);
         this.addActionPriv(card_type.js_actions);
@@ -1831,14 +1831,14 @@ var ActionManager = (function () {
         return this;
     };
     ActionManager.prototype.addActionInteraction = function (card) {
-        this.current_card = card;
+        this.current_card.push(card);
         var card_type = this.game.getCardType(card);
         log("actionmanager.addActionInteraction", card, card_type);
         this.addActionPriv(card_type.js_actions_interaction);
         return this;
     };
     ActionManager.prototype.addActionDelayed = function (card) {
-        this.current_card = card;
+        this.current_card.push(card);
         var card_type = this.game.getCardType(card);
         log("actionmanager.addActionDelayed", card, card_type);
         this.addActionPriv(card_type.js_actions_delayed);
@@ -1864,21 +1864,31 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.activateNextAction = function () {
         var _this = this;
+        log("activateNextAction");
+        log(this.actions_args);
         if (this.actions.length > 0) {
             var nextAction = this.actions.shift();
             this[nextAction]();
             return;
         }
-        var card_type = this.game.getCardType(this.current_card);
+        var card_type = this.game.getCardType(this.current_card[0]);
         log("actionmanager.activateNextAction", this.current_card, card_type, this.actions_args);
         var handleError = function (is_error) {
             is_error ? _this.game.restoreGameState() : _this.game.clearSelection();
         };
         var data = {
-            card_id: this.current_card.id,
+            card_id: this.current_card[0].id,
             args: this.actions_args.join(";"),
         };
         this.game.takeAction(this.take_action, data, null, handleError);
+    };
+    ActionManager.prototype.getCurrentCard = function () {
+        if (this.current_card.length > 0) {
+            return this.current_card[this.current_card.length - 1];
+        }
+        else {
+            return null;
+        }
     };
     ActionManager.prototype.actionArcaneTactics = function () {
         var msg = _("${you} may select ${nbr} mana card from your hand");
@@ -1886,11 +1896,11 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionBadFortune = function () {
         var msg = _("${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order");
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.badFortune, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
-                spell: this.current_card,
+                spell: this.getCurrentCard(),
             },
         });
     };
@@ -2083,7 +2093,7 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionAffliction = function () {
         var _this = this;
-        this.game.markCardAsSelected(this.current_card);
+        this.game.markCardAsSelected(this.getCurrentCard());
         this.question({
             cancel: true,
             options: [
@@ -2110,7 +2120,7 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionQuickSwap = function () {
         var _this = this;
-        this.game.markCardAsSelected(this.current_card);
+        this.game.markCardAsSelected(this.getCurrentCard());
         this.question({
             cancel: true,
             options: [
@@ -2122,12 +2132,12 @@ var ActionManager = (function () {
                     label: _("Discard this spell and replace it with a new spell"),
                     action: function () {
                         var msg = _("${you} must select a spell in the spell pool");
-                        var name = _this.game.getCardType(_this.current_card).name;
+                        var name = _this.game.getCardType(_this.getCurrentCard()).name;
                         _this.game.setClientState(states.client.selectSpellPool, {
                             descriptionmyturn: _(name) + " : " + msg,
                             args: {},
                         });
-                        _this.game.markCardAsSelected(_this.current_card);
+                        _this.game.markCardAsSelected(_this.getCurrentCard());
                     },
                 },
             ],
@@ -2135,16 +2145,50 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionTwistOfFate = function () {
         var msg = _("${you} may replace 1 of your other spells with a new spell");
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.replaceSpell, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
-                exclude: [Number(this.current_card.location_arg)],
+                exclude: [Number(this.getCurrentCard().location_arg)],
             },
         });
     };
+    ActionManager.prototype.actionWildBloom = function () {
+        this.actions.push("actionWildBloom_selectSpell");
+        this.actions.push("actionWildBloom_activate");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionWildBloom_selectSpell = function () {
+        var _this = this;
+        this.game.markCardAsSelected(this.getCurrentCard());
+        var player_table = this.game.getCurrentPlayerTable();
+        var instantSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            var type = _this.game.getCardType(card);
+            if (type.activation == "instant") {
+                var manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+                return manacount == 0;
+            }
+            return false;
+        });
+        var name = this.game.getCardType(this.getCurrentCard()).name;
+        var msg = _("${you} must select an opponent's spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: instantSpell,
+                cancel: false,
+                pass: true,
+            },
+        });
+    };
+    ActionManager.prototype.actionWildBloom_activate = function () {
+        var selectedSpell = this.game.getCurrentPlayerTable().spell_repertoire.getSelection()[0];
+        this.addAction(selectedSpell);
+        this.activateNextAction();
+    };
     ActionManager.prototype.actionCastMana = function () {
-        var _a = this.game.getCardType(this.current_card), name = _a.name, cost = _a.cost, type = _a.type;
+        var _a = this.game.getCardType(this.getCurrentCard()), name = _a.name, cost = _a.cost, type = _a.type;
         var player_table = this.game.getCurrentPlayerTable();
         var modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
         if (type == "red") {
@@ -2154,7 +2198,7 @@ var ActionManager = (function () {
         this.game.setClientState(states.client.castSpellWithMana, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
-                card: this.current_card,
+                card: this.getCurrentCard(),
                 cost: modifiedCost,
             },
         });
@@ -2170,18 +2214,18 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionSelectManaCoolDownPlayer = function () {
         var msg = _("Select a mana card under one of your spell");
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         var player_table = this.game.getCurrentPlayerTable();
         var exclude = [];
         for (var index = 1; index <= 6; index++) {
             if (player_table.mana_cooldown[index].getCards().length == 0 ||
-                index == Number(this.current_card.location_arg)) {
+                index == Number(this.getCurrentCard().location_arg)) {
                 exclude.push(index);
             }
         }
         var args = {
             player_id: this.game.getPlayerId(),
-            card: this.current_card,
+            card: this.getCurrentCard(),
             count: 1,
             exact: true,
             exclude: exclude,
@@ -2195,7 +2239,7 @@ var ActionManager = (function () {
         var _this = this;
         if (canIgnore === void 0) { canIgnore = false; }
         var msg = _("Select a mana card under one of your opponent's spell");
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         var player_table = this.game.getPlayerTable(this.game.getOpponentId());
         var exclude = [];
         for (var index = 1; index <= 6; index++) {
@@ -2205,7 +2249,7 @@ var ActionManager = (function () {
         }
         var args = {
             player_id: this.game.getOpponentId(),
-            card: this.current_card,
+            card: this.getCurrentCard(),
             count: 1,
             exact: true,
             exclude: exclude,
@@ -2255,7 +2299,7 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
         var msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.selectManaDiscard, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
@@ -2266,17 +2310,18 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionSelectSpellOpponent = function () {
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         var msg = _("${you} must select an opponent's spell");
         this.game.setClientState(states.client.selectSpell, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
                 player_id: this.game.getOpponentId(),
+                cancel: true,
             },
         });
     };
     ActionManager.prototype.question = function (args) {
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.question, {
             descriptionmyturn: _(name),
             args: args,
@@ -2285,11 +2330,11 @@ var ActionManager = (function () {
     ActionManager.prototype.selectMana = function (count, msg, exact, argsSuppl) {
         var _a;
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
         argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
-        argsSuppl.exclude.push(Number(this.current_card.location_arg));
-        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact });
+        argsSuppl.exclude.push(Number(this.getCurrentCard().location_arg));
+        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact });
         this.game.setClientState(states.client.selectMana, {
             descriptionmyturn: _(name) + " : " + msg,
             args: args,
@@ -2297,9 +2342,9 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.selectManaHand = function (count, msg, exact, argsSuppl) {
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
-        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact });
+        var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact });
         this.game.setClientState(states.client.selectManaHand, {
             descriptionmyturn: _(name) + " : " + msg,
             args: args,
@@ -2308,13 +2353,13 @@ var ActionManager = (function () {
     ActionManager.prototype.selectManaDeck = function (count, msg, exact, argsSuppl) {
         var _a;
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
         argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
         if (!argsSuppl.player_id || argsSuppl.player_id == this.game.getPlayerId()) {
-            argsSuppl.exclude.push(Number(this.current_card.location_arg));
+            argsSuppl.exclude.push(Number(this.getCurrentCard().location_arg));
         }
-        var args = __assign({ player_id: this.game.getPlayerId(), card: this.current_card, count: count, exact: exact }, argsSuppl);
+        var args = __assign({ player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact }, argsSuppl);
         this.game.setClientState(states.client.selectManaDeck, {
             descriptionmyturn: _(name) + " : " + msg,
             args: args,
@@ -2324,7 +2369,7 @@ var ActionManager = (function () {
         if (canPass === void 0) { canPass = false; }
         msg = msg.replace("${nbr}", count.toString());
         var args = { count: count, canCancel: canCancel, exact: true, canPass: canPass };
-        var name = this.game.getCardType(this.current_card).name;
+        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.selectManaReturnDeck, {
             descriptionmyturn: _(name) + " : " + msg,
             args: args,
@@ -3315,8 +3360,11 @@ var ActivateDelayedSpellStates = (function () {
         this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
     };
     ActivateDelayedSpellStates.prototype.onLeavingState = function () {
-        this.player_table.spell_repertoire.setSelectionMode("none");
-        this.player_table.spell_repertoire.onSelectionChange = null;
+        if (this.player_table) {
+            this.player_table.spell_repertoire.setSelectionMode("none");
+            this.player_table.spell_repertoire.onSelectionChange = null;
+            this.player_table = null;
+        }
     };
     ActivateDelayedSpellStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
@@ -4003,6 +4051,9 @@ var SelectSpellStates = (function () {
             return;
         this.player_table = this.game.getPlayerTable(args.player_id);
         this.player_table.spell_repertoire.setSelectionMode("single");
+        if (args.selection) {
+            this.player_table.spell_repertoire.setSelectableCards(args.selection);
+        }
         this.player_table.spell_repertoire.onSelectionChange = function (selection) {
             _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
         };
@@ -4019,7 +4070,12 @@ var SelectSpellStates = (function () {
             _this.game.actionManager.activateNextAction();
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
-        this.game.addActionButtonClientCancel();
+        if (args.cancel) {
+            this.game.addActionButtonClientCancel();
+        }
+        if (args.pass) {
+            this.game.addActionButtonPass();
+        }
         this.game.disableButton("btn_confirm");
     };
     SelectSpellStates.prototype.restoreGameState = function () {

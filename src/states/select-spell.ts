@@ -9,6 +9,11 @@ class SelectSpellStates implements StateHandler {
       this.player_table = this.game.getPlayerTable(args.player_id);
 
       this.player_table.spell_repertoire.setSelectionMode("single");
+
+      if (args.selection) {
+         this.player_table.spell_repertoire.setSelectableCards(args.selection);
+      }
+
       this.player_table.spell_repertoire.onSelectionChange = (selection: SpellCard[]) => {
          this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
       };
@@ -19,7 +24,7 @@ class SelectSpellStates implements StateHandler {
       this.player_table.spell_repertoire.onSelectionChange = null;
    }
 
-   onUpdateActionButtons(args: SelectManaDeckArgs): void {
+   onUpdateActionButtons(args: SelectSpellArgs): void {
       const handleConfirm = () => {
          const spell = this.player_table.spell_repertoire.getSelection()[0];
          this.game.actionManager.addArgument(spell.location_arg.toString());
@@ -27,7 +32,12 @@ class SelectSpellStates implements StateHandler {
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
-      this.game.addActionButtonClientCancel();
+      if (args.cancel) {
+         this.game.addActionButtonClientCancel();
+      }
+      if (args.pass) {
+         this.game.addActionButtonPass();
+      }
       this.game.disableButton("btn_confirm");
    }
 
@@ -38,4 +48,7 @@ class SelectSpellStates implements StateHandler {
 
 interface SelectSpellArgs {
    player_id: number;
+   selection?: SpellCard[];
+   cancel: boolean;
+   pass?: boolean;
 }

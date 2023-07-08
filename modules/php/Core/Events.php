@@ -25,11 +25,13 @@ class Events {
         $spell = SpellCard::getFromRepertoire($position, $player_id);
         $card_type = SpellCard::getCardInfo($spell);
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
+            $instance = SpellCard::getInstanceOfCard($spell);
             if ($card_type['activation_auto'] == true) {
-                $instance = SpellCard::getInstanceOfCard($spell);
                 $instance->castSpell($mana_card);
-            } else {
-                // TODO
+            } else if ($instance->isDelayedSpellTrigger()) {
+                $card_ids = Globals::getCoolDownDelayedSpellIds();
+                $card_ids[] = $spell['id'];
+                Globals::setCoolDownDelayedSpellIds($card_ids);
             }
         }
     }

@@ -141,15 +141,51 @@ $spellCoolDownStates = [
     ST_SPELL_CD_ACTIVATE_DELAYED => [
         "phase" => 2,
         "name" => "activateDelayedSpell",
-        "description" => clienttranslate('${actplayer} may activate a spell or pass'),
-        "descriptionmyturn" => clienttranslate('${you} may activate a spell or pass'),
+        "description" => clienttranslate('${actplayer} must resolves delayed spells'),
+        "descriptionmyturn" => clienttranslate('${you} must resolve delayed spells'),
         "args" => "argActivateDelayedSpell",
         "type" => "activeplayer",
         "possibleactions" => ["activateDelayedSpell", "pass"],
         "transitions" => [
             "cast" => ST_SPELL_CD_ACTIVATE_DELAYED,
+            "player" => ST_SPELL_CD_CAST_SPELL_INTERACTION,
+            "opponent" => ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
             "pass" => ST_GAIN_MANA,
             "dead" => ST_PRE_END_OF_GAME,
+        ]
+    ],
+
+    ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT => [
+        "phase" => 2,
+        "name" => "castSpellSwitchOpponent",
+        "type" => "game",
+        "action" => "stSwitchToOpponent",
+        "transitions" => [
+            "" => ST_SPELL_CD_CAST_SPELL_INTERACTION,
+        ]
+    ],
+
+    ST_SPELL_CD_CAST_SPELL_INTERACTION => array(
+        "phase" => 2,
+        "name" => "castSpellInteraction",
+        "description" => clienttranslate('${actplayer} must conclude the effect of the spell'),
+        "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
+        "type" => "activeplayer",
+        "args" => "argCastSpellInteraction",
+        "possibleactions" => ["castSpellInteraction"],
+        "transitions" => [
+            "return" => ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER,
+            "dead" => ST_PRE_END_OF_GAME,
+        ]
+    ),
+
+    ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER => [
+        "phase" => 2,
+        "name" => "castSpellReturnCurrentPlayer",
+        "type" => "game",
+        "action" => "stReturnToCurrentPlayer",
+        "transitions" => [
+            "" => ST_SPELL_CD_ACTIVATE_DELAYED,
         ]
     ],
 ];
@@ -215,6 +251,21 @@ $castSpellsStates = [
         "action" => "stReturnToCurrentPlayer",
         "transitions" => [
             "" => ST_CAST_SPELL,
+        ]
+    ],
+
+    ST_CAST_SPELL_CD_ACTIVATE_DELAYED => [
+        "phase" => 4,
+        "name" => "activateDelayedSpell",
+        "description" => clienttranslate('${actplayer} must resolves delayed spells'),
+        "descriptionmyturn" => clienttranslate('${you} must resolve delayed spells'),
+        "args" => "argActivateDelayedSpell",
+        "type" => "activeplayer",
+        "possibleactions" => ["activateDelayedSpell", "pass"],
+        "transitions" => [
+            "cast" => ST_CAST_SPELL,
+            "pass" => ST_CAST_SPELL,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 ];

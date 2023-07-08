@@ -51,7 +51,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   4 => [
     "name" => clienttranslate("Stone crush"),
@@ -462,6 +462,7 @@ $this->card_types = [
     "activation_auto" => false,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
+    "js_actions_delayed" => "actionWildBloom",
     "debug" => "orange",
   ],
   43 => [
@@ -548,7 +549,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   51 => [
     "name" => clienttranslate("Renewal"),
@@ -581,7 +582,7 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionWrath",
-    "debug" => "yellow",
+    "debug" => "lightgreen",
   ],
   54 => [
     "name" => clienttranslate("Reckless attack"),
@@ -655,7 +656,7 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions_delayed" => "actionSilentSupport",
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   61 => [
     "name" => clienttranslate("Power hungry"),

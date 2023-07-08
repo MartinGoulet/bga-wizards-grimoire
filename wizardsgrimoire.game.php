@@ -176,7 +176,6 @@ class WizardsGrimoire extends Table {
         self::initStat('table', WG_STAT_TURN_NUMBER, 0);
         self::initStat('player', WG_STAT_TURN_NUMBER, 0);
 
-        // TODO: setup the initial game situation here
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
         $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
 
@@ -236,8 +235,6 @@ class WizardsGrimoire extends Table {
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
         $sql = "SELECT player_id id, player_score score FROM player ";
         $result['players'] = self::getCollectionFromDb($sql);
-
-        // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
         $result['card_types'] = $this->card_types;
 

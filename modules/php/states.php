@@ -53,7 +53,9 @@ trait StateTrait {
                         if ($spell_info['activation_auto'] == true) {
                             $instance->castSpell($mana_card);
                         } else {
-                            $spell_delayed[] = $spell['id'];
+                            if ($instance->isDelayedSpellTrigger()) {
+                                $spell_delayed[] = $spell['id'];
+                            }
                         }
                         break;
 

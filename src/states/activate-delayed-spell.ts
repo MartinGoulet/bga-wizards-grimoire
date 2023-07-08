@@ -20,8 +20,11 @@ class ActivateDelayedSpellStates implements StateHandler {
       this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
    }
    onLeavingState(): void {
-      this.player_table.spell_repertoire.setSelectionMode("none");
-      this.player_table.spell_repertoire.onSelectionChange = null;
+      if (this.player_table) {
+         this.player_table.spell_repertoire.setSelectionMode("none");
+         this.player_table.spell_repertoire.onSelectionChange = null;
+         this.player_table = null;
+      }
    }
    onUpdateActionButtons(args: ActivateDelayedSpellArgs): void {
       const handleConfirm = () => {

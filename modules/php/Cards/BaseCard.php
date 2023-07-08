@@ -25,6 +25,10 @@ abstract class BaseCard {
     public function isOngoingSpellActive(bool $value) {
     }
 
+    public function isDelayedSpellTrigger() {
+        return true;
+    }
+
     protected function dealDamage(int $damage, int $opponent_id = -1) {
 
         if ($opponent_id <= 0) {

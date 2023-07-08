@@ -443,6 +443,10 @@
   right: 0;
 }
 
+.bga-cards_deck-counter {
+  z-index: 200 !important;
+}
+
 #bga-zoom-wrapper {
   position: relative;
 }

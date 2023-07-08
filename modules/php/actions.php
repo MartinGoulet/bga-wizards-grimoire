@@ -35,6 +35,12 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         $cardClass->castSpell($args);
 
+        $filter = Globals::getCoolDownDelayedSpellIds();
+
+        if(Globals::getInteractionPlayer() > 0) {
+            return;
+        }
+
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
         } else if (sizeof($filter) > 0) {
@@ -189,34 +195,39 @@ trait ActionTrait {
                 break;
 
             case WG_SPELL_ACTIVATION_INSTANT:
-                $cardClass = SpellCard::getInstanceOfCard($spell);
-                // Execute the ability of the card
-                $cardClass->castSpell($args);
-                Lullaby::check();
+                $this->activateInstantSpell($spell, $args);
+                break;
 
-                if (Globals::getSkipInteraction()) {
-                    Globals::setSkipInteraction(false);
-                    $this->castOrEndGame();
-                    return;
-                }
+            default:
+                $this->castOrEndGame();
+                break;
+        }
+    }
 
-                $card_interaction = $card_type['interaction'] ?? "";
+    function activateInstantSpell($spell, $args) {
+        $cardClass = SpellCard::getInstanceOfCard($spell);
+        // Execute the ability of the card
+        $cardClass->castSpell($args);
+        Lullaby::check();
 
-                switch ($card_interaction) {
-                    case 'player':
-                        Globals::setInteractionPlayer(Players::getPlayerId());
-                        $this->gamestate->nextState("player");
-                        break;
+        if (Globals::getSkipInteraction()) {
+            Globals::setSkipInteraction(false);
+            $this->castOrEndGame();
+            return;
+        }
 
-                    case 'opponent':
-                        Globals::setInteractionPlayer(Players::getOpponentId());
-                        $this->gamestate->nextState("opponent");
-                        break;
+        $card_type = SpellCard::getCardInfo($spell);
+        $card_interaction = $card_type['interaction'] ?? "";
 
-                    default:
-                        $this->castOrEndGame();
-                        break;
-                }
+        switch ($card_interaction) {
+            case 'player':
+                Globals::setInteractionPlayer(Players::getPlayerId());
+                $this->gamestate->nextState("player");
+                break;
+
+            case 'opponent':
+                Globals::setInteractionPlayer(Players::getOpponentId());
+                $this->gamestate->nextState("opponent");
                 break;
 
             default:

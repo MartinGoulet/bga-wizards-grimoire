@@ -3,7 +3,7 @@ type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpe
 class ActionManager {
    private actions: string[] = [];
    private actions_args: string[] = [];
-   private current_card: SpellCard;
+   private current_card: SpellCard[];
    private take_action: TakeActionType;
 
    constructor(private game: WizardsGrimoire) {}
@@ -22,7 +22,7 @@ class ActionManager {
    public reset() {
       log("actionmanager.reset");
 
-      this.current_card = null;
+      this.current_card = [];
       this.take_action = null;
       this.actions = [];
       this.actions_args = [];
@@ -30,7 +30,7 @@ class ActionManager {
    }
 
    public addAction(card: SpellCard) {
-      this.current_card = card;
+      this.current_card.push(card);
       const card_type = this.game.getCardType(card);
       log("actionmanager.addAction", card, card_type);
       this.addActionPriv(card_type.js_actions);
@@ -39,7 +39,7 @@ class ActionManager {
    }
 
    public addActionInteraction(card: SpellCard) {
-      this.current_card = card;
+      this.current_card.push(card);
       const card_type = this.game.getCardType(card);
       log("actionmanager.addActionInteraction", card, card_type);
       this.addActionPriv(card_type.js_actions_interaction);
@@ -47,7 +47,7 @@ class ActionManager {
    }
 
    public addActionDelayed(card: SpellCard) {
-      this.current_card = card;
+      this.current_card.push(card);
       const card_type = this.game.getCardType(card);
       log("actionmanager.addActionDelayed", card, card_type);
       this.addActionPriv(card_type.js_actions_delayed);
@@ -73,6 +73,8 @@ class ActionManager {
    }
 
    public activateNextAction() {
+      log("activateNextAction");
+      log(this.actions_args);
       if (this.actions.length > 0) {
          // Invoke action
          const nextAction = this.actions.shift();
@@ -80,7 +82,7 @@ class ActionManager {
          return;
       }
 
-      const card_type = this.game.getCardType(this.current_card);
+      const card_type = this.game.getCardType(this.current_card[0]);
       log("actionmanager.activateNextAction", this.current_card, card_type, this.actions_args);
 
       const handleError = (is_error: boolean) => {
@@ -88,11 +90,19 @@ class ActionManager {
       };
 
       const data = {
-         card_id: this.current_card.id,
+         card_id: this.current_card[0].id,
          args: this.actions_args.join(";"),
       };
 
       this.game.takeAction(this.take_action, data, null, handleError);
+   }
+
+   public getCurrentCard(): SpellCard {
+      if (this.current_card.length > 0) {
+         return this.current_card[this.current_card.length - 1];
+      } else {
+         return null;
+      }
    }
 
    /////////////////////////////////////////////////////////////
@@ -115,11 +125,11 @@ class ActionManager {
          "${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order",
       );
 
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       this.game.setClientState(states.client.badFortune, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
-            spell: this.current_card,
+            spell: this.getCurrentCard(),
          } as BadFortuneArgs,
       });
    }
@@ -351,7 +361,7 @@ class ActionManager {
    /////////////////////////////////////////////////////////////
 
    private actionAffliction() {
-      this.game.markCardAsSelected(this.current_card);
+      this.game.markCardAsSelected(this.getCurrentCard());
       this.question({
          cancel: true,
          options: [
@@ -380,7 +390,7 @@ class ActionManager {
    }
 
    private actionQuickSwap() {
-      this.game.markCardAsSelected(this.current_card);
+      this.game.markCardAsSelected(this.getCurrentCard());
       this.question({
          cancel: true,
          options: [
@@ -392,14 +402,14 @@ class ActionManager {
                label: _("Discard this spell and replace it with a new spell"),
                action: () => {
                   const msg = _("${you} must select a spell in the spell pool");
-                  const { name } = this.game.getCardType(this.current_card);
+                  const { name } = this.game.getCardType(this.getCurrentCard());
 
                   this.game.setClientState(states.client.selectSpellPool, {
                      descriptionmyturn: _(name) + " : " + msg,
                      args: {},
                   });
 
-                  this.game.markCardAsSelected(this.current_card);
+                  this.game.markCardAsSelected(this.getCurrentCard());
                },
             },
          ],
@@ -408,14 +418,52 @@ class ActionManager {
 
    private actionTwistOfFate() {
       const msg = _("${you} may replace 1 of your other spells with a new spell");
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
 
       this.game.setClientState(states.client.replaceSpell, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
-            exclude: [Number(this.current_card.location_arg)],
+            exclude: [Number(this.getCurrentCard().location_arg)],
          },
       });
+   }
+
+   private actionWildBloom() {
+      this.actions.push("actionWildBloom_selectSpell");
+      this.actions.push("actionWildBloom_activate");
+      this.activateNextAction();
+   }
+
+   private actionWildBloom_selectSpell() {
+      this.game.markCardAsSelected(this.getCurrentCard());
+      const player_table = this.game.getCurrentPlayerTable();
+
+      const instantSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         const type = this.game.getCardType(card);
+         if (type.activation == "instant") {
+            const manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+            return manacount == 0;
+         }
+         return false;
+      });
+
+      const { name } = this.game.getCardType(this.getCurrentCard());
+      const msg = _("${you} must select an opponent's spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: instantSpell,
+            cancel: false,
+            pass: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionWildBloom_activate() {
+      const selectedSpell = this.game.getCurrentPlayerTable().spell_repertoire.getSelection()[0];
+      this.addAction(selectedSpell);
+      this.activateNextAction();
    }
 
    ///////////////////////////////////////////////////////////////////////////////////
@@ -429,7 +477,7 @@ class ActionManager {
    ///////////////////////////////////////////////////////////////////////////////////
 
    private actionCastMana() {
-      const { name, cost, type } = this.game.getCardType(this.current_card);
+      const { name, cost, type } = this.game.getCardType(this.getCurrentCard());
       const player_table = this.game.getCurrentPlayerTable();
 
       let modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
@@ -442,7 +490,7 @@ class ActionManager {
       this.game.setClientState(states.client.castSpellWithMana, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
-            card: this.current_card,
+            card: this.getCurrentCard(),
             cost: modifiedCost,
          },
       });
@@ -460,14 +508,14 @@ class ActionManager {
 
    private actionSelectManaCoolDownPlayer() {
       const msg = _("Select a mana card under one of your spell");
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
 
       const player_table = this.game.getCurrentPlayerTable();
       const exclude: number[] = [];
       for (let index = 1; index <= 6; index++) {
          if (
             player_table.mana_cooldown[index].getCards().length == 0 ||
-            index == Number(this.current_card.location_arg)
+            index == Number(this.getCurrentCard().location_arg)
          ) {
             exclude.push(index);
          }
@@ -475,7 +523,7 @@ class ActionManager {
 
       const args: SelectManaDeckArgs = {
          player_id: this.game.getPlayerId(),
-         card: this.current_card,
+         card: this.getCurrentCard(),
          count: 1,
          exact: true,
          exclude,
@@ -489,7 +537,7 @@ class ActionManager {
 
    private actionSelectManaCoolDownOpponent(canIgnore: boolean = false) {
       const msg = _("Select a mana card under one of your opponent's spell");
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
 
       const player_table = this.game.getPlayerTable(this.game.getOpponentId());
       const exclude: number[] = [];
@@ -501,7 +549,7 @@ class ActionManager {
 
       const args = {
          player_id: this.game.getOpponentId(),
-         card: this.current_card,
+         card: this.getCurrentCard(),
          count: 1,
          exact: true,
          exclude,
@@ -563,7 +611,7 @@ class ActionManager {
 
    private actionSelectTwoManaCardFromDiscard() {
       const msg = _("${you} may select ${nbr} mana card from the discard").replace("${nbr}", "2");
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       this.game.setClientState(states.client.selectManaDiscard, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
@@ -575,12 +623,13 @@ class ActionManager {
    }
 
    private actionSelectSpellOpponent() {
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       const msg = _("${you} must select an opponent's spell");
       this.game.setClientState(states.client.selectSpell, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {
             player_id: this.game.getOpponentId(),
+            cancel: true,
          } as SelectSpellArgs,
       });
    }
@@ -596,7 +645,7 @@ class ActionManager {
    /////////////////////////////////////////////////////////////
 
    private question(args: QuestionArgs) {
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       this.game.setClientState(states.client.question, {
          descriptionmyturn: _(name),
          args,
@@ -604,16 +653,16 @@ class ActionManager {
    }
 
    private selectMana(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       msg = msg.replace("${nbr}", count.toString());
 
       argsSuppl.exclude = argsSuppl.exclude ?? [];
-      argsSuppl.exclude.push(Number(this.current_card.location_arg));
+      argsSuppl.exclude.push(Number(this.getCurrentCard().location_arg));
 
       const args = {
          ...argsSuppl,
          player_id: this.game.getPlayerId(),
-         card: this.current_card,
+         card: this.getCurrentCard(),
          count,
          exact,
       };
@@ -625,13 +674,13 @@ class ActionManager {
    }
 
    private selectManaHand(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       msg = msg.replace("${nbr}", count.toString());
 
       const args = {
          ...argsSuppl,
          player_id: this.game.getPlayerId(),
-         card: this.current_card,
+         card: this.getCurrentCard(),
          count,
          exact,
       };
@@ -643,17 +692,17 @@ class ActionManager {
    }
 
    private selectManaDeck(count: number, msg: string, exact: boolean, argsSuppl: any = {}) {
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       msg = msg.replace("${nbr}", count.toString());
 
       argsSuppl.exclude = argsSuppl.exclude ?? [];
       if (!argsSuppl.player_id || argsSuppl.player_id == this.game.getPlayerId()) {
-         argsSuppl.exclude.push(Number(this.current_card.location_arg));
+         argsSuppl.exclude.push(Number(this.getCurrentCard().location_arg));
       }
 
       const args = {
          player_id: this.game.getPlayerId(),
-         card: this.current_card,
+         card: this.getCurrentCard(),
          count,
          exact,
          ...argsSuppl,
@@ -670,7 +719,7 @@ class ActionManager {
 
       const args = { count, canCancel, exact: true, canPass } as SelectManaReturnDeckStatesArgs;
 
-      const { name } = this.game.getCardType(this.current_card);
+      const { name } = this.game.getCardType(this.getCurrentCard());
       this.game.setClientState(states.client.selectManaReturnDeck, {
          descriptionmyturn: _(name) + " : " + msg,
          args,

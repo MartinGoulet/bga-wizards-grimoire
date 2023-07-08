@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -13,7 +14,10 @@ class SilentSupport extends BaseCard {
         // Each time you discard off this spell, pick up a mana off 1 of your other spells
 
         $position = intval(array_shift($args));
-        $player_card = ManaCard::hasUnderSpell($position);
-        Notifications::moveManaCard(Players::getPlayerId(), [$player_card]);
+        $card = ManaCard::hasUnderSpell($position);
+        ManaCard::addToHand($card['id']);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
+        Events::onManaDiscarded($card, $position, Players::getPlayerId());
+        Events::onAddCardToHand();
     }
 }

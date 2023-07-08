@@ -35,8 +35,6 @@ class action_wizardsgrimoire extends APP_GameAction {
       }
    }
 
-   // TODO: defines your action entry points there
-
    public function activateDelayedSpell() {
       self::setAjaxMode();
 
