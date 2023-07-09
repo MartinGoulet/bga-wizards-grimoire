@@ -95,8 +95,14 @@ class PlayerTable {
    }
 
    public canCast(card: SpellCard): boolean {
-      const { cost } = this.game.getCardType(card);
-      return this.hand.getCards().length >= cost;
+      let { cost, type } = this.game.getCardType(card);
+
+      cost -= this.getDiscountNextSpell();
+      if (type == "red") {
+         cost -= this.getDiscountNextAttack();
+      }
+
+      return this.hand.getCards().length + this.getDiscountNextAttack() >= cost;
    }
 
    public getSpellSlotAvailables(): number[] {
