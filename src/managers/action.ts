@@ -269,7 +269,7 @@ class ActionManager {
          canCancel: false,
          skip: {
             label: _("Pass"),
-            message: _("Are you sure that you didn't want to discard mana cards?"),
+            message: _("Are you sure that you don't want to discard mana cards?"),
          },
       });
    }
@@ -340,7 +340,7 @@ class ActionManager {
          canCancel: false,
          skip: {
             label: _("Pass"),
-            message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+            message: _("Are you sure that you don't want to give a mana to your opponent?"),
          },
       });
    }
@@ -501,7 +501,7 @@ class ActionManager {
       this.selectManaHand(1, msg, false, {
          skip: {
             label: _("Pass"),
-            message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+            message: _("Are you sure that you don't want to give a mana to your opponent?"),
          },
       });
    }
