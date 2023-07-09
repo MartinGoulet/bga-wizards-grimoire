@@ -2,17 +2,17 @@
    display: flex;
    justify-content: center;
    flex-wrap: wrap;
-   width: 732px;
+   width: 740px;
    column-gap: 40px;
    row-gap: 20px;
 }
 
 #spell-pool {
-   width: 732px;
+   width: 740px;
    max-height: 400px;
    align-content: center;
-   --width: 120px;
-   --height: 168px;
+   --width: 140px;
+   --height: 192px;
 
    .wg-spell-slot {
       width: var(--width);
@@ -54,6 +54,7 @@
    display: flex;
    width: 100%;
    column-gap: 10px;
+   justify-content: space-evenly;
 }
 
 #basic-attack-wrapper,
@@ -89,7 +90,3 @@
       margin-top: 5px;
    }
 }
-
-// #table[data-phase="5"] #basic-attack-wrapper {
-//    display: block;
-// }

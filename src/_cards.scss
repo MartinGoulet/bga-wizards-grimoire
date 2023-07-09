@@ -29,16 +29,16 @@
       flex-direction: column;
       align-items: center;
       position: absolute;
-      width: 88px;
+      width: 108px;
       height: 48px;
-      top: 121px;
+      top: 140px;
       left: 18px;
       gap: 2px;
 
       .wg-card-gametext-title {
          font-family: RoughAntiquaAllCaps;
-         font-size: 6px;
-         line-height: 6px;
+         font-size: 8px;
+         line-height: 8px;
          text-align: center;
       }
 
@@ -51,8 +51,8 @@
 
       .wg-card-gametext-text {
          font-family: BrushSerifEdward;
-         font-size: 5px;
-         line-height: 6px;
+         font-size: 7px;
+         line-height: 8px;
          text-align: center;
          p {
             margin: 2px 0 0 0;

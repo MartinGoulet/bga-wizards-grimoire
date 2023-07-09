@@ -32,16 +32,16 @@
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: 88px;
+  width: 108px;
   height: 48px;
-  top: 121px;
+  top: 140px;
   left: 18px;
   gap: 2px;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-title {
   font-family: RoughAntiquaAllCaps;
-  font-size: 6px;
-  line-height: 6px;
+  font-size: 8px;
+  line-height: 8px;
   text-align: center;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-divider {
@@ -52,8 +52,8 @@
 }
 .wg-card .wg-card-gametext .wg-card-gametext-text {
   font-family: BrushSerifEdward;
-  font-size: 5px;
-  line-height: 6px;
+  font-size: 7px;
+  line-height: 8px;
   text-align: center;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-text p {
@@ -856,17 +856,17 @@ body > .card {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  width: 732px;
+  width: 740px;
   column-gap: 40px;
   row-gap: 20px;
 }
 
 #spell-pool {
-  width: 732px;
+  width: 740px;
   max-height: 400px;
   align-content: center;
-  --width: 120px;
-  --height: 168px;
+  --width: 140px;
+  --height: 192px;
 }
 #spell-pool .wg-spell-slot {
   width: var(--width);
@@ -902,6 +902,7 @@ body > .card {
   display: flex;
   width: 100%;
   column-gap: 10px;
+  justify-content: space-evenly;
 }
 
 #basic-attack-wrapper,
@@ -936,7 +937,6 @@ body > .card {
 
 .player-table {
   padding-top: 30px;
-  width: 730px;
   border-radius: 8px;
   position: relative;
   border: 3px solid var(--color);
@@ -1335,40 +1335,6 @@ body > .card {
   padding-top: 40px;
 }
 
-.player-board .break {
-  flex-basis: 100%;
-  height: 0;
-}
-.player-board .dtIconTokens {
-  display: flex;
-  width: 100%;
-  gap: 10px;
-  margin: 0 10px;
-}
-.player-board .dtIconTokens .dt-icon {
-  height: 24px;
-  width: 24px;
-  background-size: 24px 24px;
-  box-shadow: 1px 2px 2px 1px black;
-  border-radius: 20px;
-  border: 1px solid black;
-  margin: 0px;
-}
-.player-board .dtIconTokens .dt-icon:not(:first-child) {
-  margin-left: -10px;
-}
-.player-board .dtIconGroup {
-  display: flex;
-  margin-left: 15px;
-}
-.player-board .dtIconCounter {
-  display: inline-block;
-  font-weight: bold;
-  line-height: 25px;
-  vertical-align: super;
-  margin: 0 3px;
-}
-
 #table {
   display: flex;
   justify-content: center;
@@ -1392,7 +1358,7 @@ body > .card {
   justify-content: space-around;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
   flex-direction: row;
 }
 
