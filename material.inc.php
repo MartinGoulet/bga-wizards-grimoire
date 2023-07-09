@@ -368,7 +368,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   34 => [
     "name" => clienttranslate("Hellstorm"),
@@ -463,7 +463,7 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "js_actions_delayed" => "actionWildBloom",
-    "debug" => "orange",
+    "debug" => "lightgreen",
   ],
   43 => [
     "name" => clienttranslate("Tsunami"),
@@ -593,7 +593,7 @@ $this->card_types = [
     "activation_auto" => true,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
+    "debug" => "lightgreen",
   ],
   55 => [
     "name" => clienttranslate("Shared power"),
