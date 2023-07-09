@@ -346,8 +346,31 @@ class ActionManager {
    }
 
    private actionSilentSupport() {
-      this.actions.push("actionSelectManaFrom");
-      this.activateNextAction();
+      const player_table = this.game.getCurrentPlayerTable();
+
+      const emptyDecks = player_table
+         .getManaDeckWithSpellOver()
+         .filter((deck) => deck.isEmpty())
+         .map((deck) => deck.location);
+
+      const { name } = this.game.getCardType(this.getCurrentCard());
+      const msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
+
+      const args: SelectManaDeckArgs = {
+         player_id: this.game.getPlayerId(),
+         card: this.getCurrentCard(),
+         count: 1,
+         exact: true,
+         exclude: emptyDecks,
+         ignore: () => {
+            this.activateNextAction();
+         },
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args,
+      });
    }
 
    /////////////////////////////////////////////////////////////

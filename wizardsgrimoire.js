@@ -2029,7 +2029,7 @@ var ActionManager = (function () {
             canCancel: false,
             skip: {
                 label: _("Pass"),
-                message: _("Are you sure that you didn't want to discard mana cards?"),
+                message: _("Are you sure that you don't want to discard mana cards?"),
             },
         });
     };
@@ -2083,13 +2083,33 @@ var ActionManager = (function () {
             canCancel: false,
             skip: {
                 label: _("Pass"),
-                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+                message: _("Are you sure that you don't want to give a mana to your opponent?"),
             },
         });
     };
     ActionManager.prototype.actionSilentSupport = function () {
-        this.actions.push("actionSelectManaFrom");
-        this.activateNextAction();
+        var _this = this;
+        var player_table = this.game.getCurrentPlayerTable();
+        var emptyDecks = player_table
+            .getManaDeckWithSpellOver()
+            .filter(function (deck) { return deck.isEmpty(); })
+            .map(function (deck) { return deck.location; });
+        var name = this.game.getCardType(this.getCurrentCard()).name;
+        var msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
+        var args = {
+            player_id: this.game.getPlayerId(),
+            card: this.getCurrentCard(),
+            count: 1,
+            exact: true,
+            exclude: emptyDecks,
+            ignore: function () {
+                _this.activateNextAction();
+            },
+        };
+        this.game.setClientState(states.client.selectManaDeck, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: args,
+        });
     };
     ActionManager.prototype.actionAffliction = function () {
         var _this = this;
@@ -2208,7 +2228,7 @@ var ActionManager = (function () {
         this.selectManaHand(1, msg, false, {
             skip: {
                 label: _("Pass"),
-                message: _("Are you sure that you didn't want to give a mana to your opponent?"),
+                message: _("Are you sure that you don't want to give a mana to your opponent?"),
             },
         });
     };
@@ -2664,7 +2684,9 @@ var StateManager = (function () {
     StateManager.prototype.onLeavingState = function (stateName) {
         log("Leaving state: " + stateName);
         if (this.states[stateName] !== undefined) {
-            this.states[stateName].onLeavingState();
+            if (this.game.isCurrentPlayerActive()) {
+                this.states[stateName].onLeavingState();
+            }
         }
     };
     StateManager.prototype.onUpdateActionButtons = function (stateName, args) {
@@ -2753,8 +2775,12 @@ var PlayerTable = (function () {
         this.health.setValue(Number(this.game.gamedatas.players[pId].score));
     }
     PlayerTable.prototype.canCast = function (card) {
-        var cost = this.game.getCardType(card).cost;
-        return this.hand.getCards().length >= cost;
+        var _a = this.game.getCardType(card), cost = _a.cost, type = _a.type;
+        cost -= this.getDiscountNextSpell();
+        if (type == "red") {
+            cost -= this.getDiscountNextAttack();
+        }
+        return this.hand.getCards().length + this.getDiscountNextAttack() >= cost;
     };
     PlayerTable.prototype.getSpellSlotAvailables = function () {
         var _this = this;

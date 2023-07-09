@@ -11,9 +11,9 @@ use WizardsGrimoire\Core\Players;
 
 class SecretOath extends BaseCard {
 
-    public function isOngoingSpellActive(bool $value) {
+    public function isOngoingSpellActive(bool $value, int $player_id) {
         // As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately
-        Globals::setIsActiveSecretOath($value);
+        Globals::setIsActiveSecretOath($value, $player_id);
     }
 
     public static function check($cards) {

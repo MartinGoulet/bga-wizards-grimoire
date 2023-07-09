@@ -81,8 +81,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION)) == Players::getOpponentId();
     }
     
-    public static function setIsActiveBattleVision(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActiveBattleVision(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION, $value);
     }
 
@@ -94,8 +94,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH));
     }
 
-    public static function setIsActiveGrowth(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActiveGrowth(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
         Events::onIsActiveGrowthChanged();
     }
@@ -108,8 +108,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_LULLABY));
     }
 
-    public static function setIsActiveLullaby(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActiveLullaby(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_LULLABY, $value);
     }
     
@@ -121,8 +121,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY));
     }
     
-    public static function setIsActivePowerHungry(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActivePowerHungry(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, $value);
     }
 
@@ -130,8 +130,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER)) == Players::getOpponentId();
     }
 
-    public static function setIsActivePuppetmaster(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActivePuppetmaster(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER, $value);
     }
 
@@ -143,8 +143,8 @@ class Globals extends APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH));
     }
 
-    public static function setIsActiveSecretOath(bool $isActive) {
-        $value = $isActive ? Players::getPlayerId() : 0;
+    public static function setIsActiveSecretOath(bool $isActive, int $player_id) {
+        $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH, $value);
         Events::onIsActiveSecretOathChanged();
     }

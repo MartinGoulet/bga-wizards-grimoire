@@ -87,7 +87,9 @@ class StateManager {
       log("Leaving state: " + stateName);
 
       if (this.states[stateName] !== undefined) {
-         this.states[stateName].onLeavingState();
+         if (this.game.isCurrentPlayerActive()) {
+            this.states[stateName].onLeavingState();
+         }
       }
    }
 

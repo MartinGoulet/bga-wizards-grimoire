@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use SplDoublyLinkedList;
 use WizardsGrimoire\Cards\Base_2\SecretOath;
 
 /*
@@ -26,12 +27,14 @@ class Events {
         $card_type = SpellCard::getCardInfo($spell);
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
             $instance = SpellCard::getInstanceOfCard($spell);
-            if ($card_type['activation_auto'] == true) {
-                $instance->castSpell($mana_card);
-            } else if ($instance->isDelayedSpellTrigger()) {
-                $card_ids = Globals::getCoolDownDelayedSpellIds();
-                $card_ids[] = $spell['id'];
-                Globals::setCoolDownDelayedSpellIds($card_ids);
+            if ($instance->isDelayedSpellTrigger()) {
+                if ($card_type['activation_auto'] == true) {
+                    $instance->castSpell($mana_card);
+                } else {
+                    $card_ids = Globals::getCoolDownDelayedSpellIds();
+                    $card_ids[] = $spell['id'];
+                    Globals::setCoolDownDelayedSpellIds($card_ids);
+                }
             }
         }
     }
@@ -41,6 +44,15 @@ class Events {
             return SecretOath::check($cards);
         }
         return $cards;
+    }
+
+    public static function onAddManaUnderSpell($player_id, $position) {
+        $spell = SpellCard::getFromRepertoire($position, $player_id);
+        $card_type = SpellCard::getCardInfo($spell);
+        if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            $instance->isOngoingSpellActive(true, $player_id);
+        }
     }
 
     public static function onAddCardToHand() {

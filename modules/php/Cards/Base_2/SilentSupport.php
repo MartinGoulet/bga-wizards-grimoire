@@ -14,6 +14,11 @@ class SilentSupport extends BaseCard {
         // Each time you discard off this spell, pick up a mana off 1 of your other spells
 
         $position = intval(array_shift($args));
+        if($position == 0) {
+            Notifications::spellNoEffect();
+            return;
+        }
+
         $card = ManaCard::hasUnderSpell($position);
         ManaCard::addToHand($card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$card]);

@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_1;
+namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -26,6 +26,8 @@ class Fracture extends BaseCard {
             ManaCard::addOnTopOfManaCoolDown($src_top_card['id'], $dest_deck_pos);
 
             Notifications::moveManaCard($player_id, [$src_top_card]);
+            Events::onAddManaUnderSpell($player_id, $dest_deck_pos);
+            Events::onManaDiscarded($src_top_card, $src_deck_pos, $player_id);
         }
     }
 }

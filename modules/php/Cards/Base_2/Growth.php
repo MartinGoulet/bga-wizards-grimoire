@@ -7,8 +7,8 @@ use WizardsGrimoire\Core\Globals;
 
 class Growth extends BaseCard {
 
-    public function isOngoingSpellActive(bool $value) {
+    public function isOngoingSpellActive(bool $value, int $player_id) {
         // During your turn, increase the power of all mana by 1
-        Globals::setIsActiveGrowth($value);
+        Globals::setIsActiveGrowth($value, $player_id);
     }
 }

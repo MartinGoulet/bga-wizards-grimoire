@@ -22,7 +22,7 @@ abstract class BaseCard {
         throw new BgaSystemException('Not implemented : castSpellCallback of ' . get_class($this));
     }
 
-    public function isOngoingSpellActive(bool $value) {
+    public function isOngoingSpellActive(bool $value, int $player_id) {
     }
 
     public function isDelayedSpellTrigger() {

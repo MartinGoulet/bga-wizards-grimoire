@@ -191,7 +191,7 @@ trait ActionTrait {
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_ONGOING:
                 $cardClass = SpellCard::getInstanceOfCard($spell);
-                $cardClass->isOngoingSpellActive(true);
+                $cardClass->isOngoingSpellActive(true, $player_id);
                 $this->gamestate->nextState("cast");
                 break;
 
@@ -240,6 +240,8 @@ trait ActionTrait {
     private function castOrEndGame() {
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0 || Players::getPlayerLife(Players::getPlayerId()) <= 0) {
             $this->gamestate->nextState('dead');
+        } else if(sizeof(Globals::getCoolDownDelayedSpellIds()) > 0) {
+            $this->gamestate->nextState('delayed');
         } else {
             $this->gamestate->nextState('cast');
         }

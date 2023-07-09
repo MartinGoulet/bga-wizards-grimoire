@@ -287,7 +287,7 @@ class WizardsGrimoire extends Table {
 
         // $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
         // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
-        $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
+        // $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
 
         $result['opponent_id'] = Players::getOpponentIdOf($current_player_id);
 

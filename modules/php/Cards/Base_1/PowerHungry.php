@@ -7,7 +7,7 @@ use WizardsGrimoire\Core\Globals;
 
 class PowerHungry extends BaseCard {
 
-    public function isOngoingSpellActive(bool $value) {
-        Globals::setIsActivePowerHungry($value);
+    public function isOngoingSpellActive(bool $value, int $player_id) {
+        Globals::setIsActivePowerHungry($value, $player_id);
     }
 }

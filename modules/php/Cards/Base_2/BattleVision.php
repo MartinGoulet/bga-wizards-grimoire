@@ -7,8 +7,8 @@ use WizardsGrimoire\Core\Globals;
 
 class BattleVision extends BaseCard {
 
-    public function isOngoingSpellActive(bool $value) {
+    public function isOngoingSpellActive(bool $value, int $player_id) {
         // When your opponent basic attacks, you may discard a mana card of the same power from your hand to block the damage
-        Globals::setIsActiveBattleVision($value);
+        Globals::setIsActiveBattleVision($value, $player_id);
     }
 }

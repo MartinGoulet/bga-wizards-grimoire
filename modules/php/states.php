@@ -61,7 +61,7 @@ trait StateTrait {
 
                     case WG_SPELL_ACTIVATION_ONGOING:
                         if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
-                            $instance->isOngoingSpellActive(false);
+                            $instance->isOngoingSpellActive(false, 0);
                         }
                         break;
 

@@ -33,7 +33,12 @@ class Players extends \APP_DbObject {
         return intval(Game::get()->getNextPlayerTable()[$player_id]);
     }
     public static function getOpponentIdOf(int $player_id) {
-        return intval(Game::get()->getNextPlayerTable()[$player_id]);
+        $next_players = Game::get()->getNextPlayerTable();
+        if(in_array($player_id, $next_players)) {
+            return intval($next_players[$player_id]);
+        } else {
+            return 0;
+        }
     }
 
     public static function getPlayerLife(int $player_id) {

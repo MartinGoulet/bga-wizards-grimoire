@@ -115,6 +115,7 @@ class ManaCard {
         $deck->pickCardForLocation(CardLocation::Deck(), "temp");
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
         Notifications::moveManaCard($player_id, [$card]);
+        Events::onAddManaUnderSpell($player_id, $position);
     }
 
     public static function discardManaFromSpell(int $position, int $player_id = 0) {

@@ -217,6 +217,7 @@ $castSpellsStates = [
             "player" => ST_CAST_SPELL_INTERACTION,
             "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
             "dead" => ST_PRE_END_OF_GAME,
+            "delayed" => ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
         ]
     ],
 
