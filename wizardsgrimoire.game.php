@@ -97,6 +97,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_IS_ACTIVE_BATTLE_VISION => 26,
             WG_VAR_CURRENT_BASIC_ATTACK_POWER => 27,
             WG_VAR_IS_ACTIVE_LULLABY => 28,
+            WG_VAR_PLAYER_TURN => 29,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -285,7 +286,7 @@ class WizardsGrimoire extends Table {
 
         $result['players_order'] = array_keys(Players::getPlayersInOrder($current_player_id));
 
-        // $result['debug_spells'] = self::getCollectionFromDB("SELECT * FROM spells");
+        // $result['debug_spells'] = array_values(self::getCollectionFromDB("SELECT * FROM spells ORDER BY card_type"));
         // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
         // $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
 
@@ -494,5 +495,60 @@ class WizardsGrimoire extends Table {
     // Exposing protected method translation
     public static function translate($text) {
         return self::_($text);
+    }
+
+    public static function getActiveDelayedSpellStates(int $phase, int $stActiveDelayedSpell, int $stSwithOpponent, int $stInteraction, int $stReturnPlayer, int $stActivePass) {
+        return [
+            $stActiveDelayedSpell => [
+                "phase" => $phase,
+                "name" => "activateDelayedSpell",
+                "description" => clienttranslate('${actplayer} must resolve delayed spells'),
+                "descriptionmyturn" => clienttranslate('${you} must resolve delayed spells'),
+                "args" => "argActivateDelayedSpell",
+                "type" => "activeplayer",
+                "possibleactions" => ["activateDelayedSpell", "pass"],
+                "transitions" => [
+                    "cast" => $stActiveDelayedSpell,
+                    "player" => $stInteraction,
+                    "opponent" => $stSwithOpponent,
+                    "pass" => $stActivePass,
+                    "dead" => ST_PRE_END_OF_GAME,
+                ]
+            ],
+        
+            $stSwithOpponent => [
+                "phase" => $phase,
+                "name" => "castSpellSwitchOpponent",
+                "type" => "game",
+                "action" => "stSwitchToOpponent",
+                "transitions" => [
+                    "" => $stInteraction,
+                ]
+            ],
+        
+            $stInteraction => array(
+                "phase" => $phase,
+                "name" => "castSpellInteraction",
+                "description" => clienttranslate('${actplayer} must conclude the effect of the spell'),
+                "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
+                "type" => "activeplayer",
+                "args" => "argCastSpellInteraction",
+                "possibleactions" => ["castSpellInteraction"],
+                "transitions" => [
+                    "return" => $stReturnPlayer,
+                    "dead" => ST_PRE_END_OF_GAME,
+                ]
+            ),
+        
+            $stReturnPlayer => [
+                "phase" => $phase,
+                "name" => "castSpellReturnCurrentPlayer",
+                "type" => "game",
+                "action" => "stReturnToCurrentPlayer",
+                "transitions" => [
+                    "" => $stActiveDelayedSpell,
+                ]
+            ],
+        ];
     }
 }

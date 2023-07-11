@@ -28,6 +28,10 @@ class Players extends \APP_DbObject {
         return intval(Game::get()->getGameStateValue(WG_VAR_CURRENT_PLAYER));
     }
 
+    public static function setPlayerId($player_id) {
+        Game::get()->setGameStateValue(WG_VAR_CURRENT_PLAYER, $player_id);
+    }
+
     public static function getOpponentId() {
         $player_id = self::getPlayerId();
         return intval(Game::get()->getNextPlayerTable()[$player_id]);

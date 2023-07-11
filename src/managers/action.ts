@@ -640,7 +640,7 @@ class ActionManager {
          args: {
             player_id: this.game.getPlayerId(),
             count: 2,
-            exact: true,
+            exact: false,
          } as SelectManaDiscardArgs,
       });
    }

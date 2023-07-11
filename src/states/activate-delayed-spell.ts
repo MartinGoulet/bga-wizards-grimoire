@@ -15,7 +15,7 @@ class ActivateDelayedSpellStates implements StateHandler {
 
       const selectable_cards = this.player_table.spell_repertoire
          .getCards()
-         .filter((card) => args.spells.indexOf(card.id.toString()) >= 0);
+         .filter((card) => args.spells && args.spells.indexOf(card.id.toString()) >= 0);
 
       this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
    }

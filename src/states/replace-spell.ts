@@ -22,7 +22,6 @@ class ReplaceSpellStates implements StateHandler {
          .getCards()
          .filter((card) => exclude.indexOf(Number(card.location_arg)) < 0);
 
-      debugger;
       this.player_table.spell_repertoire.setSelectableCards(selectableCards);
    }
 

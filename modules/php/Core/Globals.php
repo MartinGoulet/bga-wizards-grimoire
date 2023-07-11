@@ -157,6 +157,14 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_CURRENT_BASIC_ATTACK_POWER, $value);
     }
 
+    public static function getPlayerTurn() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_PLAYER_TURN));
+    }
+
+    public static function setPlayerTurn(int $value) {
+        Game::get()->setGameStateValue(WG_VAR_PLAYER_TURN, $value);
+    }
+
     public static function getPreviousBasicAttackPower() {
         return intval(Game::get()->getGameStateValue(WG_VAR_PREVIOUS_BASIC_ATTACK_POWER));
     }

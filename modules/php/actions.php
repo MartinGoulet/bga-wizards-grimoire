@@ -138,6 +138,11 @@ trait ActionTrait {
         $player_id = intval($this->getActivePlayerId());
         // Get the card and verify ownership
         $spell = SpellCard::isInRepertoire($card_id, $player_id);
+
+        if(ManaCard::countOnTopOfManaCoolDown(intval($spell['location_arg'])) > 0) {
+            throw new BgaUserException(self::_("There is already mana card on this spell"));
+        }
+
         $mana_ids = array_shift($args);
         $mana_ids = explode(',', $mana_ids);
 
@@ -238,10 +243,16 @@ trait ActionTrait {
     }
 
     private function castOrEndGame() {
+        $spell_ids = Globals::getCoolDownDelayedSpellIds();
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0 || Players::getPlayerLife(Players::getPlayerId()) <= 0) {
             $this->gamestate->nextState('dead');
-        } else if(sizeof(Globals::getCoolDownDelayedSpellIds()) > 0) {
-            $this->gamestate->nextState('delayed');
+        } else if(is_array($spell_ids) && sizeof($spell_ids) > 0) {
+            $spell = SpellCard::get(array_shift($spell_ids));
+            if($spell['location'] == CardLocation::PlayerSpellRepertoire(Players::getPlayerId())) {
+                $this->gamestate->nextState('delayed');
+            } else {
+                $this->gamestate->nextState('delayed_opponent');
+            }
         } else {
             $this->gamestate->nextState('cast');
         }

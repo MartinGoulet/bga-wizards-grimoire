@@ -26,7 +26,7 @@ trait ArgsTrait {
 
     function argActivateDelayedSpell() {
         $args = $this->getArgsBase();
-        $args["spells"] = Globals::getCoolDownDelayedSpellIds(true);
+        $args["spells"] = array_values(Globals::getCoolDownDelayedSpellIds(true));
         return $args;
     }
 

@@ -8,8 +8,8 @@
             <div id="mana-discard"></div>
             <div id="spell-discard"></div>
             <div id="spell-deck"></div>
-            <div id="mana-discard-display" class="whiteblock"></div>
             <div id="zones">
+                <div id="mana-discard-display-wrapper" class="whiteblock"></div>
                 <div id="basic-attack-wrapper" class="whiteblock"></div>
                 <div id="mana-revealed-wrapper" class="whiteblock"></div>
             </div>

@@ -23,7 +23,7 @@ trait DebugTrait {
         }
     }
 
-    public function drawManyCards($count) {
+    public function drawManaCards($count) {
         ManaCard::draw($count);
     }
 
@@ -39,15 +39,13 @@ trait DebugTrait {
 
     public function setupGameDebug() {
         $spell_deck = Game::get()->deck_spells;
+        $mana_deck = Game::get()->deck_manas;
 
-        $spell_deck->moveAllCardsInLocation(CardLocation::Discard(), CardLocation::Deck());
-        $spell_deck->moveAllCardsInLocation(CardLocation::SpellSlot(), CardLocation::Deck());
-        $spell_deck->moveAllCardsInLocation(CardLocation::PlayerSpellRepertoire("2329672"), CardLocation::Deck());
-        $spell_deck->moveAllCardsInLocation(CardLocation::PlayerSpellRepertoire("2329673"), CardLocation::Deck());
+        $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
 
         $players_spell_cards = [
-            "2329672" => ["SilentSupport", "Fracture", "Growth"],
-            "2329673" => ["Haste", "ShadowAttack", "Freeze"],
+            "2329672" => ["GleamOfHope", "FatalFlaw", "CoerciveAgreement", "Rejuvenation"],
+            "2329673" => ["LivingWind", "TrapAttack", "CrushingBlow"],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -55,7 +53,7 @@ trait DebugTrait {
             foreach ($cards as $name) {
                 $index += 1;
                 $card = $this->getCardByClassName($name);
-                if($card != null) {
+                if($card !== null) {
                     $spell_deck->moveCard($card['id'], CardLocation::PlayerSpellRepertoire($player_id), $index);
                 } else {
                     var_dump("Wrong card name : " . $name);
@@ -69,6 +67,15 @@ trait DebugTrait {
             $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
         }
 
+        $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
+        $mana_deck->shuffle(CardLocation::Deck());
+        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+    }
+
+    public function addManaDiscardPile() {
+        $mana_deck = Game::get()->deck_manas;
+        $mana_deck->pickCardsForLocation(5, CardLocation::Deck(), CardLocation::Discard());
     }
 
     private function getCardByClassName($class_name) {

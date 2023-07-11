@@ -68,7 +68,7 @@ $basicGameStates = [
         'type' => 'game',
         'action' => 'stPreEndOfGame',
         'transitions' => ["" => ST_END_GAME],
-      ],
+    ],
 
     // Final state.
     // Please do not modify.
@@ -137,57 +137,6 @@ $spellCoolDownStates = [
             "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
-
-    ST_SPELL_CD_ACTIVATE_DELAYED => [
-        "phase" => 2,
-        "name" => "activateDelayedSpell",
-        "description" => clienttranslate('${actplayer} must resolve delayed spells'),
-        "descriptionmyturn" => clienttranslate('${you} must resolve delayed spells'),
-        "args" => "argActivateDelayedSpell",
-        "type" => "activeplayer",
-        "possibleactions" => ["activateDelayedSpell", "pass"],
-        "transitions" => [
-            "cast" => ST_SPELL_CD_ACTIVATE_DELAYED,
-            "player" => ST_SPELL_CD_CAST_SPELL_INTERACTION,
-            "opponent" => ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
-            "pass" => ST_GAIN_MANA,
-            "dead" => ST_PRE_END_OF_GAME,
-        ]
-    ],
-
-    ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT => [
-        "phase" => 2,
-        "name" => "castSpellSwitchOpponent",
-        "type" => "game",
-        "action" => "stSwitchToOpponent",
-        "transitions" => [
-            "" => ST_SPELL_CD_CAST_SPELL_INTERACTION,
-        ]
-    ],
-
-    ST_SPELL_CD_CAST_SPELL_INTERACTION => array(
-        "phase" => 2,
-        "name" => "castSpellInteraction",
-        "description" => clienttranslate('${actplayer} must conclude the effect of the spell'),
-        "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
-        "type" => "activeplayer",
-        "args" => "argCastSpellInteraction",
-        "possibleactions" => ["castSpellInteraction"],
-        "transitions" => [
-            "return" => ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER,
-            "dead" => ST_PRE_END_OF_GAME,
-        ]
-    ),
-
-    ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER => [
-        "phase" => 2,
-        "name" => "castSpellReturnCurrentPlayer",
-        "type" => "game",
-        "action" => "stReturnToCurrentPlayer",
-        "transitions" => [
-            "" => ST_SPELL_CD_ACTIVATE_DELAYED,
-        ]
-    ],
 ];
 
 $gainManaStates = [
@@ -218,6 +167,7 @@ $castSpellsStates = [
             "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
             "dead" => ST_PRE_END_OF_GAME,
             "delayed" => ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
+            "delayed_opponent" => ST_CAST_SPELL_SWITCH_TO_OPPONENT,
         ]
     ],
 
@@ -255,18 +205,23 @@ $castSpellsStates = [
         ]
     ],
 
-    ST_CAST_SPELL_CD_ACTIVATE_DELAYED => [
+    ST_CAST_SPELL_SWITCH_TO_OPPONENT => [
         "phase" => 4,
-        "name" => "activateDelayedSpell",
-        "description" => clienttranslate('${actplayer} must resolve delayed spells'),
-        "descriptionmyturn" => clienttranslate('${you} must resolve delayed spells'),
-        "args" => "argActivateDelayedSpell",
-        "type" => "activeplayer",
-        "possibleactions" => ["activateDelayedSpell", "pass"],
+        "name" => "castSpellSwitchPlayer",
+        "type" => "game",
+        "action" => "stSwithPlayer",
         "transitions" => [
-            "cast" => ST_CAST_SPELL,
-            "pass" => ST_CAST_SPELL,
-            "dead" => ST_PRE_END_OF_GAME,
+            "" => ST_CAST_SPELL_CD_OPPONENT_ACTIVATE_DELAYED,
+        ]
+    ],
+
+    ST_CAST_SPELL_SWITCH_TO_CURRENT_PLAYER => [
+        "phase" => 4,
+        "name" => "castSpellSwitchPlayer",
+        "type" => "game",
+        "action" => "stSwithPlayer",
+        "transitions" => [
+            "" => ST_CAST_SPELL,
         ]
     ],
 ];
@@ -354,10 +309,41 @@ $basicAttackStates = [
     ]
 ];
 
+$stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+    2,
+    ST_SPELL_CD_ACTIVATE_DELAYED,
+    ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
+    ST_SPELL_CD_CAST_SPELL_INTERACTION,
+    ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER,
+    ST_GAIN_MANA
+);
+
+$stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+    4,
+    ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
+    ST_CAST_SPELL_CD_SWITCH_OPPONENT,
+    ST_CAST_SPELL_CD_INTERACTION,
+    ST_CAST_SPELL_CD_RETURN_CURRENT_PLAYER,
+    ST_CAST_SPELL
+);
+
+$stCastSpellActiveDeplayedOpponent = WizardsGrimoire::getActiveDelayedSpellStates(
+    4,
+    ST_CAST_SPELL_CD_OPPONENT_ACTIVATE_DELAYED,
+    ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT,
+    ST_CAST_SPELL_CD_OPPONENT_INTERACTION,
+    ST_CAST_SPELL_CD_OPPONENT_RETURN_CURRENT_PLAYER,
+    ST_CAST_SPELL_SWITCH_TO_CURRENT_PLAYER
+);
+
 $machinestates =
     $basicGameStates +
     $chooseSpellStates +
     $spellCoolDownStates +
     $gainManaStates +
     $castSpellsStates +
-    $basicAttackStates;
+    $basicAttackStates +
+
+    $stSpellCooldownActiveDeplayed +
+    $stCastSpellActiveDeplayed +
+    $stCastSpellActiveDeplayedOpponent;

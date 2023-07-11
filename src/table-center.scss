@@ -25,7 +25,7 @@
    }
 }
 
-#mana-discard-display {
+#mana-discard-display-wrapper {
    --width: 100px;
    --height: 140px;
    display: none;
@@ -45,7 +45,7 @@
 }
 
 .gamestate_client_selectManaDiscard {
-   #mana-discard-display {
+   #mana-discard-display-wrapper {
       display: flex;
    }
 }
@@ -55,10 +55,12 @@
    width: 100%;
    column-gap: 10px;
    justify-content: space-evenly;
+   flex-wrap: wrap;
 }
 
 #basic-attack-wrapper,
-#mana-revealed-wrapper {
+#mana-revealed-wrapper,
+#mana-discard-display-wrapper {
    --color: black;
    padding-top: 25px;
    border: 2px solid black;
@@ -84,9 +86,16 @@
    }
 }
 
-#mana-revealed-wrapper {
+#mana-revealed-wrapper{
    flex-grow: 1;
    #mana-revealed {
+      margin-top: 5px;
+   }
+}
+
+#mana-discard-display-wrapper {
+   flex-basis: 100%;
+   #mana-discard-display {
       margin-top: 5px;
    }
 }

@@ -22,9 +22,10 @@ class CastSpellWithManaStates implements StateHandler {
       }
 
       const handleHandCardClick = (card: ManaCard) => {
+         if (this.mana_cards.length === cost) return;
+
          this.mana_cards.push(card);
          this.mana_deck.addCard(card);
-
          this.game.toggleButtonEnable("btnConfirm", this.mana_cards.length === cost);
       };
 

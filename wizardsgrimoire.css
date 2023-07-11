@@ -878,7 +878,7 @@ body > .card {
   border: 1px solid darkslategray;
 }
 
-#mana-discard-display {
+#mana-discard-display-wrapper {
   --width: 100px;
   --height: 140px;
   display: none;
@@ -888,14 +888,14 @@ body > .card {
   padding: 25px 25px 25px 50px;
   border-radius: 10px;
 }
-#mana-discard-display .wg-card {
+#mana-discard-display-wrapper .wg-card {
   margin-left: -25px;
 }
-#mana-discard-display .wg-card:hover {
+#mana-discard-display-wrapper .wg-card:hover {
   z-index: 1000;
 }
 
-.gamestate_client_selectManaDiscard #mana-discard-display {
+.gamestate_client_selectManaDiscard #mana-discard-display-wrapper {
   display: flex;
 }
 
@@ -904,10 +904,12 @@ body > .card {
   width: 100%;
   column-gap: 10px;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 #basic-attack-wrapper,
-#mana-revealed-wrapper {
+#mana-revealed-wrapper,
+#mana-discard-display-wrapper {
   --color: black;
   padding-top: 25px;
   border: 2px solid black;
@@ -918,7 +920,8 @@ body > .card {
   --height: 140px;
 }
 #basic-attack-wrapper .wg-card:hover,
-#mana-revealed-wrapper .wg-card:hover {
+#mana-revealed-wrapper .wg-card:hover,
+#mana-discard-display-wrapper .wg-card:hover {
   z-index: 1000;
 }
 
@@ -933,6 +936,13 @@ body > .card {
   flex-grow: 1;
 }
 #mana-revealed-wrapper #mana-revealed {
+  margin-top: 5px;
+}
+
+#mana-discard-display-wrapper {
+  flex-basis: 100%;
+}
+#mana-discard-display-wrapper #mana-discard-display {
   margin-top: 5px;
 }
 

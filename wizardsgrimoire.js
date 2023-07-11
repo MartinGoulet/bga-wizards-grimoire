@@ -2325,7 +2325,7 @@ var ActionManager = (function () {
             args: {
                 player_id: this.game.getPlayerId(),
                 count: 2,
-                exact: true,
+                exact: false,
             },
         });
     };
@@ -2976,6 +2976,8 @@ var TableCenter = (function () {
         dojo.place("<div id=\"basic-attack\"></div>", "basic-attack-wrapper");
         dojo.place("<span class=\"wg-title\">".concat(_("Revealed Mana"), "</span>"), "mana-revealed-wrapper");
         dojo.place("<div id=\"mana-revealed\"></div>", "mana-revealed-wrapper");
+        dojo.place("<span class=\"wg-title\">".concat(_("Discard"), "</span>"), "mana-discard-display-wrapper");
+        dojo.place("<div id=\"mana-discard-display\"></div>", "mana-discard-display-wrapper");
         this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
         this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
         this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
@@ -3382,7 +3384,7 @@ var ActivateDelayedSpellStates = (function () {
         this.player_table.spell_repertoire.onSelectionChange = handleSelection;
         var selectable_cards = this.player_table.spell_repertoire
             .getCards()
-            .filter(function (card) { return args.spells.indexOf(card.id.toString()) >= 0; });
+            .filter(function (card) { return args.spells && args.spells.indexOf(card.id.toString()) >= 0; });
         this.player_table.spell_repertoire.setSelectableCards(selectable_cards);
     };
     ActivateDelayedSpellStates.prototype.onLeavingState = function () {
@@ -3499,6 +3501,8 @@ var CastSpellWithManaStates = (function () {
             cost = Math.max(cost - this.player_table.getDiscountNextAttack(), 0);
         }
         var handleHandCardClick = function (card) {
+            if (_this.mana_cards.length === cost)
+                return;
             _this.mana_cards.push(card);
             _this.mana_deck.addCard(card);
             _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === cost);
@@ -3634,7 +3638,6 @@ var ReplaceSpellStates = (function () {
         var selectableCards = this.player_table.spell_repertoire
             .getCards()
             .filter(function (card) { return exclude.indexOf(Number(card.location_arg)) < 0; });
-        debugger;
         this.player_table.spell_repertoire.setSelectableCards(selectableCards);
     };
     ReplaceSpellStates.prototype.onLeavingState = function () {
@@ -3857,7 +3860,7 @@ var SelectManaDiscardStates = (function () {
         var count = args.count, exact = args.exact;
         deck.setSelectionMode(count == 1 && exact ? "single" : "multiple");
         var handleChange = function (selection, lastChange) {
-            _this.game.toggleButtonEnable("btn_confirm", exact ? deck.getSelection().length == count : deck.getSelection().length <= count);
+            _this.game.toggleButtonEnable("btn_confirm", exact ? selection.length == count : selection.length <= count);
         };
         deck.onSelectionChange = handleChange;
     };
@@ -3884,7 +3887,7 @@ var SelectManaDiscardStates = (function () {
             }
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
-        this.game.toggleButtonEnable("btn_confirm", !args.exact);
+        this.game.disableButton("btn_confirm");
         this.game.addActionButtonClientCancel();
     };
     SelectManaDiscardStates.prototype.restoreGameState = function () {

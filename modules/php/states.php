@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use BgaSystemException;
 use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Notifications;
@@ -19,7 +20,8 @@ trait StateTrait {
 
     function stNewTurn() {
         $player_id = intval($this->getActivePlayerId());
-        $this->setGameStateValue(WG_VAR_CURRENT_PLAYER, $player_id);
+        Players::setPlayerId($player_id);
+        Globals::setPlayerTurn($player_id);
 
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
@@ -103,10 +105,11 @@ trait StateTrait {
         Game::get()->gamestate->nextState();
     }
 
-    function stActivateInteractivePlayer() {
-        $player_id = Globals::getInteractionPlayer();
-        $player_id = Players::getOpponentId();
-        $this->gamestate->setPlayersMultiactive([$player_id], 'next', true);
+    function stSwithPlayer() {
+        $opponent_id = Players::getOpponentId();
+        Players::setPlayerId($opponent_id);
+        Game::get()->gamestate->changeActivePlayer($opponent_id);
+        Game::get()->gamestate->nextState();
     }
 
     function stBasicAttackDamage() {

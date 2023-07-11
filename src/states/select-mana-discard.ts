@@ -10,7 +10,7 @@ class SelectManaDiscardStates implements StateHandler {
       const handleChange = (selection: ManaCard[], lastChange: ManaCard) => {
          this.game.toggleButtonEnable(
             "btn_confirm",
-            exact ? deck.getSelection().length == count : deck.getSelection().length <= count,
+            exact ? selection.length == count : selection.length <= count,
          );
       };
 
@@ -38,7 +38,7 @@ class SelectManaDiscardStates implements StateHandler {
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
-      this.game.toggleButtonEnable("btn_confirm", !args.exact);
+      this.game.disableButton("btn_confirm");
 
       this.game.addActionButtonClientCancel();
    }

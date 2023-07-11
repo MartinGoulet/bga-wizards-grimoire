@@ -19,6 +19,8 @@ class TableCenter {
       dojo.place(`<div id="basic-attack"></div>`, "basic-attack-wrapper");
       dojo.place(`<span class="wg-title">${_("Revealed Mana")}</span>`, "mana-revealed-wrapper");
       dojo.place(`<div id="mana-revealed"></div>`, "mana-revealed-wrapper");
+      dojo.place(`<span class="wg-title">${_("Discard")}</span>`, "mana-discard-display-wrapper");
+      dojo.place(`<div id="mana-discard-display"></div>`, "mana-discard-display-wrapper");
 
       this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
       this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));

@@ -18,10 +18,14 @@ class CoerciveAgreement extends BaseCard {
             $opponent_id = Players::getOpponentId();
             $cards = ManaCard::getHand($opponent_id);
             $random_cards = $cards;
-            if (sizeof($random_cards) > 3) {
-                shuffle($random_cards);
-                shuffle($random_cards);
-                $random_cards = array_rand($cards, 3);
+            if (sizeof($cards) > 3) {
+                shuffle($cards);
+                shuffle($cards);
+                $keys = array_rand($cards, 3);
+                $random_cards = [];
+                foreach($keys as $key) {
+                    $random_cards[] = $cards[$key];
+                }
             }
             $ids = array_map(function ($card) {
                 return $card['id'];

@@ -127,7 +127,7 @@ class ManaCard {
             throw new BgaSystemException("No card found under that spell");
         }
         ManaCard::addOnTopOfDiscard($card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card]);
+        Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
 
         Events::onManaDiscarded($card, $position, $player_id);
     }
