@@ -5,6 +5,26 @@
    width: 740px;
    column-gap: 40px;
    row-gap: 20px;
+
+   .wg-card-gametext {
+      width: 88px;
+      height: 48px;
+      top: 121px;
+
+      .wg-card-gametext-title {
+         font-size: 6px;
+         line-height: 6px;
+      }
+
+      .wg-card-gametext-divider {
+         height: 4px;
+      }
+
+      .wg-card-gametext-text {
+         font-size: 5px;
+         line-height: 6px;
+      }
+   }
 }
 
 #spell-pool {
@@ -86,7 +106,7 @@
    }
 }
 
-#mana-revealed-wrapper{
+#mana-revealed-wrapper {
    flex-grow: 1;
    #mana-revealed {
       margin-top: 5px;
