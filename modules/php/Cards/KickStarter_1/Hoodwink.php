@@ -9,7 +9,7 @@ class Hoodwink extends BaseCard {
 
     public function castSpell($args)
     {
-        // Deal 7 damage, minus the damage your opponent dealt their last basic attack phase
-        $this->dealDamage(7 - Globals::getPreviousBasicAttackPower());
+        // Deal 6 damage, minus the damage your opponent dealt their last basic attack phase
+        $this->dealDamage(6 - Globals::getPreviousBasicAttackPower());
     }
 }
