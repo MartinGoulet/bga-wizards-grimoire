@@ -1890,6 +1890,56 @@ var ActionManager = (function () {
             return null;
         }
     };
+    ActionManager.prototype.actionCastSpell_Replace = function () {
+        this.actions.push("actionCastSpell_Pool", "actionCastSpell_Repertoire", "actionCastSpell_Submit");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionCastSpell_Pool = function () {
+        var msg = _("${you} must select a spell in the spell pool");
+        this.game.setClientState(states.client.selectSpellPool, {
+            descriptionmyturn: msg,
+            args: {},
+        });
+    };
+    ActionManager.prototype.actionCastSpell_Repertoire = function () {
+        var spellPoolCardId = Number(this.actions_args[0]);
+        var spellPoolCard = this.game.tableCenter.spellPool
+            .getCards()
+            .find(function (spell) { return Number(spell.id) == spellPoolCardId; });
+        this.game.markCardAsSelected(spellPoolCard);
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            var manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+            return manacount == 0;
+        });
+        var msg = _("${you} must select one of your spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                pass: false,
+            },
+        });
+    };
+    ActionManager.prototype.actionCastSpell_Submit = function () {
+        var _this = this;
+        debugger;
+        var new_spell_id = Number(this.actions_args[0]);
+        var old_spell_pos = Number(this.actions_args[1]);
+        var old_spell_id = this.game
+            .getCurrentPlayerTable()
+            .spell_repertoire.getCards()
+            .find(function (card) { return Number(card.location_arg) == old_spell_pos; }).id;
+        var handleError = function (is_error) {
+            is_error ? _this.game.restoreGameState() : _this.game.clearSelection();
+        };
+        this.game.takeAction("replaceSpell", {
+            new_spell_id: new_spell_id,
+            old_spell_id: old_spell_id,
+        }, null, handleError);
+    };
     ActionManager.prototype.actionArcaneTactics = function () {
         var msg = _("${you} may select ${nbr} mana card(s) from your hand");
         this.returnManaCardToDeck(msg, 4, false);
@@ -2184,12 +2234,36 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionTwistOfFate = function () {
-        var msg = _("${you} may replace 1 of your other spells with a new spell");
-        var name = this.game.getCardType(this.getCurrentCard()).name;
-        this.game.setClientState(states.client.replaceSpell, {
-            descriptionmyturn: _(name) + " : " + msg,
+        this.actions.push("actionTwistOfFate_Pool", "actionTwistOfFate_Repertoire");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionTwistOfFate_Pool = function () {
+        var msg = _("${you} must select a spell in the spell pool");
+        this.game.setClientState(states.client.selectSpellPool, {
+            descriptionmyturn: msg,
+            args: {},
+        });
+    };
+    ActionManager.prototype.actionTwistOfFate_Repertoire = function () {
+        var _this = this;
+        debugger;
+        var spellPoolCardId = Number(this.actions_args[this.actions_args.length - 1]);
+        var spellPoolCard = this.game.tableCenter.spellPool
+            .getCards()
+            .find(function (spell) { return Number(spell.id) == spellPoolCardId; });
+        this.game.markCardAsSelected(spellPoolCard);
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== _this.getCurrentCard().id;
+        });
+        var msg = _("${you} must select one of your spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: msg,
             args: {
-                exclude: [Number(this.getCurrentCard().location_arg)],
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                pass: false,
             },
         });
     };
@@ -3230,9 +3304,6 @@ var ChooseNewSpellStates = (function () {
         else if (this.player_table.spell_repertoire.getCards().length < 6) {
             this.onEnteringStateChoose();
         }
-        else {
-            this.onEnteringStateReplace();
-        }
     };
     ChooseNewSpellStates.prototype.onEnteringStateChoose = function () {
         var _this = this;
@@ -3247,24 +3318,6 @@ var ChooseNewSpellStates = (function () {
         this.game.tableCenter.spellPool.setSelectionMode("single");
         this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
     };
-    ChooseNewSpellStates.prototype.onEnteringStateReplace = function () {
-        var _this = this;
-        var handleSelection = function () {
-            var chooseSpell = _this.player_table.spell_repertoire.getSelection();
-            var replaceSpell = _this.game.tableCenter.spellPool.getSelection();
-            _this.game.toggleButtonEnable("btn_replace", chooseSpell.length == 1 && replaceSpell.length == 1);
-        };
-        this.game.tableCenter.spellPool.setSelectionMode("single");
-        this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
-        this.player_table.spell_repertoire.setSelectionMode("single");
-        this.player_table.spell_repertoire.onSelectionChange = handleSelection;
-        var positions = this.player_table.getSpellSlotAvailables();
-        var selectableCards = this.player_table.spell_repertoire
-            .getCards()
-            .filter(function (card) { return positions.indexOf(Number(card.location_arg)) >= 0; });
-        this.player_table.spell_repertoire.setSelectableCards(selectableCards);
-        this.game.setGamestateDescription("Replace");
-    };
     ChooseNewSpellStates.prototype.onLeavingState = function () {
         this.clearSelectionMode();
     };
@@ -3278,12 +3331,8 @@ var ChooseNewSpellStates = (function () {
             }
         };
         var handleReplace = function () {
-            var selectedSpell = _this.game.tableCenter.spellPool.getSelection()[0];
-            var replacedSpell = _this.player_table.spell_repertoire.getSelection()[0];
-            _this.game.takeAction("replaceSpell", {
-                new_spell_id: selectedSpell.id,
-                old_spell_id: replacedSpell.id,
-            });
+            _this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+            _this.game.actionManager.activateNextAction();
         };
         if (this.player_table.spell_repertoire.getCards().length < 6) {
             this.game.addActionButtonDisabled("btn_confirm", _("Choose"), handleConfirm);
@@ -3291,7 +3340,7 @@ var ChooseNewSpellStates = (function () {
         else {
             var available_slots = this.player_table.getSpellSlotAvailables();
             if (available_slots.length > 0) {
-                this.game.addActionButtonDisabled("btn_replace", _("Replace"), handleReplace);
+                this.game.addActionButton("btn_replace", _("Replace"), handleReplace);
             }
         }
         if (this.player_table.spell_repertoire.getCards().length == 6) {
@@ -3304,10 +3353,6 @@ var ChooseNewSpellStates = (function () {
     ChooseNewSpellStates.prototype.clearSelectionMode = function () {
         this.game.tableCenter.spellPool.setSelectionMode("none");
         this.game.tableCenter.spellPool.onSelectionChange = null;
-        if (this.player_table) {
-            this.player_table.spell_repertoire.setSelectionMode("none");
-            this.player_table.spell_repertoire.onSelectionChange = null;
-        }
     };
     return ChooseNewSpellStates;
 }());

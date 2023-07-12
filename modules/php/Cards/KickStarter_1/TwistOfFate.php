@@ -4,6 +4,8 @@ namespace WizardsGrimoire\Cards\KickStarter_1;
 
 use BgaSystemException;
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 
 class TwistOfFate extends BaseCard {
@@ -20,12 +22,25 @@ class TwistOfFate extends BaseCard {
             throw new BgaSystemException("Wrong number of arguments");
         }
 
-        $old_spell_pos = intval(array_shift($args));
         $new_spell_id = intval(array_shift($args));
+        $old_spell_pos = intval(array_shift($args));
 
         $old_spell = SpellCard::getFromRepertoire($old_spell_pos);
         $new_spell = SpellCard::get($new_spell_id);
 
         SpellCard::replaceSpell($old_spell, $new_spell);
+
+        if (ManaCard::countOnTopOfManaCoolDown($old_spell_pos) > 0) {
+            $this->checkOngoingSpell($old_spell, false);
+            $this->checkOngoingSpell($new_spell, true);
+        }
+    }
+
+    private function checkOngoingSpell($spell, bool $is_active) {
+        $card_type = SpellCard::getCardInfo($spell);
+        if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            $instance->isOngoingSpellActive($is_active, Players::getPlayerId());
+        }
     }
 }

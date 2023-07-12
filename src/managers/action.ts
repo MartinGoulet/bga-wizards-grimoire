@@ -1,4 +1,4 @@
-type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpell";
+type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpell" | "replaceSpell";
 
 class ActionManager {
    private actions: string[] = [];
@@ -103,6 +103,71 @@ class ActionManager {
       } else {
          return null;
       }
+   }
+
+   private actionCastSpell_Replace() {
+      this.actions.push("actionCastSpell_Pool", "actionCastSpell_Repertoire", "actionCastSpell_Submit");
+      this.activateNextAction();
+   }
+
+   private actionCastSpell_Pool() {
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: msg,
+         args: {},
+      });
+   }
+
+   private actionCastSpell_Repertoire() {
+      const spellPoolCardId = Number(this.actions_args[0]);
+      const spellPoolCard = this.game.tableCenter.spellPool
+         .getCards()
+         .find((spell) => Number(spell.id) == spellPoolCardId);
+
+      this.game.markCardAsSelected(spellPoolCard);
+
+      const player_table = this.game.getCurrentPlayerTable();
+
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         const manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+         return manacount == 0;
+      });
+
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionCastSpell_Submit() {
+      debugger;
+      const new_spell_id = Number(this.actions_args[0]);
+      const old_spell_pos = Number(this.actions_args[1]);
+
+      const old_spell_id = this.game
+         .getCurrentPlayerTable()
+         .spell_repertoire.getCards()
+         .find((card) => Number(card.location_arg) == old_spell_pos).id;
+
+      const handleError = (is_error: boolean) => {
+         is_error ? this.game.restoreGameState() : this.game.clearSelection();
+      };
+
+      this.game.takeAction(
+         "replaceSpell",
+         {
+            new_spell_id,
+            old_spell_id,
+         },
+         null,
+         handleError,
+      );
    }
 
    /////////////////////////////////////////////////////////////
@@ -463,14 +528,42 @@ class ActionManager {
    }
 
    private actionTwistOfFate() {
-      const msg = _("${you} may replace 1 of your other spells with a new spell");
-      const { name } = this.game.getCardType(this.getCurrentCard());
+      this.actions.push("actionTwistOfFate_Pool", "actionTwistOfFate_Repertoire");
+      this.activateNextAction();
+   }
 
-      this.game.setClientState(states.client.replaceSpell, {
-         descriptionmyturn: _(name) + " : " + msg,
+   private actionTwistOfFate_Pool() {
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: msg,
+         args: {},
+      });
+   }
+
+   private actionTwistOfFate_Repertoire() {
+      debugger;
+      const spellPoolCardId = Number(this.actions_args[this.actions_args.length - 1]);
+      const spellPoolCard = this.game.tableCenter.spellPool
+         .getCards()
+         .find((spell) => Number(spell.id) == spellPoolCardId);
+
+      this.game.markCardAsSelected(spellPoolCard);
+
+      const player_table = this.game.getCurrentPlayerTable();
+
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== this.getCurrentCard().id;
+      });
+
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: msg,
          args: {
-            exclude: [Number(this.getCurrentCard().location_arg)],
-         },
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
       });
    }
 

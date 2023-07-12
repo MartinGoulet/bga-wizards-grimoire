@@ -12,8 +12,6 @@ class ChooseNewSpellStates implements StateHandler {
          this.clearSelectionMode();
       } else if (this.player_table.spell_repertoire.getCards().length < 6) {
          this.onEnteringStateChoose();
-      } else {
-         this.onEnteringStateReplace();
       }
    }
 
@@ -30,27 +28,6 @@ class ChooseNewSpellStates implements StateHandler {
       this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
    }
 
-   onEnteringStateReplace(): void {
-      const handleSelection = () => {
-         const chooseSpell = this.player_table.spell_repertoire.getSelection();
-         const replaceSpell = this.game.tableCenter.spellPool.getSelection();
-         this.game.toggleButtonEnable("btn_replace", chooseSpell.length == 1 && replaceSpell.length == 1);
-      };
-
-      this.game.tableCenter.spellPool.setSelectionMode("single");
-      this.game.tableCenter.spellPool.onSelectionChange = handleSelection;
-      this.player_table.spell_repertoire.setSelectionMode("single");
-      this.player_table.spell_repertoire.onSelectionChange = handleSelection;
-
-      const positions = this.player_table.getSpellSlotAvailables();
-      const selectableCards = this.player_table.spell_repertoire
-         .getCards()
-         .filter((card) => positions.indexOf(Number(card.location_arg)) >= 0);
-
-      this.player_table.spell_repertoire.setSelectableCards(selectableCards);
-      this.game.setGamestateDescription("Replace");
-   }
-
    onLeavingState(): void {
       this.clearSelectionMode();
    }
@@ -65,13 +42,8 @@ class ChooseNewSpellStates implements StateHandler {
       };
 
       const handleReplace = () => {
-         const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
-         const replacedSpell = this.player_table.spell_repertoire.getSelection()[0];
-
-         this.game.takeAction("replaceSpell", {
-            new_spell_id: selectedSpell.id,
-            old_spell_id: replacedSpell.id,
-         });
+         this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+         this.game.actionManager.activateNextAction();
       };
 
       if (this.player_table.spell_repertoire.getCards().length < 6) {
@@ -79,7 +51,7 @@ class ChooseNewSpellStates implements StateHandler {
       } else {
          const available_slots = this.player_table.getSpellSlotAvailables();
          if (available_slots.length > 0) {
-            this.game.addActionButtonDisabled("btn_replace", _("Replace"), handleReplace);
+            this.game.addActionButton("btn_replace", _("Replace"), handleReplace);
          }
       }
       if (this.player_table.spell_repertoire.getCards().length == 6) {
@@ -94,9 +66,5 @@ class ChooseNewSpellStates implements StateHandler {
    clearSelectionMode(): void {
       this.game.tableCenter.spellPool.setSelectionMode("none");
       this.game.tableCenter.spellPool.onSelectionChange = null;
-      if (this.player_table) {
-         this.player_table.spell_repertoire.setSelectionMode("none");
-         this.player_table.spell_repertoire.onSelectionChange = null;
-      }
    }
 }
