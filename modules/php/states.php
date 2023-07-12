@@ -85,6 +85,8 @@ trait StateTrait {
                 $spell_info = SpellCard::getCardInfo($spell);
 
                 if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
+                    $cards[] = $mana_card;
+                    ManaCard::addOnTopOfDiscard($mana_card['id']);
                     $instance = SpellCard::getInstanceOfCard($spell);
 
                     if ($spell_info['activation_auto'] == true) {
@@ -94,9 +96,6 @@ trait StateTrait {
                             $spell_delayed[] = $spell['id'];
                         }
                     }
-                    
-                    $cards[] = $mana_card;
-                    ManaCard::addOnTopOfDiscard($mana_card['id']);
                 }
             }
         }
