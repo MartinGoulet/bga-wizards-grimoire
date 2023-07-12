@@ -16,11 +16,7 @@ class ShadowAttack extends BaseCard {
         $player_id = Players::getPlayerId();
 
         $card = ManaCard::hasUnderSpell($mana_deck_pos, $player_id);
-
-        ManaCard::addOnTopOfDiscard($card['id']);
-
-        Notifications::moveManaCard($player_id, [$card]);
-
+        ManaCard::discardManaFromSpell($mana_deck_pos);
         $power = ManaCard::getPower($card);
 
         $this->dealDamage($power);
