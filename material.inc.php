@@ -505,7 +505,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "js_actions" => "actionAffliction",
+    "interaction" => "player",
+    "js_actions_interaction" => "actionAffliction",
     "debug" => "lightgreen",
   ],
   47 => [
