@@ -2103,6 +2103,7 @@ var ActionManager = (function () {
             exact: true,
             exclude: emptyDecks,
             ignore: function () {
+                _this.addArgument("0");
                 _this.activateNextAction();
             },
         };

@@ -158,6 +158,7 @@ trait StateTrait {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
         }
+        Globals::setInteractionPlayer(0);
         Game::get()->gamestate->nextState();
     }
 

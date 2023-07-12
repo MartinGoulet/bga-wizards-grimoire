@@ -18,6 +18,7 @@ class Globals extends APP_DbObject {
         Globals::setSpellPlayed(0);
         Globals::setPreviousSpellPlayed(0);
         Globals::setPreviousSpellDamage(0);
+        Globals::setInteractionPlayer(0);
     }
 
     public static function getAmnesiaCount() {

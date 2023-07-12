@@ -363,6 +363,7 @@ class ActionManager {
          exact: true,
          exclude: emptyDecks,
          ignore: () => {
+            this.addArgument("0");
             this.activateNextAction();
          },
       };
