@@ -56,7 +56,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 55;Shared power;SharedPower;You may give your opponent 1 mana card from your hand. If you do, gain 4 mana cards;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_BASE_1;actionShadowPower;;;;lightgreen
 56;Sleight of hand;SleightOfHand;Gain 1 mana card. Gain additional mana equal to that mana's power;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_BASE_1;;;;;darkorange
 57;Soul pact;SoulPact;If the previous spell you cast this turn was an instant attack spell, gain mana equal to the damage dealt by that spell;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_BASE_2;;;;;lightgreen
-58;Mirror image;MirrorImage;Gain mana equal to the quantity of mana cards on 1 of your spells;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_BASE_2;;;;;darkorange
+58;Mirror image;MirrorImage;Gain mana equal to the quantity of mana cards on 1 of your spells;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_BASE_2;actionMirrorImage;;;;darkorange
 59;Battle vision;BattleVision;When your opponent basic attacks, you may discard a mana card of the same power from your hand to block the damage;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;1;WG_ICON_SET_BASE_2;;;;;darkorange
 60;Silent support;SilentSupport;Each time you discard off this spell, pick up a mana off 1 of your other spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_DELAYED;false;1;WG_ICON_SET_BASE_2;;;;actionSilentSupport;lightgreen
 61;Power hungry;PowerHungry;Both players basic attack mana cards go to your hand instead of the discard pile;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;1;WG_ICON_SET_BASE_1;;;;;lightgreen

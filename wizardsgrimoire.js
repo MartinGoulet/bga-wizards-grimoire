@@ -2078,6 +2078,25 @@ var ActionManager = (function () {
         this.actions.push("actionSelectManaCoolDownPlayer", "actionSelectSpellOpponent");
         this.activateNextAction();
     };
+    ActionManager.prototype.actionMirrorImage = function () {
+        this.game.markCardAsSelected(this.getCurrentCard());
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            var manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+            return manacount > 0;
+        });
+        var name = this.game.getCardType(this.getCurrentCard()).name;
+        var msg = _("${you} must select one of your spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                pass: false,
+            },
+        });
+    };
     ActionManager.prototype.actionPossessed = function () {
         this.selectManaHand(1, _("${you} may give ${nbr} mana card(s) from your hand to reduce damage"), true, {
             canCancel: false,

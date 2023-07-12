@@ -335,6 +335,28 @@ class ActionManager {
       this.activateNextAction();
    }
 
+   private actionMirrorImage() {
+      this.game.markCardAsSelected(this.getCurrentCard());
+      const player_table = this.game.getCurrentPlayerTable();
+
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         const manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
+         return manacount > 0;
+      });
+
+      const { name } = this.game.getCardType(this.getCurrentCard());
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: _(name) + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
+      });
+   }
+
    private actionPossessed() {
       this.selectManaHand(1, _("${you} may give ${nbr} mana card(s) from your hand to reduce damage"), true, {
          canCancel: false,
