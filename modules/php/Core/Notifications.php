@@ -192,6 +192,24 @@ class Notifications {
         ]);
     }
 
+    static function spellCooldownDelayed($cards) {
+        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from delayed activation card(s)'), [
+            "mana_values" => self::getPowerValues($cards),
+        ]);
+    }
+
+    static function spellCooldownInstant($cards) {
+        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from instant activation card(s)'), [
+            "mana_values" => self::getPowerValues($cards),
+        ]);
+    }
+
+    static function spellCooldownOngoing($cards) {
+        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from ongoing activation card(s)'), [
+            "mana_values" => self::getPowerValues($cards),
+        ]);
+    }
+
     static function spellNoEffect() {
         self::message(clienttranslate("The spell has no effect since requirement was not met"));
     }

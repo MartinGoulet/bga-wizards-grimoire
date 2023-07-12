@@ -126,15 +126,26 @@ $chooseSpellStates = [
 ];
 
 $spellCoolDownStates = [
+
     ST_SPELL_COOL_DOWN => [
         "phase" => 2,
         "name" => "spellCoolDown",
         "type" => "game",
-        "action" => "stSpellCoolDown",
+        "action" => "stSpellCoolDownInstantDelayed",
         "transitions" => [
-            "next" => ST_GAIN_MANA,
+            "next" => ST_SPELL_COOL_DOWN_ONGOING,
             "delayed" => ST_SPELL_CD_ACTIVATE_DELAYED,
             "dead" => ST_PRE_END_OF_GAME,
+        ]
+    ],
+
+    ST_SPELL_COOL_DOWN_ONGOING => [
+        "phase" => 2,
+        "name" => "spellCoolDown",
+        "type" => "game",
+        "action" => "stSpellCoolDownOngoing",
+        "transitions" => [
+            "" => ST_GAIN_MANA,
         ]
     ],
 ];
@@ -315,7 +326,7 @@ $stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
     ST_SPELL_CD_CAST_SPELL_INTERACTION,
     ST_SPELL_CD_CAST_SPELL_RETURN_CURRENT_PLAYER,
-    ST_GAIN_MANA
+    ST_SPELL_COOL_DOWN_ONGOING,
 );
 
 $stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(

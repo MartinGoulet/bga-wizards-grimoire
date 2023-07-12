@@ -35,12 +35,47 @@ trait StateTrait {
         $this->gamestate->nextState($next_state);
     }
 
-    function stSpellCoolDown() {
-        Lullaby::check();
+    function stSpellCoolDownInstantDelayed() {
 
-        $player_id = intval($this->getActivePlayerId());
+        $this->stSpellCoolDownInstant();
+        $this->stSpellCoolDownDelayed();
 
-        $cards_before = [];
+        if (Players::getPlayerLife(Players::getPlayerId()) == 0 || Players::getPlayerLife(Players::getOpponentId()) == 0) {
+            $this->gamestate->nextState('dead');
+        } else if (sizeof(Globals::getCoolDownDelayedSpellIds()) > 0) {
+            $this->gamestate->nextState('delayed');
+        } else {
+            $this->gamestate->nextState('next');
+        }
+    }
+
+    function stSpellCoolDownInstant() {
+
+        $cards = [];
+
+        for ($i = 1; $i <= 6; $i++) {
+            $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
+            if ($mana_card) {
+                $spell = SpellCard::getFromRepertoire($i);
+                $spell_info = SpellCard::getCardInfo($spell);
+
+                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
+                    $cards[] = $mana_card;
+                    ManaCard::addOnTopOfDiscard($mana_card['id']);
+                }
+            }
+        }
+
+        if (sizeof($cards) > 0) {
+            Notifications::spellCooldownInstant($cards);
+            $player_id = intval($this->getActivePlayerId());
+            Notifications::moveManaCard($player_id, $cards, false);
+        }
+    }
+
+    function stSpellCoolDownDelayed() {
+
+        $cards = [];
         $spell_delayed = [];
 
         for ($i = 1; $i <= 6; $i++) {
@@ -48,42 +83,63 @@ trait StateTrait {
             if ($mana_card) {
                 $spell = SpellCard::getFromRepertoire($i);
                 $spell_info = SpellCard::getCardInfo($spell);
-                $instance = SpellCard::getInstanceOfCard($spell);
 
-                switch ($spell_info['activation']) {
-                    case WG_SPELL_ACTIVATION_DELAYED:
-                        if ($spell_info['activation_auto'] == true) {
-                            $instance->castSpell($mana_card);
-                        } else {
-                            if ($instance->isDelayedSpellTrigger()) {
-                                $spell_delayed[] = $spell['id'];
-                            }
+                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_DELAYED) {
+                    $instance = SpellCard::getInstanceOfCard($spell);
+
+                    if ($spell_info['activation_auto'] == true) {
+                        $instance->castSpell($mana_card);
+                    } else {
+                        if ($instance->isDelayedSpellTrigger()) {
+                            $spell_delayed[] = $spell['id'];
                         }
-                        break;
-
-                    case WG_SPELL_ACTIVATION_ONGOING:
-                        if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
-                            $instance->isOngoingSpellActive(false, 0);
-                        }
-                        break;
-
-                    default:
-                        # code...
-                        break;
+                    }
+                    
+                    $cards[] = $mana_card;
+                    ManaCard::addOnTopOfDiscard($mana_card['id']);
                 }
-                $cards_before[] = $mana_card;
-                ManaCard::addOnTopOfDiscard($mana_card['id']);
             }
         }
 
-        Notifications::moveManaCard($player_id, $cards_before, false);
-
-        if (sizeof($spell_delayed) == 0) {
-            $this->gamestate->nextState('next');
-        } else {
-            Globals::setCoolDownDelayedSpellIds($spell_delayed);
-            $this->gamestate->nextState('delayed');
+        if (sizeof($cards) > 0) {
+            Notifications::spellCooldownDelayed($cards);
+            $player_id = intval($this->getActivePlayerId());
+            Notifications::moveManaCard($player_id, $cards, false);
         }
+
+        if (sizeof($spell_delayed) > 0) {
+            Globals::setCoolDownDelayedSpellIds($spell_delayed);
+        }
+    }
+
+    function stSpellCoolDownOngoing() {
+
+        $cards = [];
+
+        for ($i = 1; $i <= 6; $i++) {
+            $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
+            if ($mana_card) {
+                $spell = SpellCard::getFromRepertoire($i);
+                $spell_info = SpellCard::getCardInfo($spell);
+
+                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+                    if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
+                        $instance = SpellCard::getInstanceOfCard($spell);
+                        $instance->isOngoingSpellActive(false, 0);
+                    }
+                    $cards[] = $mana_card;
+                    ManaCard::addOnTopOfDiscard($mana_card['id']);
+                }
+            }
+        }
+
+        if (sizeof($cards) > 0) {
+            Notifications::spellCooldownOngoing($cards);
+            $player_id = intval($this->getActivePlayerId());
+            Notifications::moveManaCard($player_id, $cards, false);
+        }
+
+        $this->gamestate->nextState();
     }
 
     function stGainMana() {
