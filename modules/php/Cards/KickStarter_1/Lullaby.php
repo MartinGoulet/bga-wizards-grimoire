@@ -11,6 +11,9 @@ class Lullaby extends BaseCard {
     public function isOngoingSpellActive(bool $value, int $player_id) {
         // As long as there is mana on this spell, if you have 0 mana cards in your hand, gain 2 mana cards
         Globals::setIsActiveLullaby($value, $player_id);
+        if ($value) {
+            self::check();
+        }
     }
 
     public static function check() {
