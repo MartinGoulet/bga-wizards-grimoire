@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
 
 class GleamOfHope extends BaseCard {
 
@@ -12,6 +13,10 @@ class GleamOfHope extends BaseCard {
         // Gain mana until you have 5 mana cards in your hand
         $hand_count = ManaCard::getHandCount();
 
-        $this->drawManaCards(5 - $hand_count);
+        if ($hand_count < 5) {
+            $this->drawManaCards(5 - $hand_count);
+        } else {
+            Notifications::spellNoEffect();
+        }
     }
 }
