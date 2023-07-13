@@ -74,13 +74,19 @@ class Notifications {
         ]);
     }
 
-    static function drawManaCards($player_id, $cards) {
+    static function drawManaCards($player_id, $cards, string $card_name = null) {
         $msg = clienttranslate('${player_name} draws ${mana_values}');
         $args = [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
             'mana_values' => self::getPowerValues($cards),
         ];
+
+        if($card_name !== null) {
+            $msg = clienttranslate('${player_name} draws ${mana_values} from ${card_name}');
+            $args['card_name'] = $card_name;
+            $args["i18n"] = ["card_name"];
+        }
 
         $args['cards'] = array_values($cards);
         self::notify($player_id, 'onDrawManaCards', $msg, $args);
@@ -91,6 +97,12 @@ class Notifications {
             'player_name' => self::getPlayerName($player_id),
             'nbr_mana_card' => sizeof($cards),
         ];
+
+        if($card_name !== null) {
+            $msg = clienttranslate('${player_name} draws ${nbr_mana_card} from ${card_name}');
+            $args['card_name'] = $card_name;
+            $args["i18n"] = ["card_name"];
+        }
 
         $args['cards'] = array_values(Game::anonynizeCards($cards));
         self::notifyAll('onDrawManaCards', $msg, $args, $player_id);
@@ -163,7 +175,7 @@ class Notifications {
 
     static function revealManaCardCooldown(int $player_id, $card, $spell_name) {
         $msg = clienttranslate('${player_name} reveals ${mana_values} from the mana cooldown under ${card_name}');
-        self::notifyAll('onRevealManaCardCooldown', $msg , [
+        self::notifyAll('onRevealManaCardCooldown', $msg, [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "mana_values" => self::getPowerValues([$card]),

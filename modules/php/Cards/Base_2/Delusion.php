@@ -23,6 +23,7 @@ class Delusion extends BaseCard {
             if ($card !== null) {
                 ManaCard::addToHand($card['id']);
                 Notifications::moveManaCard($player_id, [$card]);
+                Events::onManaPickedUpUnderSpell($opponent_stack_pos, $opponent_id);
             }
         }
     }

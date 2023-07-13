@@ -20,7 +20,7 @@ class Lullaby extends BaseCard {
         if (Globals::getIsActiveLullaby()) {
             $count = ManaCard::getHandCount(Globals::getIsActiveLullabyPlayer());
             if ($count == 0) {
-                ManaCard::draw(2, Globals::getIsActiveLullabyPlayer());
+                ManaCard::draw(2, Globals::getIsActiveLullabyPlayer(), "Lullaby");
             }
         }
     }

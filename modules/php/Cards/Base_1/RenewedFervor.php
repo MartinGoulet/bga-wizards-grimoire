@@ -30,7 +30,7 @@ class RenewedFervor extends BaseCard {
         foreach ($spells as $card_id => $spell) {
             $position = intval($spell['location_arg']);
             $cards[] = ManaCard::drawFromManaCoolDown($position);
-            
+            Events::onManaPickedUpUnderSpell($position);
         }
         Notifications::moveManaCard($player_id, $cards);
         Events::onAddCardToHand();

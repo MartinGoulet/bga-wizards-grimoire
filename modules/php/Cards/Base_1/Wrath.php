@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards\Base_1;
 
 use BgaSystemException;
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -35,6 +36,8 @@ class Wrath extends BaseCard {
             }
 
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
+            Events::onHandCountChanged();
+
             $this->dealDamage(0);
         } else {
             $this->dealDamage(2);

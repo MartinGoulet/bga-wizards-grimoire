@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -22,6 +23,7 @@ class ArcaneEye extends BaseCard {
             if (intval($card_type['cost']) >= 3) {
                 $pos = intval($spell['location_arg']);
                 $card = ManaCard::getOnTopOnManaCoolDown($pos);
+                Events::onManaPickedUpUnderSpell($spell['location_arg']);
                 if ($card != null) {
                     $cards_before[] = $card;
                 }

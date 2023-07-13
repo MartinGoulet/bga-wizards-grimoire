@@ -2,14 +2,18 @@
 
 namespace WizardsGrimoire\Core;
 
-use SplDoublyLinkedList;
 use WizardsGrimoire\Cards\Base_2\SecretOath;
+use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 
 /*
  * Events: handle events
  */
 
 class Events {
+
+    public static function onHandCountChanged() {
+        Lullaby::check();
+    }
 
     public static function onIsActiveGrowthChanged() {
         self::checkSecretOathHand();
@@ -59,6 +63,21 @@ class Events {
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
             $instance = SpellCard::getInstanceOfCard($spell);
             $instance->isOngoingSpellActive(true, $player_id);
+        }
+    }
+
+    public static function onManaPickedUpUnderSpell($position, $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        $spell = SpellCard::getFromRepertoire($position, $player_id);
+        $card_type = SpellCard::getCardInfo($spell);
+        switch ($card_type['activation']) {
+            case WG_SPELL_ACTIVATION_ONGOING:
+                $instance = SpellCard::getInstanceOfCard($spell);
+                $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
+                $instance->isOngoingSpellActive($count > 0, $player_id);
+                break;
         }
     }
 

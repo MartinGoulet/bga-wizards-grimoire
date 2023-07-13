@@ -53,7 +53,7 @@ class ManaCard {
         return Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
 
-    public static function draw($count, $player_id = 0) {
+    public static function draw($count, $player_id = 0, string $card_name = null) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -63,16 +63,16 @@ class ManaCard {
         $card_left = $deck->countCardInLocation(CardLocation::Deck());
         if ($card_left >= $count) {
             $mana_cards = $deck->pickCards($count, CardLocation::Deck(), $player_id);
-            Notifications::drawManaCards($player_id, $mana_cards);
+            Notifications::drawManaCards($player_id, $mana_cards, $card_name);
             $result = $mana_cards;
         } else {
             $mana_cards_1 = $deck->pickCards($card_left, CardLocation::Deck(), $player_id);
-            Notifications::drawManaCards($player_id, $mana_cards_1);
+            Notifications::drawManaCards($player_id, $mana_cards_1, $card_name);
 
             self::reshuffle();
 
             $mana_cards_2 = $deck->pickCards($count - $card_left, CardLocation::Deck(), $player_id);
-            Notifications::drawManaCards($player_id, $mana_cards_2);
+            Notifications::drawManaCards($player_id, $mana_cards_2, $card_name);
 
             $result = array_merge($mana_cards_1, $mana_cards_2);
         }

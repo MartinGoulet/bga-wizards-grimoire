@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -17,6 +18,7 @@ class EnergyShield extends BaseCard {
         ManaCard::hasUnderSpell($player_deck_position);
         $card = ManaCard::drawFromManaCoolDown($player_deck_position);
         Notifications::moveManaCard(Players::getPlayerId(), [$card]);
+        Events::onManaPickedUpUnderSpell($player_deck_position);
 
         ManaCard::dealFromDeckToManaCoolDown($opponent_deck_position, Players::getOpponentId());
     }

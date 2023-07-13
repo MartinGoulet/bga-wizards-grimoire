@@ -50,7 +50,7 @@ abstract class BaseCard {
     }
 
     protected function drawManaCards(int $nbr, int $player_id = 0) {
-        return ManaCard::draw($nbr, $player_id);
+        return ManaCard::draw($nbr, $player_id, $this->getCardName());
     }
 
     protected function getCardName() {
