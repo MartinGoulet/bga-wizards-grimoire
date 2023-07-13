@@ -1,5 +1,6 @@
 const states = {
    client: {
+      arcaneTactics: "client_arcaneTactics",
       badFortune: "client_badFortune",
       castSpellWithMana: "client_castSpellWithMana",
       question: "client_question",
@@ -30,6 +31,7 @@ class StateManager {
 
    constructor(private game: WizardsGrimoire) {
       this.states = {
+         [states.client.arcaneTactics]: new ArcaneTacticsStates(game),
          [states.client.badFortune]: new BadFortuneStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
          [states.client.question]: new QuestionStates(game),

@@ -1941,8 +1941,12 @@ var ActionManager = (function () {
         }, null, handleError);
     };
     ActionManager.prototype.actionArcaneTactics = function () {
-        var msg = _("${you} may select ${nbr} mana card(s) from your hand");
-        this.returnManaCardToDeck(msg, 4, false);
+        var msg = _("${you} must place 4 of the revealed mana on top of the mana deck");
+        var name = this.game.getCardType(this.getCurrentCard()).name;
+        this.game.setClientState(states.client.arcaneTactics, {
+            descriptionmyturn: _(name) + " : " + msg,
+            args: {},
+        });
     };
     ActionManager.prototype.actionBadFortune = function () {
         var msg = _("${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order");
@@ -2693,6 +2697,7 @@ var NotificationManager = (function () {
 }());
 var states = {
     client: {
+        arcaneTactics: "client_arcaneTactics",
         badFortune: "client_badFortune",
         castSpellWithMana: "client_castSpellWithMana",
         question: "client_question",
@@ -2722,6 +2727,7 @@ var StateManager = (function () {
         this.game = game;
         this.client_states = [];
         this.states = (_a = {},
+            _a[states.client.arcaneTactics] = new ArcaneTacticsStates(game),
             _a[states.client.badFortune] = new BadFortuneStates(game),
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
             _a[states.client.question] = new QuestionStates(game),
@@ -3477,6 +3483,94 @@ var ActivateDelayedSpellStates = (function () {
         return new Promise(function (resolve) { return resolve(true); });
     };
     return ActivateDelayedSpellStates;
+}());
+var ArcaneTacticsStates = (function () {
+    function ArcaneTacticsStates(game) {
+        this.game = game;
+    }
+    ArcaneTacticsStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.mana_cards = [];
+        var count = 4;
+        var handleRevealedCardClick = function (card) {
+            if (_this.mana_cards.length == count)
+                return;
+            _this.mana_cards.push(card);
+            _this.game.tableCenter.manaDeck.addCard(__assign(__assign({}, card), { type: null, isHidden: true }));
+            _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
+            _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0, "gray");
+            _this.game.toggleButtonEnable("btn_pass", _this.mana_cards.length == 0, "red");
+        };
+        var handleDeckCardClick = function (card) {
+            if (_this.mana_cards.length > 0) {
+                _this.moveCardFromManaDeckToRevealedMana();
+                _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === count);
+                _this.game.toggleButtonEnable("btnCancelAction", _this.mana_cards.length > 0, "gray");
+                _this.game.toggleButtonEnable("btn_pass", _this.mana_cards.length == 0, "red");
+            }
+        };
+        this.game.tableCenter.manaRevealed.onCardClick = handleRevealedCardClick;
+        this.game.tableCenter.manaDeck.onCardClick = handleDeckCardClick;
+    };
+    ArcaneTacticsStates.prototype.onLeavingState = function () {
+        this.game.tableCenter.manaRevealed.onCardClick = null;
+        this.game.tableCenter.manaDeck.onCardClick = null;
+    };
+    ArcaneTacticsStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            if (_this.mana_cards.length !== 4)
+                return;
+            _this.game.actionManager.addArgument(_this.mana_cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonClientCancel();
+    };
+    ArcaneTacticsStates.prototype.restoreGameState = function () {
+        var _this = this;
+        return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.restore()];
+                    case 1:
+                        _a.sent();
+                        this.game.disableButton("btnConfirm");
+                        this.game.disableButton("btnCancelAction");
+                        resolve(true);
+                        return [2];
+                }
+            });
+        }); });
+    };
+    ArcaneTacticsStates.prototype.restore = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.mana_cards.length > 0)) return [3, 2];
+                        return [4, this.moveCardFromManaDeckToRevealedMana()];
+                    case 1:
+                        _a.sent();
+                        return [3, 0];
+                    case 2: return [2];
+                }
+            });
+        });
+    };
+    ArcaneTacticsStates.prototype.moveCardFromManaDeckToRevealedMana = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            var card = _this.mana_cards.pop();
+            console.log("Mana pop", __assign({}, _this.mana_cards));
+            _this.game.tableCenter.manaRevealed.addCard(card).then(function () {
+                resolve(true);
+            });
+        });
+    };
+    return ArcaneTacticsStates;
 }());
 var BadFortuneStates = (function () {
     function BadFortuneStates(game) {

@@ -22,7 +22,9 @@ class ManaCard {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
-        $card_ids = array_values(array_map(function($card) { return $card['id'];}, $cards));
+        $card_ids = array_values(array_map(function ($card) {
+            return $card['id'];
+        }, $cards));
         Game::get()->deck_manas->moveCards($card_ids, CardLocation::Hand(), $player_id);
         Notifications::moveManaCard($player_id, $cards);
         Events::onAddCardToHand();
@@ -187,6 +189,10 @@ class ManaCard {
         return $power;
     }
 
+    public static function getRevealedMana() {
+        return Game::get()->deck_manas->getCardsInLocation(CardLocation::ManaRevelead());
+    }
+
     public static function hasUnderSpell(int $deck_position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
@@ -221,6 +227,18 @@ class ManaCard {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];
             throw new \BgaSystemException("The card $card_id doesn't belong to $player_id. Card info : $card_loc, $card_loc_arg");
+        }
+
+        return $card;
+    }
+
+    public static function isInReveleadMana(int $card_id) {
+
+        $card = ManaCard::get($card_id);
+        if ($card['location'] != CardLocation::ManaRevelead()) {
+            $card_loc = $card['location'];
+            $card_loc_arg = $card['location_arg'];
+            throw new \BgaSystemException("The card $card_id doesn't belong to revealed mana. Card info : $card_loc, $card_loc_arg");
         }
 
         return $card;
