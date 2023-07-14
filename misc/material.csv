@@ -13,7 +13,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 12;Shackled motion;ShackledMotion;Choose 1: Gain 4 mana cards, or your opponent must discard their hand;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionShackledMotion;;;;darkorange
 13;Living wind;LivingWind;Gain 6 mana cards, gain 1 fewer mana for each of your other spells that have a mana on them;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;lightgreen
 14;Coercive agreement;CoerciveAgreement;Choose 1: Take up to 3 randomly selected mana from your opponent's hand, or discard a mana card off 2 of your other spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;actionCoerciveAgreement;;;;darkorange
-15;Arcane eye;ArcaneEye;Pick up a mana card of each of your spells that costs 3 or more;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
+15;Arcane eye;ArcaneEye;Pick up a mana card off each of your spells that costs 3 or more;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
 16;Haste;Haste;The next time you cast a spell this turn, it costs 2 less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
 17;Renewed fervor;RenewedFervor;Pick up a mana card off each of your instant attack spells that costs 2 or less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
 18;Secret Oath;SecretOath;As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;2;WG_ICON_SET_BASE_2;;;;;darkorange

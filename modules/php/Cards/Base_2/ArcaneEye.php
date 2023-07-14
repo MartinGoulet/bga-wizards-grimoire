@@ -12,24 +12,29 @@ use WizardsGrimoire\Core\SpellCard;
 class ArcaneEye extends BaseCard {
 
     public function castSpell($args) {
-        // Pick up a mana card of each of your spells that costs 3 or more
+        // Pick up a mana card off each of your spells that costs 3 or more
         $player_id = Players::getPlayerId();
         $spells = SpellCard::getCardsFromRepertoire();
 
-        $cards_before = [];
+        $cards = [];
 
         foreach ($spells as $card_id => $spell) {
             $card_type = SpellCard::getCardInfo($spell);
             if (intval($card_type['cost']) >= 3) {
                 $pos = intval($spell['location_arg']);
                 $card = ManaCard::getOnTopOnManaCoolDown($pos);
-                Events::onManaPickedUpUnderSpell($spell['location_arg']);
                 if ($card != null) {
-                    $cards_before[] = $card;
+                    $cards[] = $card;
+                    ManaCard::addToHand($card['id']);
+                    Events::onManaPickedUpUnderSpell($spell['location_arg']);
                 }
             }
         }
 
-        Notifications::moveManaCard($player_id, $cards_before);
+        if(sizeof($cards) > 0) {
+            Notifications::moveManaCard($player_id, $cards);
+        } else {
+            Notifications::spellNoEffect();
+        }
     }
 }
