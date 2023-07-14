@@ -83,23 +83,22 @@
 
 .help-marker {
    position: absolute;
-   right: 0;
-   margin: 3px 3px 0 0;
-   cursor: help !important;
+   right: 5px;
+   top: 5px;
+   cursor: zoom-in !important;
    pointer-events: initial !important;
    user-select: initial !important;
 }
 
 .wg-tooltip-card {
    display: contents;
-   // max-width: 300px;
    gap: 15px;
    --width: 160px;
    --height: 224px;
 
    .wg-tooltip-left {
-   max-width: 260px;
-   display: flex;
+      max-width: 260px;
+      display: flex;
       flex-direction: column;
       gap: 5px;
 

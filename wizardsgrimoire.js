@@ -1409,10 +1409,12 @@ var WizardsGrimoire = (function () {
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
         this.manasManager = new ManaCardManager(this);
+        this.tooltipManager = new TooltipManager(this);
         this.stateManager = new StateManager(this);
         this.actionManager = new ActionManager(this);
         this.gameOptions = new GameOptions(this);
         this.tableCenter = new TableCenter(this);
+        this.modal = new Modal(this);
         this.createPlayerTables(gamedatas);
         this.zoomManager = new ZoomManager({
             element: document.getElementById("table"),
@@ -2523,12 +2525,13 @@ var SpellCardManager = (function (_super) {
                     var name_1 = card_type.name, description = card_type.description;
                     var gametext = formatGametext2(description);
                     div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_1, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
-                    var helpMarkerId_1 = "".concat(_this.getId(card), "-help-marker");
+                    var helpMarkerId = "".concat(_this.getId(card), "-help-marker");
                     var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
-                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId_1, "\" class=\"help-marker\">\n                     <svg class=\"feather feather-help-circle\" fill=\"").concat(color, "\" height=\"24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3\"></path><line x1=\"12\" x2=\"12.01\" y1=\"17\" y2=\"17\"></line></svg>\n                  </div>"));
-                    game.setTooltip(helpMarkerId_1, _this.getTooltip(card));
-                    document.getElementById(helpMarkerId_1).addEventListener("click", function () {
-                        _this.game.tooltips[helpMarkerId_1].open(helpMarkerId_1);
+                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId, "\" class=\"help-marker\">\n                     <i class=\"fa6 fa6-magnifying-glass\" style=\"color: white\"></i>\n                  </div>"));
+                    document.getElementById(helpMarkerId).addEventListener("click", function (evt) {
+                        dojo.stopEvent(evt);
+                        evt.preventDefault();
+                        _this.game.modal.display(card);
                     });
                 }
             },
@@ -2605,6 +2608,43 @@ var ManaCardManager = (function (_super) {
             .find(function (x) { return x.id == id; });
     };
     return ManaCardManager;
+}(CardManager));
+var TooltipManager = (function (_super) {
+    __extends(TooltipManager, _super);
+    function TooltipManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "tooltip-spell-card-".concat(card.id); },
+            setupDiv: function (card, div) {
+                div.classList.add("wg-card");
+                div.classList.add("wg-card-spell");
+                div.dataset.cardId = "" + card.id;
+                div.dataset.type = "" + card.type;
+            },
+            setupFrontDiv: function (card, div) {
+                div.id = "".concat(_this.getId(card), "-front");
+                div.dataset.type = "" + card.type;
+                div.classList.add("wg-card-spell-front");
+                if (div.childNodes.length == 1 && card.type) {
+                    var card_type = _this.game.getCardType(card);
+                    var name_2 = card_type.name, description = card_type.description;
+                    var gametext = formatGametext2(description);
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_2, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
+                }
+            },
+            setupBackDiv: function (card, div) { },
+            isCardVisible: function (card) { return true; },
+            cardWidth: 220,
+            cardHeight: 308,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    TooltipManager.prototype.getCardById = function (id) {
+        return this.getCardStock({ id: id })
+            .getCards()
+            .find(function (x) { return x.id == id; });
+    };
+    return TooltipManager;
 }(CardManager));
 var NotificationManager = (function () {
     function NotificationManager(game) {
@@ -3169,6 +3209,46 @@ var GameOptions = (function () {
         document.getElementById("table").dataset.phase = phase.toString();
     };
     return GameOptions;
+}());
+var Modal = (function () {
+    function Modal(game) {
+        var _this = this;
+        this.game = game;
+        var html = "<div id=\"modal-display\">\n            <i id=\"modal-display-close\" class=\"fa6 fa6-solid fa6-circle-xmark\"></i>\n            <div id=\"modal-display-card\"></div>\n        </div>";
+        dojo.place(html, "ebd-body", "last");
+        this.cards = new LineStock(game.tooltipManager, document.getElementById("modal-display-card"));
+        var handleKeyboard = function (ev) {
+            if (document.getElementById("ebd-body").classList.contains("modal_open")) {
+                if (ev.key == "Escape") {
+                    _this.close();
+                }
+            }
+        };
+        document.getElementById("modal-display").addEventListener("click", function () { return _this.close(); });
+        document.getElementById("modal-display-close").addEventListener("click", function () { return _this.close(); });
+        document.getElementById("ebd-body").addEventListener("keydown", handleKeyboard);
+    }
+    Modal.prototype.display = function (card) {
+        this.cards.removeAll();
+        this.cards.addCard(card);
+        var scrollY = window.scrollY;
+        var body = document.getElementById("ebd-body");
+        body.classList.toggle("modal_open", true);
+        body.style.top = "-".concat(scrollY, "px");
+        var display = document.getElementById("modal-display");
+        display.style.top = "".concat(scrollY, "px");
+    };
+    Modal.prototype.close = function () {
+        var body = document.getElementById("ebd-body");
+        body.classList.toggle("modal_open", false);
+        body.style.top = "";
+        var display = document.getElementById("modal-display");
+        var scrollY = Number(display.style.top.replace("px", ""));
+        display.style.top = "".concat(scrollY, "px");
+        window.scroll(0, scrollY);
+        this.cards.removeAll();
+    };
+    return Modal;
 }());
 var DiscardManaStates = (function () {
     function DiscardManaStates(game) {
@@ -4304,13 +4384,6 @@ var SelectSpellPoolStates = (function () {
     };
     return SelectSpellPoolStates;
 }());
-define([
-    "dojo",
-    "dojo/_base/declare",
-    "ebg/core/gamegui",
-    "ebg/counter",
-    "ebg/stock",
-    g_gamethemeurl + "modules/js/core_patch_tooltip_position.js",
-], function (dojo, declare) {
-    return declare("bgagame.wizardsgrimoire", [ebg.core.gamegui, ebg.core.core_patch_tooltip_position], new WizardsGrimoire());
+define(["dojo", "dojo/_base/declare", "ebg/core/gamegui", "ebg/counter", "ebg/stock"], function (dojo, declare) {
+    return declare("bgagame.wizardsgrimoire", [ebg.core.gamegui], new WizardsGrimoire());
 });
