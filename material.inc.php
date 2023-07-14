@@ -60,7 +60,7 @@ $this->card_types = [
     "type" => WG_SPELL_TYPE_ATTACK,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
-    "icon" => WG_ICON_SET_BASE_1,
+    "icon" => WG_ICON_SET_BASE_2,
     "debug" => "lightgreen",
   ],
   5 => [
