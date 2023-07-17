@@ -1928,7 +1928,6 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionCastSpell_Submit = function () {
         var _this = this;
-        debugger;
         var new_spell_id = Number(this.actions_args[0]);
         var old_spell_pos = Number(this.actions_args[1]);
         var old_spell_id = this.game
@@ -2253,7 +2252,6 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionTwistOfFate_Repertoire = function () {
         var _this = this;
-        debugger;
         var spellPoolCardId = Number(this.actions_args[this.actions_args.length - 1]);
         var spellPoolCard = this.game.tableCenter.spellPool
             .getCards()
