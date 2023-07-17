@@ -48,7 +48,7 @@ class PlayerTable {
                </div>
             </div>`;
 
-      dojo.place(html, "tables");
+      document.getElementById("tables").insertAdjacentHTML("beforeend", html);
 
       if (this.current_player) {
          this.setupHaste();
@@ -298,10 +298,10 @@ class PlayerTable {
    private setupIcon({ id, title, gametext }: SetupIconArgs) {
       const cssClass = id;
       id = `${id}_${this.player_id}`;
-      dojo.place(
-         `<div id="${id}" class="${cssClass}_icon icon"></div>`,
-         `player-table-${this.player_id}-extra-icons`,
-      );
+      document
+         .getElementById(`player-table-${this.player_id}-extra-icons`)
+         .insertAdjacentHTML("beforeend", `<div id="${id}" class="${cssClass}_icon icon"></div>`);
+
       this.game.setTooltip(
          id,
          `<div class="player-table-icon-tooltip"><h3>${title}</h3><div>${_(gametext)}</div></div>`,

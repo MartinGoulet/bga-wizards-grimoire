@@ -355,6 +355,7 @@
   position: absolute;
   right: 5px;
   top: 5px;
+  padding: 5px;
   cursor: zoom-in !important;
   pointer-events: initial !important;
   user-select: initial !important;
@@ -759,6 +760,8 @@ body > .card {
   font-size: 32px;
   margin-left: 320px;
   z-index: 100;
+  margin-top: -450px;
+  position: absolute;
 }
 #modal-display .front {
   border-radius: 17px;

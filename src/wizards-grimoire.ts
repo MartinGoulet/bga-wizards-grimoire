@@ -139,7 +139,8 @@ class WizardsGrimoire
 
    public addActionButtonClientCancel() {
       const handleCancel = (evt: any): void => {
-         dojo.stopEvent(evt);
+         evt.stopPropagation();
+         evt.preventDefault();
          this.restoreGameState();
       };
       this.addActionButtonGray("btnCancelAction", _("Cancel"), handleCancel);

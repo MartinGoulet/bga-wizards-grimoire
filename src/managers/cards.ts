@@ -48,7 +48,7 @@ class SpellCardManager extends CardManager<SpellCard> {
 
                // game.setTooltip(helpMarkerId, this.getTooltip(card));
                document.getElementById(helpMarkerId).addEventListener("click", (evt) => {
-                  dojo.stopEvent(evt);
+                  evt.stopPropagation();
                   evt.preventDefault();
                   this.game.modal.display(card);
                });

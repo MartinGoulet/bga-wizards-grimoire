@@ -24,7 +24,7 @@ class GameOptions {
                 </div>
             </div>`;
 
-      dojo.place(html, "player_boards");
+      document.getElementById("player_boards").insertAdjacentHTML("beforeend", html);
 
       this.game.updatePlayerOrdering();
    }

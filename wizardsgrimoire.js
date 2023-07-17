@@ -1456,7 +1456,8 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.addActionButtonClientCancel = function () {
         var _this = this;
         var handleCancel = function (evt) {
-            dojo.stopEvent(evt);
+            evt.stopPropagation();
+            evt.preventDefault();
             _this.restoreGameState();
         };
         this.addActionButtonGray("btnCancelAction", _("Cancel"), handleCancel);
@@ -2529,7 +2530,7 @@ var SpellCardManager = (function (_super) {
                     var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
                     div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId, "\" class=\"help-marker\">\n                     <i class=\"fa6 fa6-magnifying-glass\" style=\"color: white\"></i>\n                  </div>"));
                     document.getElementById(helpMarkerId).addEventListener("click", function (evt) {
-                        dojo.stopEvent(evt);
+                        evt.stopPropagation();
                         evt.preventDefault();
                         _this.game.modal.display(card);
                     });
@@ -2884,7 +2885,7 @@ var PlayerTable = (function () {
             "data-secret_oath=\"false\"",
         ];
         var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(pName, "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\"></div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-health\" class=\"wg-health\">\n                     <div id=\"player-table-").concat(pId, "-health-value\"></div>\n                     <div class=\"wg-health-icon\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
-        dojo.place(html, "tables");
+        document.getElementById("tables").insertAdjacentHTML("beforeend", html);
         if (this.current_player) {
             this.setupHaste();
             this.setupSecondStrike();
@@ -3098,7 +3099,9 @@ var PlayerTable = (function () {
         var id = _a.id, title = _a.title, gametext = _a.gametext;
         var cssClass = id;
         id = "".concat(id, "_").concat(this.player_id);
-        dojo.place("<div id=\"".concat(id, "\" class=\"").concat(cssClass, "_icon icon\"></div>"), "player-table-".concat(this.player_id, "-extra-icons"));
+        document
+            .getElementById("player-table-".concat(this.player_id, "-extra-icons"))
+            .insertAdjacentHTML("beforeend", "<div id=\"".concat(id, "\" class=\"").concat(cssClass, "_icon icon\"></div>"));
         this.game.setTooltip(id, "<div class=\"player-table-icon-tooltip\"><h3>".concat(title, "</h3><div>").concat(_(gametext), "</div></div>"));
         document.getElementById(id).addEventListener("click", function () {
             _this.game.tooltips[id].open(id);
@@ -3112,12 +3115,12 @@ var TableCenter = (function () {
     function TableCenter(game) {
         var _this = this;
         this.game = game;
-        dojo.place("<span class=\"wg-title\">".concat(_("Basic Attack"), "</span>"), "basic-attack-wrapper");
-        dojo.place("<div id=\"basic-attack\"></div>", "basic-attack-wrapper");
-        dojo.place("<span class=\"wg-title\">".concat(_("Revealed Mana"), "</span>"), "mana-revealed-wrapper");
-        dojo.place("<div id=\"mana-revealed\"></div>", "mana-revealed-wrapper");
-        dojo.place("<span class=\"wg-title\">".concat(_("Discard"), "</span>"), "mana-discard-display-wrapper");
-        dojo.place("<div id=\"mana-discard-display\"></div>", "mana-discard-display-wrapper");
+        this.place("<span class=\"wg-title\">".concat(_("Basic Attack"), "</span>"), "basic-attack-wrapper");
+        this.place("<div id=\"basic-attack\"></div>", "basic-attack-wrapper");
+        this.place("<span class=\"wg-title\">".concat(_("Revealed Mana"), "</span>"), "mana-revealed-wrapper");
+        this.place("<div id=\"mana-revealed\"></div>", "mana-revealed-wrapper");
+        this.place("<span class=\"wg-title\">".concat(_("Discard"), "</span>"), "mana-discard-display-wrapper");
+        this.place("<div id=\"mana-discard-display\"></div>", "mana-discard-display-wrapper");
         this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
         this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
         this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
@@ -3187,6 +3190,9 @@ var TableCenter = (function () {
         this.spellDeck.setCardNumber(this.spellDeck.getCardNumber(), topHiddenCard);
         this.spellPool.addCard(card);
     };
+    TableCenter.prototype.place = function (html, element) {
+        document.getElementById(element).insertAdjacentHTML("beforeend", html);
+    };
     return TableCenter;
 }());
 var GameOptions = (function () {
@@ -3201,7 +3207,7 @@ var GameOptions = (function () {
             phase5: _("Basic Attack"),
         }, phase1 = _a.phase1, phase2 = _a.phase2, phase3 = _a.phase3, phase4 = _a.phase4, phase5 = _a.phase5;
         var html = "\n            <div class=\"player-board\">\n                <div class=\"player-board-inner\">\n                    <div id=\"wg-phase-selector\" data-phase=\"1\"></div>\n                    <ul id=\"wg-phases\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ".concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
-        dojo.place(html, "player_boards");
+        document.getElementById("player_boards").insertAdjacentHTML("beforeend", html);
         this.game.updatePlayerOrdering();
     }
     GameOptions.prototype.setPhase = function (phase) {
@@ -3214,11 +3220,12 @@ var Modal = (function () {
     function Modal(game) {
         var _this = this;
         this.game = game;
-        var html = "<div id=\"modal-display\">\n            <i id=\"modal-display-close\" class=\"fa6 fa6-solid fa6-circle-xmark\"></i>\n            <div id=\"modal-display-card\"></div>\n        </div>";
-        dojo.place(html, "ebd-body", "last");
+        var html = "<div id=\"modal-display\">\n         <div id=\"modal-display-card\"></div>\n         <i id=\"modal-display-close\" class=\"fa6 fa6-solid fa6-circle-xmark\"></i>\n        </div>";
+        var elBody = document.getElementById("ebd-body");
+        elBody.insertAdjacentHTML("beforeend", html);
         this.cards = new LineStock(game.tooltipManager, document.getElementById("modal-display-card"));
         var handleKeyboard = function (ev) {
-            if (document.getElementById("ebd-body").classList.contains("modal_open")) {
+            if (elBody.classList.contains("modal_open")) {
                 if (ev.key == "Escape") {
                     _this.close();
                 }
@@ -3226,7 +3233,7 @@ var Modal = (function () {
         };
         document.getElementById("modal-display").addEventListener("click", function () { return _this.close(); });
         document.getElementById("modal-display-close").addEventListener("click", function () { return _this.close(); });
-        document.getElementById("ebd-body").addEventListener("keydown", handleKeyboard);
+        elBody.addEventListener("keydown", handleKeyboard);
     }
     Modal.prototype.display = function (card) {
         this.cards.removeAll();

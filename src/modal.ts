@@ -1,14 +1,15 @@
 class Modal {
    public cards: LineStock<SpellCard>;
-   private handler;
 
    constructor(private game: WizardsGrimoire) {
       const html = `<div id="modal-display">
-            <i id="modal-display-close" class="fa6 fa6-solid fa6-circle-xmark"></i>
-            <div id="modal-display-card"></div>
+         <div id="modal-display-card"></div>
+         <i id="modal-display-close" class="fa6 fa6-solid fa6-circle-xmark"></i>
         </div>`;
 
-      dojo.place(html, "ebd-body", "last");
+      const elBody = document.getElementById("ebd-body");
+
+      elBody.insertAdjacentHTML("beforeend", html);
 
       this.cards = new LineStock<SpellCard>(
          game.tooltipManager,
@@ -16,7 +17,7 @@ class Modal {
       );
 
       const handleKeyboard = (ev: KeyboardEvent) => {
-         if (document.getElementById("ebd-body").classList.contains("modal_open")) {
+         if (elBody.classList.contains("modal_open")) {
             if (ev.key == "Escape") {
                this.close();
             }
@@ -25,7 +26,7 @@ class Modal {
 
       document.getElementById("modal-display").addEventListener("click", () => this.close());
       document.getElementById("modal-display-close").addEventListener("click", () => this.close());
-      document.getElementById("ebd-body").addEventListener("keydown", handleKeyboard);
+      elBody.addEventListener("keydown", handleKeyboard);
    }
 
    display(card: SpellCard) {
