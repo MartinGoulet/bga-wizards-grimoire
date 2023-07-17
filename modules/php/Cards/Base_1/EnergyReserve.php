@@ -12,7 +12,7 @@ use WizardsGrimoire\Core\Players;
 class EnergyReserve extends BaseCard {
 
     public function castSpell($args) {
-        // Pick up a mana card off 1 of your others spells. Gain mana equal to that mana's power.
+        // Pick up a mana card off 1 of your other spells. Gain mana equal to that mana's power.
         $position = intval(array_shift($args));
         $card = ManaCard::getOnTopOnManaCoolDown($position);
 
