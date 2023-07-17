@@ -80,7 +80,9 @@ class StateManager {
          }
       } else {
          this.client_states.splice(0);
-         console.warn("State not handled", stateName);
+         if (isDebug) {
+            console.warn("State not handled", stateName);
+         }
       }
       console.log("client states", this.client_states);
    }
