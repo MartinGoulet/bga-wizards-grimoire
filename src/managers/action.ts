@@ -146,7 +146,6 @@ class ActionManager {
    }
 
    private actionCastSpell_Submit() {
-      debugger;
       const new_spell_id = Number(this.actions_args[0]);
       const old_spell_pos = Number(this.actions_args[1]);
 
@@ -545,7 +544,6 @@ class ActionManager {
    }
 
    private actionTwistOfFate_Repertoire() {
-      debugger;
       const spellPoolCardId = Number(this.actions_args[this.actions_args.length - 1]);
       const spellPoolCard = this.game.tableCenter.spellPool
          .getCards()

@@ -29,10 +29,16 @@ class RenewedFervor extends BaseCard {
         $cards = [];
         foreach ($spells as $card_id => $spell) {
             $position = intval($spell['location_arg']);
-            $cards[] = ManaCard::drawFromManaCoolDown($position);
-            Events::onManaPickedUpUnderSpell($position);
+            if(ManaCard::countOnTopOfManaCoolDown($position) > 0) {
+                $cards[] = ManaCard::drawFromManaCoolDown($position);
+                Events::onManaPickedUpUnderSpell($position);
+            }
         }
-        Notifications::moveManaCard($player_id, $cards);
-        Events::onAddCardToHand();
+        if(sizeof($cards) > 0) {
+            Notifications::moveManaCard($player_id, $cards);
+            Events::onAddCardToHand();
+        } else {
+            Notifications::spellNoEffect();
+        }
     }
 }

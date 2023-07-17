@@ -40,9 +40,11 @@ trait StateTrait {
         $this->stSpellCoolDownInstant();
         $this->stSpellCoolDownDelayed();
 
+        $cooldownIds = Globals::getCoolDownDelayedSpellIds();
+
         if (Players::getPlayerLife(Players::getPlayerId()) == 0 || Players::getPlayerLife(Players::getOpponentId()) == 0) {
             $this->gamestate->nextState('dead');
-        } else if (sizeof(Globals::getCoolDownDelayedSpellIds()) > 0) {
+        } else if (is_array($cooldownIds) && sizeof($cooldownIds) > 0) {
             $this->gamestate->nextState('delayed');
         } else {
             $this->gamestate->nextState('next');
