@@ -355,10 +355,11 @@
   position: absolute;
   right: 5px;
   top: 5px;
-  padding: 5px;
+  padding: 2px;
   cursor: zoom-in !important;
   pointer-events: initial !important;
   user-select: initial !important;
+  font-size: 20px;
 }
 
 .wg-tooltip-card {

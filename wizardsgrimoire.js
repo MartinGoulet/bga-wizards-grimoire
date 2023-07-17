@@ -2526,7 +2526,7 @@ var SpellCardManager = (function (_super) {
                     div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_1, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
                     var helpMarkerId = "".concat(_this.getId(card), "-help-marker");
                     var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
-                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId, "\" class=\"help-marker\">\n                     <i class=\"fa6 fa6-magnifying-glass\" style=\"color: white\"></i>\n                  </div>"));
+                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId, "\" class=\"help-marker\">\n                     <i class=\"fa fa-search\" style=\"color: white\"></i>\n                  </div>"));
                     document.getElementById(helpMarkerId).addEventListener("click", function (evt) {
                         evt.stopPropagation();
                         evt.preventDefault();

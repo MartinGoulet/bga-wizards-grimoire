@@ -42,7 +42,7 @@ class SpellCardManager extends CardManager<SpellCard> {
                div.insertAdjacentHTML(
                   "afterbegin",
                   `<div id="${helpMarkerId}" class="help-marker">
-                     <i class="fa6 fa6-magnifying-glass" style="color: white"></i>
+                     <i class="fa fa-search" style="color: white"></i>
                   </div>`,
                );
 
