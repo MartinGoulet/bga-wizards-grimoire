@@ -120,5 +120,6 @@ class SpellCard {
         );
 
         Notifications::refillSpell($player_id, $newSpell);
+        Game::undoSavepoint();
     }
 }

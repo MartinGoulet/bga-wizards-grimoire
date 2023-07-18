@@ -397,6 +397,18 @@ class Table
     static function checkAction($actionName, $bThrowException = true)
     {
     }
+
+    //////////////////////////////////////////////////////////////////////////////
+    //////////// Undo moves
+    ////////////
+
+    function undoSavepoint() 
+    {
+    }
+
+    function undoRestorePoint()
+    {
+    }
 }
 
 class Gamestate

@@ -34,6 +34,7 @@ trait ArgsTrait {
         $args = $this->getArgsBase();
         $args["discount_attack_spell"] = Globals::getDiscountAttackSpell(true);
         $args["discount_next_spell"] = Globals::getDiscountNextSpell(true);
+        $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
     }
 
@@ -64,7 +65,7 @@ trait ArgsTrait {
                 'allowed_manas' => array_values($cards),
             ],
         ];
-        // $args["allowed_manas"] = array_values($cards);
+        $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
     }
 

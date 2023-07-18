@@ -15,7 +15,7 @@ class Possessed extends BaseCard {
         // Deal 5 damage. Your opponent may give you a mana from their hand. If they do, reduce your damage by the mana's power
         if (ManaCard::getHandCount(Players::getOpponentId()) == 0) {
             Globals::setSkipInteraction(true);
-            $this->castSpellInteraction(null);
+            $this->dealDamage(5);
         }
     }
 

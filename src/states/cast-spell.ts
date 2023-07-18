@@ -52,6 +52,10 @@ class CastSpellStates implements StateHandler {
       } else {
          this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
       }
+
+      if (args.undo) {
+         this.game.addActionButtonUndo();
+      }
    }
 
    restoreGameState() {
@@ -71,4 +75,5 @@ class CastSpellStates implements StateHandler {
 interface CastSpellArgs {
    discount_attack_spell: number;
    discount_next_spell: number;
+   undo: boolean;
 }

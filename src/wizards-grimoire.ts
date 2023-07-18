@@ -38,7 +38,7 @@ class WizardsGrimoire
 
    public gameOptions: GameOptions;
    public tableCenter: TableCenter;
-   public playersTables: PlayerTable[] = [];
+   public playersTables: PlayerTable[];
    public zoomManager: ZoomManager;
    public modal: Modal;
 
@@ -161,7 +161,18 @@ class WizardsGrimoire
       this.addActionButton(id, label, action, null, null, "red");
    }
 
+   public addActionButtonUndo() {
+      const handleUndo = () => {
+         if (this.checkAction("undo")) {
+            this.takeAction("undo");
+         }
+      };
+
+      this.addActionButton("btn_undo", _("Undo"), handleUndo, null, null, "gray");
+   }
+
    private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
+      this.playersTables = [];
       gamedatas.players_order.forEach((player_id) => {
          const player = gamedatas.players[Number(player_id)];
          const table = new PlayerTable(this, player);

@@ -1,6 +1,9 @@
 class GameOptions {
    constructor(private game: WizardsGrimoire) {
-      const playerBoards = document.getElementById("");
+      const display = document.getElementById("game-phases");
+      if (display) {
+         display.parentElement.removeChild(display);
+      }
 
       const { phase1, phase2, phase3, phase4, phase5 } = {
          phase1: _("Choose a New Spell"),
@@ -11,7 +14,7 @@ class GameOptions {
       };
 
       const html = `
-            <div class="player-board">
+            <div class="player-board" id="game-phases">
                 <div class="player-board-inner">
                     <div id="wg-phase-selector" data-phase="1"></div>
                     <ul id="wg-phases">
@@ -25,7 +28,6 @@ class GameOptions {
             </div>`;
 
       document.getElementById("player_boards").insertAdjacentHTML("beforeend", html);
-
       this.game.updatePlayerOrdering();
    }
 

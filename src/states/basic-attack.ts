@@ -31,6 +31,9 @@ class BasicAttackStates implements StateHandler {
 
       this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
       this.game.addActionButtonPass();
+      if (args.undo) {
+         this.game.addActionButtonUndo();
+      }
    }
 
    restoreGameState() {
@@ -42,4 +45,5 @@ interface BasicAttackStates {
    _private: {
       allowed_manas: ManaCard[];
    };
+   undo: boolean;
 }

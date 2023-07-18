@@ -19,7 +19,7 @@ class FriendlyTruce extends BaseCard {
         // If they do not, gain 5 mana cards
         if (ManaCard::getHandCount(Players::getOpponentId()) < 3) {
             Globals::setSkipInteraction(true);
-            $this->castSpellInteraction(null);
+            $this->drawManaCards(5);
         }
     }
 

@@ -30,6 +30,7 @@ trait StateTrait {
         Events::onPlayerNewTurn();
 
         Lullaby::check();
+        Game::undoSavepoint();
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
@@ -158,12 +159,14 @@ trait StateTrait {
     function stReturnToCurrentPlayer() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
+            Game::undoSavepoint();
         }
         Globals::setInteractionPlayer(0);
         Game::get()->gamestate->nextState();
     }
 
     function stSwithPlayer() {
+        Game::undoSavepoint();
         $opponent_id = Players::getOpponentId();
         Players::setPlayerId($opponent_id);
         Game::get()->gamestate->changeActivePlayer($opponent_id);
@@ -199,6 +202,7 @@ trait StateTrait {
             ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
             Events::onAddCardToHand();
+            Game::undoSavepoint();
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);

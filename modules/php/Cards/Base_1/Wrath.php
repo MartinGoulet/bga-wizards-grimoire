@@ -16,7 +16,7 @@ class Wrath extends BaseCard {
         // Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage.
         if (ManaCard::getHandCount(Players::getOpponentId()) < 2) {
             Globals::setSkipInteraction(true);
-            $this->castSpellInteraction(null);
+            $this->dealDamage(2);
         }
     }
 

@@ -1402,7 +1402,6 @@ var arrayRange = function (start, end) { return Array.from(Array(end - start + 1
 var WizardsGrimoire = (function () {
     function WizardsGrimoire() {
         this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
-        this.playersTables = [];
     }
     WizardsGrimoire.prototype.setup = function (gamedatas) {
         log(gamedatas);
@@ -1475,8 +1474,18 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.addActionButtonRed = function (id, label, action) {
         this.addActionButton(id, label, action, null, null, "red");
     };
+    WizardsGrimoire.prototype.addActionButtonUndo = function () {
+        var _this = this;
+        var handleUndo = function () {
+            if (_this.checkAction("undo")) {
+                _this.takeAction("undo");
+            }
+        };
+        this.addActionButton("btn_undo", _("Undo"), handleUndo, null, null, "gray");
+    };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
+        this.playersTables = [];
         gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
             var table = new PlayerTable(_this, player);
@@ -3198,7 +3207,10 @@ var TableCenter = (function () {
 var GameOptions = (function () {
     function GameOptions(game) {
         this.game = game;
-        var playerBoards = document.getElementById("");
+        var display = document.getElementById("game-phases");
+        if (display) {
+            display.parentElement.removeChild(display);
+        }
         var _a = {
             phase1: _("Choose a New Spell"),
             phase2: _("Spell Cool Down"),
@@ -3206,7 +3218,7 @@ var GameOptions = (function () {
             phase4: _("Cast Spells"),
             phase5: _("Basic Attack"),
         }, phase1 = _a.phase1, phase2 = _a.phase2, phase3 = _a.phase3, phase4 = _a.phase4, phase5 = _a.phase5;
-        var html = "\n            <div class=\"player-board\">\n                <div class=\"player-board-inner\">\n                    <div id=\"wg-phase-selector\" data-phase=\"1\"></div>\n                    <ul id=\"wg-phases\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ".concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
+        var html = "\n            <div class=\"player-board\" id=\"game-phases\">\n                <div class=\"player-board-inner\">\n                    <div id=\"wg-phase-selector\" data-phase=\"1\"></div>\n                    <ul id=\"wg-phases\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ".concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
         document.getElementById("player_boards").insertAdjacentHTML("beforeend", html);
         this.game.updatePlayerOrdering();
     }
@@ -3220,6 +3232,10 @@ var Modal = (function () {
     function Modal(game) {
         var _this = this;
         this.game = game;
+        var display = document.getElementById("modal-display");
+        if (display) {
+            display.parentElement.removeChild(display);
+        }
         var html = "<div id=\"modal-display\">\n         <div id=\"modal-display-card\"></div>\n         <i id=\"modal-display-close\" class=\"fa6 fa6-solid fa6-circle-xmark\"></i>\n        </div>";
         var elBody = document.getElementById("ebd-body");
         elBody.insertAdjacentHTML("beforeend", html);
@@ -3347,6 +3363,9 @@ var CastSpellStates = (function () {
         }
         else {
             this.game.addActionButton("btn_pass", _("Move to basic attack"), handlePass);
+        }
+        if (args.undo) {
+            this.game.addActionButtonUndo();
         }
     };
     CastSpellStates.prototype.restoreGameState = function () {
@@ -3481,6 +3500,9 @@ var BasicAttackStates = (function () {
         };
         this.game.addActionButtonDisabled("btn_attack", _("Attack"), handleCastSpell);
         this.game.addActionButtonPass();
+        if (args.undo) {
+            this.game.addActionButtonUndo();
+        }
     };
     BasicAttackStates.prototype.restoreGameState = function () {
         return new Promise(function (resolve) { return resolve(true); });

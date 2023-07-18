@@ -38,6 +38,7 @@ define('WG_VAR_PREVIOUS_BASIC_ATTACK_POWER', 'prev_basic_attack');
 define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
 define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
 define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
+define('WG_VAR_UNDO_AVAILABLE', 'undo_available');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 

@@ -69,6 +69,8 @@ class Events {
     public static function onManaPickedUpUnderSpell($position, $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
+        } else if ($player_id == Players::getOpponentId()) {
+            Game::undoSavepoint();
         }
         $spell = SpellCard::getFromRepertoire($position, $player_id);
         $card_type = SpellCard::getCardInfo($spell);

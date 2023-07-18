@@ -17,7 +17,7 @@ class MistOfPain extends BaseCard {
         // For each mana they do not discard, deal 1 damage
         if (ManaCard::getHandCount(Players::getOpponentId()) == 0) {
             Globals::setSkipInteraction(true);
-            $this->castSpellInteraction(null);
+            $this->dealDamage(4);
         }
     }
 

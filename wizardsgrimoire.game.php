@@ -98,6 +98,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_CURRENT_BASIC_ATTACK_POWER => 27,
             WG_VAR_IS_ACTIVE_LULLABY => 28,
             WG_VAR_PLAYER_TURN => 29,
+            WG_VAR_UNDO_AVAILABLE => 30,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -169,6 +170,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_BASIC_ATTACK_POWER, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_PLAYED, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_DAMAGE, 0);
+        self::setGameStateInitialValue(WG_VAR_UNDO_AVAILABLE, 1);
 
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)

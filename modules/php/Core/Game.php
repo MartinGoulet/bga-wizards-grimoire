@@ -14,6 +14,18 @@ class Game extends APP_DbObject {
         return WizardsGrimoire::get();
     }
 
+    public static function undoSavepoint() {
+        if(self::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1) {
+            self::get()->undoSavepoint();
+        }
+    }
+
+    public static function undoRestorePoint() {
+        if(self::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1) {
+            self::get()->undoRestorePoint();
+        }
+    }
+
     public static function anonynizeCards($cards, bool $anonymize = true) {
         if (!$anonymize) return $cards;
 

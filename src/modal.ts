@@ -2,6 +2,11 @@ class Modal {
    public cards: LineStock<SpellCard>;
 
    constructor(private game: WizardsGrimoire) {
+      const display = document.getElementById("modal-display");
+      if (display) {
+         display.parentElement.removeChild(display);
+      }
+
       const html = `<div id="modal-display">
          <div id="modal-display-card"></div>
          <i id="modal-display-close" class="fa6 fa6-solid fa6-circle-xmark"></i>

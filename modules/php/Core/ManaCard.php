@@ -80,6 +80,7 @@ class ManaCard {
         }
 
         Events::onManaDrawed($result);
+        Game::undoSavepoint();
 
         return $result;
     }
@@ -118,6 +119,7 @@ class ManaCard {
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
         Notifications::moveManaCard($player_id, [$card]);
         Events::onAddManaUnderSpell($player_id, $position);
+        Game::undoSavepoint();
     }
 
     public static function discardManaFromSpell(int $position, int $player_id = 0) {
@@ -130,6 +132,10 @@ class ManaCard {
         }
         ManaCard::addOnTopOfDiscard($card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+
+        if($player_id == Players::getOpponentId()) {
+            Game::undoSavepoint();
+        }
 
         Events::onManaDiscarded($card, $position, $player_id);
     }
@@ -270,6 +276,8 @@ class ManaCard {
             $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
+            
+            Game::undoSavepoint();
             return $mana_cards;
         } else {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
@@ -287,6 +295,7 @@ class ManaCard {
             }, $cards_before));
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before,  false);
 
+            Game::undoSavepoint();
             return array_merge($mana_cards_1, $mana_cards_2);
         }
     }

@@ -38,7 +38,7 @@ trait ActionTrait {
 
         $filter = Globals::getCoolDownDelayedSpellIds();
 
-        if(Globals::getInteractionPlayer() > 0) {
+        if (Globals::getInteractionPlayer() > 0) {
             return;
         }
 
@@ -139,7 +139,7 @@ trait ActionTrait {
         // Get the card and verify ownership
         $spell = SpellCard::isInRepertoire($card_id, $player_id);
 
-        if(ManaCard::countOnTopOfManaCoolDown(intval($spell['location_arg'])) > 0) {
+        if (ManaCard::countOnTopOfManaCoolDown(intval($spell['location_arg'])) > 0) {
             throw new BgaUserException(self::_("There is already mana card on this spell"));
         }
 
@@ -248,9 +248,9 @@ trait ActionTrait {
         $spell_ids = Globals::getCoolDownDelayedSpellIds();
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0 || Players::getPlayerLife(Players::getPlayerId()) <= 0) {
             $this->gamestate->nextState('dead');
-        } else if(is_array($spell_ids) && sizeof($spell_ids) > 0) {
+        } else if (is_array($spell_ids) && sizeof($spell_ids) > 0) {
             $spell = SpellCard::get(array_shift($spell_ids));
-            if($spell['location'] == CardLocation::PlayerSpellRepertoire(Players::getPlayerId())) {
+            if ($spell['location'] == CardLocation::PlayerSpellRepertoire(Players::getPlayerId())) {
                 $this->gamestate->nextState('delayed');
             } else {
                 $this->gamestate->nextState('delayed_opponent');
@@ -269,6 +269,7 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
+        Game::undoSavepoint();
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
@@ -325,6 +326,12 @@ trait ActionTrait {
         }
 
         $this->gamestate->nextState('pass');
+    }
+
+    function undo() {
+        $this->checkAction("undo");
+        Game::undoRestorePoint();
+        $this->gamestate->nextState('undo');
     }
 
     //////////////////////////////////////////////////////////////////////////////
