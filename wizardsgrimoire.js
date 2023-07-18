@@ -3236,7 +3236,7 @@ var Modal = (function () {
         if (display) {
             display.parentElement.removeChild(display);
         }
-        var html = "<div id=\"modal-display\">\n         <div id=\"modal-display-card\"></div>\n         <i id=\"modal-display-close\" class=\"fa6 fa6-solid fa6-circle-xmark\"></i>\n        </div>";
+        var html = "<div id=\"modal-display\">\n         <div id=\"modal-display-card\"></div>\n         <i id=\"modal-display-close\" class=\"fa fa-times-circle\"></i>\n        </div>";
         var elBody = document.getElementById("ebd-body");
         elBody.insertAdjacentHTML("beforeend", html);
         this.cards = new LineStock(game.tooltipManager, document.getElementById("modal-display-card"));

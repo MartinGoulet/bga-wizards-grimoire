@@ -9,7 +9,7 @@ class Modal {
 
       const html = `<div id="modal-display">
          <div id="modal-display-card"></div>
-         <i id="modal-display-close" class="fa6 fa6-solid fa6-circle-xmark"></i>
+         <i id="modal-display-close" class="fa fa-times-circle"></i>
         </div>`;
 
       const elBody = document.getElementById("ebd-body");
