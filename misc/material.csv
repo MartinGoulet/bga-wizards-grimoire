@@ -17,7 +17,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 16;Haste;Haste;The next time you cast a spell this turn, it costs 2 less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
 17;Renewed fervor;RenewedFervor;Pick up a mana card off each of your instant attack spells that costs 2 or less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
 18;Secret Oath;SecretOath;As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;2;WG_ICON_SET_BASE_2;;;;;darkorange
-19;Time distortion;TimeDistortion;Pick up a mana card of 2 of your other spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionTimeDistortion;;;;lightgreen
+19;Time distortion;TimeDistortion;Pick up a mana card off 2 of your other spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionTimeDistortion;;;;lightgreen
 20;Betrayal;Betrayal;Deal 5 damage. Your opponent gains 3 mana cards;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;3;WG_ICON_SET_BASE_1;;;;;darkorange
 21;Blood lust;BloodLust;Deal 1 damage. Deal an additionnal 2 damage for each attack spell cast consecutively before this spell;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;3;WG_ICON_SET_BASE_2;;;;;lightgreen
 22;Delusion;Delusion;Deal 3 damage. You may pick up a mana card off 1 of your opponent's spells;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;3;WG_ICON_SET_BASE_2;actionDelusion;;;;darkorange
