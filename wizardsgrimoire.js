@@ -2433,7 +2433,7 @@ var ActionManager = (function () {
             };
         }
         var msgFrom = this.actions.length > 0
-            ? _("${you} must select ${nbr} mana card(s) - source")
+            ? _("${you} may select ${nbr} mana card(s) to move")
             : _("${you} must select ${nbr} mana card(s)");
         this.selectManaDeck(1, msgFrom, true, argsSuppl);
     };
@@ -2444,7 +2444,7 @@ var ActionManager = (function () {
         var argsSuppl = {
             exclude: [manaDeckPosition],
         };
-        var msg = _("${you} must select ${nbr} mana card(s) - destination");
+        var msg = _("${you} must select ${nbr} mana cool down pile for the destination");
         this.selectManaDeck(1, msg, true, argsSuppl);
     };
     ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {

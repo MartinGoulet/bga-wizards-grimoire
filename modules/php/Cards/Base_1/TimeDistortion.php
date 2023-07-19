@@ -9,7 +9,7 @@ use WizardsGrimoire\Core\ManaCard;
 class TimeDistortion extends BaseCard {
 
     public function castSpell($args) {
-        // Pick up a mana card of 2 of your other spells
+        // Pick up a mana card off 2 of your other spells
 
         $mana_cards_id = explode(",",  array_shift($args));
         $mana_cards = ManaCard::getCards($mana_cards_id);
