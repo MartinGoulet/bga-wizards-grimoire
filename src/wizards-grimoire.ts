@@ -83,26 +83,8 @@ class WizardsGrimoire
          zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
       });
 
+      this.addTooltipToClass("hand-icon-wrapper", _("Number of cards in hand"), "");
       this.setupNotifications();
-
-      if (isDebug) {
-         // this.exportToCsv(gamedatas);
-      }
-   }
-
-   private exportToCsv(gamedatas: WizardsGrimoireGamedatas) {
-      const values: string[] = [
-         `id;name;description;class;type;activation;cost;icon;debug;js_actions;js_actions_interaction;js_actions_delayed`,
-      ];
-      Object.keys(gamedatas.card_types).forEach((id) => {
-         const a = gamedatas.card_types[id];
-         values.push(
-            `${id};${a.name};${a.description};${a.class};${a.type};${a.activation};${a.cost};${a.icon};${
-               a.debug
-            };${a.js_actions ?? ""};${a.js_actions_interaction ?? ""};${a.js_actions_delayed ?? ""}`,
-         );
-      });
-      log(values.join("\n"));
    }
 
    ///////////////////////////////////////////////////

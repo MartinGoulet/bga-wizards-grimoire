@@ -89,7 +89,7 @@ $chooseSpellStates = [
         "args" => "argPlayerNewTurn",
         "action" => "stNewTurn",
         "transitions" => [
-            "spell" => ST_CHOOSE_NEW_SPELL,
+            "spell" => ST_CHOOSE_NEW_SPELL_START,
             "discard" => ST_DISCARD_MANA,
         ]
     ],
@@ -103,7 +103,18 @@ $chooseSpellStates = [
         "type" => "activeplayer",
         "possibleactions" => ["discardMana"],
         "transitions" => [
-            "" => ST_CHOOSE_NEW_SPELL,
+            "" => ST_CHOOSE_NEW_SPELL_START,
+        ]
+    ],
+
+    ST_CHOOSE_NEW_SPELL_START => [
+        "phase" => 1,
+        "name" => "preChooseNewSpell",
+        "type" => "game",
+        "action" => "stPreChooseNewSpell",
+        "transitions" => [
+            "next" => ST_CHOOSE_NEW_SPELL,
+            "end" => ST_SPELL_COOL_DOWN,
         ]
     ],
 
@@ -111,9 +122,9 @@ $chooseSpellStates = [
         "phase" => 1,
         "name" => "chooseNewSpell",
         "description" => clienttranslate('${actplayer} must choose a new spell'),
-        "descriptionReplace" => clienttranslate('${actplayer} may choose to replace a spell'),
+        "descriptionReplace" => clienttranslate('${actplayer} may choose to replace a spell or pass'),
         "descriptionmyturn" => clienttranslate('${you} must choose a new spell'),
-        "descriptionmyturnReplace" => clienttranslate('${you} may choose to replace a spell'),
+        "descriptionmyturnReplace" => clienttranslate('${you} may choose to replace a spell or pass'),
         "args" => "argBase",
         "type" => "activeplayer",
         "possibleactions" => ["chooseSpell", "replaceSpell", "pass"],
@@ -174,7 +185,7 @@ $castSpellsStates = [
         "transitions" => [
             "cast" => ST_CAST_SPELL,
             "undo" => ST_CAST_SPELL,
-            "pass" => ST_BASIC_ATTACK,
+            "pass" => ST_BASIC_ATTACK_START,
             "player" => ST_CAST_SPELL_INTERACTION,
             "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
             "dead" => ST_PRE_END_OF_GAME,
@@ -239,6 +250,17 @@ $castSpellsStates = [
 ];
 
 $basicAttackStates = [
+    ST_BASIC_ATTACK_START => [
+        "phase" => 5,
+        "name" => "preBasicAttack",
+        "type" => "game",
+        "action" => "stPreBasicAttack",
+        "transitions" => [
+            "next" => ST_BASIC_ATTACK,
+            "end" => ST_NEXT_PLAYER,
+        ]
+    ],
+
     ST_BASIC_ATTACK => [
         "phase" => 5,
         "name" => "basicAttack",

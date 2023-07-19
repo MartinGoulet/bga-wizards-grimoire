@@ -27,6 +27,10 @@ trait DebugTrait {
         ManaCard::draw($count);
     }
 
+    public function drawManaCardsOpponent($count) {
+        ManaCard::draw($count, Players::getOpponentId());
+    }
+
     public function resetLife() {
         Players::setPlayerLife(Players::getPlayerId(), 1);
         Players::setPlayerLife(Players::getOpponentId(), 1);
@@ -44,8 +48,8 @@ trait DebugTrait {
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
 
         $players_spell_cards = [
-            "2329672" => ["GleamOfHope", "FatalFlaw", "CoerciveAgreement", "Rejuvenation"],
-            "2329673" => ["LivingWind", "TrapAttack", "CrushingBlow"],
+            "2329672" => ["Delusion", "MistOfPain", "Wrath", "ArcaneTactics", "TrapAttack", "SilentSupport"],
+            "2329673" => ["Lullaby", "Growth", "QuickSwap", "TouchTheVoid", "BattleVision", "TwistOfFate"],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -71,6 +75,7 @@ trait DebugTrait {
         $mana_deck->shuffle(CardLocation::Deck());
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+        Game::undoSavepoint();
     }
 
     public function addManaDiscardPile() {

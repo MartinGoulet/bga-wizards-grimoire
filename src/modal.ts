@@ -9,7 +9,6 @@ class Modal {
 
       const html = `<div id="modal-display">
          <div id="modal-display-card"></div>
-         <i id="modal-display-close" class="fa fa-times-circle"></i>
         </div>`;
 
       const elBody = document.getElementById("ebd-body");
@@ -30,7 +29,6 @@ class Modal {
       };
 
       document.getElementById("modal-display").addEventListener("click", () => this.close());
-      document.getElementById("modal-display-close").addEventListener("click", () => this.close());
       elBody.addEventListener("keydown", handleKeyboard);
    }
 

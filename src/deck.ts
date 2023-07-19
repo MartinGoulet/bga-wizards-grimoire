@@ -45,6 +45,8 @@ class ManaDeck extends Deck<ManaCard> {
     */
    public onDeckSelectionChanged?: () => void;
 
+   public onDeckCountChanged?: () => void;
+
    constructor(manager: CardManager<ManaCard>, element: HTMLElement, public readonly location: number) {
       super(manager, element, {
          cardNumber: 0,
@@ -60,7 +62,20 @@ class ManaDeck extends Deck<ManaCard> {
    ): Promise<boolean> {
       settings = settings ?? {};
       settings.index = Number(card.location_arg);
-      return super.addCard(card, animation, settings);
+      var promise = super.addCard(card, animation, settings);
+      const newPromise = new Promise<boolean>((resolve) =>
+         promise
+            .then(() => {
+               if (this.onDeckCountChanged) this.onDeckCountChanged();
+            })
+            .then(() => resolve(true)),
+      );
+      return newPromise;
+   }
+
+   public removeCard(card: ManaCard, settings?: RemoveCardSettings): void {
+      super.removeCard(card, settings);
+      if (this.onDeckCountChanged) this.onDeckCountChanged();
    }
 
    public setDeckIsSelectable(value: boolean) {
@@ -153,7 +168,12 @@ class SpellRepertoire extends SlotStock<SpellCard> {
 
 class Hand extends HandStock<ManaCard> {
    //extends LineStock<ManaCard> {
-   constructor(manager: CardManager<ManaCard>, element: HTMLElement, protected current_player: boolean) {
+   constructor(
+      manager: CardManager<ManaCard>,
+      element: HTMLElement,
+      protected current_player: boolean,
+      protected hand_counter: ebg.counter,
+   ) {
       super(manager, element, {
          // center: true,
          // wrap: "wrap",
@@ -173,6 +193,16 @@ class Hand extends HandStock<ManaCard> {
       if (!this.current_player) {
          copy.type = null;
       }
-      return super.addCard(copy, animation, settings);
+      return new Promise<boolean>((resolve) => {
+         super
+            .addCard(copy, animation, settings)
+            .then(() => this.hand_counter.toValue(this.getCards().length))
+            .then(() => resolve(true));
+      });
+   }
+
+   public removeCard(card: ManaCard, settings?: RemoveCardSettings): void {
+      super.removeCard(card, settings);
+      this.hand_counter.toValue(this.getCards().length);
    }
 }

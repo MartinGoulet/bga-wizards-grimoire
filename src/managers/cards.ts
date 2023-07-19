@@ -46,7 +46,7 @@ class SpellCardManager extends CardManager<SpellCard> {
                   </div>`,
                );
 
-               // game.setTooltip(helpMarkerId, this.getTooltip(card));
+               game.setTooltip(`${this.getId(card)}-front`, this.getTooltip(card));
                document.getElementById(helpMarkerId).addEventListener("click", (evt) => {
                   evt.stopPropagation();
                   evt.preventDefault();

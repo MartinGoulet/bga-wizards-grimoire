@@ -12,6 +12,9 @@ class ChooseNewSpellStates implements StateHandler {
          this.clearSelectionMode();
       } else if (this.player_table.spell_repertoire.getCards().length < 6) {
          this.onEnteringStateChoose();
+         this.game.setGamestateDescription();
+      } else {
+         this.game.setGamestateDescription("Replace");
       }
    }
 

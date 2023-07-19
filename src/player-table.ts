@@ -5,6 +5,7 @@ class PlayerTable {
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: Hand;
    public health: ebg.counter;
+   public hand_counter: ebg.counter;
 
    private current_player: boolean;
 
@@ -26,11 +27,23 @@ class PlayerTable {
          `data-secret_oath="false"`,
       ];
 
+      const mana_cooldown_icons = !this.current_player
+         ? ""
+         : `<div class="mana-cooldown-icons">
+               <div id="player_table-${pId}-mana-cooldown-icon-1" class="mana-cooldown-icon"></div>
+               <div id="player_table-${pId}-mana-cooldown-icon-2" class="mana-cooldown-icon"></div>
+               <div id="player_table-${pId}-mana-cooldown-icon-3" class="mana-cooldown-icon"></div>
+               <div id="player_table-${pId}-mana-cooldown-icon-4" class="mana-cooldown-icon"></div>
+               <div id="player_table-${pId}-mana-cooldown-icon-5" class="mana-cooldown-icon"></div>
+               <div id="player_table-${pId}-mana-cooldown-icon-6" class="mana-cooldown-icon"></div>
+            </div>`;
+
       const html = `
             <div id="player-table-${pId}" style="--color: #${pColor}" ${dataset.join(" ")}>
                <div class="player-table whiteblock">
                   <span class="wg-title">${pName}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
+                  ${mana_cooldown_icons}
                   <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
                      <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
                      <div id="player_table-${pId}-mana-deck-2" class="mana-deck"></div>
@@ -49,6 +62,24 @@ class PlayerTable {
             </div>`;
 
       document.getElementById("tables").insertAdjacentHTML("beforeend", html);
+
+      let smallBoard = document.getElementById(`player_small_board_${pId}`);
+      if (smallBoard) {
+         smallBoard.parentElement.removeChild(smallBoard);
+      }
+
+      const smallBoardHtml = `<div id="player_small_board_${pId}" class="player_small_board">
+            <div class="hand-icon-wrapper">
+               <div id="player_small_board_${pId}_hand_icon" class="hand-icon"></div>
+               <div id="player_small_board_${pId}_value" class="hand-value">0</div>
+            </div>
+         </div>`;
+
+      document.getElementById(`player_board_${pId}`).insertAdjacentHTML("beforeend", smallBoardHtml);
+      this.hand_counter = new ebg.counter();
+      this.hand_counter.create(`player_small_board_${pId}_value`);
+      this.hand_counter.setValue(0);
+      this.game.setTooltip;
 
       if (this.current_player) {
          this.setupHaste();
@@ -70,6 +101,14 @@ class PlayerTable {
       for (let index = 1; index <= 6; index++) {
          const divDeck = document.getElementById(`player_table-${pId}-mana-deck-${index}`);
          this.mana_cooldown[index] = new ManaDeck(game.manasManager, divDeck, index);
+         if (this.current_player) {
+            this.mana_cooldown[index].onDeckCountChanged = () => {
+               const cards = this.mana_cooldown[index].getCards().reverse();
+               const icons = cards.map((card) => `<div class="wg-icon-log i-mana-x">${card.type}</div>`);
+               document.getElementById(`player_table-${pId}-mana-cooldown-icon-${index}`).innerHTML =
+                  icons.join("");
+            };
+         }
       }
 
       const board: PlayerBoardInfo = game.gamedatas.player_board[pId];
@@ -86,6 +125,7 @@ class PlayerTable {
          game.manasManager,
          document.getElementById(`player-table-${pId}-hand-cards`),
          this.current_player,
+         this.hand_counter,
       );
       this.hand.addCards(board.hand ?? []);
 

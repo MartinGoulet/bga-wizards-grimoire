@@ -14,7 +14,7 @@ class SelectSpellPoolStates implements StateHandler {
       this.game.tableCenter.spellPool.onSelectionChange = null;
    }
 
-   onUpdateActionButtons(args: any): void {
+   onUpdateActionButtons(args: SelectSpellPoolStatesArgs): void {
       const handleConfirm = () => {
          const spell = this.game.tableCenter.spellPool.getSelection()[0];
          this.game.actionManager.addArgument(spell.id.toString());
@@ -22,6 +22,9 @@ class SelectSpellPoolStates implements StateHandler {
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+      if (args.skip) {
+         this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
+      }
       this.game.addActionButtonClientCancel();
       this.game.disableButton("btn_confirm");
    }
@@ -29,4 +32,11 @@ class SelectSpellPoolStates implements StateHandler {
    restoreGameState(): Promise<boolean> {
       return new Promise<boolean>((resolve) => resolve(true));
    }
+}
+
+interface SelectSpellPoolStatesArgs {
+   skip?: {
+      label: string;
+      action: () => void;
+   };
 }

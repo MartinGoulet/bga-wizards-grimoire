@@ -539,7 +539,15 @@ class ActionManager {
       const msg = _("${you} must select a spell in the spell pool");
       this.game.setClientState(states.client.selectSpellPool, {
          descriptionmyturn: msg,
-         args: {},
+         args: {
+            skip: {
+               label: _("Pass"),
+               action: () => {
+                  this.actions.splice(0);
+                  this.activateNextAction();
+               },
+            },
+         },
       });
    }
 

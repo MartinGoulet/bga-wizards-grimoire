@@ -36,6 +36,16 @@ trait StateTrait {
         $this->gamestate->nextState($next_state);
     }
 
+    function stPreChooseNewSpell() {
+        for ($i = 1; $i <= 6; $i++) {
+            if (ManaCard::countOnTopOfManaCoolDown($i) == 0) {
+                $this->gamestate->nextState("next");
+                return;
+            }
+        }
+        $this->gamestate->nextState("end");
+    }
+
     function stSpellCoolDownInstantDelayed() {
 
         $this->stSpellCoolDownInstant();
@@ -171,6 +181,14 @@ trait StateTrait {
         Players::setPlayerId($opponent_id);
         Game::get()->gamestate->changeActivePlayer($opponent_id);
         Game::get()->gamestate->nextState();
+    }
+
+    function stPreBasicAttack() {
+        if (ManaCard::getHandCount() == 0) {
+            $this->gamestate->nextState("end");
+        } else {
+            $this->gamestate->nextState("next");
+        }
     }
 
     function stBasicAttackDamage() {
