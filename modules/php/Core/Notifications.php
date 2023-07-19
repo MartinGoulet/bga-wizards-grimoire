@@ -59,9 +59,12 @@ class Notifications {
     }
 
     static function discardSpell($player_id, $card) {
-        self::notifyAll('onDiscardSpell', '', [
+        self::notifyAll('onDiscardSpell', '${player_name} discards ${card_name}', [
             'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName(intval($player_id)),
             'card' => $card,
+            'card_name' => SpellCard::getName($card),
+            'i18n' => ['card_name'],
         ]);
     }
 
