@@ -3,7 +3,6 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -32,7 +31,6 @@ class CoerciveAgreement extends BaseCard {
             }, $random_cards);
             Game::get()->deck_manas->moveCards($ids, CardLocation::Hand(), Players::getPlayerId());
             Notifications::moveManaCard($opponent_id, $random_cards, false);
-            Events::onAddCardToHand();
         } else {
             $values = explode(',', array_shift($args));
 

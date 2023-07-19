@@ -48,8 +48,8 @@ trait DebugTrait {
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
 
         $players_spell_cards = [
-            "2329672" => ["Delusion", "MistOfPain", "Wrath", "ArcaneTactics", "TrapAttack", "SilentSupport"],
-            "2329673" => ["Lullaby", "Growth", "QuickSwap", "TouchTheVoid", "BattleVision", "TwistOfFate"],
+            "2329672" => ["Delusion", "MistOfPain", "QuickSwap", "ArcaneTactics", "TrapAttack", "SilentSupport"],
+            "2329673" => ["Lullaby", "Growth", "Wrath", "SecretOath", "AfterShock", "TwistOfFate"],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -75,6 +75,13 @@ trait DebugTrait {
         $mana_deck->shuffle(CardLocation::Deck());
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+
+        Globals::setIsActiveBattleVision(false, 0);
+        Globals::setIsActiveGrowth(false, 0);
+        Globals::setIsActiveLullaby(false, 0);
+        Globals::setIsActivePowerHungry(false, 0);
+        Globals::setIsActivePuppetmaster(false, 0);
+        Globals::setIsActiveSecretOath(false, 0);
         Game::undoSavepoint();
     }
 

@@ -198,7 +198,7 @@ trait ActionTrait {
                 $cardClass = SpellCard::getInstanceOfCard($spell);
                 $cardClass->isOngoingSpellActive(true, $player_id);
                 $this->gamestate->nextState("cast");
-                Lullaby::check();
+                Events::onCheckOngoingActiveSpell();
                 break;
 
             case WG_SPELL_ACTIVATION_INSTANT:
@@ -215,7 +215,6 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
         $cardClass->castSpell($args);
-        Lullaby::check();
 
         if (Globals::getSkipInteraction()) {
             Globals::setSkipInteraction(false);
@@ -244,7 +243,7 @@ trait ActionTrait {
     }
 
     private function castOrEndGame() {
-        Lullaby::check();
+        Events::onCheckOngoingActiveSpell();
         $spell_ids = Globals::getCoolDownDelayedSpellIds();
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0 || Players::getPlayerLife(Players::getPlayerId()) <= 0) {
             $this->gamestate->nextState('dead');

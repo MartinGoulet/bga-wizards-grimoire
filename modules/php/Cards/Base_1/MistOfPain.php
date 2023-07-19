@@ -40,7 +40,6 @@ class MistOfPain extends BaseCard {
             }
 
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
-            Events::onHandCountChanged();
         }
 
         $this->dealDamage(4 - $count);

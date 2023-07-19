@@ -3,7 +3,6 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -21,7 +20,6 @@ class ToxicGift extends BaseCard {
 
         ManaCard::addToHand($card["id"], Players::getOpponentId());
         Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
-        Events::onAddCardToHand();
 
         $damage = ManaCard::getPower($card);
         $this->dealDamage($damage);

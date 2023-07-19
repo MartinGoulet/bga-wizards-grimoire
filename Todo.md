@@ -1,1 +1,0 @@
-Twist of fate should be optional

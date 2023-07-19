@@ -98,7 +98,6 @@ class Globals extends APP_DbObject {
     public static function setIsActiveGrowth(bool $isActive, int $player_id) {
         $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
-        Events::onIsActiveGrowthChanged();
     }
 
     public static function getIsActiveLullaby() {
@@ -147,7 +146,6 @@ class Globals extends APP_DbObject {
     public static function setIsActiveSecretOath(bool $isActive, int $player_id) {
         $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH, $value);
-        Events::onIsActiveSecretOathChanged();
     }
 
     public static function getCurrentBasicAttackPower() {

@@ -27,7 +27,6 @@ class ManaCard {
         }, $cards));
         Game::get()->deck_manas->moveCards($card_ids, CardLocation::Hand(), $player_id);
         Notifications::moveManaCard($player_id, $cards);
-        Events::onAddCardToHand();
     }
 
     public static function addToHand($card_id, $player_id = 0) {
@@ -79,7 +78,6 @@ class ManaCard {
             $result = array_merge($mana_cards_1, $mana_cards_2);
         }
 
-        Events::onManaDrawed($result);
         Game::undoSavepoint();
 
         return $result;

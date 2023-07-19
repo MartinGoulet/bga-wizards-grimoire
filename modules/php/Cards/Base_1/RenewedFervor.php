@@ -36,7 +36,6 @@ class RenewedFervor extends BaseCard {
         }
         if(sizeof($cards) > 0) {
             Notifications::moveManaCard($player_id, $cards);
-            Events::onAddCardToHand();
         } else {
             Notifications::spellNoEffect();
         }

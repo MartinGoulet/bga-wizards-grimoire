@@ -168,12 +168,22 @@ $gainManaStates = [
         "type" => "game",
         "action" => "stGainMana",
         "transitions" => [
-            "" => ST_CAST_SPELL
+            "" => ST_CAST_SPELL_START
         ]
     ]
 ];
 
 $castSpellsStates = [
+    ST_CAST_SPELL_START => [
+        "phase" => 4,
+        "name" => "preCastSpell",
+        "type" => "game",
+        "action" => "stPreCastSpell",
+        "transitions" => [
+            "" => ST_CAST_SPELL,
+        ]
+    ],
+
     ST_CAST_SPELL => [
         "phase" => 4,
         "name" => "castSpell",
@@ -183,8 +193,8 @@ $castSpellsStates = [
         "args" => "argCastSpell",
         "possibleactions" => ["castSpell", "pass", "undo"],
         "transitions" => [
-            "cast" => ST_CAST_SPELL,
-            "undo" => ST_CAST_SPELL,
+            "cast" => ST_CAST_SPELL_START,
+            "undo" => ST_CAST_SPELL_START,
             "pass" => ST_BASIC_ATTACK_START,
             "player" => ST_CAST_SPELL_INTERACTION,
             "opponent" => ST_CAST_SPELL_SWITCH_OPPONENT,
@@ -224,7 +234,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stReturnToCurrentPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL,
+            "" => ST_CAST_SPELL_START,
         ]
     ],
 
@@ -244,7 +254,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stSwithPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL,
+            "" => ST_CAST_SPELL_START,
         ]
     ],
 ];
@@ -271,7 +281,7 @@ $basicAttackStates = [
         "possibleactions" => ["basicAttack", "pass", "undo"],
         "transitions" => [
             "attack" => ST_BASIC_ATTACK_DAMAGE,
-            "undo" => ST_CAST_SPELL,
+            "undo" => ST_CAST_SPELL_START,
             "pass" => ST_NEXT_PLAYER,
             "battle_vision" => ST_BASIC_ATTACK_SWITCH_OPPONENT,
         ]
@@ -359,7 +369,7 @@ $stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_CAST_SPELL_CD_SWITCH_OPPONENT,
     ST_CAST_SPELL_CD_INTERACTION,
     ST_CAST_SPELL_CD_RETURN_CURRENT_PLAYER,
-    ST_CAST_SPELL
+    ST_CAST_SPELL_START
 );
 
 $stCastSpellActiveDeplayedOpponent = WizardsGrimoire::getActiveDelayedSpellStates(

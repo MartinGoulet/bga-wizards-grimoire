@@ -22,7 +22,6 @@ class SilentSupport extends BaseCard {
         $card = ManaCard::hasUnderSpell($position);
         ManaCard::addToHand($card['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$card]);
-        Events::onAddCardToHand();
         Events::onManaPickedUpUnderSpell($position);
     }
 }

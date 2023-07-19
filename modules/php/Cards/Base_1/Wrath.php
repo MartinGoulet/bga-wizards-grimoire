@@ -36,7 +36,6 @@ class Wrath extends BaseCard {
             }
 
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
-            Events::onHandCountChanged();
 
             $this->dealDamage(0);
         } else {

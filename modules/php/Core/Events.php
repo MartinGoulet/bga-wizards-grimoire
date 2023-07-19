@@ -11,16 +11,9 @@ use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 
 class Events {
 
-    public static function onHandCountChanged() {
+    public static function onCheckOngoingActiveSpell() {
         Lullaby::check();
-    }
-
-    public static function onIsActiveGrowthChanged() {
-        self::checkSecretOathHand();
-    }
-
-    public static function onIsActiveSecretOathChanged() {
-        self::checkSecretOathHand();
+        SecretOath::check();
     }
 
     public static function onManaDiscarded($mana_card, int $position, int $player_id = 0) {
@@ -50,13 +43,6 @@ class Events {
         }
     }
 
-    public static function onManaDrawed($cards) {
-        if (Globals::getIsActiveSecretOath() && Players::getOpponentId() == Globals::getIsActiveSecretOathPlayer()) {
-            return SecretOath::check($cards);
-        }
-        return $cards;
-    }
-
     public static function onAddManaUnderSpell($player_id, $position) {
         $spell = SpellCard::getFromRepertoire($position, $player_id);
         $card_type = SpellCard::getCardInfo($spell);
@@ -80,22 +66,6 @@ class Events {
                 $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
                 $instance->isOngoingSpellActive($count > 0, $player_id);
                 break;
-        }
-    }
-
-    public static function onAddCardToHand() {
-        self::checkSecretOathHand();
-    }
-
-    public static function onPlayerNewTurn() {
-        self::checkSecretOathHand();
-    }
-
-    private static function checkSecretOathHand() {
-        if (Globals::getIsActiveSecretOath()) {
-            // $player_id = Globals::getIsActiveGrowthPlayer();
-            $opponent_id = Players::getOpponentIdOf(Globals::getIsActiveSecretOathPlayer());
-            SecretOath::check(ManaCard::getHand($opponent_id));
         }
     }
 }
