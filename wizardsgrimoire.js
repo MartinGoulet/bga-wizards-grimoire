@@ -2592,7 +2592,7 @@ var SpellCardManager = (function (_super) {
         var card_type = this.game.getCardType(card);
         var name = card_type.name, cost = card_type.cost, description = card_type.description;
         var gametext = formatGametext2(description);
-        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(name, "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost :"), " ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(gametext, "</div>\n         </div>\n      </div>");
+        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(name, "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost"), " : ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(gametext, "</div>\n         </div>\n      </div>");
         return html;
     };
     return SpellCardManager;
@@ -3120,7 +3120,7 @@ var PlayerTable = (function () {
         this.setupIcon({
             id: "lullaby",
             title: _("Lullaby"),
-            gametext: _("if you have 0 mana cards in your hand, gain 2 mana cards"),
+            gametext: _("If you have 0 mana cards in your hand, gain 2 mana cards"),
         });
     };
     PlayerTable.prototype.setupPuppetMaster = function () {
@@ -4048,7 +4048,7 @@ var SelectManaStates = (function () {
                 .map(function (x) { return x.getSelection()[0].id; });
             if (selected_cards.length < args.count) {
                 if (!args.exact) {
-                    var text = _("Are-you sure to not take all mana card?");
+                    var text = _("Are you sure that is how many mana cards you would like to select?");
                     _this.game.confirmationDialog(text, function () {
                         _this.game.actionManager.addArgument(selected_cards.join(","));
                         _this.game.actionManager.activateNextAction();
@@ -4128,7 +4128,7 @@ var SelectManaDeckStates = (function () {
             var selected_decks = decks.filter(function (x) { return x.isDeckSelected; }).map(function (x) { return x.location; });
             if (selected_decks.length < args.count) {
                 if (!args.exact) {
-                    var text = _("Are-you sure to not take all mana card?");
+                    var text = _("Are you sure that is how many mana cards you would like to select?");
                     _this.game.confirmationDialog(text, function () {
                         _this.game.actionManager.addArgument(selected_decks.join(","));
                         _this.game.actionManager.activateNextAction();
@@ -4193,7 +4193,7 @@ var SelectManaDiscardStates = (function () {
             var selected_card_ids = _this.game.tableCenter.manaDiscardDisplay.getSelection().map(function (x) { return x.id; });
             if (selected_card_ids.length < args.count) {
                 if (!args.exact) {
-                    var text = _("Are-you sure to not take all mana card?");
+                    var text = _("Are you sure that is how many mana cards you would like to select?");
                     _this.game.confirmationDialog(text, function () {
                         _this.game.actionManager.addArgument(selected_card_ids.join(","));
                         _this.game.actionManager.activateNextAction();
@@ -4251,7 +4251,7 @@ var SelectManaHandStates = (function () {
             var selected_card_ids = _this.player_table.hand.getSelection().map(function (x) { return x.id; });
             if (selected_card_ids.length < args.count) {
                 if (!args.exact) {
-                    var text = _("Are-you sure to not take all mana card?");
+                    var text = _("Are you sure that is how many mana cards you would like to select?");
                     _this.game.confirmationDialog(text, function () {
                         _this.game.actionManager.addArgument(selected_card_ids.join(","));
                         _this.game.actionManager.activateNextAction();

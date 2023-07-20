@@ -295,7 +295,7 @@ class PlayerTable {
       this.setupIcon({
          id: "lullaby",
          title: _("Lullaby"),
-         gametext: _("if you have 0 mana cards in your hand, gain 2 mana cards"),
+         gametext: _("If you have 0 mana cards in your hand, gain 2 mana cards"),
       });
    }
 

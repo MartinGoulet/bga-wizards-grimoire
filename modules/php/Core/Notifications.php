@@ -15,7 +15,7 @@ class Notifications {
     }
 
     static function basicAttackCard(int $player_id, $mana_card) {
-        $msg = clienttranslate('${player_name} discard a ${mana_values} for is basic attack');
+        $msg = clienttranslate('${player_name} discards ${mana_values} for is basic attack');
         self::message($msg, [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
@@ -24,7 +24,7 @@ class Notifications {
     }
 
     static function basicAttack(int $player_id, int $damage, int $life_remaining) {
-        $message = clienttranslate('${player_name} received ${damage} from a basic attack');
+        $message = clienttranslate('${player_name} receives ${damage} from a basic attack');
 
         self::notifyAll('onHealthChanged', $message, [
             'player_id' => intval($player_id),
@@ -48,7 +48,7 @@ class Notifications {
     }
 
     static function chooseSpell($player_id, $card) {
-        $msg = clienttranslate('${player_name} chooses ${card_name} from the spell repertoire.');
+        $msg = clienttranslate('${player_name} chooses ${card_name} from the spell repertoire');
         self::notifyAll('onChooseSpell', $msg, [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
@@ -120,7 +120,7 @@ class Notifications {
     }
 
     static function manaDeckShuffle($cards) {
-        $msg = clienttranslate("Mana deck reshuffle because it's empty");
+        $msg = clienttranslate("The mana deck is reshuffled because it is empty");
         self::notifyAll('onManaDeckShuffle', $msg, [
             "cards" => $cards,
         ]);
@@ -145,7 +145,7 @@ class Notifications {
     }
 
     public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {
-        $message = clienttranslate('${player_name} received ${damage} from ${card_name}');
+        $message = clienttranslate('${player_name} receives ${damage} from ${card_name}');
 
         self::notifyAll('onHealthChanged', $message, [
             'player_id' => intval($player_id),
@@ -159,7 +159,7 @@ class Notifications {
     }
 
     static function refillSpell($player_id, $card) {
-        $msg = clienttranslate('${card_name} is added to the spell repertoire.');
+        $msg = clienttranslate('${card_name} is added to the spell repertoire');
         self::notifyAll('onRefillSpell', $msg, [
             'card' => $card,
             'card_name' => SpellCard::getName($card),

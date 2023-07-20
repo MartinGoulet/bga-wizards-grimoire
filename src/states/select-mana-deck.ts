@@ -59,7 +59,7 @@ class SelectManaDeckStates implements StateHandler {
 
          if (selected_decks.length < args.count) {
             if (!args.exact) {
-               const text = _("Are-you sure to not take all mana card?");
+               const text = _("Are you sure that is how many mana cards you would like to select?");
                this.game.confirmationDialog(text, () => {
                   this.game.actionManager.addArgument(selected_decks.join(","));
                   this.game.actionManager.activateNextAction();

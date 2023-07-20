@@ -85,7 +85,7 @@ class SpellCardManager extends CardManager<SpellCard> {
       let html = `<div class="wg-tooltip-card">
          <div class="wg-tooltip-left">
             <div class="wg-tooltip-header">${name}</div>
-            <div class="wg-tooltip-cost">${_("Cost :")} ${cost}</div>
+            <div class="wg-tooltip-cost">${_("Cost")} : ${cost}</div>
             <div class="wg-tooltip-gametext">${gametext}</div>
          </div>
       </div>`;
