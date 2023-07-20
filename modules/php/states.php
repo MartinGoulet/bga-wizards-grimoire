@@ -40,6 +40,7 @@ trait StateTrait {
                 return;
             }
         }
+        Notifications::skipChooseNewSpell();
         $this->gamestate->nextState("end");
     }
 

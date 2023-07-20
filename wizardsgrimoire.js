@@ -1595,6 +1595,9 @@ var WizardsGrimoire = (function () {
                 if (args.card_name !== undefined) {
                     args.card_name = "<b>" + _(args.card_name) + "</b>";
                 }
+                if (args.phase_name !== undefined) {
+                    args.phase_name = "<b>" + _(args.phase_name) + "</b>";
+                }
                 if (args.damage !== undefined) {
                     args.damage = "<div class=\"wg-icon-log i-dmg_undef\"><span>".concat(args.damage, "</span></div>");
                 }

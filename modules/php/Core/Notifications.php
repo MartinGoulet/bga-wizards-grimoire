@@ -85,7 +85,7 @@ class Notifications {
             'mana_values' => self::getPowerValues($cards),
         ];
 
-        if($card_name !== null) {
+        if ($card_name !== null) {
             $msg = clienttranslate('${player_name} draws ${mana_values} from ${card_name}');
             $args['card_name'] = $card_name;
             $args["i18n"] = ["card_name"];
@@ -101,7 +101,7 @@ class Notifications {
             'nbr_mana_card' => sizeof($cards),
         ];
 
-        if($card_name !== null) {
+        if ($card_name !== null) {
             $msg = clienttranslate('${player_name} draws ${nbr_mana_card} from ${card_name}');
             $args['card_name'] = $card_name;
             $args["i18n"] = ["card_name"];
@@ -207,21 +207,37 @@ class Notifications {
         ]);
     }
 
+    static function skipChooseNewSpell() {
+        $player_id = Players::getPlayerId();
+        self::message(clienttranslate('${player_name} skips phase ${phase_name} since all his spells are used'), [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "phase_name" => clienttranslate("Choose a New Spell"),
+            "i18n" => ["phase_name"],
+        ]);
+    }
+
     static function spellCooldownDelayed($cards) {
-        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from delayed activation card(s)'), [
+        self::message(clienttranslate('${phase_name} : Discard ${mana_values} from delayed activation card(s)'), [
             "mana_values" => self::getPowerValues($cards),
+            "phase_name" => clienttranslate("Spell Cool Down"),
+            "i18n" => ["phase_name"],
         ]);
     }
 
     static function spellCooldownInstant($cards) {
-        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from instant activation card(s)'), [
+        self::message(clienttranslate('${phase_name} : Discard ${mana_values} from instant activation card(s)'), [
             "mana_values" => self::getPowerValues($cards),
+            "phase_name" => clienttranslate("Spell Cool Down"),
+            "i18n" => ["phase_name"],
         ]);
     }
 
     static function spellCooldownOngoing($cards) {
-        self::message(clienttranslate('Spell Cool Down: Discard ${mana_values} from ongoing activation card(s)'), [
+        self::message(clienttranslate('${phase_name} : Discard ${mana_values} from ongoing activation card(s)'), [
             "mana_values" => self::getPowerValues($cards),
+            "phase_name" => clienttranslate("Spell Cool Down"),
+            "i18n" => ["phase_name"],
         ]);
     }
 
