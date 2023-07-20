@@ -985,7 +985,7 @@ body > .card {
 }
 .player-table .mana-cooldown-icons {
   display: flex;
-  gap: 10px;
+  gap: 11px;
   margin: 10px 0;
   position: absolute;
   z-index: 1000;

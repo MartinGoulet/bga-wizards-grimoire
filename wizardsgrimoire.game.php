@@ -312,9 +312,15 @@ class WizardsGrimoire extends Table {
         (see states.inc.php)
     */
     function getGameProgression() {
-        // TODO: compute and return the game progression
+        $player_life = Players::getPlayerLife(Players::getPlayerId());
+        $opponent_life = Players::getPlayerLife(Players::getOpponentId());
 
-        return 0;
+        $min_health = min($player_life, $opponent_life);
+        if($min_health < 0) {
+            $min_health = 0;
+        }
+
+        return ((60 - $min_health) / 60) * 100;
     }
 
 
