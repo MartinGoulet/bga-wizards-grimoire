@@ -21,7 +21,16 @@ class CastSpellStates implements StateHandler {
       repertoire.setSelectionMode("single");
       repertoire.setSelectableCards(selectableCards);
       repertoire.onSelectionChange = (selection: SpellCard[], lastChange: SpellCard) => {
-         this.game.toggleButtonEnable("btn_cast", selection && selection.length === 1);
+         if (selection && selection.length === 1) {
+            setTimeout(() => {
+               const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
+               const selectedSpell: SpellCard = repertoire.getSelection()[0];
+               this.game.markCardAsSelected(selectedSpell);
+               this.game.actionManager.setup("castSpell", "actionCastMana");
+               this.game.actionManager.addAction(selectedSpell);
+               this.game.actionManager.activateNextAction();
+            }, 10);
+         }
       };
    }
 
@@ -32,15 +41,7 @@ class CastSpellStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: CastSpellArgs): void {
-      const handleCastSpell = () => {
-         const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
-         const selectedSpell: SpellCard = repertoire.getSelection()[0];
-
-         this.game.markCardAsSelected(selectedSpell);
-         this.game.actionManager.setup("castSpell", "actionCastMana");
-         this.game.actionManager.addAction(selectedSpell);
-         this.game.actionManager.activateNextAction();
-      };
+      const handleCastSpell = () => {};
 
       const handlePass = () => {
          this.game.takeAction("pass");

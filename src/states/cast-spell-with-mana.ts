@@ -49,6 +49,21 @@ class CastSpellWithManaStates implements StateHandler {
 
    onUpdateActionButtons(args: CastSpellWithManaArgs): void {
       const handleConfirm = () => {
+         let { cost, type } = this.game.getCardType(this.spell);
+
+         const player_table = this.game.getCurrentPlayerTable();
+         cost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
+         if (type == "red") {
+            cost = Math.max(cost - player_table.getDiscountNextAttack(), 0);
+         }
+
+         if (this.mana_cards.length !== cost) {
+            this.game.showMessage(
+               _("You didn't select the right amount of mana card to cast the spell"),
+               "error",
+            );
+            return;
+         }
          this.game.actionManager.addArgument(this.mana_cards.map((x) => x.id).join(","));
          this.game.actionManager.activateNextAction();
       };

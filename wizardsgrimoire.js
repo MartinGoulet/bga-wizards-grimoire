@@ -3466,7 +3466,16 @@ var CastSpellStates = (function () {
         repertoire.setSelectionMode("single");
         repertoire.setSelectableCards(selectableCards);
         repertoire.onSelectionChange = function (selection, lastChange) {
-            _this.game.toggleButtonEnable("btn_cast", selection && selection.length === 1);
+            if (selection && selection.length === 1) {
+                setTimeout(function () {
+                    var repertoire = _this.game.getCurrentPlayerTable().spell_repertoire;
+                    var selectedSpell = repertoire.getSelection()[0];
+                    _this.game.markCardAsSelected(selectedSpell);
+                    _this.game.actionManager.setup("castSpell", "actionCastMana");
+                    _this.game.actionManager.addAction(selectedSpell);
+                    _this.game.actionManager.activateNextAction();
+                }, 10);
+            }
         };
     };
     CastSpellStates.prototype.onLeavingState = function () {
@@ -3476,14 +3485,7 @@ var CastSpellStates = (function () {
     };
     CastSpellStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
-        var handleCastSpell = function () {
-            var repertoire = _this.game.getCurrentPlayerTable().spell_repertoire;
-            var selectedSpell = repertoire.getSelection()[0];
-            _this.game.markCardAsSelected(selectedSpell);
-            _this.game.actionManager.setup("castSpell", "actionCastMana");
-            _this.game.actionManager.addAction(selectedSpell);
-            _this.game.actionManager.activateNextAction();
-        };
+        var handleCastSpell = function () { };
         var handlePass = function () {
             _this.game.takeAction("pass");
         };
@@ -3926,6 +3928,16 @@ var CastSpellWithManaStates = (function () {
     CastSpellWithManaStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
+            var _a = _this.game.getCardType(_this.spell), cost = _a.cost, type = _a.type;
+            var player_table = _this.game.getCurrentPlayerTable();
+            cost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
+            if (type == "red") {
+                cost = Math.max(cost - player_table.getDiscountNextAttack(), 0);
+            }
+            if (_this.mana_cards.length !== cost) {
+                _this.game.showMessage(_("You didn't select the right amount of mana card to cast the spell"), "error");
+                return;
+            }
             _this.game.actionManager.addArgument(_this.mana_cards.map(function (x) { return x.id; }).join(","));
             _this.game.actionManager.activateNextAction();
         };
