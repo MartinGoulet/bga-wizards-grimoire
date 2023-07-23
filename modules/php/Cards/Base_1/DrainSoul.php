@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -27,5 +28,6 @@ class DrainSoul extends BaseCard {
         Notifications::moveManaCard(Players::getPlayerId(), [$first_card]);
 
         $this->dealDamage($max_value);
+        Game::undoSavepoint();
     }
 }
