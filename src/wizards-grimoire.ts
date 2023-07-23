@@ -20,6 +20,13 @@ interface WizardsGrimoire
    fadeOutAndDestroy(id: string, duration?: number, delay?: number): void;
    showMessage(msg: string, type: "info" | "error" | "only_to_log"): void;
    updatePlayerOrdering(): void;
+   addTooltip(
+      nodeId: string,
+      helpStringTranslated: string,
+      actionStringTranslated: string,
+      delay?: number,
+   ): void;
+   addTooltipHtmlToClass(cssClass: string, html: string, delay?: number): void;
 }
 
 class WizardsGrimoire
@@ -31,6 +38,7 @@ class WizardsGrimoire
    public notifManager: NotificationManager;
    public spellsManager: SpellCardManager;
    public manasManager: ManaCardManager;
+   public discardManager: ManaDiscardManager;
    public stateManager: StateManager;
    public actionManager: ActionManager;
 
@@ -62,6 +70,7 @@ class WizardsGrimoire
       this.notifManager = new NotificationManager(this);
       this.spellsManager = new SpellCardManager(this);
       this.manasManager = new ManaCardManager(this);
+      this.discardManager = new ManaDiscardManager(this);
       this.tooltipManager = new TooltipManager(this);
       this.stateManager = new StateManager(this);
       this.actionManager = new ActionManager(this);
@@ -83,7 +92,7 @@ class WizardsGrimoire
          zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
       });
 
-      this.addTooltipToClass("hand-icon-wrapper", _("Number of cards in hand"), "");
+      this.addTooltipHtmlToClass("hand-icon-wrapper", _("Number of cards in hand"), 0);
       this.setupNotifications();
    }
 

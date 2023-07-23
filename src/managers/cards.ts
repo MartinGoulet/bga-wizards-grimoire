@@ -1,5 +1,5 @@
-const card_width: number = 120;
-const card_height: number = 168;
+const card_width: number = 110;
+const card_height: number = 154;
 
 function formatGametext2(rawText: string) {
    if (!rawText) return "";
@@ -179,5 +179,35 @@ class TooltipManager extends CardManager<SpellCard> {
       return this.getCardStock({ id } as SpellCard)
          .getCards()
          .find((x) => x.id == id);
+   }
+}
+
+class ManaDiscardManager extends CardManager<ManaCard> {
+   constructor(public game: WizardsGrimoire) {
+      super(game, {
+         getId: (card) => `discard-mana-card-${card.id}`,
+         setupDiv: (card: ManaCard, div: HTMLElement) => {
+            div.classList.add("wg-card");
+            div.classList.add("wg-card-mana");
+            div.dataset.cardId = "" + card.id;
+            div.dataset.type = "" + card.type;
+         },
+         setupFrontDiv: (card: ManaCard, div: HTMLElement) => {
+            div.dataset.type = "" + card.type;
+            div.classList.add("wg-card-mana-front");
+
+            const growthID = `${this.getId(card)}-growth-id`;
+            if (!document.getElementById(growthID)) {
+               div.insertAdjacentHTML(
+                  "afterbegin",
+                  `<div id="${growthID}" class="wg-mana-icon wg-icon-growth">+1</div>`,
+               );
+            }
+         },
+         setupBackDiv: (card: ManaCard, div: HTMLElement) => {},
+         isCardVisible: (card) => true,
+         cardWidth: 75,
+         cardHeight: 105,
+      });
    }
 }

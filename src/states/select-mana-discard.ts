@@ -27,11 +27,13 @@ class SelectManaDiscardStates implements StateHandler {
             if (!args.exact) {
                const text = _("Are you sure that is how many mana cards you would like to select?");
                this.game.confirmationDialog(text, () => {
+                  this.game.tableCenter.manaDiscardDisplay.unselectAll();
                   this.game.actionManager.addArgument(selected_card_ids.join(","));
                   this.game.actionManager.activateNextAction();
                });
             }
          } else {
+            this.game.tableCenter.manaDiscardDisplay.unselectAll();
             this.game.actionManager.addArgument(selected_card_ids.join(","));
             this.game.actionManager.activateNextAction();
          }

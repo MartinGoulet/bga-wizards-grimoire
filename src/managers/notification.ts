@@ -70,7 +70,7 @@ class NotificationManager {
       const { player_id, cards_after: cards } = notif.args;
       log("onMoveManaCards", cards);
       cards.forEach((card) => {
-         this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
+         this.game.getPlayerTable(player_id).onMoveManaCard(card);
       });
    }
 

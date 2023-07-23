@@ -69,7 +69,7 @@ class PlayerTable {
       }
 
       const smallBoardHtml = `<div id="player_small_board_${pId}" class="player_small_board">
-            <div class="hand-icon-wrapper">
+            <div id="hand-icon-wrapper-${pId}" class="hand-icon-wrapper">
                <div id="player_small_board_${pId}_hand_icon" class="hand-icon"></div>
                <div id="player_small_board_${pId}_value" class="hand-value">0</div>
             </div>
@@ -190,7 +190,7 @@ class PlayerTable {
       });
    }
 
-   public async onMoveManaCard(before: ManaCard, after: ManaCard) {
+   public async onMoveManaCard(after: ManaCard) {
       const stockBeforeManager = this.game.manasManager.getCardStock(after);
       const stockAfter = this.getStock(after);
 

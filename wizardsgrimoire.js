@@ -1408,6 +1408,7 @@ var WizardsGrimoire = (function () {
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
         this.manasManager = new ManaCardManager(this);
+        this.discardManager = new ManaDiscardManager(this);
         this.tooltipManager = new TooltipManager(this);
         this.stateManager = new StateManager(this);
         this.actionManager = new ActionManager(this);
@@ -1424,7 +1425,7 @@ var WizardsGrimoire = (function () {
             localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
             zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
         });
-        this.addTooltipToClass("hand-icon-wrapper", _("Number of cards in hand"), "");
+        this.addTooltipHtmlToClass("hand-icon-wrapper", _("Number of cards in hand"), 0);
         this.setupNotifications();
     };
     WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
@@ -2530,8 +2531,8 @@ var ActionManager = (function () {
     };
     return ActionManager;
 }());
-var card_width = 120;
-var card_height = 168;
+var card_width = 110;
+var card_height = 154;
 function formatGametext2(rawText) {
     if (!rawText)
         return "";
@@ -2680,6 +2681,35 @@ var TooltipManager = (function (_super) {
     };
     return TooltipManager;
 }(CardManager));
+var ManaDiscardManager = (function (_super) {
+    __extends(ManaDiscardManager, _super);
+    function ManaDiscardManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "discard-mana-card-".concat(card.id); },
+            setupDiv: function (card, div) {
+                div.classList.add("wg-card");
+                div.classList.add("wg-card-mana");
+                div.dataset.cardId = "" + card.id;
+                div.dataset.type = "" + card.type;
+            },
+            setupFrontDiv: function (card, div) {
+                div.dataset.type = "" + card.type;
+                div.classList.add("wg-card-mana-front");
+                var growthID = "".concat(_this.getId(card), "-growth-id");
+                if (!document.getElementById(growthID)) {
+                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>"));
+                }
+            },
+            setupBackDiv: function (card, div) { },
+            isCardVisible: function (card) { return true; },
+            cardWidth: 75,
+            cardHeight: 105,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    return ManaDiscardManager;
+}(CardManager));
 var NotificationManager = (function () {
     function NotificationManager(game) {
         this.game = game;
@@ -2743,7 +2773,7 @@ var NotificationManager = (function () {
         var _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
         log("onMoveManaCards", cards);
         cards.forEach(function (card) {
-            _this.game.getPlayerTable(player_id).onMoveManaCard(undefined, card);
+            _this.game.getPlayerTable(player_id).onMoveManaCard(card);
         });
     };
     NotificationManager.prototype.notif_onRevealManaCardCooldown = function (notif) {
@@ -2928,7 +2958,7 @@ var PlayerTable = (function () {
         if (smallBoard) {
             smallBoard.parentElement.removeChild(smallBoard);
         }
-        var smallBoardHtml = "<div id=\"player_small_board_".concat(pId, "\" class=\"player_small_board\">\n            <div class=\"hand-icon-wrapper\">\n               <div id=\"player_small_board_").concat(pId, "_hand_icon\" class=\"hand-icon\"></div>\n               <div id=\"player_small_board_").concat(pId, "_value\" class=\"hand-value\">0</div>\n            </div>\n         </div>");
+        var smallBoardHtml = "<div id=\"player_small_board_".concat(pId, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(pId, "\" class=\"hand-icon-wrapper\">\n               <div id=\"player_small_board_").concat(pId, "_hand_icon\" class=\"hand-icon\"></div>\n               <div id=\"player_small_board_").concat(pId, "_value\" class=\"hand-value\">0</div>\n            </div>\n         </div>");
         document.getElementById("player_board_".concat(pId)).insertAdjacentHTML("beforeend", smallBoardHtml);
         this.hand_counter = new ebg.counter();
         this.hand_counter.create("player_small_board_".concat(pId, "_value"));
@@ -3027,7 +3057,7 @@ var PlayerTable = (function () {
             fromStock: this.game.tableCenter.spellPool,
         });
     };
-    PlayerTable.prototype.onMoveManaCard = function (before, after) {
+    PlayerTable.prototype.onMoveManaCard = function (after) {
         return __awaiter(this, void 0, void 0, function () {
             var stockBeforeManager, stockAfter, newCard;
             return __generator(this, function (_a) {
@@ -3171,10 +3201,28 @@ var PlayerTable = (function () {
 }());
 var EIGHT_CARDS_SLOT = [1, 5, 2, 6, 3, 7, 4, 8];
 var TEN_CARDS_SLOT = [1, 6, 2, 7, 3, 8, 4, 9, 5, 10];
+var DiscardPile = (function (_super) {
+    __extends(DiscardPile, _super);
+    function DiscardPile(manager, element) {
+        return _super.call(this, manager, element) || this;
+    }
+    DiscardPile.prototype.addCard = function (card, animation, settings) {
+        var promise = _super.prototype.addCard.call(this, card, animation, settings);
+        this.onAddCard(__assign({}, card));
+        return promise;
+    };
+    DiscardPile.prototype.removeCard = function (card, settings) {
+        var copy = __assign({}, card);
+        _super.prototype.removeCard.call(this, card, settings);
+        this.onRemoveCard(copy);
+    };
+    return DiscardPile;
+}(VisibleDeck));
 var TableCenter = (function () {
     function TableCenter(game) {
         var _this = this;
         this.game = game;
+        this.mana_counter = {};
         this.place("<span class=\"wg-title\">".concat(_("Basic Attack"), "</span>"), "basic-attack-wrapper");
         this.place("<div id=\"basic-attack\"></div>", "basic-attack-wrapper");
         this.place("<span class=\"wg-title\">".concat(_("Revealed Mana"), "</span>"), "mana-revealed-wrapper");
@@ -3184,19 +3232,27 @@ var TableCenter = (function () {
         this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
         this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
         this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
-        this.manaDiscard = new VisibleDeck(game.manasManager, document.getElementById("mana-discard"));
+        this.manaDiscard = new DiscardPile(game.manasManager, document.getElementById("mana-discard"));
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
             slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
             mapCardToSlot: function (card) { return card.location_arg; },
             direction: "column",
         });
-        this.manaDiscardDisplay = new LineStock(game.manasManager, document.getElementById("mana-discard-display"), { gap: "2px" });
+        this.manaDiscardDisplay = new LineStock(game.discardManager, document.getElementById("mana-discard-display"), { gap: "2px", center: false });
+        this.setupManaCounter();
+        this.manaDiscard.onAddCard = function (card) {
+            _this.updateManaCounter();
+            _this.manaDiscardDisplay.addCard(__assign({}, card));
+        };
+        this.manaDiscard.onRemoveCard = function (card) {
+            _this.updateManaCounter();
+            _this.manaDiscardDisplay.removeCard(__assign({}, card));
+        };
         this.manaRevealed = new LineStock(game.manasManager, document.getElementById("mana-revealed"), {
             gap: "10px",
         });
         this.basicAttack = new LineStock(game.manasManager, document.getElementById("basic-attack"));
-        this.manaDiscardDisplay.setSelectionMode("multiple");
         game.gamedatas.spells.deck.forEach(function (card) {
             _this.spellDeck.addCard(__assign(__assign({}, card), { isHidden: true }));
         });
@@ -3213,7 +3269,31 @@ var TableCenter = (function () {
             _this.manaDiscard.addCard(card);
         });
         this.spellPool.addCards(game.gamedatas.slot_cards);
+        document
+            .getElementById("mana-discard")
+            .insertAdjacentHTML("afterbegin", "<div id=\"eye-icon-discard\" class=\"eye-icon discard\"></div>");
+        var tableElement = document.getElementById("table");
+        document.getElementById("eye-icon-discard").addEventListener("click", function () {
+            tableElement.dataset.display_discard =
+                tableElement.dataset.display_discard == "false" ? "true" : "false";
+        });
+        this.game.addTooltipHtml("mana-deck", _("Mana Deck"), 1000);
+        this.game.addTooltipHtml("mana-discard", _("Mana Discard"), 1000);
+        this.game.addTooltipHtml("spell-deck", _("Spell Deck"), 1000);
+        this.game.addTooltipHtml("spell-discard", _("Spell Discard"), 1000);
     }
+    TableCenter.prototype.setupManaCounter = function () {
+        var _this = this;
+        var manaInfos = [1, 2, 3, 4].map(function (number) {
+            return "<div class=\"mana-discard-info-line\">\n            <div id=\"mana-counter-wrapper-".concat(number, "\" class=\"wg-icon-log i-mana-x\">").concat(number, "</div><div>x</div><div id=\"mana-counter-").concat(number, "\">0</div>\n         </div>");
+        });
+        document.getElementById("mana-discard-info").insertAdjacentHTML("afterbegin", manaInfos.join(""));
+        [1, 2, 3, 4].forEach(function (number) {
+            _this.mana_counter[number] = new ebg.counter();
+            _this.mana_counter[number].create("mana-counter-".concat(number));
+            _this.game.addTooltipHtml("mana-counter-wrapper-".concat(number), _("Number of ${mana_value} in the discard pile").replace("${mana_value}", number.toString()), 1000);
+        });
+    };
     TableCenter.prototype.shuffleManaDeck = function (cards) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -3230,20 +3310,9 @@ var TableCenter = (function () {
         });
     };
     TableCenter.prototype.moveManaDiscardPile = function (toDisplay) {
-        var _this = this;
-        this.manaDiscardDisplay.unselectAll();
-        if (toDisplay) {
-            var cards = __spreadArray([], this.manaDiscard.getCards(), true);
-            this.manaDiscardDisplay.addCards(cards);
-        }
-        else {
-            this.manaDiscardDisplay
-                .getCards()
-                .sort(function (x, y) { return x.location_arg - y.location_arg; })
-                .forEach(function (card) {
-                _this.manaDiscard.addCard(card);
-            });
-        }
+        var elTable = document.getElementById("table");
+        elTable.dataset.display_discard = toDisplay ? "true" : "false";
+        this.manaDiscardDisplay.setSelectionMode(toDisplay ? "multiple" : "none");
     };
     TableCenter.prototype.onRefillSpell = function (card) {
         var topHiddenCard = __assign(__assign({}, card), { isHidden: true });
@@ -3252,6 +3321,17 @@ var TableCenter = (function () {
     };
     TableCenter.prototype.place = function (html, element) {
         document.getElementById(element).insertAdjacentHTML("beforeend", html);
+    };
+    TableCenter.prototype.toggleDisplayDiscard = function () {
+        var elTable = document.getElementById("table");
+        elTable.dataset.display_discard = elTable.dataset.display_discard == "false" ? "true" : "false";
+    };
+    TableCenter.prototype.updateManaCounter = function () {
+        var _this = this;
+        [1, 2, 3, 4].forEach(function (number) {
+            var cards = _this.manaDiscard.getCards().filter(function (card) { return card.type == number.toString(); });
+            _this.mana_counter[number].toValue(cards.length);
+        });
     };
     return TableCenter;
 }());
@@ -4198,12 +4278,14 @@ var SelectManaDiscardStates = (function () {
                 if (!args.exact) {
                     var text = _("Are you sure that is how many mana cards you would like to select?");
                     _this.game.confirmationDialog(text, function () {
+                        _this.game.tableCenter.manaDiscardDisplay.unselectAll();
                         _this.game.actionManager.addArgument(selected_card_ids.join(","));
                         _this.game.actionManager.activateNextAction();
                     });
                 }
             }
             else {
+                _this.game.tableCenter.manaDiscardDisplay.unselectAll();
                 _this.game.actionManager.addArgument(selected_card_ids.join(","));
                 _this.game.actionManager.activateNextAction();
             }
