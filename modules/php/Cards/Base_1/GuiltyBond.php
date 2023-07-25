@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -29,5 +30,7 @@ class GuiltyBond extends BaseCard {
             Notifications::hasNoManaCard(Players::getOpponentId(), $mana_power);
             Notifications::spellNoEffect();
         }
+
+        Game::undoSavepoint();
     }
 }
