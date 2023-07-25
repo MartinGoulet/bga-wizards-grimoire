@@ -185,7 +185,9 @@ trait StateTrait {
     }
 
     function stPreBasicAttack() {
+        Globals::setCurrentBasicAttackPower(0);
         if (ManaCard::getHandCount() == 0) {
+            Globals::setPreviousBasicAttackPower(0);
             $this->gamestate->nextState("end");
         } else {
             $this->gamestate->nextState("next");
@@ -196,12 +198,10 @@ trait StateTrait {
         $opponent_id = Players::getOpponentId();
         $damage = Globals::getCurrentBasicAttackPower();
 
-        $card = ManaCard::getBasicAttack();
-
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
 
-        Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
+        Globals::setPreviousBasicAttackPower($damage);
         Globals::setCurrentBasicAttackPower(0);
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
