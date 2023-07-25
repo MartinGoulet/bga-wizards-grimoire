@@ -27,7 +27,7 @@ class Fracture extends BaseCard {
 
             Notifications::moveManaCard($player_id, [$src_top_card]);
             Events::onAddManaUnderSpell($player_id, $dest_deck_pos);
-            Events::onManaDiscarded($src_top_card, $src_deck_pos, $player_id);
+            Events::onManaPickedUpUnderSpell($src_deck_pos, $player_id);
         }
     }
 }
