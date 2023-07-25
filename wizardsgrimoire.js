@@ -1977,7 +1977,7 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionBadFortune = function () {
-        var msg = _("${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order");
+        var msg = _("${you} must return revealed mana greater than 1 on the top of mana deck in any order");
         var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.badFortune, {
             descriptionmyturn: _(name) + " : " + msg,
@@ -3819,24 +3819,18 @@ var ArcaneTacticsStates = (function () {
 var BadFortuneStates = (function () {
     function BadFortuneStates(game) {
         this.game = game;
+        this.mana_count = 0;
     }
     BadFortuneStates.prototype.onEnteringState = function (args) {
         var _this = this;
         if (!this.game.isCurrentPlayerActive())
             return;
+        this.mana_count = this.game.tableCenter.manaRevealed.getCards().length;
         this.deck_cards = [];
-        this.spell_cards = [];
         this.player_table = this.game.getCurrentPlayerTable();
-        this.spell_cooldown = this.player_table.mana_cooldown[Number(args.spell.location_arg)];
         var handleManaRevealedClick = function (card) {
-            if (_this.game.getPower(card) == 1) {
-                _this.spell_cooldown.addCard(card);
-                _this.spell_cards.push(card);
-            }
-            else {
-                _this.game.tableCenter.manaDeck.addCard(card);
-                _this.deck_cards.push(card);
-            }
+            _this.game.tableCenter.manaDeck.addCard(card);
+            _this.deck_cards.push(card);
             _this.game.enableButton("btnCancel", "gray");
             _this.game.toggleButtonEnable("btnConfirm", _this.isAllManaCardDistributed(), "blue");
         };
@@ -3845,31 +3839,27 @@ var BadFortuneStates = (function () {
                 return;
             var card = cards.pop();
             _this.game.tableCenter.manaRevealed.addCard(card);
-            _this.game.toggleButtonEnable("btnCancel", _this.spell_cards.length > 0 || _this.deck_cards.length > 0, "gray");
+            _this.game.toggleButtonEnable("btnCancel", _this.deck_cards.length > 0, "gray");
             _this.game.toggleButtonEnable("btnConfirm", _this.isAllManaCardDistributed(), "blue");
         };
         this.game.tableCenter.manaRevealed.onCardClick = handleManaRevealedClick;
         this.game.tableCenter.manaDeck.onCardClick = function () { return handleReturn(_this.deck_cards); };
-        this.spell_cooldown.onCardClick = function () { return handleReturn(_this.spell_cards); };
     };
     BadFortuneStates.prototype.onLeavingState = function () {
         this.deck_cards = [];
-        this.spell_cards = [];
         this.game.tableCenter.manaRevealed.onCardClick = null;
         this.game.tableCenter.manaDeck.onCardClick = null;
-        this.spell_cooldown.onCardClick = null;
     };
     BadFortuneStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
             if (!_this.isAllManaCardDistributed())
                 return;
-            var cards = __spreadArray(__spreadArray([], _this.spell_cards, true), _this.deck_cards, true);
+            var cards = __spreadArray([], _this.deck_cards, true);
             _this.game.actionManager.addArgument(cards.map(function (x) { return x.id; }).join(","));
             _this.game.actionManager.activateNextAction();
         };
         var handleCancel = function () {
-            _this.game.tableCenter.manaRevealed.addCards(_this.spell_cards.splice(0, _this.spell_cards.length));
             _this.game.tableCenter.manaRevealed.addCards(_this.deck_cards.splice(0, _this.deck_cards.length));
             _this.game.disableButton("btnConfirm");
         };
@@ -3882,7 +3872,7 @@ var BadFortuneStates = (function () {
         return new Promise(function (resolve) { return resolve(true); });
     };
     BadFortuneStates.prototype.isAllManaCardDistributed = function () {
-        return this.spell_cards.length + this.deck_cards.length == 3;
+        return this.mana_count == this.deck_cards.length;
     };
     return BadFortuneStates;
 }());

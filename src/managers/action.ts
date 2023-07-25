@@ -189,9 +189,7 @@ class ActionManager {
    }
 
    private actionBadFortune() {
-      const msg = _(
-         "${you} must place any revealed 1 power mana on Bad Fortune. Return the rest in any order",
-      );
+      const msg = _("${you} must return revealed mana greater than 1 on the top of mana deck in any order");
 
       const { name } = this.game.getCardType(this.getCurrentCard());
       this.game.setClientState(states.client.badFortune, {
