@@ -2557,10 +2557,9 @@ var SpellCardManager = (function (_super) {
                 if (div.childNodes.length == 1 && card.type) {
                     var card_type = _this.game.getCardType(card);
                     var name_1 = card_type.name, description = card_type.description;
-                    var gametext = formatGametext2(description);
-                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_1, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
+                    var gametext = formatGametext2(_(description));
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(_(name_1), "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(_(gametext), "</div>\n                  </div>"));
                     var helpMarkerId = "".concat(_this.getId(card), "-help-marker");
-                    var color = !isDebug ? "white" : _this.game.getCardType(card).debug;
                     div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(helpMarkerId, "\" class=\"help-marker\">\n                     <i class=\"fa fa-search\" style=\"color: white\"></i>\n                  </div>"));
                     game.setTooltip("".concat(_this.getId(card), "-front"), _this.getTooltip(card));
                     document.getElementById(helpMarkerId).addEventListener("click", function (evt) {
@@ -2595,8 +2594,8 @@ var SpellCardManager = (function (_super) {
     SpellCardManager.prototype.getTooltip = function (card) {
         var card_type = this.game.getCardType(card);
         var name = card_type.name, cost = card_type.cost, description = card_type.description;
-        var gametext = formatGametext2(description);
-        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(name, "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost"), " : ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(gametext, "</div>\n         </div>\n      </div>");
+        var gametext = formatGametext2(_(description));
+        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(_(name), "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost"), " : ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(_(gametext), "</div>\n         </div>\n      </div>");
         return html;
     };
     return SpellCardManager;
@@ -2662,8 +2661,8 @@ var TooltipManager = (function (_super) {
                 if (div.childNodes.length == 1 && card.type) {
                     var card_type = _this.game.getCardType(card);
                     var name_2 = card_type.name, description = card_type.description;
-                    var gametext = formatGametext2(description);
-                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(name_2, "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
+                    var gametext = formatGametext2(_(description));
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(_(name_2), "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
                 }
             },
             setupBackDiv: function (card, div) { },

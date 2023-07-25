@@ -4,7 +4,6 @@ const card_height: number = 154;
 function formatGametext2(rawText: string) {
    if (!rawText) return "";
    let value = rawText.replace(":", ":<br />");
-   // return "<p>" + value.split(".").join(".</p><p>") + "</p>";
    return "<p>" + value + "</p>";
 }
 
@@ -26,19 +25,17 @@ class SpellCardManager extends CardManager<SpellCard> {
             if (div.childNodes.length == 1 && card.type) {
                const card_type = this.game.getCardType(card);
                const { name, description } = card_type;
-               const gametext = formatGametext2(description);
+               const gametext = formatGametext2(_(description));
 
                div.insertAdjacentHTML(
                   "afterbegin",
                   `<div class="wg-card-gametext">
-                     <div class="wg-card-gametext-title">${name}</div>
+                     <div class="wg-card-gametext-title">${_(name)}</div>
                      <div class="wg-card-gametext-divider"></div>
-                     <div class="wg-card-gametext-text">${gametext}</div>
+                     <div class="wg-card-gametext-text">${_(gametext)}</div>
                   </div>`,
                );
                const helpMarkerId = `${this.getId(card)}-help-marker`;
-               // TODO : Remove before production
-               const color = !isDebug ? "white" : this.game.getCardType(card).debug;
                div.insertAdjacentHTML(
                   "afterbegin",
                   `<div id="${helpMarkerId}" class="help-marker">
@@ -79,14 +76,13 @@ class SpellCardManager extends CardManager<SpellCard> {
       const card_type = this.game.getCardType(card);
       const { name, cost, description } = card_type;
 
-      // const gametext = this.game.formatGametext(description);
-      const gametext = formatGametext2(description);
+      const gametext = formatGametext2(_(description));
 
       let html = `<div class="wg-tooltip-card">
          <div class="wg-tooltip-left">
-            <div class="wg-tooltip-header">${name}</div>
+            <div class="wg-tooltip-header">${_(name)}</div>
             <div class="wg-tooltip-cost">${_("Cost")} : ${cost}</div>
-            <div class="wg-tooltip-gametext">${gametext}</div>
+            <div class="wg-tooltip-gametext">${_(gametext)}</div>
          </div>
       </div>`;
 
@@ -156,12 +152,12 @@ class TooltipManager extends CardManager<SpellCard> {
             if (div.childNodes.length == 1 && card.type) {
                const card_type = this.game.getCardType(card);
                const { name, description } = card_type;
-               const gametext = formatGametext2(description);
+               const gametext = formatGametext2(_(description));
 
                div.insertAdjacentHTML(
                   "afterbegin",
                   `<div class="wg-card-gametext">
-                     <div class="wg-card-gametext-title">${name}</div>
+                     <div class="wg-card-gametext-title">${_(name)}</div>
                      <div class="wg-card-gametext-divider"></div>
                      <div class="wg-card-gametext-text">${gametext}</div>
                   </div>`,
