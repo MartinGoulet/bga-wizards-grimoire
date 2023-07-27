@@ -200,6 +200,7 @@ trait StateTrait {
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
+        Stats::damageWithBasicAttack($damage, $opponent_id);
 
         Globals::setPreviousBasicAttackPower($damage);
         Globals::setCurrentBasicAttackPower(0);
@@ -249,6 +250,20 @@ trait StateTrait {
     }
 
     public function stPreEndOfGame() {
+
+        $first_player = Players::getFirstPlayer();
+        $second_player = Players::getOpponentIdOf($first_player);
+
+        $game = Game::get();
+
+        if(Players::getPlayerLife($first_player) > Players::getPlayerLife($second_player)) {
+            $game->initStat('player', WG_STAT_WIN_FIRST_CHOICE, 100, $first_player);
+            $game->initStat('player', WG_STAT_WIN_FIRST_ATTACKER, 0, $second_player);
+        } else {
+            $game->initStat('player', WG_STAT_WIN_FIRST_CHOICE, 0, $first_player);
+            $game->initStat('player', WG_STAT_WIN_FIRST_ATTACKER, 100, $second_player);
+        }
+
         $this->gamestate->nextState();
     }
 }

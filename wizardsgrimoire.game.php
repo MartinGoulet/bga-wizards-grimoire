@@ -99,6 +99,8 @@ class WizardsGrimoire extends Table {
             WG_VAR_IS_ACTIVE_LULLABY => 28,
             WG_VAR_PLAYER_TURN => 29,
             WG_VAR_UNDO_AVAILABLE => 30,
+            WG_VAR_STATS_ACTIVATED => 31,
+            WG_VAR_FIRST_PLAYER => 32,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -140,7 +142,14 @@ class WizardsGrimoire extends Table {
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
         $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_score) VALUES ";
         $values = array();
+        $firstPlayer = null;
+        $firstAttacker = null;
         foreach ($players as $player_id => $player) {
+            if ($firstPlayer == null) {
+                $firstPlayer = $player_id;
+            } else if ($firstAttacker == null) {
+                $firstAttacker = $player_id;
+            }
             $color = array_shift($default_colors);
             $values[] = "('" . $player_id . "','$color','" . $player['player_canal'] . "','" . addslashes($player['player_name']) . "','" . addslashes($player['player_avatar']) . "', 60)";
         }
@@ -171,13 +180,28 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_PLAYED, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_DAMAGE, 0);
         self::setGameStateInitialValue(WG_VAR_UNDO_AVAILABLE, 1);
+        self::setGameStateInitialValue(WG_VAR_STATS_ACTIVATED, 1);
+        self::setGameStateInitialValue(WG_VAR_FIRST_PLAYER, intval($firstPlayer));
 
         // Init game statistics
-        // (note: statistics used in this file must be defined in your stats.inc.php file)
-        //self::initStat( 'table', 'table_teststat1', 0 );    // Init a table statistics
-        //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
         self::initStat('table', WG_STAT_TURN_NUMBER, 0);
-        self::initStat('player', WG_STAT_TURN_NUMBER, 0);
+
+        foreach ([
+            //  10
+            WG_STAT_TURN_NUMBER,
+            // 20
+            WG_STAT_NBR_DRAFT, WG_STAT_NBR_DRAFT_ATTACK, WG_STAT_NBR_DRAFT_UTILITY, WG_STAT_NBR_DRAFT_REGENERATION, 
+            // 30
+            WG_STAT_DMG_WHEN_3_SPELLS, WG_STAT_DMG_WHEN_4_SPELLS, WG_STAT_DMG_WHEN_5_SPELLS, WG_STAT_DMG_WHEN_6_SPELLS,
+            WG_STAT_DMG_BASIC_ATTACK,
+            // 50
+            WG_STAT_DMG_WITH_SPELLS_COST_1, WG_STAT_DMG_WITH_SPELLS_COST_2, WG_STAT_DMG_WITH_SPELLS_COST_3, WG_STAT_DMG_WITH_SPELLS_COST_4, WG_STAT_DMG_WITH_SPELLS_COST_5,
+            // 70
+            WG_STAT_NBR_MANA_DRAW,
+        ] as $name) {
+            $this->initStat('player', $name, 0);
+        }
+        $this->initStat('player', WG_STAT_DMG_WHEN_2_SPELLS, 0, $firstAttacker);
 
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
         $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
@@ -186,7 +210,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
         $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1) {
-            switch($card_type['icon']) {
+            switch ($card_type['icon']) {
                 case WG_ICON_SET_BASE_1:
                     return true;
                 case WG_ICON_SET_BASE_2:
@@ -291,11 +315,17 @@ class WizardsGrimoire extends Table {
         // $result['debug_spells'] = array_values(self::getCollectionFromDB("SELECT * FROM spells ORDER BY card_type"));
         // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
         // $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");
+        // $firstPlayer = Players::getFirstPlayer();
+        // $firstAttacker = Players::getOpponentIdOf($firstPlayer);
+
+        // $result['debug_stats_first'] = self::getCollectionFromDB("SELECT * FROM stats WHERE stats_player_id = $firstPlayer ORDER BY stats_type");
+        // $result['debug_stats_second'] = self::getCollectionFromDB("SELECT * FROM stats WHERE stats_player_id = $firstAttacker ORDER BY stats_type");
 
         $result['opponent_id'] = Players::getOpponentIdOf($current_player_id);
 
         $result['globals'] = [
             "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
+            // "first_player" => self::getGameStateValue(WG_VAR_FIRST_PLAYER),
         ];
 
         return $result;
@@ -316,7 +346,7 @@ class WizardsGrimoire extends Table {
         $opponent_life = Players::getPlayerLife(Players::getOpponentId());
 
         $min_health = min($player_life, $opponent_life);
-        if($min_health < 0) {
+        if ($min_health < 0) {
             $min_health = 0;
         }
 
@@ -523,7 +553,7 @@ class WizardsGrimoire extends Table {
                     "dead" => ST_PRE_END_OF_GAME,
                 ]
             ],
-        
+
             $stSwithOpponent => [
                 "phase" => $phase,
                 "name" => "castSpellSwitchOpponent",
@@ -533,7 +563,7 @@ class WizardsGrimoire extends Table {
                     "" => $stInteraction,
                 ]
             ],
-        
+
             $stInteraction => array(
                 "phase" => $phase,
                 "name" => "castSpellInteraction",
@@ -547,7 +577,7 @@ class WizardsGrimoire extends Table {
                     "dead" => ST_PRE_END_OF_GAME,
                 ]
             ),
-        
+
             $stReturnPlayer => [
                 "phase" => $phase,
                 "name" => "castSpellReturnCurrentPlayer",

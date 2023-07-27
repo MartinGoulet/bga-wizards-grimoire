@@ -106,6 +106,8 @@ trait ActionTrait {
         Notifications::chooseSpell($playerId, $card);
         Notifications::refillSpell($playerId, $newSpell);
 
+        Stats::chooseSpell($playerId, $card);
+
         $turn_number = Game::get()->getStat(WG_STAT_TURN_NUMBER);
         if ($turn_number <= 3) {
             $this->gamestate->nextState('next_player');

@@ -8,6 +8,7 @@ use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
+use WizardsGrimoire\Core\Stats;
 
 abstract class BaseCard {
 
@@ -47,6 +48,7 @@ abstract class BaseCard {
         );
 
         Globals::setPreviousSpellDamage($damage);
+        Stats::damageWithSpell($damage, $opponent_id, $this->getCard());
     }
 
     protected function drawManaCards(int $nbr, int $player_id = 0) {

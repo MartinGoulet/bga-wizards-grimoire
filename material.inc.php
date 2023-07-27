@@ -78,7 +78,7 @@ $this->card_types = [
   6 => [
     "name" => clienttranslate("Arcane tactics"),
     "class" => "ArcaneTactics",
-    "description" => clienttranslate("Reveal 7 mana cards from the mana deck. Place 4 of the revealed mana on top of the mana deck in any order and gain the rest."),
+    "description" => clienttranslate("Reveal 7 mana cards from the mana deck. Place 4 of the revealed mana on top of the mana deck in any order and gain the rest"),
     "type" => WG_SPELL_TYPE_REGENERATION,
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
@@ -204,7 +204,7 @@ $this->card_types = [
     "debug" => "darkorange",
   ],
   18 => [
-    "name" => clienttranslate("Secret Oath"),
+    "name" => clienttranslate("Secret oath"),
     "class" => "SecretOath",
     "description" => clienttranslate("As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately"),
     "type" => WG_SPELL_TYPE_UTILITY,
@@ -724,7 +724,7 @@ $this->card_types = [
     "debug" => "darkorange",
   ],
   67 => [
-    "name" => clienttranslate("Ice Storm"),
+    "name" => clienttranslate("Ice storm"),
     "class" => "IceStorm",
     "description" => clienttranslate("Deal 1 damage for each of your spells with exactly 1 mana card on them"),
     "type" => WG_SPELL_TYPE_ATTACK,
@@ -734,7 +734,7 @@ $this->card_types = [
     "debug" => "darkorange",
   ],
   68 => [
-    "name" => clienttranslate("AfterShock"),
+    "name" => clienttranslate("After shock"),
     "class" => "AfterShock",
     "description" => clienttranslate("Gain 1 mana card. Place 1 mana card on the mana deck and deal damage equal to its power"),
     "type" => WG_SPELL_TYPE_ATTACK,

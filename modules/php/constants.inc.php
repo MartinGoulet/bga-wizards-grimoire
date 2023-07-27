@@ -39,6 +39,8 @@ define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
 define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
 define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
 define('WG_VAR_UNDO_AVAILABLE', 'undo_available');
+define('WG_VAR_STATS_ACTIVATED', 'stats_activated');
+define('WG_VAR_FIRST_PLAYER', 'first_player');
 
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 
@@ -100,6 +102,28 @@ define('ST_NEXT_PLAYER', 7);
  * Statistic variables 
  */
 define('WG_STAT_TURN_NUMBER', 'turns_number');
+define('WG_STAT_WIN_FIRST_CHOICE', 'win_first_spell_choice');
+define('WG_STAT_WIN_FIRST_ATTACKER', 'win_first_attacker');
+
+define('WG_STAT_NBR_DRAFT', 'nbr_draft');
+define('WG_STAT_NBR_DRAFT_ATTACK', 'nbr_draft_red');
+define('WG_STAT_NBR_DRAFT_UTILITY', 'nbr_draft_purple');
+define('WG_STAT_NBR_DRAFT_REGENERATION', 'nbr_draft_green');
+
+define('WG_STAT_NBR_MANA_DRAW', 'nbr_mana_draw');
+
+define('WG_STAT_DMG_WHEN_2_SPELLS', 'nbr_dmg_spells_2');
+define('WG_STAT_DMG_WHEN_3_SPELLS', 'nbr_dmg_spells_3');
+define('WG_STAT_DMG_WHEN_4_SPELLS', 'nbr_dmg_spells_4');
+define('WG_STAT_DMG_WHEN_5_SPELLS', 'nbr_dmg_spells_5');
+define('WG_STAT_DMG_WHEN_6_SPELLS', 'nbr_dmg_spells_6');
+define('WG_STAT_DMG_BASIC_ATTACK',  'nbr_dmg_basic_attack');
+
+define('WG_STAT_DMG_WITH_SPELLS_COST_1', 'nbr_dmg_spell_cost_1');
+define('WG_STAT_DMG_WITH_SPELLS_COST_2', 'nbr_dmg_spell_cost_2');
+define('WG_STAT_DMG_WITH_SPELLS_COST_3', 'nbr_dmg_spell_cost_3');
+define('WG_STAT_DMG_WITH_SPELLS_COST_4', 'nbr_dmg_spell_cost_4');
+define('WG_STAT_DMG_WITH_SPELLS_COST_5', 'nbr_dmg_spell_cost_5');
 
 /**
  * Spell Activation

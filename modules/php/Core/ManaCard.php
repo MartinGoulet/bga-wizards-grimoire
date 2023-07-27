@@ -78,6 +78,7 @@ class ManaCard {
             $result = array_merge($mana_cards_1, $mana_cards_2);
         }
 
+        Game::get()->incStat($count, WG_STAT_NBR_MANA_DRAW, $player_id);
         Game::undoSavepoint();
 
         return $result;
@@ -288,9 +289,6 @@ class ManaCard {
             $cards_before = $deck->getCardsOnTop($count - $card_left, CardLocation::Deck());
             $mana_cards_2 = $deck->pickCardsForLocation($count - $card_left, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_2);
-            $card_ids = array_values(array_map(function ($card) {
-                return $card['id'];
-            }, $cards_before));
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before,  false);
 
             Game::undoSavepoint();

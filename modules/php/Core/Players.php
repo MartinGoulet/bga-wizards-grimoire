@@ -11,6 +11,10 @@ use WizardsGrimoire\Objects\CardLocation;
 
 class Players extends \APP_DbObject {
 
+    public static function getFirstPlayer() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_FIRST_PLAYER));
+    }
+
     public static function dealDamage(int $damage, int $opponent_id = -1) {
 
         if($opponent_id <= 0) {

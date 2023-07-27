@@ -112,6 +112,7 @@ class SpellCard {
 
         $card = SpellCard::get($new_spell['id']);
         Notifications::chooseSpell($player_id, $card);
+        Stats::replaceSpell($player_id, $card);
 
         $newSpell = Game::get()->deck_spells->pickCardForLocation(
             CardLocation::Deck(),
