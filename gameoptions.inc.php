@@ -44,12 +44,12 @@ $game_options = [
         ]
     ],
     WG_GAME_OPTION_EXT_KICKSTARTER_1_ID => [
-        'name' => totranslate('Mini expansion 1'),
+        'name' => totranslate('Lost Pages expansion'),
         'default' => WG_OPTION_NO,
         'values' => [
             WG_OPTION_YES => [
                 'name' => totranslate('Yes'),
-                'tmdisplay' => totranslate('Mini expansion 1'),
+                'tmdisplay' => totranslate('Lost Pages expansion'),
                 'description' => totranslate('Add a mini expansion of 10 spell cards from the first kickstarter campaign')
             ],
             WG_OPTION_NO => [
