@@ -962,6 +962,7 @@ body > .card {
   font-size: 20px;
   gap: 5px;
   cursor: default;
+  color: white;
 }
 #mana-discard-info .mana-discard-info-line .i-mana-x {
   background-size: 34px 34px;
