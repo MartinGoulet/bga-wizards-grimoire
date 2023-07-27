@@ -46,54 +46,140 @@
     * Statistic name is the English description of the statistic as shown to players
     
 */
+require_once("modules/php/constants.inc.php");
 
-$stats_type = array(
+$stats_type = [
 
     // Statistics global to table
-    "table" => array(
+    "table" => [
 
-        "turns_number" => array(
+        WG_STAT_TURN_NUMBER => array(
             "id" => 10,
             "name" => totranslate("Number of turns"),
             "type" => "int"
         ),
 
-        /*
-        Examples:
 
-
-        "table_teststat1" => array(   "id"=> 10,
-                                "name" => totranslate("table test stat 1"), 
-                                "type" => "int" ),
-                                
-        "table_teststat2" => array(   "id"=> 11,
-                                "name" => totranslate("table test stat 2"), 
-                                "type" => "float" )
-*/
-    ),
+    ],
 
     // Statistics existing for each player
-    "player" => array(
+    "player" => [
 
-        "turns_number" => array(
+        WG_STAT_TURN_NUMBER => [
             "id" => 10,
             "name" => totranslate("Number of turns"),
             "type" => "int"
-        ),
+        ],
 
-        /*
-        Examples:    
-        
-        
-        "player_teststat1" => array(   "id"=> 10,
-                                "name" => totranslate("player test stat 1"), 
-                                "type" => "int" ),
-                                
-        "player_teststat2" => array(   "id"=> 11,
-                                "name" => totranslate("player test stat 2"), 
-                                "type" => "float" )
+        WG_STAT_WIN_FIRST_CHOICE => [
+            "id" => 11,
+            "name" => totranslate("Win rate with first spell choice"),
+            "type" => "int"
+        ],
 
-*/
-    )
+        WG_STAT_WIN_FIRST_ATTACKER => [
+            "id" => 12,
+            "name" => totranslate("Win rate with as first attacker"),
+            "type" => "int"
+        ],
 
-);
+        // Spell drafted
+        WG_STAT_NBR_DRAFT => [
+            "id" => 20,
+            "name" => totranslate("Number of spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_ATTACK => [
+            "id" => 21,
+            "name" => totranslate("Number of attack spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_REGENERATION => [
+            "id" => 22,
+            "name" => totranslate("Number of regeneration spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_UTILITY => [
+            "id" => 23,
+            "name" => totranslate("Number of utility spells drafted"),
+            "type" => "int"
+        ],
+
+        // Spell damage 
+        WG_STAT_DMG_WHEN_2_SPELLS => [
+            "id" => 30,
+            "name" => totranslate("Damage when having 2 spells"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WHEN_3_SPELLS => [
+            "id" => 31,
+            "name" => totranslate("Damage when having 3 spells"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WHEN_4_SPELLS => [
+            "id" => 32,
+            "name" => totranslate("Damage when having 4 spells"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WHEN_5_SPELLS => [
+            "id" => 33,
+            "name" => totranslate("Damage when having 5 spells"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WHEN_6_SPELLS => [
+            "id" => 34,
+            "name" => totranslate("Damage when having 6 spells"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_BASIC_ATTACK => [
+            "id" => 38,
+            "name" => totranslate("Damage with basic attack"),
+            "type" => "int"
+        ],
+
+        // Spell damage 
+        WG_STAT_DMG_WITH_SPELLS_COST_1 => [
+            "id" => 50,
+            "name" => totranslate("Damage with spell cost of 1"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WITH_SPELLS_COST_2 => [
+            "id" => 51,
+            "name" => totranslate("Damage with spell cost of 2"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WITH_SPELLS_COST_3 => [
+            "id" => 52,
+            "name" => totranslate("Damage with spell cost of 3"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WITH_SPELLS_COST_4 => [
+            "id" => 53,
+            "name" => totranslate("Damage with spell cost of 4"),
+            "type" => "int"
+        ],
+
+        WG_STAT_DMG_WITH_SPELLS_COST_5 => [
+            "id" => 54,
+            "name" => totranslate("Damage with spell cost of 5"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_MANA_DRAW => [
+            "id" => 70,
+            "name" => totranslate("Number of mana drawed"),
+            "type" => "int"
+        ],
+    ]
+];

@@ -4,7 +4,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 3;Mutation;Mutation;Gain 1 mana card. Deal damage equal to that mana's power;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;lightgreen
 4;Stone crush;StoneCrush;Deal 1 damage for each mana card in your opponent's hand;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;lightgreen
 5;Mist of pain;MistOfPain;Your opponent may discard up to 4 mana cards from their hand. For each mana they do not discard, deal 1 damage;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;opponent;actionMistOfPain;;lightgreen
-6;Arcane tactics;ArcaneTactics;Reveal 7 mana cards from the mana deck. Place 4 of the revealed mana on top of the mana deck in any order and gain the rest.;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;player;actionArcaneTactics;;lightgreen
+6;Arcane tactics;ArcaneTactics;Reveal 7 mana cards from the mana deck. Place 4 of the revealed mana on top of the mana deck in any order and gain the rest;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;player;actionArcaneTactics;;lightgreen
 7;Freeze;Freeze;Choose 1: Gain 4 mana cards, or place a mana card from the mana deck on one of your opponent's spells;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionFreeze;;;;lightgreen
 8;Energy reserve;EnergyReserve;Pick up a mana card off 1 of your other spells. Gain mana equal to that mana's power;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionEnergyReserve;;;;darkorange
 9;Fracture;Fracture;Gain 4 mana cards. You may move a mana card between 2 of your other spells;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;actionFracture;;;;darkorange
@@ -16,7 +16,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 15;Arcane eye;ArcaneEye;Pick up a mana card off each of your spells that costs 3 or more;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
 16;Haste;Haste;The next time you cast a spell this turn, it costs 2 less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
 17;Renewed fervor;RenewedFervor;Pick up a mana card off each of your instant attack spells that costs 2 or less;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
-18;Secret Oath;SecretOath;As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;2;WG_ICON_SET_BASE_2;;;;;darkorange
+18;Secret oath;SecretOath;As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_ONGOING;;2;WG_ICON_SET_BASE_2;;;;;darkorange
 19;Time distortion;TimeDistortion;Pick up a mana card off 2 of your other spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;actionTimeDistortion;;;;lightgreen
 20;Betrayal;Betrayal;Deal 5 damage. Your opponent gains 3 mana cards;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;3;WG_ICON_SET_BASE_1;;;;;darkorange
 21;Blood lust;BloodLust;Deal 1 damage. Deal an additionnal 2 damage for each attack spell cast consecutively before this spell;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;3;WG_ICON_SET_BASE_2;;;;;lightgreen
@@ -65,7 +65,7 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 64;Contamination;Contamination;Place 2 mana cards from your hand on the mana deck. If you do, deal 4 damage;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;actionContamination;;;;darkorange
 65;Dance of pain;DanceOfPain;Deal 3 damage. Discard or gain mana until you have 2 mana cards in your hand;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;actionDanceOfPain;;;;darkorange
 66;Drain soul;DrainSoul;Your opponent must give you the highest power card mana in their hand. Deal damage equal to that mana's power;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;;;;darkorange
-67;Ice Storm;IceStorm;Deal 1 damage for each of your spells with exactly 1 mana card on them;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
-68;AfterShock;AfterShock;Gain 1 mana card. Place 1 mana card on the mana deck and deal damage equal to its power;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;player;actionAfterShock;;lightgreen
+67;Ice storm;IceStorm;Deal 1 damage for each of your spells with exactly 1 mana card on them;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
+68;After shock;AfterShock;Gain 1 mana card. Place 1 mana card on the mana deck and deal damage equal to its power;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;player;actionAfterShock;;lightgreen
 69;Bad fortune;BadFortune;Deal 4 damage. Reveal 3 cards from the mana deck. Place any revealed 1 power mana on this spell. Return the rest in any order;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_1;;player;actionBadFortune;;darkorange
 70;Force of nature;ForceOfNature;Deal 4 damage, minus 1 damage for each of your other attack spells that have mana on them;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_BASE_2;;;;;darkorange
