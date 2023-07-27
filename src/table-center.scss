@@ -20,7 +20,8 @@
    .wg-card-gametext {
       width: 88px;
       height: 48px;
-      top: 121px;
+      top: 111px;
+      left: 13px;
 
       .wg-card-gametext-title {
          font-size: 6px;
@@ -62,7 +63,7 @@
    display: none;
    width: 100%;
    row-gap: 10px;
-   border: 2px solid black;
+   border: 3px solid black;
    padding-left: 55px;
    border-radius: 10px;
    min-height: 120px !important;
@@ -76,11 +77,6 @@
    }
 }
 
-// .gamestate_client_selectManaDiscard {
-//    #mana-discard-display-wrapper {
-//       display: flex;
-//    }
-// }
 
 #mana-discard-display-wrapper {
    display: flex;
@@ -103,7 +99,7 @@
 #mana-discard-display-wrapper {
    --color: black;
    padding-top: 25px;
-   border: 2px solid black;
+   border: 3px solid black;
    border-radius: 10px;
    row-gap: 10px;
    min-height: 150px;
@@ -117,7 +113,7 @@
 }
 
 #basic-attack-wrapper {
-   width: 140px;
+   width: 160px;
    #basic-attack {
       margin-top: 5px;
    }

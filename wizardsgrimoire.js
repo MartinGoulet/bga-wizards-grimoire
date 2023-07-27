@@ -1415,6 +1415,11 @@ var WizardsGrimoire = (function () {
         this.gameOptions = new GameOptions(this);
         this.tableCenter = new TableCenter(this);
         this.modal = new Modal(this);
+        var htmlElement = document.getElementsByTagName("html")[0];
+        htmlElement.classList.toggle("mobile_version", document.body.classList.contains("mobile_version"));
+        htmlElement.classList.toggle("desktop_version", document.body.classList.contains("desktop_version"));
+        this.dontPreloadImage("background-mobile.png");
+        this.dontPreloadImage("background-desktop.png");
         this.createPlayerTables(gamedatas);
         this.zoomManager = new ZoomManager({
             element: document.getElementById("table"),

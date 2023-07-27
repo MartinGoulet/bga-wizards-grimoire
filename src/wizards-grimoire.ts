@@ -79,6 +79,13 @@ class WizardsGrimoire
       this.tableCenter = new TableCenter(this);
       this.modal = new Modal(this);
 
+      const htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.classList.toggle("mobile_version", document.body.classList.contains("mobile_version"));
+      htmlElement.classList.toggle("desktop_version", document.body.classList.contains("desktop_version"));
+
+      this.dontPreloadImage("background-mobile.png");
+      this.dontPreloadImage("background-desktop.png");
+
       // Setting up player boards
       this.createPlayerTables(gamedatas);
 

@@ -16,6 +16,20 @@
    src: url("img/RoughAntiquaAllCaps.otf") format("opentype");
 }
 
+html.mobile_version,
+.mobile_version .mode_3d #game_play_area_background {
+   background: url("img/background-mobile.png");
+   background-size: 100% auto;
+   background-repeat: repeat;
+}
+
+html.desktop_version,
+.desktop_version .mode_3d #game_play_area_background {
+   background: url("img/background-desktop.png");
+   background-size: 100% auto;
+   background-repeat: repeat;
+}
+
 #game_play_area {
    #bga-zoom-wrapper {
       padding-top: 40px;
