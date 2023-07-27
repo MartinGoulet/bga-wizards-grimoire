@@ -112,7 +112,7 @@ class Notifications {
     }
 
     static function hasNoManaCard(int $player_id, int $value) {
-        self::message(clienttranslate('${player_name} does not have a ${value} power mana.'), [
+        self::message(clienttranslate('${player_name} does not have a ${value} power mana'), [
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "value" => $value,
@@ -197,12 +197,13 @@ class Notifications {
     }
 
     static function secretOath(int $player_id, $cards) {
+        $opponent_id = Players::getOpponentIdOf($player_id);
         self::message(clienttranslate('${card_name} : ${player_name} must gives ${mana_values} to ${player_name2}'), [
-            'player_id' => intval($player_id),
-            "player_name" => self::getPlayerName($player_id),
-            "player_name2" => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'player_id' => intval($opponent_id),
+            "player_name" => self::getPlayerName($opponent_id),
+            "player_name2" => self::getPlayerName($player_id),
             "mana_values" => self::getPowerValues(array_values($cards)),
-            "card_name" => _("Secret Oath"),
+            "card_name" => _("Secret oath"),
             "i18n" => ["card_name"],
         ]);
     }
