@@ -351,7 +351,8 @@ $basicAttackStates = [
         "type" => "game",
         "action" => "stNextPlayer",
         "transitions" => [
-            "" => ST_PLAYER_NEW_TURN
+            "next" => ST_PLAYER_NEW_TURN,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ]
 ];

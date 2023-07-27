@@ -239,14 +239,18 @@ trait StateTrait {
             }
         }
 
-        $this->giveExtraTime(Players::getPlayerId());
+        if (Players::getPlayerLife(Players::getPlayerId()) <= 0 || Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->giveExtraTime(Players::getPlayerId());
 
-        $player_id = intval($this->getActivePlayerId());
-        if ($player_id == Players::getPlayerId()) {
-            $this->activeNextPlayer();
+            $player_id = intval($this->getActivePlayerId());
+            if ($player_id == Players::getPlayerId()) {
+                $this->activeNextPlayer();
+            }
+
+            $this->gamestate->nextState('next');
         }
-
-        $this->gamestate->nextState();
     }
 
     public function stPreEndOfGame() {
@@ -256,7 +260,7 @@ trait StateTrait {
 
         $game = Game::get();
 
-        if(Players::getPlayerLife($first_player) > Players::getPlayerLife($second_player)) {
+        if (Players::getPlayerLife($first_player) > Players::getPlayerLife($second_player)) {
             $game->initStat('player', WG_STAT_WIN_FIRST_CHOICE, 100, $first_player);
             $game->initStat('player', WG_STAT_WIN_FIRST_ATTACKER, 0, $second_player);
         } else {
