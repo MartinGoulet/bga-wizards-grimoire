@@ -93,7 +93,7 @@ class WizardsGrimoire
          element: document.getElementById("table"),
          smooth: false,
          zoomControls: {
-            color: "black",
+            color: "white",
          },
          localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
          zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
