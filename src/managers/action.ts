@@ -595,7 +595,7 @@ class ActionManager {
       });
 
       const { name } = this.game.getCardType(this.getCurrentCard());
-      const msg = _("${you} must select an opponent's spell");
+      const msg = _("${you} may select one of your instant spell");
       this.game.setClientState(states.client.selectSpell, {
          descriptionmyturn: _(name) + " : " + msg,
          args: {

@@ -2330,7 +2330,7 @@ var ActionManager = (function () {
             return false;
         });
         var name = this.game.getCardType(this.getCurrentCard()).name;
-        var msg = _("${you} must select an opponent's spell");
+        var msg = _("${you} may select one of your instant spell");
         this.game.setClientState(states.client.selectSpell, {
             descriptionmyturn: _(name) + " : " + msg,
             args: {
