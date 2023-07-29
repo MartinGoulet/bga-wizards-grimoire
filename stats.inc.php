@@ -108,6 +108,38 @@ $stats_type = [
             "type" => "int"
         ],
 
+
+        // Spell damage 
+        WG_STAT_NBR_DRAFT_COST_1 => [
+            "id" => 25,
+            "name" => totranslate("Number of 1 cost spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_COST_2 => [
+            "id" => 26,
+            "name" => totranslate("Number of 2 cost spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_COST_3 => [
+            "id" => 27,
+            "name" => totranslate("Number of 3 cost spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_COST_4 => [
+            "id" => 28,
+            "name" => totranslate("Number of 4 cost spells drafted"),
+            "type" => "int"
+        ],
+
+        WG_STAT_NBR_DRAFT_COST_5 => [
+            "id" => 29,
+            "name" => totranslate("Number of 5 cost spells drafted"),
+            "type" => "int"
+        ],
+
         // Spell damage 
         WG_STAT_DMG_WHEN_2_SPELLS => [
             "id" => 30,
@@ -145,40 +177,9 @@ $stats_type = [
             "type" => "int"
         ],
 
-        // Spell damage 
-        WG_STAT_DMG_WITH_SPELLS_COST_1 => [
-            "id" => 50,
-            "name" => totranslate("Damage with spell cost of 1"),
-            "type" => "int"
-        ],
-
-        WG_STAT_DMG_WITH_SPELLS_COST_2 => [
-            "id" => 51,
-            "name" => totranslate("Damage with spell cost of 2"),
-            "type" => "int"
-        ],
-
-        WG_STAT_DMG_WITH_SPELLS_COST_3 => [
-            "id" => 52,
-            "name" => totranslate("Damage with spell cost of 3"),
-            "type" => "int"
-        ],
-
-        WG_STAT_DMG_WITH_SPELLS_COST_4 => [
-            "id" => 53,
-            "name" => totranslate("Damage with spell cost of 4"),
-            "type" => "int"
-        ],
-
-        WG_STAT_DMG_WITH_SPELLS_COST_5 => [
-            "id" => 54,
-            "name" => totranslate("Damage with spell cost of 5"),
-            "type" => "int"
-        ],
-
         WG_STAT_NBR_MANA_DRAW => [
             "id" => 70,
-            "name" => totranslate("Number of mana drawed"),
+            "name" => totranslate("Number of mana cards drawn"),
             "type" => "int"
         ],
     ]

@@ -180,7 +180,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_PLAYED, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_DAMAGE, 0);
         self::setGameStateInitialValue(WG_VAR_UNDO_AVAILABLE, 1);
-        self::setGameStateInitialValue(WG_VAR_STATS_ACTIVATED, 1);
+        self::setGameStateInitialValue(WG_VAR_STATS_ACTIVATED, 2);
         self::setGameStateInitialValue(WG_VAR_FIRST_PLAYER, intval($firstPlayer));
 
         // Init game statistics
@@ -191,11 +191,11 @@ class WizardsGrimoire extends Table {
             WG_STAT_TURN_NUMBER,
             // 20
             WG_STAT_NBR_DRAFT, WG_STAT_NBR_DRAFT_ATTACK, WG_STAT_NBR_DRAFT_UTILITY, WG_STAT_NBR_DRAFT_REGENERATION, 
+            // 25
+            WG_STAT_NBR_DRAFT_COST_1, WG_STAT_NBR_DRAFT_COST_2, WG_STAT_NBR_DRAFT_COST_3, WG_STAT_NBR_DRAFT_COST_4, WG_STAT_NBR_DRAFT_COST_5,
             // 30
             WG_STAT_DMG_WHEN_3_SPELLS, WG_STAT_DMG_WHEN_4_SPELLS, WG_STAT_DMG_WHEN_5_SPELLS, WG_STAT_DMG_WHEN_6_SPELLS,
             WG_STAT_DMG_BASIC_ATTACK,
-            // 50
-            WG_STAT_DMG_WITH_SPELLS_COST_1, WG_STAT_DMG_WITH_SPELLS_COST_2, WG_STAT_DMG_WITH_SPELLS_COST_3, WG_STAT_DMG_WITH_SPELLS_COST_4, WG_STAT_DMG_WITH_SPELLS_COST_5,
             // 70
             WG_STAT_NBR_MANA_DRAW,
         ] as $name) {

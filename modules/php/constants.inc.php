@@ -110,6 +110,12 @@ define('WG_STAT_NBR_DRAFT_ATTACK', 'nbr_draft_red');
 define('WG_STAT_NBR_DRAFT_UTILITY', 'nbr_draft_purple');
 define('WG_STAT_NBR_DRAFT_REGENERATION', 'nbr_draft_green');
 
+define('WG_STAT_NBR_DRAFT_COST_1', 'nbr_draft_cost_1');
+define('WG_STAT_NBR_DRAFT_COST_2', 'nbr_draft_cost_2');
+define('WG_STAT_NBR_DRAFT_COST_3', 'nbr_draft_cost_3');
+define('WG_STAT_NBR_DRAFT_COST_4', 'nbr_draft_cost_4');
+define('WG_STAT_NBR_DRAFT_COST_5', 'nbr_draft_cost_5');
+
 define('WG_STAT_NBR_MANA_DRAW', 'nbr_mana_draw');
 
 define('WG_STAT_DMG_WHEN_2_SPELLS', 'nbr_dmg_spells_2');
@@ -118,12 +124,6 @@ define('WG_STAT_DMG_WHEN_4_SPELLS', 'nbr_dmg_spells_4');
 define('WG_STAT_DMG_WHEN_5_SPELLS', 'nbr_dmg_spells_5');
 define('WG_STAT_DMG_WHEN_6_SPELLS', 'nbr_dmg_spells_6');
 define('WG_STAT_DMG_BASIC_ATTACK',  'nbr_dmg_basic_attack');
-
-define('WG_STAT_DMG_WITH_SPELLS_COST_1', 'nbr_dmg_spell_cost_1');
-define('WG_STAT_DMG_WITH_SPELLS_COST_2', 'nbr_dmg_spell_cost_2');
-define('WG_STAT_DMG_WITH_SPELLS_COST_3', 'nbr_dmg_spell_cost_3');
-define('WG_STAT_DMG_WITH_SPELLS_COST_4', 'nbr_dmg_spell_cost_4');
-define('WG_STAT_DMG_WITH_SPELLS_COST_5', 'nbr_dmg_spell_cost_5');
 
 /**
  * Spell Activation

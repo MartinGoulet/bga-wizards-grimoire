@@ -22,6 +22,20 @@ class Stats {
 
         Game::get()->incStat(1, WG_STAT_NBR_DRAFT, $player_id);
         Game::get()->incStat(1, $stats[$spell_info['type']], $player_id);
+
+        if (!self::isStatActive(2)) return;
+
+        $cost = intval($spell_info['cost']);
+
+        $stats = [
+            1 => WG_STAT_NBR_DRAFT_COST_1,
+            2 => WG_STAT_NBR_DRAFT_COST_2,
+            3 => WG_STAT_NBR_DRAFT_COST_3,
+            4 => WG_STAT_NBR_DRAFT_COST_4,
+            5 => WG_STAT_NBR_DRAFT_COST_5,
+        ];
+
+        Game::get()->incStat(1, $stats[$cost], $player_id);
     }
 
     static function damageWithSpell($damage, $player_received_damage, $spell) {
@@ -40,19 +54,6 @@ class Stats {
         ];
 
         Game::get()->incStat($damage, $stats[$spells_count], $player_id);
-
-        $spell_info = SpellCard::getCardInfo($spell);
-        $cost = intval($spell_info['cost']);
-
-        $stats = [
-            1 => WG_STAT_DMG_WITH_SPELLS_COST_1,
-            2 => WG_STAT_DMG_WITH_SPELLS_COST_2,
-            3 => WG_STAT_DMG_WITH_SPELLS_COST_3,
-            4 => WG_STAT_DMG_WITH_SPELLS_COST_4,
-            5 => WG_STAT_DMG_WITH_SPELLS_COST_5,
-        ];
-
-        Game::get()->incStat($damage, $stats[$cost], $player_id);
     }
 
     static function damageWithBasicAttack($damage, $player_received_damage) {
@@ -68,7 +69,7 @@ class Stats {
         self::chooseSpell($player_id, $newSpell);
     }
 
-    private static function isStatActive() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_STATS_ACTIVATED)) == 1;
+    private static function isStatActive(int $version = 1) {
+        return intval(Game::get()->getGameStateValue(WG_VAR_STATS_ACTIVATED)) >= $version;
     }
 }

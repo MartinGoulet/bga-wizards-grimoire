@@ -47,9 +47,11 @@ trait DebugTrait {
 
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
 
+        Globals::setPreviousBasicAttackPower(2);
+
         $players_spell_cards = [
-            "2329672" => ["Delusion", "MistOfPain", "QuickSwap", "ArcaneTactics", "TrapAttack", "SilentSupport"],
-            "2329673" => ["Lullaby", "Growth", "Wrath", "SecretOath", "AfterShock", "TwistOfFate"],
+            "2329672" => ["Delusion", "MistOfPain", "QuickSwap", "ArcaneTactics", "FalseFace", "FireBlast"],
+            "2329673" => ["BadFortune", "Growth", "Wrath", "Fracture", "TrapAttack", "SilentSupport"],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -75,6 +77,8 @@ trait DebugTrait {
         $mana_deck->shuffle(CardLocation::Deck());
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+        Players::setPlayerLife("2329672", 1);
+        Players::setPlayerLife("2329673", 1);
 
         Globals::setIsActiveBattleVision(false, 0);
         Globals::setIsActiveGrowth(false, 0);
