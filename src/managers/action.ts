@@ -111,10 +111,21 @@ class ActionManager {
    }
 
    private actionCastSpell_Pool() {
-      const msg = _("${you} must select a spell in the spell pool");
+      // const msg = _("${you} must select a spell in the spell pool");
+      const msg = _("${you} may choose to replace a spell or pass");
+      const args: SelectSpellPoolStatesArgs = {
+         skip: {
+            label: "Pass",
+            action: () => {
+               this.actions.splice(0);
+               this.game.takeAction("pass");
+            },
+         },
+         cancel: false,
+      };
       this.game.setClientState(states.client.selectSpellPool, {
          descriptionmyturn: msg,
-         args: {},
+         args,
       });
    }
 

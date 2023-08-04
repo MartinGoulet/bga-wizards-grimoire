@@ -21,12 +21,13 @@ class SelectSpellPoolStates implements StateHandler {
          this.game.actionManager.activateNextAction();
       };
 
-      this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+      this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
       if (args.skip) {
          this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
       }
-      this.game.addActionButtonClientCancel();
-      this.game.disableButton("btn_confirm");
+      if (args.cancel !== false) {
+         this.game.addActionButtonClientCancel();
+      }
    }
 
    restoreGameState(): Promise<boolean> {
@@ -39,4 +40,5 @@ interface SelectSpellPoolStatesArgs {
       label: string;
       action: () => void;
    };
+   cancel?: boolean;
 }

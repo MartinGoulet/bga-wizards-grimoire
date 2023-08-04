@@ -1929,10 +1929,21 @@ var ActionManager = (function () {
         this.activateNextAction();
     };
     ActionManager.prototype.actionCastSpell_Pool = function () {
-        var msg = _("${you} must select a spell in the spell pool");
+        var _this = this;
+        var msg = _("${you} may choose to replace a spell or pass");
+        var args = {
+            skip: {
+                label: "Pass",
+                action: function () {
+                    _this.actions.splice(0);
+                    _this.game.takeAction("pass");
+                },
+            },
+            cancel: false,
+        };
         this.game.setClientState(states.client.selectSpellPool, {
             descriptionmyturn: msg,
-            args: {},
+            args: args,
         });
     };
     ActionManager.prototype.actionCastSpell_Repertoire = function () {
@@ -3555,7 +3566,11 @@ var ChooseNewSpellStates = (function () {
             this.game.setGamestateDescription();
         }
         else {
-            this.game.setGamestateDescription("Replace");
+            var available_slots = this.player_table.getSpellSlotAvailables();
+            if (available_slots.length > 0) {
+                this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+                this.game.actionManager.activateNextAction();
+            }
         }
     };
     ChooseNewSpellStates.prototype.onEnteringStateChoose = function () {
@@ -4547,12 +4562,13 @@ var SelectSpellPoolStates = (function () {
             _this.game.actionManager.addArgument(spell.id.toString());
             _this.game.actionManager.activateNextAction();
         };
-        this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
         if (args.skip) {
             this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
         }
-        this.game.addActionButtonClientCancel();
-        this.game.disableButton("btn_confirm");
+        if (args.cancel !== false) {
+            this.game.addActionButtonClientCancel();
+        }
     };
     SelectSpellPoolStates.prototype.restoreGameState = function () {
         return new Promise(function (resolve) { return resolve(true); });

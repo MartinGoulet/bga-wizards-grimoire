@@ -14,7 +14,11 @@ class ChooseNewSpellStates implements StateHandler {
          this.onEnteringStateChoose();
          this.game.setGamestateDescription();
       } else {
-         this.game.setGamestateDescription("Replace");
+         const available_slots = this.player_table.getSpellSlotAvailables();
+         if (available_slots.length > 0) {
+            this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+            this.game.actionManager.activateNextAction();
+         }
       }
    }
 
