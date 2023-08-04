@@ -98,20 +98,20 @@
 
    .mana-cooldown-icons {
       display: flex;
-      // height: 24px;
-      gap: 11px;
+      gap: 8px;
       margin: 10px 0;
       position: absolute;
       z-index: 10;
+      width: 712px;
 
       .mana-cooldown-icon {
-         width: 110px;
+         width: 112px;
          display: flex;
          justify-content: center;
-         height: 0;
+         height: 24px;
 
          .i-mana-x {
-            display: none;
+            display: flex;
             background-color: white;
             border-radius: 50%;
             width: 20px;
@@ -120,6 +120,13 @@
             background-position: -1px -1px;
             line-height: 20px;
             font-size: 12px;
+         }
+
+         &:has(> *:nth-child(2)) {
+            height: 0;
+            .i-mana-x {
+               display: none;
+            }
          }
 
          &:has(> *:nth-child(2)) {
