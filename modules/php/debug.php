@@ -46,12 +46,19 @@ trait DebugTrait {
         $mana_deck = Game::get()->deck_manas;
 
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
+        $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
+        $mana_deck->shuffle(CardLocation::Deck());
 
         Globals::setPreviousBasicAttackPower(2);
 
         $players_spell_cards = [
-            "2329672" => ["Delusion", "MistOfPain", "QuickSwap", "ArcaneTactics", "FalseFace", "FireBlast"],
-            "2329673" => ["BadFortune", "Growth", "Wrath", "Fracture", "TrapAttack", "SilentSupport"],
+            "2329672" => ["WildBloom", "ShadowAttack", "SilentSupport", "ArcaneTactics", "FalseFace", "FireBlast"],
+            "2329673" => ["BadFortune", "Growth", "Wrath", "Fracture", "TrapAttack", "QuickSwap"],
+        ];
+
+        $players_spell_mana = [
+            "2329672" => [1, 1, 1, 1, 1, 0],
+            "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -67,18 +74,27 @@ trait DebugTrait {
             }
         }
 
+        foreach ($players_spell_mana as $player_id => $nbr_cards) {
+            $index = 0;
+            foreach ($nbr_cards as $nbr_card) {
+                $index += 1;
+                for ($i=0; $i < $nbr_card; $i++) { 
+                    ManaCard::dealFromDeckToManaCoolDown($index, $player_id);
+                }
+            }
+        }
+
         $spell_deck->shuffle(CardLocation::Deck());
 
         for ($i = 1; $i <= intval(self::getGameStateValue(WG_VAR_SLOT_COUNT)); $i++) {
             $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
         }
 
-        $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
-        $mana_deck->shuffle(CardLocation::Deck());
+        
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
-        Players::setPlayerLife("2329672", 1);
-        Players::setPlayerLife("2329673", 1);
+        Players::setPlayerLife("2329672", 50);
+        Players::setPlayerLife("2329673", 50);
 
         Globals::setIsActiveBattleVision(false, 0);
         Globals::setIsActiveGrowth(false, 0);

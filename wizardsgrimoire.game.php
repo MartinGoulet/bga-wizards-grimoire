@@ -547,6 +547,7 @@ class WizardsGrimoire extends Table {
                 "possibleactions" => ["activateDelayedSpell", "pass"],
                 "transitions" => [
                     "cast" => $stActiveDelayedSpell,
+                    "delayed" => $stActiveDelayedSpell,
                     "player" => $stInteraction,
                     "opponent" => $stSwithOpponent,
                     "pass" => $stActivePass,
