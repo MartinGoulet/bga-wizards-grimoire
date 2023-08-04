@@ -19,17 +19,24 @@ class WildBloom extends BaseCard {
         $spell_pos = intval(array_shift($args));
         $spell = SpellCard::getFromRepertoire($spell_pos);
 
-        if(ManaCard::countOnTopOfManaCoolDown($spell_pos) > 0) {
+        if (ManaCard::countOnTopOfManaCoolDown($spell_pos) > 0) {
             throw new BgaSystemException("Card has mana cooldown");
         }
 
-        if(SpellCard::getCardInfo($spell)['activation'] !== WG_SPELL_ACTIVATION_INSTANT) {
+        $spell_info = SpellCard::getCardInfo($spell);
+
+        if ($spell_info['activation'] !== WG_SPELL_ACTIVATION_INSTANT) {
             throw new BgaSystemException("Card is not an instant");
         }
 
         $card_name = SpellCard::getName($spell);
         Notifications::activateSpell(Players::getPlayerId(), $card_name);
         Globals::setSpellPlayed($spell['id']);
+
+        if ($spell_info['type'] == WG_SPELL_TYPE_ATTACK) {
+            Globals::incConsecutivelyAttackSpellCount(1);
+        }
+
         Game::get()->activateInstantSpell($spell, $args);
     }
 
