@@ -122,17 +122,11 @@
             font-size: 12px;
          }
 
-         &:has(> *:nth-child(2)) {
+         &[data-count="0"],
+         &[data-count="1"] {
             height: 0;
             .i-mana-x {
                display: none;
-            }
-         }
-
-         &:has(> *:nth-child(2)) {
-            height: 24px;
-            .i-mana-x {
-               display: flex;
             }
          }
       }

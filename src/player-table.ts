@@ -105,8 +105,9 @@ class PlayerTable {
             this.mana_cooldown[index].onDeckCountChanged = () => {
                const cards = this.mana_cooldown[index].getCards().reverse();
                const icons = cards.map((card) => `<div class="wg-icon-log i-mana-x">${card.type}</div>`);
-               document.getElementById(`player_table-${pId}-mana-cooldown-icon-${index}`).innerHTML =
-                  icons.join("");
+               const elManaIcons = document.getElementById(`player_table-${pId}-mana-cooldown-icon-${index}`);
+               elManaIcons.innerHTML = icons.join("");
+               elManaIcons.dataset.count = "" + icons.length;
             };
          }
       }

@@ -1085,17 +1085,11 @@ body > .card {
   line-height: 20px;
   font-size: 12px;
 }
-.player-table .mana-cooldown-icons .mana-cooldown-icon:has(> *:nth-child(2)) {
+.player-table .mana-cooldown-icons .mana-cooldown-icon[data-count="0"], .player-table .mana-cooldown-icons .mana-cooldown-icon[data-count="1"] {
   height: 0;
 }
-.player-table .mana-cooldown-icons .mana-cooldown-icon:has(> *:nth-child(2)) .i-mana-x {
+.player-table .mana-cooldown-icons .mana-cooldown-icon[data-count="0"] .i-mana-x, .player-table .mana-cooldown-icons .mana-cooldown-icon[data-count="1"] .i-mana-x {
   display: none;
-}
-.player-table .mana-cooldown-icons .mana-cooldown-icon:has(> *:nth-child(2)) {
-  height: 24px;
-}
-.player-table .mana-cooldown-icons .mana-cooldown-icon:has(> *:nth-child(2)) .i-mana-x {
-  display: flex;
 }
 .player-table.player-hand {
   margin-top: 20px;

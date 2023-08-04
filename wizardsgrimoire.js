@@ -2986,8 +2986,9 @@ var PlayerTable = (function () {
                 this_1.mana_cooldown[index].onDeckCountChanged = function () {
                     var cards = _this.mana_cooldown[index].getCards().reverse();
                     var icons = cards.map(function (card) { return "<div class=\"wg-icon-log i-mana-x\">".concat(card.type, "</div>"); });
-                    document.getElementById("player_table-".concat(pId, "-mana-cooldown-icon-").concat(index)).innerHTML =
-                        icons.join("");
+                    var elManaIcons = document.getElementById("player_table-".concat(pId, "-mana-cooldown-icon-").concat(index));
+                    elManaIcons.innerHTML = icons.join("");
+                    elManaIcons.dataset.count = "" + icons.length;
                 };
             }
         };
