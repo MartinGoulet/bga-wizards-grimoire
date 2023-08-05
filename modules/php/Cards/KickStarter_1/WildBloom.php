@@ -17,6 +17,10 @@ class WildBloom extends BaseCard {
         // When you discard the last mana off this spell, you may immediately cast an instant spell of yours that has 0 mana on it for no cost
 
         $spell_pos = intval(array_shift($args));
+        if($spell_pos == 0) {
+            Notifications::spellNoEffect();
+            return;
+        }
         $spell = SpellCard::getFromRepertoire($spell_pos);
 
         if (ManaCard::countOnTopOfManaCoolDown($spell_pos) > 0) {

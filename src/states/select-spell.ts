@@ -26,9 +26,16 @@ class SelectSpellStates implements StateHandler {
 
    onUpdateActionButtons(args: SelectSpellArgs): void {
       const handleConfirm = () => {
+         if (this.player_table.spell_repertoire.getSelection().length == 0) return;
+
          const spell = this.player_table.spell_repertoire.getSelection()[0];
          this.game.actionManager.addArgument(spell.location_arg.toString());
          this.game.actionManager.activateNextAction();
+      };
+
+      const handleIgnore = () => {
+         const text = _("Are-you sure you want to ignore this effect?");
+         this.game.confirmationDialog(text, args.ignore);
       };
 
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
@@ -37,6 +44,9 @@ class SelectSpellStates implements StateHandler {
       }
       if (args.pass) {
          this.game.addActionButtonPass();
+      }
+      if (args.ignore) {
+         this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
       }
       this.game.disableButton("btn_confirm");
    }
@@ -51,4 +61,5 @@ interface SelectSpellArgs {
    selection?: SpellCard[];
    cancel: boolean;
    pass?: boolean;
+   ignore?: () => void;
 }

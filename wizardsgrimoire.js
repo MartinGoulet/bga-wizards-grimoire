@@ -2348,7 +2348,11 @@ var ActionManager = (function () {
                 player_id: this.game.getPlayerId(),
                 selection: instantSpell,
                 cancel: false,
-                pass: true,
+                ignore: function () {
+                    _this.actions.splice(0);
+                    _this.addArgument("0");
+                    _this.activateNextAction();
+                },
             },
         });
     };
@@ -2871,7 +2875,7 @@ var StateManager = (function () {
     StateManager.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
         var _a;
-        log("Entering state: " + stateName);
+        log("Entering state: " + stateName, args.args);
         if (args.phase) {
             this.game.gameOptions.setPhase(Number(args.phase));
         }
@@ -4520,9 +4524,15 @@ var SelectSpellStates = (function () {
     SelectSpellStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
+            if (_this.player_table.spell_repertoire.getSelection().length == 0)
+                return;
             var spell = _this.player_table.spell_repertoire.getSelection()[0];
             _this.game.actionManager.addArgument(spell.location_arg.toString());
             _this.game.actionManager.activateNextAction();
+        };
+        var handleIgnore = function () {
+            var text = _("Are-you sure you want to ignore this effect?");
+            _this.game.confirmationDialog(text, args.ignore);
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         if (args.cancel) {
@@ -4530,6 +4540,9 @@ var SelectSpellStates = (function () {
         }
         if (args.pass) {
             this.game.addActionButtonPass();
+        }
+        if (args.ignore) {
+            this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
         }
         this.game.disableButton("btn_confirm");
     };

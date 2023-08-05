@@ -82,7 +82,6 @@ class BadFortuneStates implements StateHandler {
 
    isAllManaCardDistributed() {
       return this.mana_count == this.deck_cards.length;
-      // return this.spell_cards.length + this.deck_cards.length == 3;
    }
 }
 

@@ -613,7 +613,11 @@ class ActionManager {
             player_id: this.game.getPlayerId(),
             selection: instantSpell,
             cancel: false,
-            pass: true,
+            ignore: () => {
+               this.actions.splice(0);
+               this.addArgument("0");
+               this.activateNextAction();
+            },
          } as SelectSpellArgs,
       });
    }
