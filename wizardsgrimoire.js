@@ -2875,7 +2875,7 @@ var StateManager = (function () {
     StateManager.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
         var _a;
-        log("Entering state: " + stateName, args.args);
+        log("Entering state: " + stateName);
         if (args.phase) {
             this.game.gameOptions.setPhase(Number(args.phase));
         }
