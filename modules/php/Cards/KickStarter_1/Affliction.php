@@ -15,7 +15,7 @@ class Affliction extends BaseCard {
     public function castSpellInteraction($args) {
         $gainExtraCard = boolval(array_shift($args));
         if ($gainExtraCard) {
-            $this->dealDamage(1, Players::getPlayerId());
+            $this->dealDamage(1, Players::getPlayerId(), false);
             $this->drawManaCards(2);
         }
     }

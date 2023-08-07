@@ -30,7 +30,7 @@ abstract class BaseCard {
         return true;
     }
 
-    protected function dealDamage(int $damage, int $opponent_id = -1) {
+    protected function dealDamage(int $damage, int $opponent_id = -1, bool $recordDamage = true) {
 
         if ($opponent_id <= 0) {
             $opponent_id = Players::getOpponentId();
@@ -48,7 +48,9 @@ abstract class BaseCard {
         );
 
         Globals::setPreviousSpellDamage($damage);
-        Stats::damageWithSpell($damage, $opponent_id, $this->getCard());
+        if($recordDamage) {
+            Stats::damageWithSpell($damage, $opponent_id, $this->getCard());
+        }
     }
 
     protected function drawManaCards(int $nbr, int $player_id = 0) {
