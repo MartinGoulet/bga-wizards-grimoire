@@ -53,13 +53,13 @@ $gameinfos = array(
     'estimated_duration' => 30,
 
     // Time in second add to a player when "giveExtraTime" is called (speed profile = fast)
-    'fast_additional_time' => 30,
+    'fast_additional_time' => 60,
 
     // Time in second add to a player when "giveExtraTime" is called (speed profile = medium)
-    'medium_additional_time' => 40,
+    'medium_additional_time' => 90,
 
     // Time in second add to a player when "giveExtraTime" is called (speed profile = slow)
-    'slow_additional_time' => 50,
+    'slow_additional_time' => 120,
 
     // If you are using a tie breaker in your game (using "player_score_aux"), you must describe here
     // the formula used to compute "player_score_aux". This description will be used as a tooltip to explain
