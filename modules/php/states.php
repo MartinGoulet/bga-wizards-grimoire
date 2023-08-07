@@ -158,11 +158,13 @@ trait StateTrait {
     }
 
     function stPreCastSpell() {
+        $this->giveExtraTime(Players::getPlayerId());
         Events::onCheckOngoingActiveSpell();
         $this->gamestate->nextState();
     }
 
     function stSwitchToOpponent() {
+        $this->giveExtraTime(Globals::getInteractionPlayer());
         Game::get()->gamestate->changeActivePlayer(Globals::getInteractionPlayer());
         Game::get()->gamestate->nextState();
     }
@@ -180,11 +182,14 @@ trait StateTrait {
         Game::undoSavepoint();
         $opponent_id = Players::getOpponentId();
         Players::setPlayerId($opponent_id);
+        $this->giveExtraTime($opponent_id);
+
         Game::get()->gamestate->changeActivePlayer($opponent_id);
         Game::get()->gamestate->nextState();
     }
 
     function stPreBasicAttack() {
+        $this->giveExtraTime(Players::getPlayerId());
         Globals::setCurrentBasicAttackPower(0);
         if (ManaCard::getHandCount() == 0) {
             Globals::setPreviousBasicAttackPower(0);
