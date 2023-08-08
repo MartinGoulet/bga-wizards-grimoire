@@ -1483,6 +1483,7 @@ var WizardsGrimoire = (function () {
         gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
             var table = new PlayerTable(_this, player);
+            table.setPreviousBasicAttack(gamedatas.globals.previous_basic_attack);
             _this.playersTables.push(table);
         });
     };
@@ -3139,7 +3140,7 @@ var PlayerTable = (function () {
         this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
     };
     PlayerTable.prototype.setPreviousBasicAttack = function (value) {
-        var id = "puppetmaster_icon_".concat(this.player_id);
+        var id = "puppetmaster_".concat(this.player_id);
         var el = document.getElementById(id);
         if (el == null)
             return;

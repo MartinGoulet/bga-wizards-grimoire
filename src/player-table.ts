@@ -256,7 +256,7 @@ class PlayerTable {
    }
 
    setPreviousBasicAttack(value: number) {
-      const id = `puppetmaster_icon_${this.player_id}`;
+      const id = `puppetmaster_${this.player_id}`;
       const el = document.getElementById(id);
       if (el == null) return;
       el.innerText = value.toString();

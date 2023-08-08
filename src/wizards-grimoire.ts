@@ -174,6 +174,7 @@ class WizardsGrimoire
       gamedatas.players_order.forEach((player_id) => {
          const player = gamedatas.players[Number(player_id)];
          const table = new PlayerTable(this, player);
+         table.setPreviousBasicAttack(gamedatas.globals.previous_basic_attack);
          this.playersTables.push(table);
       });
    }
