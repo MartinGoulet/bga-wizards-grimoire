@@ -48,6 +48,7 @@ trait StateTrait {
 
         $this->stSpellCoolDownInstant();
         $this->stSpellCoolDownDelayed();
+        $this->stSpellCoolDownRememberOngoing();
 
         $cooldownIds = Globals::getCoolDownDelayedSpellIds();
 
@@ -122,11 +123,33 @@ trait StateTrait {
         }
     }
 
+    function stSpellCoolDownRememberOngoing() {
+        $positions = [];
+
+        for ($i = 1; $i <= 6; $i++) {
+            $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
+            if ($mana_card) {
+                $spell = SpellCard::getFromRepertoire($i);
+                $spell_info = SpellCard::getCardInfo($spell);
+
+                if ($spell_info['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+                    $positions[] = $i;
+                }
+            }
+        }
+
+        Globals::setCoolDownOngoingSpellIds($positions);
+    }
+
     function stSpellCoolDownOngoing() {
 
         $cards = [];
+        $positions = Globals::getCoolDownOngoingSpellIds();
+        if (!is_array($positions)) {
+            $positions = [1, 2, 3, 4, 5, 6];
+        }
 
-        for ($i = 1; $i <= 6; $i++) {
+        foreach ($positions as $i) {
             $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
             if ($mana_card) {
                 $spell = SpellCard::getFromRepertoire($i);

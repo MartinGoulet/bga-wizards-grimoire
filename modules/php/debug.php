@@ -52,13 +52,13 @@ trait DebugTrait {
         Globals::setPreviousBasicAttackPower(2);
 
         $players_spell_cards = [
-            "2329672" => ["WildBloom", "ShadowAttack", "SilentSupport", "ArcaneTactics", "FalseFace", "FireBlast"],
-            "2329673" => ["BadFortune", "Growth", "Wrath", "Fracture", "TrapAttack", "QuickSwap"],
+            "2329672" => ["Affliction", "Wrath", "Hellstorm", "Possessed", "SilentSupport", "TouchTheVoid"],
+            "2329673" => ["ArcaneTactics", "Hoodwink", "WildBloom", "Windstorm", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
-            "2329672" => [1, 1, 1, 1, 1, 0],
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329672" => [2, 1, 3, 3, 0, 2],
+            "2329673" => [2, 0, 1, 1, 2, 2],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {

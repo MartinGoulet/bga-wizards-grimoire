@@ -43,6 +43,15 @@ class Globals extends APP_DbObject {
         return Globals::set(WG_GV_COOLDOWN_DELAYED_SPELLS, $spell_delayed_ids);
     }
 
+    /** @return array */
+    public static function getCoolDownOngoingSpellIds() {
+        return Globals::get(WG_GV_COOLDOWN_ONGOING_SPELLS, true);
+    }
+
+    public static function setCoolDownOngoingSpellIds(array $spell_delayed_ids) {
+        return Globals::set(WG_GV_COOLDOWN_ONGOING_SPELLS, $spell_delayed_ids);
+    }
+
     public static function getConsecutivelyAttackSpellCount() {
         return intval(Game::get()->getGameStateValue(WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST));
     }
