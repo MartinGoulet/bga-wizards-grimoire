@@ -27,30 +27,30 @@ class PlayerTable {
          `data-secret_oath="false"`,
       ];
 
-      const mana_cooldown_icons = !this.current_player
-         ? ""
-         : `<div class="mana-cooldown-icons">
-               <div id="player_table-${pId}-mana-cooldown-icon-1" class="mana-cooldown-icon"></div>
-               <div id="player_table-${pId}-mana-cooldown-icon-2" class="mana-cooldown-icon"></div>
-               <div id="player_table-${pId}-mana-cooldown-icon-3" class="mana-cooldown-icon"></div>
-               <div id="player_table-${pId}-mana-cooldown-icon-4" class="mana-cooldown-icon"></div>
-               <div id="player_table-${pId}-mana-cooldown-icon-5" class="mana-cooldown-icon"></div>
-               <div id="player_table-${pId}-mana-cooldown-icon-6" class="mana-cooldown-icon"></div>
-            </div>`;
-
       const html = `
             <div id="player-table-${pId}" style="--color: #${pColor}" ${dataset.join(" ")}>
                <div class="player-table whiteblock">
                   <span class="wg-title">${pName}</span>
                   <div id="player-table-${pId}-spell-repertoire" class="spell-repertoire"></div>
-                  ${mana_cooldown_icons}
                   <div id="player-table-${pId}-mana-cooldown" class="mana-cooldown">
-                     <div id="player_table-${pId}-mana-deck-1" class="mana-deck"></div>
-                     <div id="player_table-${pId}-mana-deck-2" class="mana-deck"></div>
-                     <div id="player_table-${pId}-mana-deck-3" class="mana-deck"></div>
-                     <div id="player_table-${pId}-mana-deck-4" class="mana-deck"></div>
-                     <div id="player_table-${pId}-mana-deck-5" class="mana-deck"></div>
-                     <div id="player_table-${pId}-mana-deck-6" class="mana-deck"></div>
+                     <div id="player_table-${pId}-mana-deck-1" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-1" class="mana-cooldown-icon"></div>
+                     </div>
+                     <div id="player_table-${pId}-mana-deck-2" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-2" class="mana-cooldown-icon"></div>
+                     </div>
+                     <div id="player_table-${pId}-mana-deck-3" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-3" class="mana-cooldown-icon"></div>
+                     </div>
+                     <div id="player_table-${pId}-mana-deck-4" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-4" class="mana-cooldown-icon"></div>
+                     </div>
+                     <div id="player_table-${pId}-mana-deck-5" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-5" class="mana-cooldown-icon"></div>
+                     </div>
+                     <div id="player_table-${pId}-mana-deck-6" class="mana-deck">
+                        <div id="player_table-${pId}-mana-cooldown-icon-6" class="mana-cooldown-icon"></div>
+                     </div>
                   </div>
                   <div id="player-table-${pId}-health" class="wg-health">
                      <div id="player-table-${pId}-health-value"></div>
