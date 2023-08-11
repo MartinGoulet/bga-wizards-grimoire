@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
@@ -13,6 +14,10 @@ class SecretOath extends BaseCard {
     public function isOngoingSpellActive(bool $value, int $player_id) {
         // As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately
         Globals::setIsActiveSecretOath($value, $player_id);
+        
+        if ($value == true) {
+            Game::undoSavepoint();
+        }
     }
 
     public static function check() {
