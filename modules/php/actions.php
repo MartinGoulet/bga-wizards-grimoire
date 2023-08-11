@@ -312,7 +312,8 @@ trait ActionTrait {
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
-
+            Globals::setPreviousBasicAttackPower(0);
+            
             Game::get()->gamestate->nextState("block");
         } else {
             throw new BgaUserException(_("Wrong Mana Power"));
