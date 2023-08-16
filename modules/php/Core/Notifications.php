@@ -48,7 +48,7 @@ class Notifications {
     }
 
     static function chooseSpell($player_id, $card) {
-        $msg = clienttranslate('${player_name} chooses ${card_name} from the spell repertoire');
+        $msg = clienttranslate('${player_name} chooses ${card_name} from the spell pool');
         self::notifyAll('onChooseSpell', $msg, [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
@@ -159,7 +159,7 @@ class Notifications {
     }
 
     static function refillSpell($player_id, $card) {
-        $msg = clienttranslate('${card_name} is added to the spell repertoire');
+        $msg = clienttranslate('${card_name} is added to the spell pool');
         self::notifyAll('onRefillSpell', $msg, [
             'card' => $card,
             'card_name' => SpellCard::getName($card),
