@@ -196,13 +196,19 @@ class Hand extends HandStock<ManaCard> {
       return new Promise<boolean>((resolve) => {
          super
             .addCard(copy, animation, settings)
-            .then(() => this.hand_counter.toValue(this.getCards().length))
+            .then(() => {
+               const count = this.getCards().length;
+               this.hand_counter.toValue(count);
+               this.element.dataset.count = count.toString();
+            })
             .then(() => resolve(true));
       });
    }
 
    public removeCard(card: ManaCard, settings?: RemoveCardSettings): void {
       super.removeCard(card, settings);
-      this.hand_counter.toValue(this.getCards().length);
+      const count = this.getCards().length;
+      this.hand_counter.toValue(count);
+      this.element.dataset.count = count.toString();
    }
 }

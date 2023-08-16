@@ -138,18 +138,37 @@
       min-height: 150px;
       margin: 20px 0;
 
-      &:has(:nth-child(10)),
-      &:has(:nth-child(11)) {
+      &[data-count="10"],
+      &[data-count="11"] {
          --card-overlap: 40px !important;
          --card-shift: 5px !important;
          --card-inclination: 5deg !important;
       }
 
-      &:has(> :nth-child(12)) {
+      &[data-count="12"],
+      &[data-count="13"] {
          --card-overlap: 50px !important;
          --card-shift: 4px !important;
          --card-inclination: 4deg !important;
       }
+
+      &[data-count="14"],
+      &[data-count="15"],
+      &[data-count="16"]{
+         --card-overlap: 60px !important;
+         --card-shift: 3px !important;
+         --card-inclination: 3deg !important;
+      }
+
+      &[data-count="17"],
+      &[data-count="18"],
+      &[data-count="19"],
+      &[data-count="20"] {
+         --card-overlap: 65px !important;
+         --card-shift: 2px !important;
+         --card-inclination: 2deg !important;
+      }
+
    }
 }
 

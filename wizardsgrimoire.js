@@ -1823,13 +1823,19 @@ var Hand = (function (_super) {
         }
         return new Promise(function (resolve) {
             _super.prototype.addCard.call(_this, copy, animation, settings)
-                .then(function () { return _this.hand_counter.toValue(_this.getCards().length); })
+                .then(function () {
+                var count = _this.getCards().length;
+                _this.hand_counter.toValue(count);
+                _this.element.dataset.count = count.toString();
+            })
                 .then(function () { return resolve(true); });
         });
     };
     Hand.prototype.removeCard = function (card, settings) {
         _super.prototype.removeCard.call(this, card, settings);
-        this.hand_counter.toValue(this.getCards().length);
+        var count = this.getCards().length;
+        this.hand_counter.toValue(count);
+        this.element.dataset.count = count.toString();
     };
     return Hand;
 }(HandStock));

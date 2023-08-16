@@ -1097,15 +1097,25 @@ body > .card {
   min-height: 150px;
   margin: 20px 0;
 }
-.player-table .hand:has(:nth-child(10)), .player-table .hand:has(:nth-child(11)) {
+.player-table .hand[data-count="10"], .player-table .hand[data-count="11"] {
   --card-overlap: 40px !important;
   --card-shift: 5px !important;
   --card-inclination: 5deg !important;
 }
-.player-table .hand:has(> :nth-child(12)) {
+.player-table .hand[data-count="12"], .player-table .hand[data-count="13"] {
   --card-overlap: 50px !important;
   --card-shift: 4px !important;
   --card-inclination: 4deg !important;
+}
+.player-table .hand[data-count="14"], .player-table .hand[data-count="15"], .player-table .hand[data-count="16"] {
+  --card-overlap: 60px !important;
+  --card-shift: 3px !important;
+  --card-inclination: 3deg !important;
+}
+.player-table .hand[data-count="17"], .player-table .hand[data-count="18"], .player-table .hand[data-count="19"], .player-table .hand[data-count="20"] {
+  --card-overlap: 65px !important;
+  --card-shift: 2px !important;
+  --card-inclination: 2deg !important;
 }
 
 .player-table-extra-icons {
