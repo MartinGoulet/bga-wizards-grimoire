@@ -45,7 +45,7 @@ $game_options = [
     ],
     WG_GAME_OPTION_EXT_KICKSTARTER_1_ID => [
         'name' => totranslate('Lost Pages expansion'),
-        'default' => WG_OPTION_NO,
+        'default' => WG_OPTION_YES,
         'values' => [
             WG_OPTION_YES => [
                 'name' => totranslate('Yes'),
