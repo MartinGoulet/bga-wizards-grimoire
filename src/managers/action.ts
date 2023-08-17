@@ -388,7 +388,7 @@ class ActionManager {
    }
 
    private actionContamination() {
-      const msg = _("${you} may select ${nbr} mana card(s) from your hand to your deck");
+      const msg = _("${you} may select ${nbr} mana card(s) to move from your hand on the mana deck");
       this.returnManaCardToDeck(msg, 2, true, true);
    }
 
