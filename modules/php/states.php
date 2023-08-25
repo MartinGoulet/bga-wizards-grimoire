@@ -181,9 +181,13 @@ trait StateTrait {
     }
 
     function stPreCastSpell() {
-        $this->giveExtraTime(Players::getPlayerId());
-        Events::onCheckOngoingActiveSpell();
-        $this->gamestate->nextState();
+        if (Players::getPlayerLife(Players::getPlayerId()) <= 0 || Players::getPlayerLife(Players::getOpponentId()) <= 0) {
+            $this->gamestate->nextState('dead');
+        } else {
+            $this->giveExtraTime(Players::getPlayerId());
+            Events::onCheckOngoingActiveSpell();
+            $this->gamestate->nextState('cast');
+        }
     }
 
     function stSwitchToOpponent() {

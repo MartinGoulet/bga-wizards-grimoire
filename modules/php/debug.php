@@ -57,7 +57,7 @@ trait DebugTrait {
         ];
 
         $players_spell_mana = [
-            "2329672" => [2, 1, 3, 3, 0, 2],
+            "2329672" => [0, 1, 3, 3, 0, 2],
             "2329673" => [2, 0, 1, 1, 2, 2],
         ];
 
@@ -93,8 +93,8 @@ trait DebugTrait {
         
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
-        Players::setPlayerLife("2329672", 50);
-        Players::setPlayerLife("2329673", 50);
+        Players::setPlayerLife("2329672", 1);
+        Players::setPlayerLife("2329673", 1);
 
         Globals::setIsActiveBattleVision(false, 0);
         Globals::setIsActiveGrowth(false, 0);

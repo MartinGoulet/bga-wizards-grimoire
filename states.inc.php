@@ -181,7 +181,8 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stPreCastSpell",
         "transitions" => [
-            "" => ST_CAST_SPELL,
+            "cast" => ST_CAST_SPELL,
+            "dead" => ST_PRE_END_OF_GAME,
         ]
     ],
 
