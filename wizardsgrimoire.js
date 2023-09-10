@@ -2620,9 +2620,19 @@ var SpellCardManager = (function (_super) {
     };
     SpellCardManager.prototype.getTooltip = function (card) {
         var card_type = this.game.getCardType(card);
-        var name = card_type.name, cost = card_type.cost, description = card_type.description;
+        var name = card_type.name, cost = card_type.cost, description = card_type.description, type = card_type.type, activation = card_type.activation;
         var gametext = formatGametext2(_(description));
-        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(_(name), "</div>\n            <div class=\"wg-tooltip-cost\">").concat(_("Cost"), " : ").concat(cost, "</div>\n            <div class=\"wg-tooltip-gametext\">").concat(_(gametext), "</div>\n         </div>\n      </div>");
+        var text_type = {
+            red: _("Damage"),
+            green: _("Regeneration"),
+            purple: _("Utility"),
+        }[type];
+        var text_activation = {
+            instant: _("Instant"),
+            delayed: _("Delayed"),
+            ongoing: _("Ongoing"),
+        }[activation];
+        var html = "<div class=\"wg-tooltip-card\">\n         <div class=\"wg-tooltip-left\">\n            <div class=\"wg-tooltip-header\">".concat(_(name), "</div>\n            <div class=\"wg-tooltip-cost\"> \n               <table>\n                  <tr><td style=\"padding-right: 15px\">").concat(_("Cost"), "</td><td>").concat(cost, "</td></tr>\n                  <tr><td style=\"padding-right: 15px\">").concat(_("Type"), "</td><td>").concat(text_type, "</td></tr>\n                  <tr><td style=\"padding-right: 15px\">").concat(_("Activation"), "</td><td>").concat(text_activation, "</td></tr>\n               </table\n            <div class=\"wg-tooltip-gametext\">").concat(_(gametext), "</div>\n         </div>\n      </div>");
         return html;
     };
     return SpellCardManager;

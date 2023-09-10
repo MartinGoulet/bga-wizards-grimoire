@@ -74,14 +74,31 @@ class SpellCardManager extends CardManager<SpellCard> {
 
    getTooltip(card: SpellCard) {
       const card_type = this.game.getCardType(card);
-      const { name, cost, description } = card_type;
+      const { name, cost, description, type, activation } = card_type;
 
       const gametext = formatGametext2(_(description));
+
+      const text_type = {
+         red: _("Damage"),
+         green: _("Regeneration"),
+         purple: _("Utility"),
+      }[type];
+
+      const text_activation = {
+         instant: _("Instant"),
+         delayed: _("Delayed"),
+         ongoing: _("Ongoing"),
+      }[activation];
 
       let html = `<div class="wg-tooltip-card">
          <div class="wg-tooltip-left">
             <div class="wg-tooltip-header">${_(name)}</div>
-            <div class="wg-tooltip-cost">${_("Cost")} : ${cost}</div>
+            <div class="wg-tooltip-cost"> 
+               <table>
+                  <tr><td style="padding-right: 15px">${_("Cost")}</td><td>${cost}</td></tr>
+                  <tr><td style="padding-right: 15px">${_("Type")}</td><td>${text_type}</td></tr>
+                  <tr><td style="padding-right: 15px">${_("Activation")}</td><td>${text_activation}</td></tr>
+               </table
             <div class="wg-tooltip-gametext">${_(gametext)}</div>
          </div>
       </div>`;
