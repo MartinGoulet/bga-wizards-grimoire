@@ -42,6 +42,8 @@ define('WG_VAR_UNDO_AVAILABLE', 'undo_available');
 define('WG_VAR_STATS_ACTIVATED', 'stats_activated');
 define('WG_VAR_FIRST_PLAYER', 'first_player');
 
+define('WG_VAR_LAST_BASIC_ATTACK_DAMAGE', 'last_basic_dmg');
+
 define('WG_GV_COOLDOWN_DELAYED_SPELLS', 'cooldown_delayed_spells');
 define('WG_GV_COOLDOWN_ONGOING_SPELLS', 'cooldown_ongoing_spells');
 

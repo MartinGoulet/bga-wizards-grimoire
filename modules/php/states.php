@@ -235,6 +235,7 @@ trait StateTrait {
         Stats::damageWithBasicAttack($damage, $opponent_id);
 
         Globals::setPreviousBasicAttackPower($damage);
+        Globals::setLastBasicAttackDamage($damage);
         Globals::setCurrentBasicAttackPower(0);
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {

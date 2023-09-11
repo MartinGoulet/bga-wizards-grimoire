@@ -1168,14 +1168,14 @@ body > .card {
   background-position-y: -849px;
 }
 
-.wg-ongoing-spell-puppetmaster [data-battle_vision=false] .puppetmaster_icon {
+.wg-ongoing-spell-puppetmaster [data-puppetmaster=false] .puppetmaster_icon {
   display: flex;
   border: 2px solid white;
   background-position-x: -230px;
   background-position-y: -855px;
 }
 
-.wg-ongoing-spell-secretoath [data-battle_vision=false] .secretoath_icon {
+.wg-ongoing-spell-secretoath [data-secret_oath=false] .secretoath_icon {
   display: flex;
   border: 2px solid white;
   background-position-x: -736px;

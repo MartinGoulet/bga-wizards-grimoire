@@ -32,8 +32,8 @@ trait DebugTrait {
     }
 
     public function resetLife() {
-        Players::setPlayerLife(Players::getPlayerId(), 1);
-        Players::setPlayerLife(Players::getOpponentId(), 1);
+        Players::setPlayerLife(Players::getPlayerId(), 100);
+        Players::setPlayerLife(Players::getOpponentId(), 100);
     }
 
     public function shuffleSpells() {
@@ -52,13 +52,13 @@ trait DebugTrait {
         Globals::setPreviousBasicAttackPower(2);
 
         $players_spell_cards = [
-            "2329672" => ["Affliction", "Wrath", "Hellstorm", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["ArcaneTactics", "Hoodwink", "WildBloom", "Windstorm", "StoneCrush", "EnergyReserve"],
+            "2329672" => ["BattleVision", "Hoodwink", "Hellstorm", "Possessed", "SilentSupport", "TouchTheVoid"],
+            "2329673" => ["FalseFace", "Wrath", "WildBloom", "Windstorm", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
-            "2329672" => [0, 1, 3, 3, 0, 2],
-            "2329673" => [2, 0, 1, 1, 2, 2],
+            "2329672" => [1, 0, 3, 3, 0, 2],
+            "2329673" => [0, 0, 1, 1, 2, 2],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -66,7 +66,7 @@ trait DebugTrait {
             foreach ($cards as $name) {
                 $index += 1;
                 $card = $this->getCardByClassName($name);
-                if($card !== null) {
+                if ($card !== null) {
                     $spell_deck->moveCard($card['id'], CardLocation::PlayerSpellRepertoire($player_id), $index);
                 } else {
                     var_dump("Wrong card name : " . $name);
@@ -78,7 +78,7 @@ trait DebugTrait {
             $index = 0;
             foreach ($nbr_cards as $nbr_card) {
                 $index += 1;
-                for ($i=0; $i < $nbr_card; $i++) { 
+                for ($i = 0; $i < $nbr_card; $i++) {
                     ManaCard::dealFromDeckToManaCoolDown($index, $player_id);
                 }
             }
@@ -93,10 +93,10 @@ trait DebugTrait {
         
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
-        Players::setPlayerLife("2329672", 1);
-        Players::setPlayerLife("2329673", 1);
+        Players::setPlayerLife("2329672", 100);
+        Players::setPlayerLife("2329673", 100);
 
-        Globals::setIsActiveBattleVision(false, 0);
+        Globals::setIsActiveBattleVision(true, 2329672);
         Globals::setIsActiveGrowth(false, 0);
         Globals::setIsActiveLullaby(false, 0);
         Globals::setIsActivePowerHungry(false, 0);

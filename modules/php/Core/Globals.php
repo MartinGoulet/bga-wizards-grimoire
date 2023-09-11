@@ -182,6 +182,19 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_PREVIOUS_BASIC_ATTACK_POWER, $value);
     }
 
+    public static function getLastBasicAttackDamage() {
+        $value = self::get(WG_VAR_LAST_BASIC_ATTACK_DAMAGE, true);
+        if($value == null) {
+            return self::getPreviousBasicAttackPower();
+        } else {
+            return intval($value['dmg']);
+        }
+    }
+
+    public static function setLastBasicAttackDamage(int $value) {
+        self::set(WG_VAR_LAST_BASIC_ATTACK_DAMAGE, ['dmg' => $value]);
+    }
+
     public static function getPreviousSpellDamage() {
         return intval(Game::get()->getGameStateValue(WG_VAR_PREVIOUS_SPELL_DAMAGE));
     }

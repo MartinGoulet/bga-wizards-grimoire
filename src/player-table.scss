@@ -236,7 +236,7 @@
 }
 
 .wg-ongoing-spell-puppetmaster {
-   [data-battle_vision="false"] {
+   [data-puppetmaster="false"] {
       .puppetmaster_icon {
          display: flex;
          border: 2px solid white;
@@ -247,7 +247,7 @@
 }
 
 .wg-ongoing-spell-secretoath {
-   [data-battle_vision="false"] {
+   [data-secret_oath="false"] {
       .secretoath_icon {
          display: flex;
          border: 2px solid white;
