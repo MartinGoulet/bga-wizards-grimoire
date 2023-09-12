@@ -46,6 +46,7 @@ class WizardsGrimoire
 
    public gameOptions: GameOptions;
    public tableCenter: TableCenter;
+   public playersPanels: PlayerPanel[];
    public playersTables: PlayerTable[];
    public zoomManager: ZoomManager;
    public modal: Modal;
@@ -87,6 +88,7 @@ class WizardsGrimoire
       this.dontPreloadImage("background-desktop.png");
 
       // Setting up player boards
+      this.createPlayerPanels(gamedatas);
       this.createPlayerTables(gamedatas);
 
       this.zoomManager = new ZoomManager({
@@ -169,6 +171,15 @@ class WizardsGrimoire
       this.addActionButton("btn_undo", _("Undo"), handleUndo, null, null, "gray");
    }
 
+   private createPlayerPanels(gamedatas: WizardsGrimoireGamedatas) {
+      this.playersPanels = [];
+      gamedatas.playerorder.forEach((player_id) => {
+         const player = gamedatas.players[Number(player_id)];
+         const panel = new PlayerPanel(this, player);
+         this.playersPanels.push(panel);
+      });
+   }
+
    private createPlayerTables(gamedatas: WizardsGrimoireGamedatas) {
       this.playersTables = [];
       gamedatas.players_order.forEach((player_id) => {
@@ -222,6 +233,10 @@ class WizardsGrimoire
 
    public getPlayerId(): number {
       return Number(this.player_id);
+   }
+
+   public getPlayerPanel(playerId: number): PlayerPanel {
+      return this.playersPanels.find((playerPanel) => playerPanel.player_id === playerId);
    }
 
    public getPlayerTable(playerId: number): PlayerTable {

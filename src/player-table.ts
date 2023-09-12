@@ -5,7 +5,6 @@ class PlayerTable {
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: Hand;
    public health: ebg.counter;
-   public hand_counter: ebg.counter;
 
    private current_player: boolean;
 
@@ -63,24 +62,6 @@ class PlayerTable {
 
       document.getElementById("tables").insertAdjacentHTML("beforeend", html);
 
-      let smallBoard = document.getElementById(`player_small_board_${pId}`);
-      if (smallBoard) {
-         smallBoard.parentElement.removeChild(smallBoard);
-      }
-
-      const smallBoardHtml = `<div id="player_small_board_${pId}" class="player_small_board">
-            <div id="hand-icon-wrapper-${pId}" class="hand-icon-wrapper">
-               <div id="player_small_board_${pId}_hand_icon" class="hand-icon"></div>
-               <div id="player_small_board_${pId}_value" class="hand-value">0</div>
-            </div>
-         </div>`;
-
-      document.getElementById(`player_board_${pId}`).insertAdjacentHTML("beforeend", smallBoardHtml);
-      this.hand_counter = new ebg.counter();
-      this.hand_counter.create(`player_small_board_${pId}_value`);
-      this.hand_counter.setValue(0);
-      this.game.setTooltip;
-
       if (this.current_player) {
          this.setupHaste();
          this.setupSecondStrike();
@@ -126,7 +107,7 @@ class PlayerTable {
          game.manasManager,
          document.getElementById(`player-table-${pId}-hand-cards`),
          this.current_player,
-         this.hand_counter,
+         this.game.getPlayerPanel(this.player_id).hand_counter,
       );
       this.hand.addCards(board.hand ?? []);
 

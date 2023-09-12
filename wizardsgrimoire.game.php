@@ -47,6 +47,7 @@ use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
+use WizardsGrimoire\Core\Stats;
 use WizardsGrimoire\DebugTrait;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -257,11 +258,18 @@ class WizardsGrimoire extends Table {
         $result = array();
 
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+        $first_player = Players::getFirstPlayer();
+        $second_player = Players::getOpponentIdOf($first_player);
 
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
         $sql = "SELECT player_id id, player_score score FROM player ";
         $result['players'] = self::getCollectionFromDb($sql);
+
+        $result['players'][$first_player]['turn'] = intval(self::getStat(WG_STAT_TURN_NUMBER, $first_player));
+        $result['players'][$second_player]['turn'] = intval(self::getStat(WG_STAT_TURN_NUMBER, $second_player));
+        
+        $result['first_player'] = $first_player;
 
         $result['card_types'] = $this->card_types;
 

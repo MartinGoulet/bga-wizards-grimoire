@@ -1,4 +1,5 @@
 interface WizardsGrimoirePlayerData extends BgaPlayer {
+   turn: number;
    // Add Player data
 }
 
@@ -11,6 +12,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    spells: SpellInfo;
    manas: ManaInfo;
 
+   first_player: number;
    card_types: { [card_type: number]: CardType };
    player_board: PlayerBoardObject;
    players_order: number[];

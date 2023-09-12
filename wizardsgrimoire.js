@@ -1420,6 +1420,7 @@ var WizardsGrimoire = (function () {
         htmlElement.classList.toggle("desktop_version", document.body.classList.contains("desktop_version"));
         this.dontPreloadImage("background-mobile.png");
         this.dontPreloadImage("background-desktop.png");
+        this.createPlayerPanels(gamedatas);
         this.createPlayerTables(gamedatas);
         this.zoomManager = new ZoomManager({
             element: document.getElementById("table"),
@@ -1477,6 +1478,15 @@ var WizardsGrimoire = (function () {
         };
         this.addActionButton("btn_undo", _("Undo"), handleUndo, null, null, "gray");
     };
+    WizardsGrimoire.prototype.createPlayerPanels = function (gamedatas) {
+        var _this = this;
+        this.playersPanels = [];
+        gamedatas.playerorder.forEach(function (player_id) {
+            var player = gamedatas.players[Number(player_id)];
+            var panel = new PlayerPanel(_this, player);
+            _this.playersPanels.push(panel);
+        });
+    };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
         this.playersTables = [];
@@ -1527,6 +1537,9 @@ var WizardsGrimoire = (function () {
     };
     WizardsGrimoire.prototype.getPlayerId = function () {
         return Number(this.player_id);
+    };
+    WizardsGrimoire.prototype.getPlayerPanel = function (playerId) {
+        return this.playersPanels.find(function (playerPanel) { return playerPanel.player_id === playerId; });
     };
     WizardsGrimoire.prototype.getPlayerTable = function (playerId) {
         return this.playersTables.find(function (playerTable) { return playerTable.player_id === playerId; });
@@ -2976,6 +2989,29 @@ var StateManager = (function () {
     };
     return StateManager;
 }());
+var PlayerPanel = (function () {
+    function PlayerPanel(game, player) {
+        this.game = game;
+        this.player_id = Number(player.id);
+        var smallBoard = document.getElementById("player_small_board_".concat(player.id));
+        if (smallBoard) {
+            smallBoard.parentElement.removeChild(smallBoard);
+        }
+        var player_turn_text = this.player_id == game.gamedatas.first_player ? _("First choice") : _("First attacker");
+        var player_turn_class = this.player_id == game.gamedatas.first_player ? "choice" : "attacker";
+        var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon\"></div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " : </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n            </div>\n         </div>");
+        document.getElementById("player_board_".concat(player.id)).insertAdjacentHTML("beforeend", smallBoardHtml);
+        this.hand_counter = this.createCounter("player_small_board_".concat(player.id, "_hand_value"), 0);
+        this.turn_counter = this.createCounter("player_small_board_".concat(player.id, "_turn_value"), player.turn);
+    }
+    PlayerPanel.prototype.createCounter = function (target, value) {
+        var counter = new ebg.counter();
+        counter.create(target);
+        counter.setValue(value);
+        return counter;
+    };
+    return PlayerPanel;
+}());
 var PlayerTable = (function () {
     function PlayerTable(game, player) {
         var _this = this;
@@ -2998,16 +3034,6 @@ var PlayerTable = (function () {
         ];
         var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(pName, "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-1\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-2\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-3\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-4\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-5\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-6\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-health\" class=\"wg-health\">\n                     <div id=\"player-table-").concat(pId, "-health-value\"></div>\n                     <div class=\"wg-health-icon\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         document.getElementById("tables").insertAdjacentHTML("beforeend", html);
-        var smallBoard = document.getElementById("player_small_board_".concat(pId));
-        if (smallBoard) {
-            smallBoard.parentElement.removeChild(smallBoard);
-        }
-        var smallBoardHtml = "<div id=\"player_small_board_".concat(pId, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(pId, "\" class=\"hand-icon-wrapper\">\n               <div id=\"player_small_board_").concat(pId, "_hand_icon\" class=\"hand-icon\"></div>\n               <div id=\"player_small_board_").concat(pId, "_value\" class=\"hand-value\">0</div>\n            </div>\n         </div>");
-        document.getElementById("player_board_".concat(pId)).insertAdjacentHTML("beforeend", smallBoardHtml);
-        this.hand_counter = new ebg.counter();
-        this.hand_counter.create("player_small_board_".concat(pId, "_value"));
-        this.hand_counter.setValue(0);
-        this.game.setTooltip;
         if (this.current_player) {
             this.setupHaste();
             this.setupSecondStrike();
@@ -3044,7 +3070,7 @@ var PlayerTable = (function () {
                 deck.addCard(card, null, { index: 0 });
             });
         });
-        this.hand = new Hand(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), this.current_player, this.hand_counter);
+        this.hand = new Hand(game.manasManager, document.getElementById("player-table-".concat(pId, "-hand-cards")), this.current_player, this.game.getPlayerPanel(this.player_id).hand_counter);
         this.hand.addCards((_a = board.hand) !== null && _a !== void 0 ? _a : []);
         this.health = new ebg.counter();
         this.health.create("player-table-".concat(pId, "-health-value"));
