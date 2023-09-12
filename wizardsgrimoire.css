@@ -994,6 +994,11 @@ body > .card {
   padding: 2px 10px;
   border-radius: 5px;
 }
+.player_small_board .icon-wrapper > div.break {
+  flex-basis: 100%;
+  height: 0;
+  padding: 0;
+}
 .player_small_board .icon-wrapper > div.choice {
   background-color: rgba(0, 128, 0, 0.6666666667);
   color: white;

@@ -26,6 +26,7 @@ class PlayerPanel {
                     <div class="text">${_("Turn")} </div>  
                     <div id="player_small_board_${player.id}_turn_value" class="text"></div>
                 </div>
+                <div class="break"></div>
                 <div class="${player_turn_class}">
                     <div class="text">${player_turn_text}</div> 
                 </div>
