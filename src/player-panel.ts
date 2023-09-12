@@ -23,7 +23,7 @@ class PlayerPanel {
                     <div id="player_small_board_${player.id}_hand_value" class="text"></div>
                 </div>
                 <div>
-                    <div class="text">${_("Turn")} : </div>  
+                    <div class="text">${_("Turn")} </div>  
                     <div id="player_small_board_${player.id}_turn_value" class="text"></div>
                 </div>
                 <div class="${player_turn_class}">

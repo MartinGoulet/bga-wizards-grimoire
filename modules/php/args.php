@@ -100,7 +100,16 @@ trait ArgsTrait {
             ]
         ];
 
-        $result = ['ongoing_spells' => array_values($ongoing_spell)];
+        $first_player = Players::getPlayerId();
+        $second_player = Players::getOpponentIdOf($first_player);
+
+        $result = [
+            'ongoing_spells' => array_values($ongoing_spell),
+            'players' => [
+                $first_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $first_player),
+                $second_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $second_player),
+            ]
+        ];
 
         return $result;
     }

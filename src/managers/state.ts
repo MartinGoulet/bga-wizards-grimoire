@@ -69,6 +69,10 @@ class StateManager {
             if (value.active) log(value);
             this.game.toggleOngoingSpell(value);
          });
+         Object.keys(args.args.players).forEach((player_id) => {
+            const value = Number(args.args.players[player_id]);
+            this.game.getPlayerPanel(Number(player_id)).turn_counter.setValue(value);
+         });
       }
 
       if (this.states[stateName] !== undefined) {

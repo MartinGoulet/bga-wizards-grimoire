@@ -2929,6 +2929,10 @@ var StateManager = (function () {
                     log(value);
                 _this.game.toggleOngoingSpell(value);
             });
+            Object.keys(args.args.players).forEach(function (player_id) {
+                var value = Number(args.args.players[player_id]);
+                _this.game.getPlayerPanel(Number(player_id)).turn_counter.setValue(value);
+            });
         }
         if (this.states[stateName] !== undefined) {
             this.states[stateName].onEnteringState(args.args);
@@ -2999,7 +3003,7 @@ var PlayerPanel = (function () {
         }
         var player_turn_text = this.player_id == game.gamedatas.first_player ? _("First choice") : _("First attacker");
         var player_turn_class = this.player_id == game.gamedatas.first_player ? "choice" : "attacker";
-        var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon\"></div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " : </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n            </div>\n         </div>");
+        var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon\"></div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n            </div>\n         </div>");
         document.getElementById("player_board_".concat(player.id)).insertAdjacentHTML("beforeend", smallBoardHtml);
         this.hand_counter = this.createCounter("player_small_board_".concat(player.id, "_hand_value"), 0);
         this.turn_counter = this.createCounter("player_small_board_".concat(player.id, "_turn_value"), player.turn);
