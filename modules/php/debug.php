@@ -53,7 +53,7 @@ trait DebugTrait {
 
         $players_spell_cards = [
             "2329672" => ["TimeDistortion", "Windstorm", "BadFortune", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["FalseFace", "Wrath", "WildBloom", "Hoodwink", "StoneCrush", "EnergyReserve"],
+            "2329673" => ["ArcaneTactics", "Wrath", "WildBloom", "Hoodwink", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
@@ -96,12 +96,12 @@ trait DebugTrait {
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 
-        Globals::setIsActiveBattleVision(true, 2329672);
+        Globals::setIsActiveBattleVision(false, 0);
         Globals::setIsActiveGrowth(false, 0);
         Globals::setIsActiveLullaby(false, 0);
         Globals::setIsActivePowerHungry(false, 0);
         Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(false, 0);
+        Globals::setIsActiveSecretOath(true, 2329672);
         Game::undoSavepoint();
     }
 

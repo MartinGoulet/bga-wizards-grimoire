@@ -11,6 +11,8 @@ class SelectManaReturnDeckStates implements StateHandler {
       const { count } = args;
 
       const handleHandCardClick = (card: ManaCard) => {
+         if (args.exact && this.mana_cards.length >= args.count) return;
+
          this.mana_cards.push(card);
          this.game.tableCenter.manaDeck.addCard({ ...card, type: null, isHidden: true });
          this.game.toggleButtonEnable("btnConfirm", this.mana_cards.length === count);

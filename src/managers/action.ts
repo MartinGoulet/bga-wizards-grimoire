@@ -191,12 +191,8 @@ class ActionManager {
    /////////////////////////////////////////////////////////////
 
    private actionArcaneTactics() {
-      const msg = _("${you} must place 4 of the revealed mana on top of the mana deck");
-      const { name } = this.game.getCardType(this.getCurrentCard());
-      this.game.setClientState(states.client.arcaneTactics, {
-         descriptionmyturn: _(name) + " : " + msg,
-         args: {},
-      });
+      const msg = _("${you} may select ${nbr} mana card(s) from your hand");
+      this.returnManaCardToDeck(msg, 4, false, false);
    }
 
    private actionBadFortune() {
