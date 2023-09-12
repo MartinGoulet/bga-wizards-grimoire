@@ -6,7 +6,7 @@ class NotificationManager {
       this.subscribeEvent("onDiscardSpell", 500);
       this.subscribeEvent("onRefillSpell", 500);
       this.subscribeEvent("onDrawManaCards", 650, true);
-      this.subscribeEvent("onMoveManaCards", 1000, true);
+      this.subscribeEvent("onMoveManaCards", undefined, true);
       this.subscribeEvent("onManaDeckShuffle", 2500);
       this.subscribeEvent("onRevealManaCardCooldown", 500);
       this.subscribeEvent("onHealthChanged", 500);
@@ -17,12 +17,16 @@ class NotificationManager {
       );
    }
 
-   private subscribeEvent(eventName: string, time: number, setIgnore: boolean = false) {
+   private subscribeEvent(eventName: string, time?: number, setIgnore: boolean = false) {
       try {
-         dojo.subscribe(eventName, this, "notif_" + eventName);
-         if (time) {
-            this.game.notifqueue.setSynchronous(eventName, time);
-         }
+         dojo.subscribe(eventName, this, (notifDetails: INotification<any>) => {
+            const promise = this[`notif_${eventName}`](notifDetails);
+
+            // tell the UI notification ends, if the function returned a promise
+            promise?.then(() => this.game.notifqueue.onSynchronousNotificationEnd());
+         });
+         this.game.notifqueue.setSynchronous(eventName, time);
+
          if (setIgnore) {
             this.game.notifqueue.setIgnoreNotificationCheck(
                eventName,
@@ -57,8 +61,6 @@ class NotificationManager {
       const { player_id, cards } = notif.args;
       log("onDrawManaCards", cards);
       this.game.getPlayerTable(player_id).hand.addCards(cards);
-      // const { hand } = this.game.getPlayerTable(player_id);
-      // cards.forEach((card) => hand.addCard(card));
    }
 
    private notif_onManaDeckShuffle(notif: INotification<NotifManaDeckShuffleArgs>) {
@@ -66,12 +68,19 @@ class NotificationManager {
       this.game.tableCenter.shuffleManaDeck(notif.args.cards);
    }
 
-   private notif_onMoveManaCards(notif: INotification<NotifMoveManaCardsArgs>) {
+   private async notif_onMoveManaCards(notif: INotification<NotifMoveManaCardsArgs>) {
       const { player_id, cards_after: cards } = notif.args;
       log("onMoveManaCards", cards);
-      cards.forEach((card) => {
-         this.game.getPlayerTable(player_id).onMoveManaCard(card);
-      });
+      const promises = [];
+      for (const card of cards) {
+         promises.push(this.game.getPlayerTable(player_id).onMoveManaCard(card));
+      }
+      promises.push(
+         new Promise((resolve) => {
+            setTimeout(() => resolve(true), 1000);
+         }),
+      );
+      return Promise.all(promises);
    }
 
    private notif_onRevealManaCardCooldown(notif: INotification<NotifRevealManaCardCooldown>) {

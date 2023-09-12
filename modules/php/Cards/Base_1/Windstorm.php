@@ -27,7 +27,7 @@ class Windstorm extends BaseCard {
         } else {
             ManaCard::addOnTopOfDeck($topCard['id']);
         }
-        
-        Notifications::moveManaCard(Players::getPlayerId(), [$topCard]);
+
+        Notifications::moveManaCard(Players::getPlayerId(), [ManaCard::get($topCard['id'])]);
     }
 }

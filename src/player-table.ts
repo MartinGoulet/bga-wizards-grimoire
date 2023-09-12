@@ -197,12 +197,13 @@ class PlayerTable {
 
       if (stockBeforeManager === stockAfter) {
          // The card already move (client state)
+         stockAfter.setCardVisible(after, true, { updateData: true, updateFront: true });
          return;
       }
 
       if (!stockAfter.contains(after)) {
          const newCard: ManaCard = { ...after, isHidden: this.isStockHidden(stockAfter) };
-         await stockAfter.addCard(newCard);
+         await stockAfter.addCard(newCard, null, { updateInformations: true });
       }
    }
 

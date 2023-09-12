@@ -52,12 +52,12 @@ trait DebugTrait {
         Globals::setPreviousBasicAttackPower(2);
 
         $players_spell_cards = [
-            "2329672" => ["BattleVision", "Hoodwink", "Hellstorm", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["FalseFace", "Wrath", "WildBloom", "Windstorm", "StoneCrush", "EnergyReserve"],
+            "2329672" => ["TimeDistortion", "Windstorm", "BadFortune", "Possessed", "SilentSupport", "TouchTheVoid"],
+            "2329673" => ["FalseFace", "Wrath", "WildBloom", "Hoodwink", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
-            "2329672" => [1, 0, 3, 3, 0, 2],
+            "2329672" => [0, 0, 0, 3, 0, 2],
             "2329673" => [0, 0, 1, 1, 2, 2],
         ];
 
@@ -91,8 +91,8 @@ trait DebugTrait {
         }
 
         
-        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 

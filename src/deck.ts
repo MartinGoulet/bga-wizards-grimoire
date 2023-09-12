@@ -61,7 +61,7 @@ class ManaDeck extends Deck<ManaCard> {
       settings?: AddCardToDeckSettings,
    ): Promise<boolean> {
       settings = settings ?? {};
-      settings.index = Number(card.location_arg);
+      settings.index = Number(card.location_arg) + 1;
       var promise = super.addCard(card, animation, settings);
       const newPromise = new Promise<boolean>((resolve) =>
          promise

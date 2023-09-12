@@ -1068,7 +1068,7 @@ body > .card {
   display: flex;
   justify-content: center;
   height: 24px;
-  z-index: 5;
+  z-index: 20;
 }
 .player-table .mana-cooldown-icon .i-mana-x {
   display: flex;

@@ -1701,7 +1701,7 @@ var ManaDeck = (function (_super) {
     ManaDeck.prototype.addCard = function (card, animation, settings) {
         var _this = this;
         settings = settings !== null && settings !== void 0 ? settings : {};
-        settings.index = Number(card.location_arg);
+        settings.index = Number(card.location_arg) + 1;
         var promise = _super.prototype.addCard.call(this, card, animation, settings);
         var newPromise = new Promise(function (resolve) {
             return promise
@@ -2756,7 +2756,7 @@ var NotificationManager = (function () {
         this.subscribeEvent("onDiscardSpell", 500);
         this.subscribeEvent("onRefillSpell", 500);
         this.subscribeEvent("onDrawManaCards", 650, true);
-        this.subscribeEvent("onMoveManaCards", 1000, true);
+        this.subscribeEvent("onMoveManaCards", undefined, true);
         this.subscribeEvent("onManaDeckShuffle", 2500);
         this.subscribeEvent("onRevealManaCardCooldown", 500);
         this.subscribeEvent("onHealthChanged", 500);
@@ -2766,10 +2766,11 @@ var NotificationManager = (function () {
         var _this = this;
         if (setIgnore === void 0) { setIgnore = false; }
         try {
-            dojo.subscribe(eventName, this, "notif_" + eventName);
-            if (time) {
-                this.game.notifqueue.setSynchronous(eventName, time);
-            }
+            dojo.subscribe(eventName, this, function (notifDetails) {
+                var promise = _this["notif_".concat(eventName)](notifDetails);
+                promise === null || promise === void 0 ? void 0 : promise.then(function () { return _this.game.notifqueue.onSynchronousNotificationEnd(); });
+            });
+            this.game.notifqueue.setSynchronous(eventName, time);
             if (setIgnore) {
                 this.game.notifqueue.setIgnoreNotificationCheck(eventName, function (notif) {
                     return notif.args.excluded_player_id && notif.args.excluded_player_id == _this.game.player_id;
@@ -2805,11 +2806,21 @@ var NotificationManager = (function () {
         this.game.tableCenter.shuffleManaDeck(notif.args.cards);
     };
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
-        var _this = this;
-        var _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
-        log("onMoveManaCards", cards);
-        cards.forEach(function (card) {
-            _this.game.getPlayerTable(player_id).onMoveManaCard(card);
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, player_id, cards, promises, _i, cards_1, card;
+            return __generator(this, function (_b) {
+                _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
+                log("onMoveManaCards", cards);
+                promises = [];
+                for (_i = 0, cards_1 = cards; _i < cards_1.length; _i++) {
+                    card = cards_1[_i];
+                    promises.push(this.game.getPlayerTable(player_id).onMoveManaCard(card));
+                }
+                promises.push(new Promise(function (resolve) {
+                    setTimeout(function () { return resolve(true); }, 1000);
+                }));
+                return [2, Promise.all(promises)];
+            });
         });
     };
     NotificationManager.prototype.notif_onRevealManaCardCooldown = function (notif) {
@@ -3100,11 +3111,12 @@ var PlayerTable = (function () {
                         stockBeforeManager = this.game.manasManager.getCardStock(after);
                         stockAfter = this.getStock(after);
                         if (stockBeforeManager === stockAfter) {
+                            stockAfter.setCardVisible(after, true, { updateData: true, updateFront: true });
                             return [2];
                         }
                         if (!!stockAfter.contains(after)) return [3, 2];
                         newCard = __assign(__assign({}, after), { isHidden: this.isStockHidden(stockAfter) });
-                        return [4, stockAfter.addCard(newCard)];
+                        return [4, stockAfter.addCard(newCard, null, { updateInformations: true })];
                     case 1:
                         _a.sent();
                         _a.label = 2;
