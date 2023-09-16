@@ -41,6 +41,11 @@ trait DebugTrait {
         Game::get()->deck_spells->shuffle(CardLocation::Deck());
     }
 
+    public function setDamage() {
+        Globals::setPreviousBasicAttackPower(2);
+        Globals::setLastBasicAttackDamage(2);
+    }
+
     public function setupGameDebug() {
         $spell_deck = Game::get()->deck_spells;
         $mana_deck = Game::get()->deck_manas;
@@ -52,13 +57,13 @@ trait DebugTrait {
         Globals::setPreviousBasicAttackPower(2);
 
         $players_spell_cards = [
-            "2329672" => ["TimeDistortion", "Windstorm", "BadFortune", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["ArcaneTactics", "Wrath", "WildBloom", "Hoodwink", "StoneCrush", "EnergyReserve"],
+            "2329672" => ["WildBloom", "FalseFace", "ShadowAttack", "Possessed", "SilentSupport", "TouchTheVoid"],
+            "2329673" => ["ArcaneTactics", "Wrath", "TimeDistortion", "Hoodwink", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 3, 0, 2],
-            "2329673" => [0, 0, 1, 1, 2, 2],
+            "2329672" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -101,7 +106,7 @@ trait DebugTrait {
         Globals::setIsActiveLullaby(false, 0);
         Globals::setIsActivePowerHungry(false, 0);
         Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(true, 2329672);
+        Globals::setIsActiveSecretOath(false, 0);
         Game::undoSavepoint();
     }
 

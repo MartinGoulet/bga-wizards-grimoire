@@ -326,6 +326,7 @@ trait ActionTrait {
 
         if ($this->gamestate->state_id() == ST_BASIC_ATTACK) {
             Globals::setPreviousBasicAttackPower(0);
+            Globals::setLastBasicAttackDamage(0);
         }
 
         $this->gamestate->nextState('pass');
