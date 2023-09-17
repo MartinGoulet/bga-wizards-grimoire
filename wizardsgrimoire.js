@@ -1481,7 +1481,7 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.createPlayerPanels = function (gamedatas) {
         var _this = this;
         this.playersPanels = [];
-        gamedatas.playerorder.forEach(function (player_id) {
+        gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
             var panel = new PlayerPanel(_this, player);
             _this.playersPanels.push(panel);
