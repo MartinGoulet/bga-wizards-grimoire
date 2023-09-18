@@ -20,6 +20,7 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
    ongoing_spells: OngoingSpell[];
    globals: {
       previous_basic_attack: number;
+      last_basic_attack_damage: number;
    };
 }
 

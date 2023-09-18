@@ -1481,10 +1481,12 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.createPlayerPanels = function (gamedatas) {
         var _this = this;
         this.playersPanels = [];
+        var isFirst = true;
         gamedatas.players_order.forEach(function (player_id) {
             var player = gamedatas.players[Number(player_id)];
-            var panel = new PlayerPanel(_this, player);
+            var panel = new PlayerPanel(_this, player, isFirst);
             _this.playersPanels.push(panel);
+            isFirst = false;
         });
     };
     WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
@@ -2989,8 +2991,9 @@ var StateManager = (function () {
     return StateManager;
 }());
 var PlayerPanel = (function () {
-    function PlayerPanel(game, player) {
+    function PlayerPanel(game, player, isFirst) {
         this.game = game;
+        this.isFirst = isFirst;
         this.player_id = Number(player.id);
         var smallBoard = document.getElementById("player_small_board_".concat(player.id));
         if (smallBoard) {
@@ -2998,10 +3001,19 @@ var PlayerPanel = (function () {
         }
         var player_turn_text = this.player_id == game.gamedatas.first_player ? _("First choice") : _("First attacker");
         var player_turn_class = this.player_id == game.gamedatas.first_player ? "choice" : "attacker";
-        var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon\"></div>\n                    <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"break\"></div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n            </div>\n         </div>");
+        var htmlGameInfo = isFirst == false
+            ? ""
+            : "<div class=\"break\"></div>\n            <div class=\"game-info\">\n               <div class=\"text\">".concat(_("Last basic attack"), "</div> \n               <div id=\"last_attack_power\" class=\"wg-icon-log i-mana-x\"></div>\n               <div class=\"wg-icon-log i-dmg_undef\"><span id=\"last_attack_damage\"></span></div>\n            </div>\n      </div>");
+        var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon hand\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"break\"></div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n                ").concat(htmlGameInfo, "\n            </div>\n         </div>");
         document.getElementById("player_board_".concat(player.id)).insertAdjacentHTML("beforeend", smallBoardHtml);
         this.hand_counter = this.createCounter("player_small_board_".concat(player.id, "_hand_value"), 0);
         this.turn_counter = this.createCounter("player_small_board_".concat(player.id, "_turn_value"), player.turn);
+        if (isFirst) {
+            this.last_attack_power = this.createCounter("last_attack_power", game.gamedatas.globals.previous_basic_attack);
+            this.last_attack_damage = this.createCounter("last_attack_damage", game.gamedatas.globals.last_basic_attack_damage);
+            this.game.setTooltip("last_attack_power", _("Mana power used by the player for the last basic attack"));
+            this.game.setTooltip("last_attack_damage", _("Damage received by the player during the last basic attack"));
+        }
     }
     PlayerPanel.prototype.createCounter = function (target, value) {
         var counter = new ebg.counter();
@@ -3994,8 +4006,15 @@ var PlayerNewTurnStates = (function () {
         this.game = game;
     }
     PlayerNewTurnStates.prototype.onEnteringState = function (args) {
+        console.log("Player new turn: ", args);
         this.game.playersTables.forEach(function (table) {
             table.setPreviousBasicAttack(args.previous_basic_attack);
+        });
+        this.game.playersPanels
+            .filter(function (panel) { return panel.isFirst; })
+            .forEach(function (panel) {
+            panel.last_attack_damage.setValue(args.last_basic_attack_damage);
+            panel.last_attack_power.setValue(args.previous_basic_attack);
         });
         if (!this.game.isCurrentPlayerActive())
             return;

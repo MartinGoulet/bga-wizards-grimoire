@@ -333,7 +333,7 @@ class WizardsGrimoire extends Table {
 
         $result['globals'] = [
             "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
-            // "first_player" => self::getGameStateValue(WG_VAR_FIRST_PLAYER),
+            "last_basic_attack_damage" => Globals::getLastBasicAttackDamage(),
         ];
 
         return $result;

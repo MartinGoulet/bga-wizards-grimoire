@@ -173,10 +173,12 @@ class WizardsGrimoire
 
    private createPlayerPanels(gamedatas: WizardsGrimoireGamedatas) {
       this.playersPanels = [];
+      let isFirst = true;
       gamedatas.players_order.forEach((player_id) => {
          const player = gamedatas.players[Number(player_id)];
-         const panel = new PlayerPanel(this, player);
+         const panel = new PlayerPanel(this, player, isFirst);
          this.playersPanels.push(panel);
+         isFirst = false;
       });
    }
 

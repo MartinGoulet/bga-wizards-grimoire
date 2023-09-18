@@ -220,6 +220,7 @@ trait StateTrait {
         Globals::setCurrentBasicAttackPower(0);
         if (ManaCard::getHandCount() == 0) {
             Globals::setPreviousBasicAttackPower(0);
+            Globals::setLastBasicAttackDamage(0);
             $this->gamestate->nextState("end");
         } else {
             $this->gamestate->nextState("next");

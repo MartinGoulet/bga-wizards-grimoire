@@ -21,6 +21,7 @@ trait ArgsTrait {
     function argPlayerNewTurn() {
         return [
             "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
+            "last_basic_attack_damage" => Globals::getLastBasicAttackDamage(),
         ];
     }
 
