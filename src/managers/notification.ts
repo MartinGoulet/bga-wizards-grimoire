@@ -77,7 +77,7 @@ class NotificationManager {
       }
       promises.push(
          new Promise((resolve) => {
-            setTimeout(() => resolve(true), 1000);
+            setTimeout(() => resolve(true), this.game.instantaneousMode ? 0 : 1000);
          }),
       );
       return Promise.all(promises);

@@ -2819,6 +2819,7 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_onMoveManaCards = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, player_id, cards, promises, _i, cards_1, card;
+            var _this = this;
             return __generator(this, function (_b) {
                 _a = notif.args, player_id = _a.player_id, cards = _a.cards_after;
                 log("onMoveManaCards", cards);
@@ -2828,7 +2829,7 @@ var NotificationManager = (function () {
                     promises.push(this.game.getPlayerTable(player_id).onMoveManaCard(card));
                 }
                 promises.push(new Promise(function (resolve) {
-                    setTimeout(function () { return resolve(true); }, 1000);
+                    setTimeout(function () { return resolve(true); }, _this.game.instantaneousMode ? 0 : 1000);
                 }));
                 return [2, Promise.all(promises)];
             });
@@ -3003,7 +3004,7 @@ var PlayerPanel = (function () {
         var player_turn_class = this.player_id == game.gamedatas.first_player ? "choice" : "attacker";
         var htmlGameInfo = isFirst == false
             ? ""
-            : "<div class=\"break\"></div>\n            <div class=\"game-info\">\n               <div class=\"text\">".concat(_("Last basic attack"), "</div> \n               <div id=\"last_attack_power\" class=\"wg-icon-log i-mana-x\"></div>\n               <div class=\"wg-icon-log i-dmg_undef\"><span id=\"last_attack_damage\"></span></div>\n            </div>\n      </div>");
+            : "<div class=\"break\"></div>\n            <div class=\"game-info\">\n               ".concat(_("Last basic attack"), "\n               <div id=\"last_attack_power\" class=\"wg-icon-log i-mana-x\"></div>\n               <div class=\"wg-icon-log i-dmg_undef\"><span id=\"last_attack_damage\"></span></div>\n            </div>\n      </div>");
         var smallBoardHtml = "<div id=\"player_small_board_".concat(player.id, "\" class=\"player_small_board\">\n            <div id=\"hand-icon-wrapper-").concat(player.id, "\" class=\"icon-wrapper\">\n                <div>\n                <div id=\"player_small_board_").concat(player.id, "_hand_value\" class=\"text\"></div>\n                <div id=\"player_small_board_").concat(player.id, "_hand_icon\" class=\"icon hand\"></div>\n                </div>\n                <div>\n                    <div class=\"text\">").concat(_("Turn"), " </div>  \n                    <div id=\"player_small_board_").concat(player.id, "_turn_value\" class=\"text\"></div>\n                </div>\n                <div class=\"break\"></div>\n                <div class=\"").concat(player_turn_class, "\">\n                    <div class=\"text\">").concat(player_turn_text, "</div> \n                </div>\n                ").concat(htmlGameInfo, "\n            </div>\n         </div>");
         document.getElementById("player_board_".concat(player.id)).insertAdjacentHTML("beforeend", smallBoardHtml);
         this.hand_counter = this.createCounter("player_small_board_".concat(player.id, "_hand_value"), 0);

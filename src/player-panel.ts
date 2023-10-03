@@ -24,7 +24,7 @@ class PlayerPanel {
             ? ""
             : `<div class="break"></div>
             <div class="game-info">
-               <div class="text">${_("Last basic attack")}</div> 
+               ${_("Last basic attack")}
                <div id="last_attack_power" class="wg-icon-log i-mana-x"></div>
                <div class="wg-icon-log i-dmg_undef"><span id="last_attack_damage"></span></div>
             </div>
