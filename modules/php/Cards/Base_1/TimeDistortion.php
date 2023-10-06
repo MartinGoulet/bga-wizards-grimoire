@@ -17,11 +17,15 @@ class TimeDistortion extends BaseCard {
         // Verify if card is on top of the spell deck (first card in mana cooldown deck)
         // Note : Since mana card is not moved, the current spell card played didn't have
         //        any mana card under it.
+        $positions = [];
         foreach ($mana_cards as $card_id => $card) {
-            $position = ManaCard::isOnTopOfSpell($card);
-            Events::onManaPickedUpUnderSpell($position);
+            $positions[] = ManaCard::isOnTopOfSpell($card);
         }
 
         ManaCard::addCardsToHand($mana_cards);
+
+        foreach ($positions as $position) {
+            Events::onManaPickedUpUnderSpell($position);
+        }
     }
 }

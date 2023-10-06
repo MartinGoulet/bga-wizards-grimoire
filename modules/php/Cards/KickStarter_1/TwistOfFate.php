@@ -31,9 +31,10 @@ class TwistOfFate extends BaseCard {
         SpellCard::replaceSpell($old_spell, $new_spell);
 
         if (ManaCard::countOnTopOfManaCoolDown($old_spell_pos) > 0) {
-            $this->checkOngoingSpell($old_spell, false);
             $this->checkOngoingSpell($new_spell, true);
         }
+
+        $this->checkOngoingSpell($old_spell, false);
     }
 
     private function checkOngoingSpell($spell, bool $is_active) {

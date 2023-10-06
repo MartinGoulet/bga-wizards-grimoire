@@ -58,12 +58,12 @@ trait DebugTrait {
 
         $players_spell_cards = [
             "2329672" => ["WildBloom", "FalseFace", "ShadowAttack", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["ArcaneTactics", "Wrath", "TimeDistortion", "Hoodwink", "StoneCrush", "EnergyReserve"],
+            "2329673" => ["SecretOath", "TwistOfFate", "TimeDistortion", "Hoodwink", "StoneCrush", "EnergyReserve"],
         ];
 
         $players_spell_mana = [
             "2329672" => [0, 0, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [1, 1, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -106,7 +106,7 @@ trait DebugTrait {
         Globals::setIsActiveLullaby(false, 0);
         Globals::setIsActivePowerHungry(false, 0);
         Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(false, 0);
+        Globals::setIsActiveSecretOath(true, 2329673);
         Game::undoSavepoint();
     }
 
