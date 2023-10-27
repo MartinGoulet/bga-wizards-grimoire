@@ -31,7 +31,7 @@ class DanceOfPain extends BaseCard {
             foreach ($cards as $card_id => $card) {
                 ManaCard::addOnTopOfDiscard($card['id']);
             }
-            Notifications::moveManaCard(Players::getPlayerId(), $cards);
+            Notifications::moveManaCard(Players::getPlayerId(), $cards, false);
         }
     }
 }
