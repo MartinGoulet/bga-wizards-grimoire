@@ -68,8 +68,8 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["CoerciveAgreement", "TimeDistortion", "SneakyDeal", "QuickSwap", "Haste", "EchoCard"],
-            "2329673" => ["Backfire", "AfterShock", "DeathSpiral", "Hoodwink", "FalseFace", "StoneCrush"],
+            "2329672" => ["SecondStrike", "DeathSpiral", "EchoCard", "QuickSwap", "Haste", "SneakyDeal"],
+            "2329673" => ["Backfire", "AfterShock", "TimeDistortion", "Hoodwink", "FalseFace", "StoneCrush"],
         ];
 
         $spells_pool = ["SecretOath", "Possessed"];

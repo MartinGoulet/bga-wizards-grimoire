@@ -1420,7 +1420,6 @@ var WizardsGrimoire = (function () {
         htmlElement.classList.toggle("desktop_version", document.body.classList.contains("desktop_version"));
         this.dontPreloadImage("background-mobile.png");
         this.dontPreloadImage("background-desktop.png");
-        debugger;
         if (!gamedatas.images.front_2) {
             this.dontPreloadImage("spell-front-2.jpg");
         }
@@ -1541,8 +1540,7 @@ var WizardsGrimoire = (function () {
         if (spell.type === SpellType.DeathSpiral) {
             var previous_spell_id = Number(player_table.getPreviousSpellPlayed());
             if (previous_spell_id > 0) {
-                var previous_spell = this.spellsManager.getCardById(previous_spell_id);
-                var previous_cost = this.getCardType(previous_spell).cost;
+                var previous_cost = Number(player_table.getPreviousSpellCost());
                 if (previous_cost >= 3) {
                     cost = 0;
                 }

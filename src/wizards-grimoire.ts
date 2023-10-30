@@ -86,7 +86,6 @@ class WizardsGrimoire
 
       this.dontPreloadImage("background-mobile.png");
       this.dontPreloadImage("background-desktop.png");
-      debugger;
       if (!gamedatas.images.front_2) {
          this.dontPreloadImage("spell-front-2.jpg");
       }
@@ -237,8 +236,7 @@ class WizardsGrimoire
       if (spell.type === SpellType.DeathSpiral) {
          const previous_spell_id = Number(player_table.getPreviousSpellPlayed());
          if (previous_spell_id > 0) {
-            const previous_spell = this.spellsManager.getCardById(previous_spell_id);
-            const { cost: previous_cost } = this.getCardType(previous_spell);
+            const previous_cost = Number(player_table.getPreviousSpellCost());
             if (previous_cost >= 3) {
                cost = 0;
             }

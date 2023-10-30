@@ -21,7 +21,7 @@ class DeathSpiral extends BaseCard {
             return;
         }
 
-        $cost = intval(SpellCard::getCardInfo($spell)['cost']);
+        $cost = Globals::getSpellCost();
         return $cost >= 3 ? 99 : 0;
     }
 }
