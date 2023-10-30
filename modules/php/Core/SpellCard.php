@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use BgaUserException;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -95,13 +96,22 @@ class SpellCard {
         return $card;
     }
 
-    public static function replaceSpell($old_spell, $new_spell) {
+    public static function replaceSpell($old_spell, $new_spell, $move = "replace") {
         $player_id = Players::getPlayerId();
 
         // Discard old spell
         Game::get()->deck_spells->insertCardOnExtremePosition($old_spell['id'], CardLocation::Discard(), true);
         $discarded_card = SpellCard::get($old_spell['id']);
-        Notifications::discardSpell($player_id, $discarded_card);
+        switch($move) {
+            case "replace": 
+                Notifications::discardSpell($player_id, $discarded_card);
+                break;
+            case "destroy":
+                Notifications::destroySpell($player_id, $discarded_card);
+                break;
+            default:
+                throw new BgaUserException("Invalid move");
+        }
 
         // Choose spell
         Game::get()->deck_spells->moveCard(

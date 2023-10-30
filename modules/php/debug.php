@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire;
 
+use BgaUserException;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
@@ -24,7 +25,7 @@ trait DebugTrait {
     }
 
     public function drawManaCards($count) {
-        ManaCard::draw($count);
+        ManaCard::draw($count, Game::get()->getCurrentPlayerId());
     }
 
     public function drawManaCardsOpponent($count) {
@@ -46,6 +47,10 @@ trait DebugTrait {
         Globals::setLastBasicAttackDamage(2);
     }
 
+    public function init() {
+        Game::get()->setGameStateInitialValue(WG_VAR_SWITCH_CARDS_COUNT, 1);
+    }
+
     public function setupGameDebug() {
         $spell_deck = Game::get()->deck_spells;
         $mana_deck = Game::get()->deck_manas;
@@ -54,16 +59,24 @@ trait DebugTrait {
         $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
         $mana_deck->shuffle(CardLocation::Deck());
 
+        Globals::setSkipInteraction(false);
         Globals::setPreviousBasicAttackPower(2);
+        Globals::setAmnesiaCount(0);
+        Globals::setPreviousSpellCost(0);
+        Globals::setPreviousSpellPlayed(0);
+        Globals::setSpellCost(0);
+        Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["WildBloom", "FalseFace", "ShadowAttack", "Possessed", "SilentSupport", "TouchTheVoid"],
-            "2329673" => ["SecretOath", "TwistOfFate", "TimeDistortion", "Hoodwink", "StoneCrush", "EnergyReserve"],
+            "2329672" => ["CoerciveAgreement", "TimeDistortion", "SneakyDeal", "QuickSwap", "Haste", "EchoCard"],
+            "2329673" => ["Backfire", "AfterShock", "DeathSpiral", "Hoodwink", "FalseFace", "StoneCrush"],
         ];
 
+        $spells_pool = ["SecretOath", "Possessed"];
+
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0, 0],
-            "2329673" => [1, 1, 0, 0, 0, 0],
+            "2329672" => [0, 0, 0, 3, 0, 0],
+            "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -92,11 +105,22 @@ trait DebugTrait {
         $spell_deck->shuffle(CardLocation::Deck());
 
         for ($i = 1; $i <= intval(self::getGameStateValue(WG_VAR_SLOT_COUNT)); $i++) {
-            $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
+            if(sizeof($spells_pool) > 0) {
+                $name = array_shift($spells_pool);
+                $card = $this->getCardByClassName($name);
+                if ($card !== null) {
+                    $this->deck_spells->moveCard($card['id'], CardLocation::SpellSlot(), $i);
+                } else {
+                    throw new BgaUserException("Wrong card name : " . $name);
+                }
+            } else {
+                $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
+            }
         }
 
+        $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(14, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
@@ -106,7 +130,7 @@ trait DebugTrait {
         Globals::setIsActiveLullaby(false, 0);
         Globals::setIsActivePowerHungry(false, 0);
         Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(true, 2329673);
+        Globals::setIsActiveSecretOath(false, 0);
         Game::undoSavepoint();
     }
 

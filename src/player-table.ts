@@ -117,14 +117,8 @@ class PlayerTable {
    }
 
    public canCast(card: SpellCard): boolean {
-      let { cost, type } = this.game.getCardType(card);
-
-      cost -= this.getDiscountNextSpell();
-      if (type == "red") {
-         cost -= this.getDiscountNextAttack();
-      }
-
-      return this.hand.getCards().length + this.getDiscountNextAttack() >= cost;
+      const cost = this.game.getSpellCost(card);
+      return this.hand.getCards().length >= cost;
    }
 
    public getSpellSlotAvailables(): number[] {
@@ -235,6 +229,28 @@ class PlayerTable {
 
    setDiscountNextSpell(amount: number) {
       this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
+   }
+
+   getPreviousSpellCost() {
+      return Number(this.getPlayerTableDiv().dataset.previousSpellCost);
+   }
+
+   setPreviousSpellCost(cost: number) {
+      this.getPlayerTableDiv().dataset.previousSpellCost = cost.toString();
+   }
+
+   getPreviousSpellPlayed() {
+      return Number(this.getPlayerTableDiv().dataset.prevousSpellId);
+   }
+
+   setPreviousSpellPlayed(spell_id: number) {
+      this.getPlayerTableDiv().dataset.prevousSpellId = spell_id.toString();
+      document
+         .querySelectorAll(".card.previous-spell")
+         .forEach((div) => div.classList.remove("previous-spell"));
+
+      const div = this.game.spellsManager.getCardElement({ id: spell_id } as SpellCard);
+      div?.classList?.add("previous-spell");
    }
 
    setPreviousBasicAttack(value: number) {

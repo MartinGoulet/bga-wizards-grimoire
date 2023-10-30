@@ -16,10 +16,37 @@ class Globals extends APP_DbObject {
         Globals::setAmnesiaCount(0);
         Globals::setConsecutivelyAttackSpellCount(0);
         Globals::setSpellPlayed(0);
+        Globals::setSpellCost(0);
         Globals::setPreviousSpellPlayed(0);
+        Globals::setPreviousSpellCost(0);
         Globals::setPreviousSpellDamage(0);
         Globals::setInteractionPlayer(0);
         Globals::setCoolDownDelayedSpellIds([]);
+        Globals::setCardsTimesPlayed([]);
+    }
+
+    public static function getCardsTimesPlayed() {
+        return self::get('cards_times_played', true) ?? [];
+    }
+
+    public static function setCardsTimesPlayed(array $values) {
+        self::set('cards_times_played', $values);
+    }
+
+    public static function getCardTimesPlayed(int $card_type) {
+        $array_played = self::getCardsTimesPlayed();
+        $value = array_key_exists($card_type, $array_played) ? intval($array_played[$card_type]) : 0;
+        return $value;
+    }
+
+    public static function incCardTimesPlayed(int $card_type) {
+        $array_played = self::getCardsTimesPlayed();
+        if (array_key_exists($card_type, $array_played)) {
+            $array_played[$card_type] += 1;
+        } else {
+            $array_played[$card_type] = 1;
+        }
+        self::setCardsTimesPlayed($array_played);
     }
 
     public static function getAmnesiaCount() {
@@ -91,7 +118,7 @@ class Globals extends APP_DbObject {
     public static function getIsActiveBattleVision() {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION)) == Players::getOpponentId();
     }
-    
+
     public static function setIsActiveBattleVision(bool $isActive, int $player_id) {
         $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION, $value);
@@ -122,7 +149,7 @@ class Globals extends APP_DbObject {
         $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_LULLABY, $value);
     }
-    
+
     public static function getIsActivePowerHungry() {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) > 0;
     }
@@ -130,7 +157,7 @@ class Globals extends APP_DbObject {
     public static function getIsActivePowerHungryPlayer() {
         return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY));
     }
-    
+
     public static function setIsActivePowerHungry(bool $isActive, int $player_id) {
         $value = $isActive ? $player_id : 0;
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, $value);
@@ -184,7 +211,7 @@ class Globals extends APP_DbObject {
 
     public static function getLastBasicAttackDamage() {
         $value = self::get(WG_VAR_LAST_BASIC_ATTACK_DAMAGE, true);
-        if($value == null) {
+        if ($value == null) {
             return self::getPreviousBasicAttackPower();
         } else {
             return intval($value['dmg']);
@@ -193,6 +220,14 @@ class Globals extends APP_DbObject {
 
     public static function setLastBasicAttackDamage(int $value) {
         self::set(WG_VAR_LAST_BASIC_ATTACK_DAMAGE, ['dmg' => $value]);
+    }
+
+    public static function getPreviousSpellCost() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_PREVIOUS_SPELL_COST));
+    }
+
+    public static function setPreviousSpellCost(int $cost) {
+        Game::get()->setGameStateValue(WG_VAR_PREVIOUS_SPELL_COST, $cost);
     }
 
     public static function getPreviousSpellDamage() {
@@ -218,6 +253,14 @@ class Globals extends APP_DbObject {
     public static function setSkipInteraction(bool $skip) {
         $value = $skip ? 1 : 0;
         Game::get()->setGameStateValue(WG_VAR_SKIP_INTERACTION, $value);
+    }
+
+    public static function getSpellCost() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_SPELL_COST));
+    }
+
+    public static function setSpellCost(int $cost) {
+        Game::get()->setGameStateValue(WG_VAR_SPELL_COST, $cost);
     }
 
     public static function getSpellPlayed() {

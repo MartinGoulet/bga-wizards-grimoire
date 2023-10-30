@@ -70,6 +70,8 @@
         "src/states/select-spell.ts",
         "src/states/select-spell-pool.ts",
 
+        "src/types.ts",
+        
         "src/define.ts"
     ]
 }

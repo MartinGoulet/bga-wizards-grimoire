@@ -35,6 +35,8 @@ trait ArgsTrait {
         $args = $this->getArgsBase();
         $args["discount_attack_spell"] = Globals::getDiscountAttackSpell(true);
         $args["discount_next_spell"] = Globals::getDiscountNextSpell(true);
+        $args["previous_spell_played"] = Globals::getSpellPlayed();
+        $args["previous_spell_cost"] = Globals::getSpellCost();
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
     }
@@ -42,6 +44,7 @@ trait ArgsTrait {
     function argCastSpellInteraction() {
         $args = $this->getArgsBase();
         $args["spell"] = SpellCard::get(Globals::getSpellPlayed());
+        $args["previous_spell_played"] = Globals::getPreviousSpellPlayed();
         return $args;
     }
 

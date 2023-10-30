@@ -1,3 +1,7 @@
+// .card.previous-spell {
+//    outline: 3px dashed red;
+// }
+
 .wg-card {
    width: var(--width);
    height: var(--height);
@@ -67,14 +71,28 @@
    }
 }
 
-.wg-card .wg-card-spell-front,
-.wg-tooltip-card .wg-card {
+.wg-card.base_game .wg-card-spell-front,
+.wg-tooltip-card .wg-card.base_game {
    background: url("img/spell-front.jpg");
    background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 
    @for $row from 0 through 6 {
       @for $col from 0 through 9 {
          &[data-type="#{($row * 10) + ($col + 1)}"] {
+            background-position: ($col * -100%) ($row * -100%);
+         }
+      }
+   }
+}
+
+.wg-card.shifting_sand .wg-card-spell-front,
+.wg-tooltip-card .wg-card.shifting_sand {
+   background: url("img/spell-front-2.jpg");
+   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+
+   @for $row from 0 through 6 {
+      @for $col from 0 through 9 {
+         &[data-type="#{($row * 10) + ($col + 1) + 100}"] {
             background-position: ($col * -100%) ($row * -100%);
          }
       }

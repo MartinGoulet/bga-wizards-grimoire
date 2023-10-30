@@ -17,7 +17,7 @@ class WildBloom extends BaseCard {
         // When you discard the last mana off this spell, you may immediately cast an instant spell of yours that has 0 mana on it for no cost
 
         $spell_pos = intval(array_shift($args));
-        if($spell_pos == 0) {
+        if ($spell_pos == 0) {
             Notifications::spellNoEffect();
             return;
         }
@@ -36,6 +36,8 @@ class WildBloom extends BaseCard {
         $card_name = SpellCard::getName($spell);
         Notifications::activateSpell(Players::getPlayerId(), $card_name);
         Globals::setSpellPlayed($spell['id']);
+        Globals::setSpellCost(0);
+        Globals::setPreviousSpellCost(0);
 
         if ($spell_info['type'] == WG_SPELL_TYPE_ATTACK) {
             Globals::incConsecutivelyAttackSpellCount(1);

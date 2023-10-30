@@ -1420,6 +1420,10 @@ var WizardsGrimoire = (function () {
         htmlElement.classList.toggle("desktop_version", document.body.classList.contains("desktop_version"));
         this.dontPreloadImage("background-mobile.png");
         this.dontPreloadImage("background-desktop.png");
+        debugger;
+        if (!gamedatas.images.front_2) {
+            this.dontPreloadImage("spell-front-2.jpg");
+        }
         this.createPlayerPanels(gamedatas);
         this.createPlayerTables(gamedatas);
         this.zoomManager = new ZoomManager({
@@ -1527,6 +1531,25 @@ var WizardsGrimoire = (function () {
     WizardsGrimoire.prototype.getCardType = function (card) {
         return this.gamedatas.card_types[card.type];
     };
+    WizardsGrimoire.prototype.getSpellCost = function (spell) {
+        var _a = this.getCardType(spell), cost = _a.cost, type = _a.type;
+        var player_table = this.getCurrentPlayerTable();
+        cost = cost - player_table.getDiscountNextSpell();
+        if (type == "red") {
+            cost = cost - player_table.getDiscountNextAttack();
+        }
+        if (spell.type === SpellType.DeathSpiral) {
+            var previous_spell_id = Number(player_table.getPreviousSpellPlayed());
+            if (previous_spell_id > 0) {
+                var previous_spell = this.spellsManager.getCardById(previous_spell_id);
+                var previous_cost = this.getCardType(previous_spell).cost;
+                if (previous_cost >= 3) {
+                    cost = 0;
+                }
+            }
+        }
+        return Math.max(cost, 0);
+    };
     WizardsGrimoire.prototype.getPower = function (card) {
         var value = Number(card["type"]);
         if (document.getElementById("table").classList.contains("wg-ongoing-spell-growth")) {
@@ -1616,6 +1639,9 @@ var WizardsGrimoire = (function () {
                 args.processed = true;
                 if (args.card_name !== undefined) {
                     args.card_name = "<b>" + _(args.card_name) + "</b>";
+                }
+                if (args.card_name2 !== undefined) {
+                    args.card_name2 = "<b>" + _(args.card_name2) + "</b>";
                 }
                 if (args.phase_name !== undefined) {
                     args.phase_name = "<b>" + _(args.phase_name) + "</b>";
@@ -1946,6 +1972,11 @@ var ActionManager = (function () {
             return null;
         }
     };
+    ActionManager.prototype.getCardName = function () {
+        var current_card = this.getCurrentCard();
+        var name = this.game.getCardType(current_card).name;
+        return _(name);
+    };
     ActionManager.prototype.actionCastSpell_Replace = function () {
         this.actions.push("actionCastSpell_Pool", "actionCastSpell_Repertoire", "actionCastSpell_Submit");
         this.activateNextAction();
@@ -2012,9 +2043,8 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionBadFortune = function () {
         var msg = _("${you} must return revealed mana greater than 1 on the top of mana deck in any order");
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.badFortune, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 spell: this.getCurrentCard(),
             },
@@ -2201,10 +2231,9 @@ var ActionManager = (function () {
             var manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
             return manacount > 0;
         });
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var msg = _("${you} must select one of your spell");
         this.game.setClientState(states.client.selectSpell, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getPlayerId(),
                 selection: selectableSpell,
@@ -2229,7 +2258,6 @@ var ActionManager = (function () {
             .getManaDeckWithSpellOver()
             .filter(function (deck) { return deck.isEmpty(); })
             .map(function (deck) { return deck.location; });
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
         var args = {
             player_id: this.game.getPlayerId(),
@@ -2243,7 +2271,7 @@ var ActionManager = (function () {
             },
         };
         this.game.setClientState(states.client.selectManaDeck, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
@@ -2288,9 +2316,8 @@ var ActionManager = (function () {
                     label: _("Discard this spell and replace it with a new spell"),
                     action: function () {
                         var msg = _("${you} must select a spell in the spell pool");
-                        var name = _this.game.getCardType(_this.getCurrentCard()).name;
                         _this.game.setClientState(states.client.selectSpellPool, {
-                            descriptionmyturn: _(name) + " : " + msg,
+                            descriptionmyturn: _this.getCardName() + " : " + msg,
                             args: {},
                         });
                         _this.game.markCardAsSelected(_this.getCurrentCard());
@@ -2307,7 +2334,7 @@ var ActionManager = (function () {
         var _this = this;
         var msg = _("${you} must select a spell in the spell pool");
         this.game.setClientState(states.client.selectSpellPool, {
-            descriptionmyturn: msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 skip: {
                     label: _("Pass"),
@@ -2332,7 +2359,7 @@ var ActionManager = (function () {
         });
         var msg = _("${you} must select one of your spell");
         this.game.setClientState(states.client.selectSpell, {
-            descriptionmyturn: msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getPlayerId(),
                 selection: selectableSpell,
@@ -2358,10 +2385,9 @@ var ActionManager = (function () {
             }
             return false;
         });
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var msg = _("${you} may select one of your instant spell");
         this.game.setClientState(states.client.selectSpell, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getPlayerId(),
                 selection: instantSpell,
@@ -2380,15 +2406,10 @@ var ActionManager = (function () {
         this.activateNextAction();
     };
     ActionManager.prototype.actionCastMana = function () {
-        var _a = this.game.getCardType(this.getCurrentCard()), name = _a.name, cost = _a.cost, type = _a.type;
-        var player_table = this.game.getCurrentPlayerTable();
-        var modifiedCost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
-        if (type == "red") {
-            modifiedCost = Math.max(modifiedCost - player_table.getDiscountNextAttack(), 0);
-        }
+        var modifiedCost = this.game.getSpellCost(this.getCurrentCard());
         var msg = _("${you} must pay ${nbr} mana card(s)").replace("${nbr}", modifiedCost.toString());
         this.game.setClientState(states.client.castSpellWithMana, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 card: this.getCurrentCard(),
                 cost: modifiedCost,
@@ -2406,7 +2427,6 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionSelectManaCoolDownPlayer = function () {
         var msg = _("Select a mana card under one of your spell");
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var player_table = this.game.getCurrentPlayerTable();
         var exclude = [];
         for (var index = 1; index <= 6; index++) {
@@ -2423,7 +2443,7 @@ var ActionManager = (function () {
             exclude: exclude,
         };
         this.game.setClientState(states.client.selectManaDeck, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
@@ -2431,7 +2451,6 @@ var ActionManager = (function () {
         var _this = this;
         if (canIgnore === void 0) { canIgnore = false; }
         var msg = _("Select a mana card under one of your opponent's spell");
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var player_table = this.game.getPlayerTable(this.game.getOpponentId());
         var exclude = [];
         for (var index = 1; index <= 6; index++) {
@@ -2453,7 +2472,7 @@ var ActionManager = (function () {
             };
         }
         this.game.setClientState(states.client.selectManaDeck, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
@@ -2491,9 +2510,8 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
         var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "2");
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.selectManaDiscard, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getPlayerId(),
                 count: 2,
@@ -2502,50 +2520,62 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionSelectSpellOpponent = function () {
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         var msg = _("${you} must select an opponent's spell");
         this.game.setClientState(states.client.selectSpell, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getOpponentId(),
                 cancel: true,
             },
         });
     };
+    ActionManager.prototype.actionEcho = function () {
+        var previous_spell_id = this.game.getCurrentPlayerTable().getPreviousSpellPlayed();
+        var previous_spell_cost = this.game.getCurrentPlayerTable().getPreviousSpellCost();
+        if (previous_spell_id > 0 && previous_spell_cost <= 1) {
+            var spell = this.game.spellsManager.getCardById(previous_spell_id);
+            var card_type = this.game.getCardType(spell);
+            this.addActionPriv(card_type.js_actions);
+        }
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionEchoInteraction = function () {
+        var previous_spell_id = Number(this.actions_args.pop());
+        var spell = this.game.spellsManager.getCardById(previous_spell_id);
+        var card_type = this.game.getCardType(spell);
+        this.addActionPriv(card_type.js_actions_interaction);
+        this.activateNextAction();
+    };
     ActionManager.prototype.question = function (args) {
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.question, {
-            descriptionmyturn: _(name),
+            descriptionmyturn: this.getCardName(),
             args: args,
         });
     };
     ActionManager.prototype.selectMana = function (count, msg, exact, argsSuppl) {
         var _a;
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
         argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
         argsSuppl.exclude.push(Number(this.getCurrentCard().location_arg));
         var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact });
         this.game.setClientState(states.client.selectMana, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
     ActionManager.prototype.selectManaHand = function (count, msg, exact, argsSuppl) {
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
         var args = __assign(__assign({}, argsSuppl), { player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact });
         this.game.setClientState(states.client.selectManaHand, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
     ActionManager.prototype.selectManaDeck = function (count, msg, exact, argsSuppl) {
         var _a;
         if (argsSuppl === void 0) { argsSuppl = {}; }
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         msg = msg.replace("${nbr}", count.toString());
         argsSuppl.exclude = (_a = argsSuppl.exclude) !== null && _a !== void 0 ? _a : [];
         if (!argsSuppl.player_id || argsSuppl.player_id == this.game.getPlayerId()) {
@@ -2553,7 +2583,7 @@ var ActionManager = (function () {
         }
         var args = __assign({ player_id: this.game.getPlayerId(), card: this.getCurrentCard(), count: count, exact: exact }, argsSuppl);
         this.game.setClientState(states.client.selectManaDeck, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
@@ -2561,9 +2591,8 @@ var ActionManager = (function () {
         if (canPass === void 0) { canPass = false; }
         msg = msg.replace("${nbr}", count.toString());
         var args = { count: count, canCancel: canCancel, exact: true, canPass: canPass };
-        var name = this.game.getCardType(this.getCurrentCard()).name;
         this.game.setClientState(states.client.selectManaReturnDeck, {
-            descriptionmyturn: _(name) + " : " + msg,
+            descriptionmyturn: this.getCardName() + " : " + msg,
             args: args,
         });
     };
@@ -2587,6 +2616,7 @@ var SpellCardManager = (function (_super) {
                 div.classList.add("wg-card-spell");
                 div.dataset.cardId = "" + card.id;
                 div.dataset.type = "" + card.type;
+                div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
@@ -2701,6 +2731,7 @@ var TooltipManager = (function (_super) {
                 div.classList.add("wg-card-spell");
                 div.dataset.cardId = "" + card.id;
                 div.dataset.type = "" + card.type;
+                div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
@@ -3089,12 +3120,8 @@ var PlayerTable = (function () {
         this.health.setValue(Number(this.game.gamedatas.players[pId].score));
     }
     PlayerTable.prototype.canCast = function (card) {
-        var _a = this.game.getCardType(card), cost = _a.cost, type = _a.type;
-        cost -= this.getDiscountNextSpell();
-        if (type == "red") {
-            cost -= this.getDiscountNextAttack();
-        }
-        return this.hand.getCards().length + this.getDiscountNextAttack() >= cost;
+        var cost = this.game.getSpellCost(card);
+        return this.hand.getCards().length >= cost;
     };
     PlayerTable.prototype.getSpellSlotAvailables = function () {
         var _this = this;
@@ -3201,6 +3228,24 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.setDiscountNextSpell = function (amount) {
         this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
+    };
+    PlayerTable.prototype.getPreviousSpellCost = function () {
+        return Number(this.getPlayerTableDiv().dataset.previousSpellCost);
+    };
+    PlayerTable.prototype.setPreviousSpellCost = function (cost) {
+        this.getPlayerTableDiv().dataset.previousSpellCost = cost.toString();
+    };
+    PlayerTable.prototype.getPreviousSpellPlayed = function () {
+        return Number(this.getPlayerTableDiv().dataset.prevousSpellId);
+    };
+    PlayerTable.prototype.setPreviousSpellPlayed = function (spell_id) {
+        var _a;
+        this.getPlayerTableDiv().dataset.prevousSpellId = spell_id.toString();
+        document
+            .querySelectorAll(".card.previous-spell")
+            .forEach(function (div) { return div.classList.remove("previous-spell"); });
+        var div = this.game.spellsManager.getCardElement({ id: spell_id });
+        (_a = div === null || div === void 0 ? void 0 : div.classList) === null || _a === void 0 ? void 0 : _a.add("previous-spell");
     };
     PlayerTable.prototype.setPreviousBasicAttack = function (value) {
         var id = "puppetmaster_".concat(this.player_id);
@@ -3541,6 +3586,8 @@ var CastSpellStates = (function () {
         var repertoire = player_table.spell_repertoire;
         player_table.setDiscountNextAttack(args.discount_attack_spell);
         player_table.setDiscountNextSpell(args.discount_next_spell);
+        player_table.setPreviousSpellPlayed(args.previous_spell_played);
+        player_table.setPreviousSpellCost(args.previous_spell_cost);
         var selectableCards = repertoire
             .getCards()
             .filter(function (card) {
@@ -3607,6 +3654,9 @@ var CastSpellInteractionStates = (function () {
             return;
         this.game.actionManager.setup("castSpellInteraction");
         this.game.actionManager.addActionInteraction(args.spell);
+        if (args.spell.type === SpellType.Echo) {
+            this.game.actionManager.addArgument(args.previous_spell_played.toString());
+        }
         setTimeout(function () {
             _this.game.actionManager.activateNextAction();
         }, 10);
@@ -3887,13 +3937,9 @@ var CastSpellWithManaStates = (function () {
             return;
         this.mana_cards = [];
         this.spell = args.card;
-        var _a = this.game.getCardType(this.spell), cost = _a.cost, type = _a.type;
+        var cost = this.game.getSpellCost(args.card);
         this.player_table = this.game.getCurrentPlayerTable();
         this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
-        cost = Math.max(cost - this.player_table.getDiscountNextSpell(), 0);
-        if (type == "red") {
-            cost = Math.max(cost - this.player_table.getDiscountNextAttack(), 0);
-        }
         var handleHandCardClick = function (card) {
             if (_this.mana_cards.length === cost)
                 return;
@@ -3918,12 +3964,7 @@ var CastSpellWithManaStates = (function () {
     CastSpellWithManaStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
-            var _a = _this.game.getCardType(_this.spell), cost = _a.cost, type = _a.type;
-            var player_table = _this.game.getCurrentPlayerTable();
-            cost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
-            if (type == "red") {
-                cost = Math.max(cost - player_table.getDiscountNextAttack(), 0);
-            }
+            var cost = _this.game.getSpellCost(args.card);
             if (_this.mana_cards.length !== cost) {
                 _this.game.showMessage(_("You didn't select the right amount of mana card to cast the spell"), "error");
                 return;
@@ -4573,6 +4614,10 @@ var SelectSpellPoolStates = (function () {
     };
     return SelectSpellPoolStates;
 }());
+var SpellType = {
+    Echo: "102",
+    DeathSpiral: "105",
+};
 define([
     "dojo",
     "dojo/_base/declare",

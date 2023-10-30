@@ -43,11 +43,9 @@ use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
-use WizardsGrimoire\Core\Stats;
 use WizardsGrimoire\DebugTrait;
 use WizardsGrimoire\Objects\CardLocation;
 
@@ -102,9 +100,13 @@ class WizardsGrimoire extends Table {
             WG_VAR_UNDO_AVAILABLE => 30,
             WG_VAR_STATS_ACTIVATED => 31,
             WG_VAR_FIRST_PLAYER => 32,
+            WG_VAR_SPELL_COST => 33,
+            WG_VAR_PREVIOUS_SPELL_COST => 34,
+            WG_VAR_SWITCH_CARDS_COUNT => 35,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
+            WG_GAME_OPTION_SHIFT_SAND_PROMO => WG_GAME_OPTION_SHIFT_SAND_PROMO_ID,
         ));
 
         self::$instance = $this;
@@ -165,6 +167,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_CURRENT_PLAYER, 0);
         self::setGameStateInitialValue(WG_VAR_INTERACTION_PLAYER, 0);
         self::setGameStateInitialValue(WG_VAR_SPELL_PLAYED, 0);
+        self::setGameStateInitialValue(WG_VAR_SPELL_COST, 0);
         self::setGameStateInitialValue(WG_VAR_SKIP_INTERACTION, 0);
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_NEXT_SPELL, 0);
         self::setGameStateInitialValue(WG_VAR_DISCOUNT_ATTACK_SPELL, 0);
@@ -180,9 +183,11 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_BASIC_ATTACK_POWER, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_PLAYED, 0);
         self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_DAMAGE, 0);
+        self::setGameStateInitialValue(WG_VAR_PREVIOUS_SPELL_COST, 0);
         self::setGameStateInitialValue(WG_VAR_UNDO_AVAILABLE, 1);
         self::setGameStateInitialValue(WG_VAR_STATS_ACTIVATED, 2);
         self::setGameStateInitialValue(WG_VAR_FIRST_PLAYER, intval($firstPlayer));
+        self::setGameStateInitialValue(WG_VAR_SWITCH_CARDS_COUNT, 1);
 
         // Init game statistics
         self::initStat('table', WG_STAT_TURN_NUMBER, 0);
@@ -191,7 +196,7 @@ class WizardsGrimoire extends Table {
             //  10
             WG_STAT_TURN_NUMBER,
             // 20
-            WG_STAT_NBR_DRAFT, WG_STAT_NBR_DRAFT_ATTACK, WG_STAT_NBR_DRAFT_UTILITY, WG_STAT_NBR_DRAFT_REGENERATION, 
+            WG_STAT_NBR_DRAFT, WG_STAT_NBR_DRAFT_ATTACK, WG_STAT_NBR_DRAFT_UTILITY, WG_STAT_NBR_DRAFT_REGENERATION,
             // 25
             WG_STAT_NBR_DRAFT_COST_1, WG_STAT_NBR_DRAFT_COST_2, WG_STAT_NBR_DRAFT_COST_3, WG_STAT_NBR_DRAFT_COST_4, WG_STAT_NBR_DRAFT_COST_5,
             // 30
@@ -206,11 +211,12 @@ class WizardsGrimoire extends Table {
 
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
         $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
+        $gameOptionShiftingSandPromo = intval(self::getGameStateValue(WG_GAME_OPTION_SHIFT_SAND_PROMO));
 
         $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
-        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1) {
+        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo) {
             switch ($card_type['icon']) {
                 case WG_ICON_SET_BASE_1:
                     return true;
@@ -218,6 +224,8 @@ class WizardsGrimoire extends Table {
                     return $gameOptionDifficulty == WG_DIFFICULTY_ADVANCED;
                 case WG_ICON_SET_KICKSTARTER_1:
                     return $gameOptionKickStarter1 == WG_OPTION_YES;
+                case WG_ICON_SET_SAND_1:
+                    return $gameOptionShiftingSandPromo == WG_OPTION_YES;
             }
         });
 
@@ -268,7 +276,7 @@ class WizardsGrimoire extends Table {
 
         $result['players'][$first_player]['turn'] = intval(self::getStat(WG_STAT_TURN_NUMBER, $first_player));
         $result['players'][$second_player]['turn'] = intval(self::getStat(WG_STAT_TURN_NUMBER, $second_player));
-        
+
         $result['first_player'] = $first_player;
 
         $result['card_types'] = $this->card_types;
@@ -328,12 +336,18 @@ class WizardsGrimoire extends Table {
 
         // $result['debug_stats_first'] = self::getCollectionFromDB("SELECT * FROM stats WHERE stats_player_id = $firstPlayer ORDER BY stats_type");
         // $result['debug_stats_second'] = self::getCollectionFromDB("SELECT * FROM stats WHERE stats_player_id = $firstAttacker ORDER BY stats_type");
+        // $result['debug_cards_times_played'] = Globals::getCardsTimesPlayed();
 
         $result['opponent_id'] = Players::getOpponentIdOf($current_player_id);
 
         $result['globals'] = [
             "previous_basic_attack" => Globals::getPreviousBasicAttackPower(),
             "last_basic_attack_damage" => Globals::getLastBasicAttackDamage(),
+        ];
+
+        $result['images'] = [
+            "front_1" => true,
+            "front_2" => self::getGameStateValue(WG_GAME_OPTION_SHIFT_SAND_PROMO) == WG_OPTION_YES,
         ];
 
         return $result;

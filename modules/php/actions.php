@@ -4,7 +4,6 @@ namespace WizardsGrimoire\Core;
 
 use BgaSystemException;
 use BgaUserException;
-use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
 use WizardsGrimoire\Objects\CardLocation;
 
 trait ActionTrait {
@@ -151,12 +150,19 @@ trait ActionTrait {
         $card_type = SpellCard::getCardInfo($spell);
         $cost = intval($card_type['cost']);
 
-        $cost = max($cost - Globals::getDiscountNextSpell(), 0);
+        $cost = $cost - Globals::getDiscountNextSpell();
         Globals::setDiscountNextSpell(0);
         if ($card_type['type'] == WG_SPELL_TYPE_ATTACK) {
-            $cost = max($cost - Globals::getDiscountAttackSpell(), 0);
+            $cost = $cost - Globals::getDiscountAttackSpell();
             Globals::setDiscountAttackSpell(0);
         }
+
+        $instance = SpellCard::getInstanceOfCard($spell);
+        if (method_exists($instance, 'discount')) {
+            $cost = $cost - intval($instance->discount());
+        }
+
+        $cost = $cost < 0 ? 0 : $cost;
 
         if ($cost == 0 && sizeof($mana_ids) == 1 && $mana_ids[0] == "") {
             // Free card
@@ -191,9 +197,13 @@ trait ActionTrait {
                 Globals::setConsecutivelyAttackSpellCount(0);
                 break;
         }
+        Globals::incCardTimesPlayed(intval($spell['type']));
 
         Globals::setPreviousSpellPlayed(Globals::getSpellPlayed());
+        Globals::setPreviousSpellCost(Globals::getSpellCost());
         Globals::setSpellPlayed(intval($spell['id']));
+        Globals::setSpellCost($cost);
+
 
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_ONGOING:
@@ -216,7 +226,11 @@ trait ActionTrait {
     function activateInstantSpell($spell, $args) {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
-        $cardClass->castSpell($args);
+        $res = $cardClass->castSpell($args);
+
+        if($res === "stop") {
+            return;
+        }
 
         if (Globals::getSkipInteraction()) {
             Globals::setSkipInteraction(false);

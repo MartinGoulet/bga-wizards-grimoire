@@ -58,6 +58,16 @@ class Notifications {
         ]);
     }
 
+    static function destroySpell($player_id, $card) {
+        self::notifyAll('onDiscardSpell', '${player_name} destroys ${card_name}', [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName(intval($player_id)),
+            'card' => $card,
+            'card_name' => SpellCard::getName($card),
+            'i18n' => ['card_name'],
+        ]);
+    }
+
     static function discardSpell($player_id, $card) {
         self::notifyAll('onDiscardSpell', '${player_name} discards ${card_name}', [
             'player_id' => intval($player_id),
@@ -109,6 +119,17 @@ class Notifications {
 
         $args['cards'] = array_values(Game::anonynizeCards($cards));
         self::notifyAll('onDrawManaCards', $msg, $args, $player_id);
+    }
+
+    static function echoSpell(int $player_id, array $spell) {
+        $message = clienttranslate('${player_name} uses ${card_name} and copy the effect of ${card_name2}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            'card_name' => clienttranslate("Echo"),
+            'card_name2' => SpellCard::getName($spell),
+            'i18n' => ['card_name', 'card_name2'],
+        ]);
     }
 
     static function hasNoManaCard(int $player_id, int $value) {

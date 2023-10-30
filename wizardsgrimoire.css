@@ -65,289 +65,575 @@
   background-position: 100% 0%;
 }
 
-.wg-card .wg-card-spell-front,
-.wg-tooltip-card .wg-card {
+.wg-card.base_game .wg-card-spell-front,
+.wg-tooltip-card .wg-card.base_game {
   background: url("img/spell-front.jpg");
   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 }
-.wg-card .wg-card-spell-front[data-type="1"],
-.wg-tooltip-card .wg-card[data-type="1"] {
+.wg-card.base_game .wg-card-spell-front[data-type="1"],
+.wg-tooltip-card .wg-card.base_game[data-type="1"] {
   background-position: 0% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="2"],
-.wg-tooltip-card .wg-card[data-type="2"] {
+.wg-card.base_game .wg-card-spell-front[data-type="2"],
+.wg-tooltip-card .wg-card.base_game[data-type="2"] {
   background-position: -100% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="3"],
-.wg-tooltip-card .wg-card[data-type="3"] {
+.wg-card.base_game .wg-card-spell-front[data-type="3"],
+.wg-tooltip-card .wg-card.base_game[data-type="3"] {
   background-position: -200% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="4"],
-.wg-tooltip-card .wg-card[data-type="4"] {
+.wg-card.base_game .wg-card-spell-front[data-type="4"],
+.wg-tooltip-card .wg-card.base_game[data-type="4"] {
   background-position: -300% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="5"],
-.wg-tooltip-card .wg-card[data-type="5"] {
+.wg-card.base_game .wg-card-spell-front[data-type="5"],
+.wg-tooltip-card .wg-card.base_game[data-type="5"] {
   background-position: -400% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="6"],
-.wg-tooltip-card .wg-card[data-type="6"] {
+.wg-card.base_game .wg-card-spell-front[data-type="6"],
+.wg-tooltip-card .wg-card.base_game[data-type="6"] {
   background-position: -500% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="7"],
-.wg-tooltip-card .wg-card[data-type="7"] {
+.wg-card.base_game .wg-card-spell-front[data-type="7"],
+.wg-tooltip-card .wg-card.base_game[data-type="7"] {
   background-position: -600% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="8"],
-.wg-tooltip-card .wg-card[data-type="8"] {
+.wg-card.base_game .wg-card-spell-front[data-type="8"],
+.wg-tooltip-card .wg-card.base_game[data-type="8"] {
   background-position: -700% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="9"],
-.wg-tooltip-card .wg-card[data-type="9"] {
+.wg-card.base_game .wg-card-spell-front[data-type="9"],
+.wg-tooltip-card .wg-card.base_game[data-type="9"] {
   background-position: -800% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="10"],
-.wg-tooltip-card .wg-card[data-type="10"] {
+.wg-card.base_game .wg-card-spell-front[data-type="10"],
+.wg-tooltip-card .wg-card.base_game[data-type="10"] {
   background-position: -900% 0%;
 }
-.wg-card .wg-card-spell-front[data-type="11"],
-.wg-tooltip-card .wg-card[data-type="11"] {
+.wg-card.base_game .wg-card-spell-front[data-type="11"],
+.wg-tooltip-card .wg-card.base_game[data-type="11"] {
   background-position: 0% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="12"],
-.wg-tooltip-card .wg-card[data-type="12"] {
+.wg-card.base_game .wg-card-spell-front[data-type="12"],
+.wg-tooltip-card .wg-card.base_game[data-type="12"] {
   background-position: -100% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="13"],
-.wg-tooltip-card .wg-card[data-type="13"] {
+.wg-card.base_game .wg-card-spell-front[data-type="13"],
+.wg-tooltip-card .wg-card.base_game[data-type="13"] {
   background-position: -200% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="14"],
-.wg-tooltip-card .wg-card[data-type="14"] {
+.wg-card.base_game .wg-card-spell-front[data-type="14"],
+.wg-tooltip-card .wg-card.base_game[data-type="14"] {
   background-position: -300% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="15"],
-.wg-tooltip-card .wg-card[data-type="15"] {
+.wg-card.base_game .wg-card-spell-front[data-type="15"],
+.wg-tooltip-card .wg-card.base_game[data-type="15"] {
   background-position: -400% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="16"],
-.wg-tooltip-card .wg-card[data-type="16"] {
+.wg-card.base_game .wg-card-spell-front[data-type="16"],
+.wg-tooltip-card .wg-card.base_game[data-type="16"] {
   background-position: -500% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="17"],
-.wg-tooltip-card .wg-card[data-type="17"] {
+.wg-card.base_game .wg-card-spell-front[data-type="17"],
+.wg-tooltip-card .wg-card.base_game[data-type="17"] {
   background-position: -600% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="18"],
-.wg-tooltip-card .wg-card[data-type="18"] {
+.wg-card.base_game .wg-card-spell-front[data-type="18"],
+.wg-tooltip-card .wg-card.base_game[data-type="18"] {
   background-position: -700% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="19"],
-.wg-tooltip-card .wg-card[data-type="19"] {
+.wg-card.base_game .wg-card-spell-front[data-type="19"],
+.wg-tooltip-card .wg-card.base_game[data-type="19"] {
   background-position: -800% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="20"],
-.wg-tooltip-card .wg-card[data-type="20"] {
+.wg-card.base_game .wg-card-spell-front[data-type="20"],
+.wg-tooltip-card .wg-card.base_game[data-type="20"] {
   background-position: -900% -100%;
 }
-.wg-card .wg-card-spell-front[data-type="21"],
-.wg-tooltip-card .wg-card[data-type="21"] {
+.wg-card.base_game .wg-card-spell-front[data-type="21"],
+.wg-tooltip-card .wg-card.base_game[data-type="21"] {
   background-position: 0% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="22"],
-.wg-tooltip-card .wg-card[data-type="22"] {
+.wg-card.base_game .wg-card-spell-front[data-type="22"],
+.wg-tooltip-card .wg-card.base_game[data-type="22"] {
   background-position: -100% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="23"],
-.wg-tooltip-card .wg-card[data-type="23"] {
+.wg-card.base_game .wg-card-spell-front[data-type="23"],
+.wg-tooltip-card .wg-card.base_game[data-type="23"] {
   background-position: -200% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="24"],
-.wg-tooltip-card .wg-card[data-type="24"] {
+.wg-card.base_game .wg-card-spell-front[data-type="24"],
+.wg-tooltip-card .wg-card.base_game[data-type="24"] {
   background-position: -300% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="25"],
-.wg-tooltip-card .wg-card[data-type="25"] {
+.wg-card.base_game .wg-card-spell-front[data-type="25"],
+.wg-tooltip-card .wg-card.base_game[data-type="25"] {
   background-position: -400% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="26"],
-.wg-tooltip-card .wg-card[data-type="26"] {
+.wg-card.base_game .wg-card-spell-front[data-type="26"],
+.wg-tooltip-card .wg-card.base_game[data-type="26"] {
   background-position: -500% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="27"],
-.wg-tooltip-card .wg-card[data-type="27"] {
+.wg-card.base_game .wg-card-spell-front[data-type="27"],
+.wg-tooltip-card .wg-card.base_game[data-type="27"] {
   background-position: -600% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="28"],
-.wg-tooltip-card .wg-card[data-type="28"] {
+.wg-card.base_game .wg-card-spell-front[data-type="28"],
+.wg-tooltip-card .wg-card.base_game[data-type="28"] {
   background-position: -700% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="29"],
-.wg-tooltip-card .wg-card[data-type="29"] {
+.wg-card.base_game .wg-card-spell-front[data-type="29"],
+.wg-tooltip-card .wg-card.base_game[data-type="29"] {
   background-position: -800% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="30"],
-.wg-tooltip-card .wg-card[data-type="30"] {
+.wg-card.base_game .wg-card-spell-front[data-type="30"],
+.wg-tooltip-card .wg-card.base_game[data-type="30"] {
   background-position: -900% -200%;
 }
-.wg-card .wg-card-spell-front[data-type="31"],
-.wg-tooltip-card .wg-card[data-type="31"] {
+.wg-card.base_game .wg-card-spell-front[data-type="31"],
+.wg-tooltip-card .wg-card.base_game[data-type="31"] {
   background-position: 0% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="32"],
-.wg-tooltip-card .wg-card[data-type="32"] {
+.wg-card.base_game .wg-card-spell-front[data-type="32"],
+.wg-tooltip-card .wg-card.base_game[data-type="32"] {
   background-position: -100% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="33"],
-.wg-tooltip-card .wg-card[data-type="33"] {
+.wg-card.base_game .wg-card-spell-front[data-type="33"],
+.wg-tooltip-card .wg-card.base_game[data-type="33"] {
   background-position: -200% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="34"],
-.wg-tooltip-card .wg-card[data-type="34"] {
+.wg-card.base_game .wg-card-spell-front[data-type="34"],
+.wg-tooltip-card .wg-card.base_game[data-type="34"] {
   background-position: -300% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="35"],
-.wg-tooltip-card .wg-card[data-type="35"] {
+.wg-card.base_game .wg-card-spell-front[data-type="35"],
+.wg-tooltip-card .wg-card.base_game[data-type="35"] {
   background-position: -400% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="36"],
-.wg-tooltip-card .wg-card[data-type="36"] {
+.wg-card.base_game .wg-card-spell-front[data-type="36"],
+.wg-tooltip-card .wg-card.base_game[data-type="36"] {
   background-position: -500% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="37"],
-.wg-tooltip-card .wg-card[data-type="37"] {
+.wg-card.base_game .wg-card-spell-front[data-type="37"],
+.wg-tooltip-card .wg-card.base_game[data-type="37"] {
   background-position: -600% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="38"],
-.wg-tooltip-card .wg-card[data-type="38"] {
+.wg-card.base_game .wg-card-spell-front[data-type="38"],
+.wg-tooltip-card .wg-card.base_game[data-type="38"] {
   background-position: -700% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="39"],
-.wg-tooltip-card .wg-card[data-type="39"] {
+.wg-card.base_game .wg-card-spell-front[data-type="39"],
+.wg-tooltip-card .wg-card.base_game[data-type="39"] {
   background-position: -800% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="40"],
-.wg-tooltip-card .wg-card[data-type="40"] {
+.wg-card.base_game .wg-card-spell-front[data-type="40"],
+.wg-tooltip-card .wg-card.base_game[data-type="40"] {
   background-position: -900% -300%;
 }
-.wg-card .wg-card-spell-front[data-type="41"],
-.wg-tooltip-card .wg-card[data-type="41"] {
+.wg-card.base_game .wg-card-spell-front[data-type="41"],
+.wg-tooltip-card .wg-card.base_game[data-type="41"] {
   background-position: 0% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="42"],
-.wg-tooltip-card .wg-card[data-type="42"] {
+.wg-card.base_game .wg-card-spell-front[data-type="42"],
+.wg-tooltip-card .wg-card.base_game[data-type="42"] {
   background-position: -100% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="43"],
-.wg-tooltip-card .wg-card[data-type="43"] {
+.wg-card.base_game .wg-card-spell-front[data-type="43"],
+.wg-tooltip-card .wg-card.base_game[data-type="43"] {
   background-position: -200% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="44"],
-.wg-tooltip-card .wg-card[data-type="44"] {
+.wg-card.base_game .wg-card-spell-front[data-type="44"],
+.wg-tooltip-card .wg-card.base_game[data-type="44"] {
   background-position: -300% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="45"],
-.wg-tooltip-card .wg-card[data-type="45"] {
+.wg-card.base_game .wg-card-spell-front[data-type="45"],
+.wg-tooltip-card .wg-card.base_game[data-type="45"] {
   background-position: -400% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="46"],
-.wg-tooltip-card .wg-card[data-type="46"] {
+.wg-card.base_game .wg-card-spell-front[data-type="46"],
+.wg-tooltip-card .wg-card.base_game[data-type="46"] {
   background-position: -500% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="47"],
-.wg-tooltip-card .wg-card[data-type="47"] {
+.wg-card.base_game .wg-card-spell-front[data-type="47"],
+.wg-tooltip-card .wg-card.base_game[data-type="47"] {
   background-position: -600% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="48"],
-.wg-tooltip-card .wg-card[data-type="48"] {
+.wg-card.base_game .wg-card-spell-front[data-type="48"],
+.wg-tooltip-card .wg-card.base_game[data-type="48"] {
   background-position: -700% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="49"],
-.wg-tooltip-card .wg-card[data-type="49"] {
+.wg-card.base_game .wg-card-spell-front[data-type="49"],
+.wg-tooltip-card .wg-card.base_game[data-type="49"] {
   background-position: -800% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="50"],
-.wg-tooltip-card .wg-card[data-type="50"] {
+.wg-card.base_game .wg-card-spell-front[data-type="50"],
+.wg-tooltip-card .wg-card.base_game[data-type="50"] {
   background-position: -900% -400%;
 }
-.wg-card .wg-card-spell-front[data-type="51"],
-.wg-tooltip-card .wg-card[data-type="51"] {
+.wg-card.base_game .wg-card-spell-front[data-type="51"],
+.wg-tooltip-card .wg-card.base_game[data-type="51"] {
   background-position: 0% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="52"],
-.wg-tooltip-card .wg-card[data-type="52"] {
+.wg-card.base_game .wg-card-spell-front[data-type="52"],
+.wg-tooltip-card .wg-card.base_game[data-type="52"] {
   background-position: -100% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="53"],
-.wg-tooltip-card .wg-card[data-type="53"] {
+.wg-card.base_game .wg-card-spell-front[data-type="53"],
+.wg-tooltip-card .wg-card.base_game[data-type="53"] {
   background-position: -200% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="54"],
-.wg-tooltip-card .wg-card[data-type="54"] {
+.wg-card.base_game .wg-card-spell-front[data-type="54"],
+.wg-tooltip-card .wg-card.base_game[data-type="54"] {
   background-position: -300% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="55"],
-.wg-tooltip-card .wg-card[data-type="55"] {
+.wg-card.base_game .wg-card-spell-front[data-type="55"],
+.wg-tooltip-card .wg-card.base_game[data-type="55"] {
   background-position: -400% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="56"],
-.wg-tooltip-card .wg-card[data-type="56"] {
+.wg-card.base_game .wg-card-spell-front[data-type="56"],
+.wg-tooltip-card .wg-card.base_game[data-type="56"] {
   background-position: -500% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="57"],
-.wg-tooltip-card .wg-card[data-type="57"] {
+.wg-card.base_game .wg-card-spell-front[data-type="57"],
+.wg-tooltip-card .wg-card.base_game[data-type="57"] {
   background-position: -600% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="58"],
-.wg-tooltip-card .wg-card[data-type="58"] {
+.wg-card.base_game .wg-card-spell-front[data-type="58"],
+.wg-tooltip-card .wg-card.base_game[data-type="58"] {
   background-position: -700% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="59"],
-.wg-tooltip-card .wg-card[data-type="59"] {
+.wg-card.base_game .wg-card-spell-front[data-type="59"],
+.wg-tooltip-card .wg-card.base_game[data-type="59"] {
   background-position: -800% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="60"],
-.wg-tooltip-card .wg-card[data-type="60"] {
+.wg-card.base_game .wg-card-spell-front[data-type="60"],
+.wg-tooltip-card .wg-card.base_game[data-type="60"] {
   background-position: -900% -500%;
 }
-.wg-card .wg-card-spell-front[data-type="61"],
-.wg-tooltip-card .wg-card[data-type="61"] {
+.wg-card.base_game .wg-card-spell-front[data-type="61"],
+.wg-tooltip-card .wg-card.base_game[data-type="61"] {
   background-position: 0% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="62"],
-.wg-tooltip-card .wg-card[data-type="62"] {
+.wg-card.base_game .wg-card-spell-front[data-type="62"],
+.wg-tooltip-card .wg-card.base_game[data-type="62"] {
   background-position: -100% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="63"],
-.wg-tooltip-card .wg-card[data-type="63"] {
+.wg-card.base_game .wg-card-spell-front[data-type="63"],
+.wg-tooltip-card .wg-card.base_game[data-type="63"] {
   background-position: -200% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="64"],
-.wg-tooltip-card .wg-card[data-type="64"] {
+.wg-card.base_game .wg-card-spell-front[data-type="64"],
+.wg-tooltip-card .wg-card.base_game[data-type="64"] {
   background-position: -300% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="65"],
-.wg-tooltip-card .wg-card[data-type="65"] {
+.wg-card.base_game .wg-card-spell-front[data-type="65"],
+.wg-tooltip-card .wg-card.base_game[data-type="65"] {
   background-position: -400% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="66"],
-.wg-tooltip-card .wg-card[data-type="66"] {
+.wg-card.base_game .wg-card-spell-front[data-type="66"],
+.wg-tooltip-card .wg-card.base_game[data-type="66"] {
   background-position: -500% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="67"],
-.wg-tooltip-card .wg-card[data-type="67"] {
+.wg-card.base_game .wg-card-spell-front[data-type="67"],
+.wg-tooltip-card .wg-card.base_game[data-type="67"] {
   background-position: -600% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="68"],
-.wg-tooltip-card .wg-card[data-type="68"] {
+.wg-card.base_game .wg-card-spell-front[data-type="68"],
+.wg-tooltip-card .wg-card.base_game[data-type="68"] {
   background-position: -700% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="69"],
-.wg-tooltip-card .wg-card[data-type="69"] {
+.wg-card.base_game .wg-card-spell-front[data-type="69"],
+.wg-tooltip-card .wg-card.base_game[data-type="69"] {
   background-position: -800% -600%;
 }
-.wg-card .wg-card-spell-front[data-type="70"],
-.wg-tooltip-card .wg-card[data-type="70"] {
+.wg-card.base_game .wg-card-spell-front[data-type="70"],
+.wg-tooltip-card .wg-card.base_game[data-type="70"] {
+  background-position: -900% -600%;
+}
+
+.wg-card.shifting_sand .wg-card-spell-front,
+.wg-tooltip-card .wg-card.shifting_sand {
+  background: url("img/spell-front-2.jpg");
+  background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="101"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="101"] {
+  background-position: 0% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="102"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="102"] {
+  background-position: -100% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="103"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="103"] {
+  background-position: -200% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="104"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="104"] {
+  background-position: -300% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="105"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="105"] {
+  background-position: -400% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="106"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="106"] {
+  background-position: -500% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="107"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="107"] {
+  background-position: -600% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="108"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="108"] {
+  background-position: -700% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="109"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="109"] {
+  background-position: -800% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="110"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="110"] {
+  background-position: -900% 0%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="111"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="111"] {
+  background-position: 0% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="112"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="112"] {
+  background-position: -100% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="113"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="113"] {
+  background-position: -200% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="114"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="114"] {
+  background-position: -300% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="115"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="115"] {
+  background-position: -400% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="116"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="116"] {
+  background-position: -500% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="117"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="117"] {
+  background-position: -600% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="118"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="118"] {
+  background-position: -700% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="119"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="119"] {
+  background-position: -800% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="120"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="120"] {
+  background-position: -900% -100%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="121"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="121"] {
+  background-position: 0% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="122"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="122"] {
+  background-position: -100% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="123"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="123"] {
+  background-position: -200% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="124"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="124"] {
+  background-position: -300% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="125"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="125"] {
+  background-position: -400% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="126"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="126"] {
+  background-position: -500% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="127"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="127"] {
+  background-position: -600% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="128"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="128"] {
+  background-position: -700% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="129"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="129"] {
+  background-position: -800% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="130"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="130"] {
+  background-position: -900% -200%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="131"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="131"] {
+  background-position: 0% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="132"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="132"] {
+  background-position: -100% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="133"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="133"] {
+  background-position: -200% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="134"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="134"] {
+  background-position: -300% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="135"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="135"] {
+  background-position: -400% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="136"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="136"] {
+  background-position: -500% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="137"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="137"] {
+  background-position: -600% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="138"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="138"] {
+  background-position: -700% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="139"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="139"] {
+  background-position: -800% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="140"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="140"] {
+  background-position: -900% -300%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="141"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="141"] {
+  background-position: 0% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="142"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="142"] {
+  background-position: -100% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="143"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="143"] {
+  background-position: -200% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="144"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="144"] {
+  background-position: -300% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="145"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="145"] {
+  background-position: -400% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="146"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="146"] {
+  background-position: -500% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="147"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="147"] {
+  background-position: -600% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="148"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="148"] {
+  background-position: -700% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="149"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="149"] {
+  background-position: -800% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="150"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="150"] {
+  background-position: -900% -400%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="151"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="151"] {
+  background-position: 0% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="152"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="152"] {
+  background-position: -100% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="153"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="153"] {
+  background-position: -200% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="154"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="154"] {
+  background-position: -300% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="155"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="155"] {
+  background-position: -400% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="156"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="156"] {
+  background-position: -500% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="157"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="157"] {
+  background-position: -600% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="158"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="158"] {
+  background-position: -700% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="159"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="159"] {
+  background-position: -800% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="160"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="160"] {
+  background-position: -900% -500%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="161"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="161"] {
+  background-position: 0% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="162"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="162"] {
+  background-position: -100% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="163"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="163"] {
+  background-position: -200% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="164"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="164"] {
+  background-position: -300% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="165"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="165"] {
+  background-position: -400% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="166"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="166"] {
+  background-position: -500% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="167"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="167"] {
+  background-position: -600% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="168"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="168"] {
+  background-position: -700% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="169"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="169"] {
+  background-position: -800% -600%;
+}
+.wg-card.shifting_sand .wg-card-spell-front[data-type="170"],
+.wg-tooltip-card .wg-card.shifting_sand[data-type="170"] {
   background-position: -900% -600%;
 }
 
@@ -1033,6 +1319,10 @@ body > .card {
 }
 .player_small_board .icon-wrapper .hand {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Layer_1' x='0px' y='0px' viewBox='0 0 95.23 122.88' style='enable-background:new 0 0 95.23 122.88' xml:space='preserve'%3E%3Cg%3E%3Cpath d='M10.52,22.54L10.52,22.54c2.11,0,4.08,0.63,5.73,1.71v-2.84c0-2.89,1.18-5.52,3.09-7.43c1.9-1.9,4.53-3.09,7.43-3.09l0,0 c2.23,0,4.3,0.7,6.01,1.9v-2.29c0-2.89,1.18-5.52,3.09-7.43C37.77,1.18,40.4,0,43.29,0l0,0c2.89,0,5.52,1.18,7.43,3.09 c1.9,1.9,3.09,4.53,3.09,7.43v2.32c1.68-1.15,3.71-1.82,5.9-1.82l0,0c2.89,0,5.52,1.18,7.43,3.09c1.9,1.9,3.09,4.54,3.09,7.43 v49.97c0.13,0.86,0.2,1.74,0.2,2.64v2.94l0.26-0.24c1.81-1.7,3.58-3.47,4.24-4.14c4.48-4.49,9.31-5.44,13.14-4.23 c1.73,0.55,3.23,1.53,4.41,2.83c1.17,1.29,2.03,2.89,2.46,4.69c1.01,4.25-0.36,9.6-5.64,14.32l-0.09,0.09l0,0l-0.02,0.02 l-23.12,23.34l0,0.01c-0.05,0.05-0.11,0.11-0.17,0.16c-3.38,3.25-6.69,5.47-10.29,6.9c-3.66,1.46-7.52,2.06-11.94,2.06H28.71 c-7.96,0-15.13-3.26-20.31-8.5C3.2,109.11,0,101.84,0,93.85V74.13c0-0.69,0.04-1.37,0.11-2.04C0.04,71.86,0,71.61,0.01,71.36v-38.3 c0-2.89,1.18-5.52,3.09-7.43C5,23.72,7.63,22.54,10.52,22.54L10.52,22.54z M66.14,83.55c-4.09-1.57-7.81-2.34-11.09-2.39 c-3.43-0.05-6.36,0.68-8.69,2.08c-2.26,1.35-3.98,3.38-5.07,5.96c-0.85,2.01-1.31,4.35-1.35,6.98l-4.76-0.06 c0.05-3.28,0.63-6.23,1.7-8.77c1.48-3.53,3.87-6.31,7.03-8.2c3.08-1.85,6.86-2.81,11.19-2.75c3.23,0.05,6.76,0.66,10.53,1.9v-4.16 c0-0.51-0.03-1.02-0.09-1.52c-0.1-0.22-0.16-0.45-0.19-0.7c-0.63-2.87-2.23-5.4-4.45-7.22c-2.22-1.81-5.05-2.91-8.12-2.91h-1.2 c-0.03,0-0.05,0-0.08,0c-0.03,0-0.05,0-0.08,0H35.17c-0.05,0-0.09,0-0.14,0c-0.05,0-0.09,0-0.14,0H18.64 c-0.25,0-0.5-0.04-0.73-0.12h-0.6c-3.06,0-5.87,1.08-8.07,2.87c-1.09,0.89-2.03,1.94-2.79,3.13c-1.07,1.9-1.67,4.11-1.67,6.46 v19.72c0,6.7,2.67,12.79,7.02,17.18c4.31,4.36,10.27,7.06,16.91,7.06h14.96c3.86,0,7.16-0.5,10.19-1.71c3-1.19,5.81-3.1,8.73-5.91 c0.03-0.03,0.06-0.06,0.09-0.09l0,0l0.03-0.03l23.09-23.31c0.07-0.08,0.15-0.17,0.24-0.24l1.59,1.79l-1.58-1.78 c3.83-3.39,4.89-7,4.23-9.74c-0.24-1-0.7-1.88-1.34-2.58c-0.63-0.7-1.42-1.22-2.32-1.5c-2.27-0.72-5.28,0.01-8.32,3.05 c-0.7,0.7-2.55,2.55-4.35,4.25c-1.7,1.59-3.45,3.12-4.6,3.77c-0.38,0.25-0.83,0.4-1.32,0.4C67.26,84.47,66.57,84.11,66.14,83.55 L66.14,83.55z M21.04,56.5h11.47V21.42c0-1.57-0.65-3.01-1.69-4.05c-1.04-1.04-2.47-1.69-4.05-1.69l0,0 c-1.57,0-3.01,0.65-4.05,1.69c-1.04,1.04-1.69,2.47-1.69,4.05v11.64V56.5L21.04,56.5z M37.56,56.5h11.47V10.52 c0-1.57-0.65-3.01-1.69-4.05c-1.04-1.04-2.47-1.69-4.05-1.69l0,0c-1.57,0-3.01,0.65-4.05,1.69c-1.04,1.04-1.69,2.47-1.69,4.05V56.5 L37.56,56.5z M53.97,56.54c4.38,0.29,8.34,2.2,11.27,5.14c0.07,0.07,0.13,0.14,0.2,0.2V21.53c0-1.57-0.65-3.01-1.69-4.05 c-1.04-1.04-2.47-1.68-4.05-1.68l0,0c-1.57,0-3.01,0.64-4.05,1.68c-1.04,1.04-1.69,2.47-1.69,4.05V56.54L53.97,56.54z M4.79,61.93 c0.09-0.09,0.17-0.19,0.26-0.28c2.89-2.95,6.8-4.86,11.2-5.12V33.06c0-1.57-0.64-3.01-1.68-4.05c-1.04-1.04-2.47-1.69-4.05-1.69 l0,0c-1.58,0-3.01,0.65-4.05,1.69c-1.04,1.04-1.68,2.47-1.68,4.05V61.93L4.79,61.93z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.player_small_board .icon-wrapper .text {
+  line-height: 24px;
+  vertical-align: middle;
 }
 
 .player-table {

@@ -16,6 +16,7 @@ class SpellCardManager extends CardManager<SpellCard> {
             div.classList.add("wg-card-spell");
             div.dataset.cardId = "" + card.id;
             div.dataset.type = "" + card.type;
+            div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
          },
          setupFrontDiv: (card: SpellCard, div: HTMLElement) => {
             div.id = `${this.getId(card)}-front`;
@@ -160,6 +161,7 @@ class TooltipManager extends CardManager<SpellCard> {
             div.classList.add("wg-card-spell");
             div.dataset.cardId = "" + card.id;
             div.dataset.type = "" + card.type;
+            div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
          },
          setupFrontDiv: (card: SpellCard, div: HTMLElement) => {
             div.id = `${this.getId(card)}-front`;

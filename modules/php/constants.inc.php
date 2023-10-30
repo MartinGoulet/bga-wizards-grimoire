@@ -14,6 +14,9 @@ define('WG_DIFFICULTY_ADVANCED', 2);
 define('WG_GAME_OPTION_EXT_KICKSTARTER_1_ID', 101);
 define('WG_GAME_OPTION_EXT_KICKSTARTER_1', 'gameOptionKickStarter1');
 
+define('WG_GAME_OPTION_SHIFT_SAND_PROMO_ID', 102);
+define('WG_GAME_OPTION_SHIFT_SAND_PROMO', 'gameOptionShiftingSandPromo');
+
 
 /*
  * Game variables
@@ -23,6 +26,7 @@ define('WG_VAR_CURRENT_PLAYER', 'current_player');
 define('WG_VAR_PLAYER_TURN', 'player_turn');
 define('WG_VAR_INTERACTION_PLAYER', 'interaction_player');
 define('WG_VAR_SPELL_PLAYED', 'spell_played');
+define('WG_VAR_SPELL_COST', 'spell_cost');
 define('WG_VAR_SKIP_INTERACTION', 'skip_interaction');
 define('WG_VAR_DISCOUNT_NEXT_SPELL', 'discount_next_spell');
 define('WG_VAR_DISCOUNT_ATTACK_SPELL', 'discount_attack_spell');
@@ -38,9 +42,12 @@ define('WG_VAR_PREVIOUS_BASIC_ATTACK_POWER', 'prev_basic_attack');
 define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
 define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
 define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
+define('WG_VAR_PREVIOUS_SPELL_COST', 'prev_spell_cost');
 define('WG_VAR_UNDO_AVAILABLE', 'undo_available');
 define('WG_VAR_STATS_ACTIVATED', 'stats_activated');
 define('WG_VAR_FIRST_PLAYER', 'first_player');
+
+define('WG_VAR_SWITCH_CARDS_COUNT', 'switch_cards_count');
 
 define('WG_VAR_LAST_BASIC_ATTACK_DAMAGE', 'last_basic_dmg');
 
@@ -148,3 +155,4 @@ define('WG_SPELL_TYPE_UTILITY', 'purple');
 define('WG_ICON_SET_BASE_1', 'Base_1');
 define('WG_ICON_SET_BASE_2', 'Base_2');
 define('WG_ICON_SET_KICKSTARTER_1', 'KickStarter_1');
+define('WG_ICON_SET_SAND_1', 'Sand_1');

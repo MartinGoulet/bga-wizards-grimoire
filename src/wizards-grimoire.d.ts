@@ -22,6 +22,11 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
       previous_basic_attack: number;
       last_basic_attack_damage: number;
    };
+
+   images: {
+      front_1: boolean;
+      front_2: boolean;
+   };
 }
 
 interface OngoingSpell {

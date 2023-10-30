@@ -11,15 +11,10 @@ class CastSpellWithManaStates implements StateHandler {
       this.mana_cards = [];
       this.spell = args.card;
 
-      let { cost, type } = this.game.getCardType(this.spell);
+      const cost = this.game.getSpellCost(args.card);
 
       this.player_table = this.game.getCurrentPlayerTable();
       this.mana_deck = this.player_table.mana_cooldown[this.spell.location_arg];
-
-      cost = Math.max(cost - this.player_table.getDiscountNextSpell(), 0);
-      if (type == "red") {
-         cost = Math.max(cost - this.player_table.getDiscountNextAttack(), 0);
-      }
 
       const handleHandCardClick = (card: ManaCard) => {
          if (this.mana_cards.length === cost) return;
@@ -49,13 +44,7 @@ class CastSpellWithManaStates implements StateHandler {
 
    onUpdateActionButtons(args: CastSpellWithManaArgs): void {
       const handleConfirm = () => {
-         let { cost, type } = this.game.getCardType(this.spell);
-
-         const player_table = this.game.getCurrentPlayerTable();
-         cost = Math.max(cost - player_table.getDiscountNextSpell(), 0);
-         if (type == "red") {
-            cost = Math.max(cost - player_table.getDiscountNextAttack(), 0);
-         }
+         const cost = this.game.getSpellCost(args.card);
 
          if (this.mana_cards.length !== cost) {
             this.game.showMessage(

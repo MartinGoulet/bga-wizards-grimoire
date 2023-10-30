@@ -86,6 +86,10 @@ class WizardsGrimoire
 
       this.dontPreloadImage("background-mobile.png");
       this.dontPreloadImage("background-desktop.png");
+      debugger;
+      if (!gamedatas.images.front_2) {
+         this.dontPreloadImage("spell-front-2.jpg");
+      }
 
       // Setting up player boards
       this.createPlayerPanels(gamedatas);
@@ -221,6 +225,29 @@ class WizardsGrimoire
       return this.gamedatas.card_types[card.type];
    }
 
+   public getSpellCost(spell: SpellCard): number {
+      let { cost, type } = this.getCardType(spell);
+      const player_table = this.getCurrentPlayerTable();
+
+      cost = cost - player_table.getDiscountNextSpell();
+      if (type == "red") {
+         cost = cost - player_table.getDiscountNextAttack();
+      }
+
+      if (spell.type === SpellType.DeathSpiral) {
+         const previous_spell_id = Number(player_table.getPreviousSpellPlayed());
+         if (previous_spell_id > 0) {
+            const previous_spell = this.spellsManager.getCardById(previous_spell_id);
+            const { cost: previous_cost } = this.getCardType(previous_spell);
+            if (previous_cost >= 3) {
+               cost = 0;
+            }
+         }
+      }
+
+      return Math.max(cost, 0);
+   }
+
    public getPower(card: ManaCard): number {
       let value = Number(card["type"]);
       if (document.getElementById("table").classList.contains("wg-ongoing-spell-growth")) {
@@ -341,6 +368,10 @@ class WizardsGrimoire
 
             if (args.card_name !== undefined) {
                args.card_name = "<b>" + _(args.card_name) + "</b>";
+            }
+
+            if (args.card_name2 !== undefined) {
+               args.card_name2 = "<b>" + _(args.card_name2) + "</b>";
             }
 
             if (args.phase_name !== undefined) {

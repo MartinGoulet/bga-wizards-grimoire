@@ -6,6 +6,10 @@ class CastSpellInteractionStates implements StateHandler {
       if (!this.game.isCurrentPlayerActive()) return;
       this.game.actionManager.setup("castSpellInteraction");
       this.game.actionManager.addActionInteraction(args.spell);
+      if (args.spell.type === SpellType.Echo) {
+         // Echo
+         this.game.actionManager.addArgument(args.previous_spell_played.toString());
+      }
       setTimeout(() => {
          this.game.actionManager.activateNextAction();
       }, 10);
@@ -22,4 +26,5 @@ class CastSpellInteractionStates implements StateHandler {
 
 interface CastSpellInteractionArgs {
    spell: SpellCard;
+   previous_spell_played: number;
 }
