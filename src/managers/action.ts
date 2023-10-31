@@ -813,6 +813,66 @@ class ActionManager {
       this.activateNextAction();
    }
 
+   private actionShadowOath() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionTransfigure() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Gain 4 mana cards"),
+               action: () => {
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Gain 3 mana and destroy 1 of your spells that has no mana on it"),
+               action: () => {
+                  this.actions.push("actionTransfigure_Repertoire", "actionTransfigure_Pool");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTransfigure_Repertoire() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return player_table.mana_cooldown[Number(card.location_arg)].getCards().length === 0;
+      });
+
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionTransfigure_Pool() {
+      const spellPosition = Number(this.actions_args[this.actions_args.length - 1]);
+      const spellPoolCard = this.game
+         .getCurrentPlayerTable()
+         .spell_repertoire.getCards()
+         .find((card) => Number(card.location_arg) === spellPosition);
+      this.game.markCardAsSelected(spellPoolCard);
+
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
    /////////////////////////////////////////////////////////////
    //    _    _  _    _  _  _  _    _
    //   | |  | || |  (_)| |(_)| |  (_)

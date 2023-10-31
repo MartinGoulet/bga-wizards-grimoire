@@ -2544,6 +2544,61 @@ var ActionManager = (function () {
         this.addActionPriv(card_type.js_actions_interaction);
         this.activateNextAction();
     };
+    ActionManager.prototype.actionShadowOath = function () {
+        this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionTransfigure = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Gain 4 mana cards"),
+                    action: function () {
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: _("Gain 3 mana and destroy 1 of your spells that has no mana on it"),
+                    action: function () {
+                        _this.actions.push("actionTransfigure_Repertoire", "actionTransfigure_Pool");
+                        _this.activateNextAction();
+                    },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionTransfigure_Repertoire = function () {
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return player_table.mana_cooldown[Number(card.location_arg)].getCards().length === 0;
+        });
+        var msg = _("${you} must select one of your spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                pass: false,
+            },
+        });
+    };
+    ActionManager.prototype.actionTransfigure_Pool = function () {
+        var spellPosition = Number(this.actions_args[this.actions_args.length - 1]);
+        var spellPoolCard = this.game
+            .getCurrentPlayerTable()
+            .spell_repertoire.getCards()
+            .find(function (card) { return Number(card.location_arg) === spellPosition; });
+        this.game.markCardAsSelected(spellPoolCard);
+        var msg = _("${you} must select a spell in the spell pool");
+        this.game.setClientState(states.client.selectSpellPool, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                cancel: true,
+            },
+        });
+    };
     ActionManager.prototype.question = function (args) {
         this.game.setClientState(states.client.question, {
             descriptionmyturn: this.getCardName(),
