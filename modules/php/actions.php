@@ -63,7 +63,7 @@ trait ActionTrait {
             $cards[] = ManaCard::isInHand($card_id);
             ManaCard::addOnTopOfDiscard($card_id);
         }
-        Notifications::moveManaCard(Players::getPlayerId(), $cards);
+        Notifications::moveManaCard(Players::getPlayerId(), $cards, false);
 
         $this->gamestate->nextState();
     }
