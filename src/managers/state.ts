@@ -3,6 +3,7 @@ const states = {
       arcaneTactics: "client_arcaneTactics",
       badFortune: "client_badFortune",
       castSpellWithMana: "client_castSpellWithMana",
+      eclipse: "client_eclipse",
       question: "client_question",
       replaceSpell: "client_replaceSpell",
       selectMana: "client_selectMana",
@@ -33,6 +34,7 @@ class StateManager {
       this.states = {
          [states.client.badFortune]: new BadFortuneStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
+         [states.client.eclipse]: new EclipseStates(game),
          [states.client.question]: new QuestionStates(game),
          [states.client.replaceSpell]: new ReplaceSpellStates(game),
          [states.client.selectMana]: new SelectManaStates(game),

@@ -76,3 +76,4 @@ id;name;class;description;type;activation;activation_auto;cost;icon;js_actions;i
 105;Death spiral;DeathSpiral;This spell costs 0 if the previous spell you cast cost 3 or more. Deal 2 damage;WG_SPELL_TYPE_ATTACK;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_SAND_1;;;;;darkorange
 106;Transfigure;Transfigure;Gain 4 mana. You may choose to gain 1 less mana to destroy 1 of your spells that has no mana on it;WG_SPELL_TYPE_REGENERATION;WG_SPELL_ACTIVATION_INSTANT;;2;WG_ICON_SET_SAND_1;actionTransfigure;;;;darkorange
 107;Shadow oath;ShadowOath;Pick up a mana card off one of your other spells. You opponent gains 1 mana card;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;1;WG_ICON_SET_SAND_1;actionShadowOath;;;;darkorange
+108;Eclipse;Eclipse;Reveal 3 mana cards from the mana deck, place them on any mix of your spells or your opponent's spells;WG_SPELL_TYPE_UTILITY;WG_SPELL_ACTIVATION_INSTANT;;4;WG_ICON_SET_SAND_1;;player;actionEclipse;;darkorange

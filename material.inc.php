@@ -841,6 +841,18 @@ $this->card_types = [
     "js_actions" => "actionShadowOath",
     "debug" => "darkorange",
   ],
+  108 => [
+    "name" => clienttranslate("Eclipse"),
+    "class" => "Eclipse",
+    "description" => clienttranslate("Reveal 3 mana cards from the mana deck, place them on any mix of your spells or your opponent's spells"),
+    "type" => WG_SPELL_TYPE_UTILITY,
+    "activation" => WG_SPELL_ACTIVATION_INSTANT,
+    "cost" => 4,
+    "icon" => WG_ICON_SET_SAND_1,
+    "interaction" => "player",
+    "js_actions_interaction" => "actionEclipse",
+    "debug" => "darkorange",
+  ],
   // --- gen php end --- 
 ];
 

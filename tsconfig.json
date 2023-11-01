@@ -59,6 +59,7 @@
         "src/states/arcane-tactics.ts",
         "src/states/bad-fortune.ts",
         "src/states/cast-spell-with-mana.ts",
+        "src/states/eclipse.ts",
         "src/states/question.ts",
         "src/states/player-new-turn.ts",
         "src/states/replace-spell.ts",

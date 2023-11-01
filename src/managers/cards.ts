@@ -16,12 +16,14 @@ class SpellCardManager extends CardManager<SpellCard> {
             div.classList.add("wg-card-spell");
             div.dataset.cardId = "" + card.id;
             div.dataset.type = "" + card.type;
-            div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
          },
          setupFrontDiv: (card: SpellCard, div: HTMLElement) => {
             div.id = `${this.getId(card)}-front`;
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-spell-front");
+            if (card.type !== null) {
+               div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+            }
 
             if (div.childNodes.length == 1 && card.type) {
                const card_type = this.game.getCardType(card);
@@ -161,12 +163,14 @@ class TooltipManager extends CardManager<SpellCard> {
             div.classList.add("wg-card-spell");
             div.dataset.cardId = "" + card.id;
             div.dataset.type = "" + card.type;
-            div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
          },
          setupFrontDiv: (card: SpellCard, div: HTMLElement) => {
             div.id = `${this.getId(card)}-front`;
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-spell-front");
+            if (card.type !== null) {
+               div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+            }
 
             if (div.childNodes.length == 1 && card.type) {
                const card_type = this.game.getCardType(card);

@@ -172,7 +172,8 @@ class PlayerTable {
 
       if (stockBeforeManager === stockAfter) {
          // The card already move (client state)
-         stockAfter.setCardVisible(after, true, { updateData: true, updateFront: true });
+         const isVisible = this.player_id === this.game.getPlayerId();
+         stockAfter.setCardVisible(after, isVisible, { updateData: true, updateFront: true });
          return;
       }
 

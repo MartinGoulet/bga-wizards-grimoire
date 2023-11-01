@@ -813,6 +813,14 @@ class ActionManager {
       this.activateNextAction();
    }
 
+   private actionEclipse() {
+      const msg = _("${you} must place revealed mana on top of any mana cooldown deck");
+      this.game.setClientState(states.client.eclipse, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {},
+      });
+   }
+
    private actionShadowOath() {
       this.actionSelectManaFrom();
    }

@@ -58,20 +58,20 @@ $game_options = [
         ]
         
     ],
-    WG_GAME_OPTION_SHIFT_SAND_PROMO_ID => [
-        'name' => totranslate('Shifting Sands Kickstarter Promo'),
-        'default' => WG_OPTION_NO,
-        'values' => [
-            WG_OPTION_YES => [
-                'name' => totranslate('Yes'),
-                'tmdisplay' => totranslate('Shifting Sands Kickstarter Promo'),
-                'description' => totranslate('Add some spells from the upcoming Shifting Sand Kickstarter campaign')
-            ],
-            WG_OPTION_NO => [
-                'name' => totranslate('No'),
-            ],
-        ]
-    ],
+    // WG_GAME_OPTION_SHIFT_SAND_PROMO_ID => [
+    //     'name' => totranslate('Shifting Sands Kickstarter Promo'),
+    //     'default' => WG_OPTION_NO,
+    //     'values' => [
+    //         WG_OPTION_YES => [
+    //             'name' => totranslate('Yes'),
+    //             'tmdisplay' => totranslate('Shifting Sands Kickstarter Promo'),
+    //             'description' => totranslate('Add some spells from the upcoming Shifting Sand Kickstarter campaign')
+    //         ],
+    //         WG_OPTION_NO => [
+    //             'name' => totranslate('No'),
+    //         ],
+    //     ]
+    // ],
 ];
 
 

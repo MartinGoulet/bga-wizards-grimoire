@@ -71,8 +71,8 @@
    }
 }
 
-.wg-card.base_game .wg-card-spell-front,
-.wg-tooltip-card .wg-card.base_game {
+.wg-card .wg-card-spell-front.base_game,
+.wg-tooltip-card .wg-card .base_game {
    background: url("img/spell-front.jpg");
    background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 
@@ -85,8 +85,8 @@
    }
 }
 
-.wg-card.shifting_sand .wg-card-spell-front,
-.wg-tooltip-card .wg-card.shifting_sand {
+.wg-card .wg-card-spell-front.shifting_sand,
+.wg-tooltip-card .wg-card .shifting_sand {
    background: url("img/spell-front-2.jpg");
    background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 

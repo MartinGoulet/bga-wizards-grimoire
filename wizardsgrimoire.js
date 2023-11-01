@@ -2544,6 +2544,13 @@ var ActionManager = (function () {
         this.addActionPriv(card_type.js_actions_interaction);
         this.activateNextAction();
     };
+    ActionManager.prototype.actionEclipse = function () {
+        var msg = _("${you} must place revealed mana on top of any mana cooldown deck");
+        this.game.setClientState(states.client.eclipse, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {},
+        });
+    };
     ActionManager.prototype.actionShadowOath = function () {
         this.actionSelectManaFrom();
     };
@@ -2669,12 +2676,14 @@ var SpellCardManager = (function (_super) {
                 div.classList.add("wg-card-spell");
                 div.dataset.cardId = "" + card.id;
                 div.dataset.type = "" + card.type;
-                div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
+                if (card.type !== null) {
+                    div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+                }
                 if (div.childNodes.length == 1 && card.type) {
                     var card_type = _this.game.getCardType(card);
                     var name_1 = card_type.name, description = card_type.description;
@@ -2784,12 +2793,14 @@ var TooltipManager = (function (_super) {
                 div.classList.add("wg-card-spell");
                 div.dataset.cardId = "" + card.id;
                 div.dataset.type = "" + card.type;
-                div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
+                if (card.type !== null) {
+                    div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+                }
                 if (div.childNodes.length == 1 && card.type) {
                     var card_type = _this.game.getCardType(card);
                     var name_2 = card_type.name, description = card_type.description;
@@ -2947,6 +2958,7 @@ var states = {
         arcaneTactics: "client_arcaneTactics",
         badFortune: "client_badFortune",
         castSpellWithMana: "client_castSpellWithMana",
+        eclipse: "client_eclipse",
         question: "client_question",
         replaceSpell: "client_replaceSpell",
         selectMana: "client_selectMana",
@@ -2976,6 +2988,7 @@ var StateManager = (function () {
         this.states = (_a = {},
             _a[states.client.badFortune] = new BadFortuneStates(game),
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
+            _a[states.client.eclipse] = new EclipseStates(game),
             _a[states.client.question] = new QuestionStates(game),
             _a[states.client.replaceSpell] = new ReplaceSpellStates(game),
             _a[states.client.selectMana] = new SelectManaStates(game),
@@ -3222,14 +3235,15 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.onMoveManaCard = function (after) {
         return __awaiter(this, void 0, void 0, function () {
-            var stockBeforeManager, stockAfter, newCard;
+            var stockBeforeManager, stockAfter, isVisible, newCard;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         stockBeforeManager = this.game.manasManager.getCardStock(after);
                         stockAfter = this.getStock(after);
                         if (stockBeforeManager === stockAfter) {
-                            stockAfter.setCardVisible(after, true, { updateData: true, updateFront: true });
+                            isVisible = this.player_id === this.game.getPlayerId();
+                            stockAfter.setCardVisible(after, isVisible, { updateData: true, updateFront: true });
                             return [2];
                         }
                         if (!!stockAfter.contains(after)) return [3, 2];
@@ -4072,6 +4086,93 @@ var CastSpellWithManaStates = (function () {
         });
     };
     return CastSpellWithManaStates;
+}());
+var EclipseStates = (function () {
+    function EclipseStates(game) {
+        this.game = game;
+        this.mana_cards = [];
+        this.player_ids = [];
+        this.mana_cooldown_position = [];
+    }
+    EclipseStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.resetVariables();
+        var revealed_zone = this.game.tableCenter.manaRevealed;
+        var player_mana_cooldown = this.game.getCurrentPlayerTable().getManaDeckWithSpellOver();
+        var opponent_mana_cooldown = this.game
+            .getPlayerTable(this.game.getOpponentId())
+            .getManaDeckWithSpellOver();
+        var handleDeckSelection = function (deck, position, player_id) {
+            deck.unselectDeck();
+            if (revealed_zone.getSelection().length !== 1)
+                return;
+            var card = __assign({}, revealed_zone.getSelection()[0]);
+            card.location_arg = deck.getCards().length + 1;
+            deck.addCard(card);
+            _this.mana_cards.push(card);
+            _this.player_ids.push(player_id);
+            _this.mana_cooldown_position.push(position);
+            _this.game.toggleButtonEnable("btnConfirm", _this.mana_cards.length === 3, "blue");
+            _this.game.enableButton("btnCancel", "gray");
+        };
+        var _loop_4 = function (index) {
+            var deck = player_mana_cooldown[index];
+            deck.onDeckSelectionChanged = function () { return handleDeckSelection(deck, index + 1, _this.game.getPlayerId()); };
+            deck.setDeckIsSelectable(true);
+        };
+        for (var index = 0; index < player_mana_cooldown.length; index++) {
+            _loop_4(index);
+        }
+        var _loop_5 = function (index) {
+            var deck = opponent_mana_cooldown[index];
+            deck.onDeckSelectionChanged = function () { return handleDeckSelection(deck, index + 1, _this.game.getOpponentId()); };
+            deck.setDeckIsSelectable(true);
+        };
+        for (var index = 0; index < opponent_mana_cooldown.length; index++) {
+            _loop_5(index);
+        }
+        revealed_zone.setSelectionMode("single");
+    };
+    EclipseStates.prototype.onLeavingState = function () {
+        this.game.tableCenter.manaRevealed.setSelectionMode("none");
+        var decks = __spreadArray(__spreadArray([], this.game.getCurrentPlayerTable().getManaDecks(), true), this.game.getPlayerTable(this.game.getOpponentId()).getManaDecks(), true);
+        decks.forEach(function (deck) {
+            deck.unselectDeck();
+            deck.setDeckIsSelectable(false);
+            deck.onDeckSelectionChanged = null;
+        });
+        this.resetVariables();
+    };
+    EclipseStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            if (_this.mana_cards.length !== 3)
+                return;
+            _this.game.actionManager.addArgument(_this.mana_cards.map(function (card) { return card.id; }).join(","));
+            _this.game.actionManager.addArgument(_this.player_ids.join(","));
+            _this.game.actionManager.addArgument(_this.mana_cooldown_position.join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        var handleCancel = function () {
+            _this.game.tableCenter.manaRevealed.addCards(_this.mana_cards);
+            _this.resetVariables();
+            _this.game.disableButton("btnConfirm");
+            _this.game.disableButton("btnCancel");
+        };
+        this.game.addActionButtonDisabled("btnConfirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonDisabled("btnCancel", _("Cancel"), handleCancel);
+    };
+    EclipseStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    EclipseStates.prototype.resetVariables = function () {
+        this.mana_cards = [];
+        this.player_ids = [];
+        this.mana_cooldown_position = [];
+    };
+    return EclipseStates;
 }());
 var QuestionStates = (function () {
     function QuestionStates(game) {
