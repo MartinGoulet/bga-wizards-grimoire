@@ -13,9 +13,6 @@ use WizardsGrimoire\Core\Stats;
 
 abstract class BaseCard {
 
-    /** @var int */
-    public $owner;
-
     public function castSpell($args) {
         throw new BgaSystemException('Not implemented : castSpell of ' . get_class($this));
     }
@@ -67,7 +64,10 @@ abstract class BaseCard {
             $spell = SpellCard::get(Globals::getSpellPlayed());
             return SpellCard::getName($spell);
         }
+        return $this->getCardNameFromType();
+    }
 
+    protected function getCardNameFromType() {
         $classParts = explode('\\', get_class($this));
         $class_name = array_pop($classParts);
         $name = array_values(

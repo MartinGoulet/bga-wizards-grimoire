@@ -13,4 +13,8 @@ class FalseFace extends BaseCard {
             $this->dealDamage(3);
         }
     }
+
+    protected function getCardName() {
+        return $this->getCardNameFromType();
+    }
 }
