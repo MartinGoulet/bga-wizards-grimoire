@@ -104,6 +104,7 @@ trait ActionTrait {
 
         Notifications::chooseSpell($playerId, $card);
         Notifications::refillSpell($playerId, $newSpell);
+        Globals::setLastAddedSpell($newSpell['id']);
 
         Stats::chooseSpell($playerId, $card);
 

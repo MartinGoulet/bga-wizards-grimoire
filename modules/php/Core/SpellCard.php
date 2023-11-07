@@ -129,6 +129,7 @@ class SpellCard {
             CardLocation::SpellSlot(),
             $new_spell['location_arg'],
         );
+        Globals::setLastAddedSpell($newSpell['id']);
 
         Notifications::refillSpell($player_id, $newSpell);
         Game::undoSavepoint();

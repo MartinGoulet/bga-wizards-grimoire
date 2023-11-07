@@ -46,6 +46,7 @@ define('WG_VAR_PREVIOUS_SPELL_COST', 'prev_spell_cost');
 define('WG_VAR_UNDO_AVAILABLE', 'undo_available');
 define('WG_VAR_STATS_ACTIVATED', 'stats_activated');
 define('WG_VAR_FIRST_PLAYER', 'first_player');
+define('WG_VAR_LAST_ADDED_SPELL', 'last_added_spell');
 
 define('WG_VAR_SWITCH_CARDS_COUNT', 'switch_cards_count');
 

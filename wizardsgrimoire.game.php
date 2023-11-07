@@ -43,6 +43,7 @@ use WizardsGrimoire\Core\ActionTrait;
 use WizardsGrimoire\Core\ArgsTrait;
 use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
+use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\StateTrait;
@@ -103,6 +104,7 @@ class WizardsGrimoire extends Table {
             WG_VAR_SPELL_COST => 33,
             WG_VAR_PREVIOUS_SPELL_COST => 34,
             WG_VAR_SWITCH_CARDS_COUNT => 35,
+            WG_VAR_LAST_ADDED_SPELL => 36,
 
             WG_GAME_OPTION_DIFFICULTY => WG_GAME_OPTION_DIFFICULTY_ID,
             WG_GAME_OPTION_EXT_KICKSTARTER_1 => WG_GAME_OPTION_EXT_KICKSTARTER_1_ID,
@@ -188,6 +190,7 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_STATS_ACTIVATED, 2);
         self::setGameStateInitialValue(WG_VAR_FIRST_PLAYER, intval($firstPlayer));
         self::setGameStateInitialValue(WG_VAR_SWITCH_CARDS_COUNT, 1);
+        self::setGameStateInitialValue(WG_VAR_LAST_ADDED_SPELL, 0);
 
         // Init game statistics
         self::initStat('table', WG_STAT_TURN_NUMBER, 0);
@@ -246,7 +249,8 @@ class WizardsGrimoire extends Table {
         $this->deck_manas->shuffle(CardLocation::Deck());
 
         for ($i = 1; $i <= $slot_count; $i++) {
-            $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
+            $card = $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
+            Notifications::refillSpell(null, $card);
         }
 
         // Activate first player (which is in general a good idea :) )

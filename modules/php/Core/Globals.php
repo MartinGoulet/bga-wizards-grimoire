@@ -185,6 +185,14 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH, $value);
     }
 
+    public static function getLastAddedSpell() {
+        return intval(Game::get()->getGameStateValue(WG_VAR_LAST_ADDED_SPELL));
+    }
+
+    public static function setLastAddedSpell(int $value) {
+        Game::get()->setGameStateValue(WG_VAR_LAST_ADDED_SPELL, $value);
+    }
+
     public static function getCurrentBasicAttackPower() {
         return intval(Game::get()->getGameStateValue(WG_VAR_CURRENT_BASIC_ATTACK_POWER));
     }

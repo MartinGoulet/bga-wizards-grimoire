@@ -3010,7 +3010,7 @@ var StateManager = (function () {
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        var _a;
+        var _a, _b;
         log("Entering state: " + stateName);
         if (args.phase) {
             this.game.gameOptions.setPhase(Number(args.phase));
@@ -3019,15 +3019,22 @@ var StateManager = (function () {
             this.game.gameOptions.setPhase(99);
         }
         if ((_a = args.args) === null || _a === void 0 ? void 0 : _a.ongoing_spells) {
-            args.args.ongoing_spells.forEach(function (value) {
+            var _c = args.args, ongoing_spells = _c.ongoing_spells, players_1 = _c.players, last_added_spell = _c.last_added_spell;
+            ongoing_spells.forEach(function (value) {
                 if (value.active)
                     log(value);
                 _this.game.toggleOngoingSpell(value);
             });
-            Object.keys(args.args.players).forEach(function (player_id) {
-                var value = Number(args.args.players[player_id]);
+            Object.keys(players_1).forEach(function (player_id) {
+                var value = Number(players_1[player_id]);
                 _this.game.getPlayerPanel(Number(player_id)).turn_counter.setValue(value);
             });
+            (_b = document.querySelector(".wg-last-added-spell")) === null || _b === void 0 ? void 0 : _b.classList.remove("wg-last-added-spell");
+            if (Number(last_added_spell) > 0) {
+                this.game.spellsManager
+                    .getCardElement({ id: last_added_spell })
+                    .classList.add("wg-last-added-spell");
+            }
         }
         if (this.states[stateName] !== undefined) {
             this.states[stateName].onEnteringState(args.args);
@@ -3435,6 +3442,9 @@ var TableCenter = (function () {
             mapCardToSlot: function (card) { return card.location_arg; },
             direction: "column",
         });
+        document
+            .getElementById("spell-pool")
+            .style.setProperty("--newtext", "'".concat(_("Last spell revealed").replaceAll("'", "\\'"), "'"));
         this.manaDiscardDisplay = new LineStock(game.discardManager, document.getElementById("mana-discard-display"), { gap: "2px", center: false });
         this.setupManaCounter();
         this.manaDiscard.onAddCard = function (card) {
@@ -3545,12 +3555,12 @@ var GameOptions = (function () {
             phase4: _("Cast Spells"),
             phase5: _("Basic Attack"),
         }, phase1 = _a.phase1, phase2 = _a.phase2, phase3 = _a.phase3, phase4 = _a.phase4, phase5 = _a.phase5;
-        var html = "\n            <div class=\"player-board\" id=\"game-phases\">\n                <div class=\"player-board-inner\">\n                    <div id=\"wg-phase-selector\" data-phase=\"1\"></div>\n                    <ul id=\"wg-phases\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ".concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
+        var html = "\n            <div class=\"player-board\" id=\"game-phases\">\n                <div class=\"title\">".concat(_("Turn order"), "</div>\n                <div class=\"player-board-inner\">\n                    <ul id=\"wg-phases\" data-phase=\"1\">\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">1. ").concat(phase1, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">2. ").concat(phase2, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">3. ").concat(phase3, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">4. ").concat(phase4, "</div></li>\n                        <li><div class=\"wg-icon\"></div><div class=\"wg-phase-name\">5. ").concat(phase5, "</div></li>\n                    </ul>\n                </div>\n            </div>");
         document.getElementById("player_boards").insertAdjacentHTML("beforeend", html);
         this.game.updatePlayerOrdering();
     }
     GameOptions.prototype.setPhase = function (phase) {
-        document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
+        document.getElementById("wg-phases").dataset.phase = phase.toString();
         document.getElementById("table").dataset.phase = phase.toString();
     };
     return GameOptions;

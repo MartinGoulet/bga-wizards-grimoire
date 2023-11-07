@@ -112,7 +112,8 @@ trait ArgsTrait {
             'players' => [
                 $first_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $first_player),
                 $second_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $second_player),
-            ]
+            ],
+            'last_added_spell' => Globals::getLastAddedSpell(),
         ];
 
         return $result;

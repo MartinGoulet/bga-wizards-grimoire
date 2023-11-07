@@ -61,6 +61,10 @@ class TableCenter {
          direction: "column",
       });
 
+      document
+         .getElementById("spell-pool")
+         .style.setProperty("--newtext", `'${_("Last spell revealed").replaceAll("'", "\\'")}'`);
+
       this.manaDiscardDisplay = new LineStock(
          game.discardManager,
          document.getElementById("mana-discard-display"),

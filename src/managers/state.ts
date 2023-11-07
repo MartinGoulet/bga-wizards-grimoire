@@ -66,14 +66,22 @@ class StateManager {
       }
 
       if (args.args?.ongoing_spells) {
-         args.args.ongoing_spells.forEach((value) => {
+         const { ongoing_spells, players, last_added_spell } = args.args;
+
+         ongoing_spells.forEach((value) => {
             if (value.active) log(value);
             this.game.toggleOngoingSpell(value);
          });
-         Object.keys(args.args.players).forEach((player_id) => {
-            const value = Number(args.args.players[player_id]);
+         Object.keys(players).forEach((player_id) => {
+            const value = Number(players[player_id]);
             this.game.getPlayerPanel(Number(player_id)).turn_counter.setValue(value);
          });
+         document.querySelector(".wg-last-added-spell")?.classList.remove("wg-last-added-spell");
+         if (Number(last_added_spell) > 0) {
+            this.game.spellsManager
+               .getCardElement({ id: last_added_spell } as SpellCard)
+               .classList.add("wg-last-added-spell");
+         }
       }
 
       if (this.states[stateName] !== undefined) {

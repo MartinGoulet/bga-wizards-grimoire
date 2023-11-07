@@ -15,9 +15,9 @@ class GameOptions {
 
       const html = `
             <div class="player-board" id="game-phases">
+                <div class="title">${_("Turn order")}</div>
                 <div class="player-board-inner">
-                    <div id="wg-phase-selector" data-phase="1"></div>
-                    <ul id="wg-phases">
+                    <ul id="wg-phases" data-phase="1">
                         <li><div class="wg-icon"></div><div class="wg-phase-name">1. ${phase1}</div></li>
                         <li><div class="wg-icon"></div><div class="wg-phase-name">2. ${phase2}</div></li>
                         <li><div class="wg-icon"></div><div class="wg-phase-name">3. ${phase3}</div></li>
@@ -32,7 +32,7 @@ class GameOptions {
    }
 
    public setPhase(phase: number) {
-      document.getElementById("wg-phase-selector").dataset.phase = phase.toString();
+      document.getElementById("wg-phases").dataset.phase = phase.toString();
       document.getElementById("table").dataset.phase = phase.toString();
    }
 }
