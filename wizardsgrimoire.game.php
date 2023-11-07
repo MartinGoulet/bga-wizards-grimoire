@@ -216,12 +216,12 @@ class WizardsGrimoire extends Table {
         $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
         $gameOptionShiftingSandPromo = intval(self::getGameStateValue(WG_GAME_OPTION_SHIFT_SAND_PROMO));
 
-        $isAllPlayerAllowed = self::isAllPlayersAllowed(array_keys($players));
+        // $isAllPlayerAllowed = self::isAllPlayersAllowed(array_keys($players));
 
         $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
-        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo, $isAllPlayerAllowed) {
+        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo) {
             switch ($card_type['icon']) {
                 case WG_ICON_SET_BASE_1:
                     return true;
@@ -230,7 +230,7 @@ class WizardsGrimoire extends Table {
                 case WG_ICON_SET_KICKSTARTER_1:
                     return $gameOptionKickStarter1 == WG_OPTION_YES;
                 case WG_ICON_SET_SAND_1:
-                    return $gameOptionShiftingSandPromo == WG_OPTION_YES || $isAllPlayerAllowed;
+                    return $gameOptionShiftingSandPromo == WG_OPTION_YES;
             }
         });
 
