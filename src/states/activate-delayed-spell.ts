@@ -3,6 +3,7 @@ class ActivateDelayedSpellStates implements StateHandler {
 
    constructor(private game: WizardsGrimoire) {}
    onEnteringState(args: ActivateDelayedSpellArgs): void {
+      this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
       this.player_table = this.game.getCurrentPlayerTable();
 

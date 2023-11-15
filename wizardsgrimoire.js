@@ -3905,6 +3905,7 @@ var ActivateDelayedSpellStates = (function () {
     }
     ActivateDelayedSpellStates.prototype.onEnteringState = function (args) {
         var _this = this;
+        this.game.clearSelection();
         if (!this.game.isCurrentPlayerActive())
             return;
         this.player_table = this.game.getCurrentPlayerTable();

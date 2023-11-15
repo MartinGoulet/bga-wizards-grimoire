@@ -196,6 +196,16 @@ trait StateTrait {
         Game::get()->gamestate->nextState();
     }
 
+    function stReturnToCurrentPlayerDelayedSpell() {
+        if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
+            Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
+            Game::undoSavepoint();
+        }
+        Globals::setInteractionPlayer(0);
+        $next_state = sizeof(Globals::getCoolDownDelayedSpellIds()) > 0 ? "delayed" : "end";
+        Game::get()->gamestate->nextState($next_state);
+    }
+
     function stReturnToCurrentPlayer() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());

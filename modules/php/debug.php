@@ -69,14 +69,14 @@ trait DebugTrait {
 
         $players_spell_cards = [
             "2329672" => ["InvisibleFriend", "DeathSpiral", "EchoCard", "ShadowOath", "Transfigure", "Backfire"],
-            "2329673" => ["ShadowAttack", "AfterShock", "TimeDistortion", "Hoodwink", "FalseFace", "StoneCrush"],
+            "2329673" => ["WildBloom", "Possessed", "SilentSupport", "Hoodwink", "FalseFace", "StoneCrush"],
         ];
 
-        $spells_pool = ["SecretOath", "Possessed", "SneakyDeal", "SecondStrike", "Symbiosis"];
+        $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
         $players_spell_mana = [
             "2329672" => [0, 0, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [1, 0, 1, 2, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {

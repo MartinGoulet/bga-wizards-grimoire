@@ -628,9 +628,10 @@ class WizardsGrimoire extends Table {
                 "phase" => $phase,
                 "name" => "castSpellReturnCurrentPlayer",
                 "type" => "game",
-                "action" => "stReturnToCurrentPlayer",
+                "action" => "stReturnToCurrentPlayerDelayedSpell",
                 "transitions" => [
-                    "" => $stActiveDelayedSpell,
+                    "delayed" => $stActiveDelayedSpell,
+                    "end" => $stActivePass,
                 ]
             ],
         ];
