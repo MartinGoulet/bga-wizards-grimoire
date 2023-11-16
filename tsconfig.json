@@ -56,7 +56,6 @@
         "src/states/basic-attack-battle-vision.ts",
 
         "src/states/activate-delayed-spell.ts",
-        "src/states/arcane-tactics.ts",
         "src/states/bad-fortune.ts",
         "src/states/cast-spell-with-mana.ts",
         "src/states/eclipse.ts",

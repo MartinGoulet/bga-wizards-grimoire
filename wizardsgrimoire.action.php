@@ -125,6 +125,7 @@ class action_wizardsgrimoire extends APP_GameAction {
    }
 
    public function undo() {
+      self::setAjaxMode();
 		$this->game->undo();
 		self::ajaxResponse();
 	}

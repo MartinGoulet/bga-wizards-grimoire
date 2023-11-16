@@ -35,7 +35,7 @@ class FriendlyTruce extends BaseCard {
             }, $mana_ids);
 
             Game::get()->deck_manas->moveCards($mana_ids, CardLocation::Hand(), Players::getPlayerId());
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
+            Notifications::giveManaCards(Players::getPlayerId(), $cards_before);
         } else {
             $this->drawManaCards(5);
         }

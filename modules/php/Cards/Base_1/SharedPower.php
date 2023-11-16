@@ -26,7 +26,7 @@ class SharedPower extends BaseCard {
         // Give opponent 1 mana
 
         ManaCard::addToHand($mana_id, $opponent_id);
-        Notifications::moveManaCard($opponent_id, [$card]);
+        Notifications::giveManaCards(Players::getPlayerId(), [$card]);
 
         // Gain 4 mana cards
         $this->drawManaCards(4);

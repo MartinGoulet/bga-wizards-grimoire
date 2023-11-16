@@ -35,7 +35,7 @@ class Wrath extends BaseCard {
                 ManaCard::addOnTopOfDiscard($card_id);
             }
 
-            Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
+            Notifications::discardManaCards(Players::getPlayerId(), $cards_before);
 
             $this->dealDamage(0);
         } else {

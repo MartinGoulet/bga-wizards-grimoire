@@ -26,7 +26,7 @@ class Possessed extends BaseCard {
 
             $card = ManaCard::isInHand($card_id, Players::getOpponentId());
             ManaCard::addToHand($card_id);
-            Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+            Notifications::giveManaCards(Players::getPlayerId(), [$card]);
 
             $this->dealDamage(5 - ManaCard::getPower($card));
         }

@@ -93,6 +93,7 @@ class ManaCard {
             CardLocation::Hand(),
             $player_id,
         );
+        Notifications::pickUpManaCardFromSpell($player_id, $card, $position);
         return $card;
     }
 
@@ -130,7 +131,7 @@ class ManaCard {
             throw new BgaSystemException("No card found under that spell");
         }
         ManaCard::addOnTopOfDiscard($card['id']);
-        Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+        Notifications::discardManaCardFromSpell(Players::getPlayerId(), $card, $position);
 
         if($player_id == Players::getOpponentId()) {
             Game::undoSavepoint();

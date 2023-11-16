@@ -25,7 +25,7 @@ class ShackledMotion extends BaseCard {
                 foreach ($cards_before as $card_id => $card) {
                     ManaCard::addOnTopOfDiscard($card_id);
                 }
-                Notifications::moveManaCard($opponent_id, $cards_before,  false);
+                Notifications::discardManaCards($opponent_id, $cards_before);
                 Game::undoSavepoint();
                 break;
 

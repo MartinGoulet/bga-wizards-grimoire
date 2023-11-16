@@ -68,14 +68,15 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["InvisibleFriend", "DeathSpiral", "EchoCard", "ShadowOath", "Transfigure", "Backfire"],
-            "2329673" => ["WildBloom", "Possessed", "SilentSupport", "Hoodwink", "FalseFace", "StoneCrush"],
+            "2329672" => ["ShadowAttack", "SilentSupport", "Possessed", "CoerciveAgreement", "Fracture", "DrainSoul"],
+            "2329673" => ["WildBloom", "MistOfPain", "ArcaneEye", "Hoodwink", "FalseFace", "StoneCrush"],
         ];
 
-        $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
+        $spells_pool = [];
+        // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0, 0],
+            "2329672" => [0, 1, 1, 0, 0, 0],
             "2329673" => [1, 0, 1, 2, 0, 0],
         ];
 
@@ -97,7 +98,11 @@ trait DebugTrait {
             foreach ($nbr_cards as $nbr_card) {
                 $index += 1;
                 for ($i = 0; $i < $nbr_card; $i++) {
-                    ManaCard::dealFromDeckToManaCoolDown($index, $player_id);
+                    // ManaCard::dealFromDeckToManaCoolDown($index, $player_id);
+                    $deck = Game::get()->deck_manas;
+                    $card = $deck->getCardOnTop(CardLocation::Deck());
+                    $deck->pickCardForLocation(CardLocation::Deck(), "temp");
+                    $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $index), true);
                 }
             }
         }

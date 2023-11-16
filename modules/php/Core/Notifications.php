@@ -147,6 +147,67 @@ class Notifications {
         ]);
     }
 
+    static function discardManaCards($player_id, $cards) {
+        $message = clienttranslate('${player_name} discards ${mana_values}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_values' => self::getPowerValues($cards),
+        ]);
+        self::moveManaCard($player_id, $cards, false);
+    }
+
+    static function discardManaCardFromSpell($player_id, $card, $position) {
+        $message = clienttranslate('${player_name} discards ${mana_values} from ${card_name}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_values' => self::getPowerValues([$card]),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position, $player_id)),
+            'i18n' => ['card_name'],
+        ]);
+        self::moveManaCard($player_id, [$card], false);
+    }
+
+    static function pickUpManaCardFromSpell($player_id, $card, $position, $spell_player_id = null) {
+        if($spell_player_id == null) {
+            $spell_player_id = $player_id;
+        }
+        $message = clienttranslate('${player_name} pick up ${mana_values} from ${card_name}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_values' => self::getPowerValues([$card]),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position, $spell_player_id)),
+            'i18n' => ['card_name'],
+        ]);
+    }
+
+    static function giveManaCards($player_id, $cards) {
+        $message = clienttranslate('${player_name} gives ${mana_values} to ${player_name2}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'mana_values' => self::getPowerValues($cards),
+        ]);
+        self::moveManaCard($player_id, $cards, false);
+    }
+
+    static function fracture($player_id, $card, $position_from, $position_to) {
+        $message = clienttranslate('${player_name} transfers ${mana_values} from ${card_name} to ${card_name2}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'mana_values' => self::getPowerValues([$card]),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position_from, $player_id)),
+            'card_name2' => SpellCard::getName(SpellCard::getFromRepertoire($position_to, $player_id)),
+            'i18n' => ['card_name', 'card_name2'],
+        ]);
+        self::moveManaCard($player_id, [$card], false);
+    }
+
     static function moveManaCard($player_id, $cards_before, $anonimyze = true) {
         $args = [
             'player_id' => intval($player_id),
@@ -297,6 +358,6 @@ class Notifications {
     private static function getPowerValues(array $cards) {
         return array_map(function ($card) {
             return ManaCard::getPower($card);
-        }, $cards);
+        }, array_values($cards));
     }
 }

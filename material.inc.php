@@ -117,7 +117,8 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "js_actions" => "actionFracture",
+    "interaction" => "player",
+    "js_actions_interaction" => "actionFracture",
     "debug" => "darkorange",
   ],
   10 => [

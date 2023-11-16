@@ -30,7 +30,7 @@ class CoerciveAgreement extends BaseCard {
                 return $card['id'];
             }, $random_cards);
             Game::get()->deck_manas->moveCards($ids, CardLocation::Hand(), Players::getPlayerId());
-            Notifications::moveManaCard($opponent_id, $random_cards, false);
+            Notifications::giveManaCards($opponent_id, $random_cards);
             Game::undoSavepoint();
         } else {
             $values = explode(',', array_shift($args));

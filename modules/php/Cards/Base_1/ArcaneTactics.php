@@ -29,9 +29,5 @@ class ArcaneTactics extends BaseCard {
         }
 
         Notifications::moveManaCard(Players::getPlayerId(), $cards);
-
-        // $remaining_cards = ManaCard::getRevealedMana();
-        // ManaCard::addCardsToHand($remaining_cards);
-        // Notifications::moveManaCard(Players::getPlayerId(), $remaining_cards);
     }
 }

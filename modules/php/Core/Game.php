@@ -16,6 +16,7 @@ class Game extends APP_DbObject {
 
     public static function undoSavepoint() {
         if(self::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1) {
+            self::get()->notifyAllPlayers('message', "undoSavepoint()", []);
             self::get()->undoSavepoint();
         }
     }

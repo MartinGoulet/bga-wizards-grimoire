@@ -63,7 +63,7 @@ trait ActionTrait {
             $cards[] = ManaCard::isInHand($card_id);
             ManaCard::addOnTopOfDiscard($card_id);
         }
-        Notifications::moveManaCard(Players::getPlayerId(), $cards, false);
+        Notifications::discardManaCards(Players::getPlayerId(), $cards);
 
         $this->gamestate->nextState();
     }
@@ -285,7 +285,9 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
-        Game::undoSavepoint();
+        if(Globals::getInteractionPlayer() !== $player_id) {
+            Game::undoSavepoint();
+        }
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
             $this->gamestate->nextState('dead');
@@ -326,7 +328,7 @@ trait ActionTrait {
 
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
-            Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
+            Notifications::discardManaCards(Players::getPlayerId(), [$card]);
             Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
             Globals::setLastBasicAttackDamage(0);
             
@@ -350,7 +352,6 @@ trait ActionTrait {
     function undo() {
         $this->checkAction("undo");
         Game::undoRestorePoint();
-        $this->gamestate->nextState('undo');
     }
 
     //////////////////////////////////////////////////////////////////////////////

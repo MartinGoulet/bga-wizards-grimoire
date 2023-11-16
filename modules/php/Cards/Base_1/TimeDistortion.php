@@ -5,6 +5,8 @@ namespace WizardsGrimoire\Cards\Base_1;
 use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\Events;
 use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoire\Core\Players;
 
 class TimeDistortion extends BaseCard {
 
@@ -19,7 +21,9 @@ class TimeDistortion extends BaseCard {
         //        any mana card under it.
         $positions = [];
         foreach ($mana_cards as $card_id => $card) {
-            $positions[] = ManaCard::isOnTopOfSpell($card);
+            $position = ManaCard::isOnTopOfSpell($card);
+            Notifications::pickUpManaCardFromSpell(Players::getPlayerId(), $card, $position);
+            $positions[] = $position;
         }
 
         ManaCard::addCardsToHand($mana_cards);

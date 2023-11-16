@@ -26,6 +26,7 @@ class ArcaneEye extends BaseCard {
                 if ($card != null) {
                     $cards[] = $card;
                     ManaCard::addToHand($card['id']);
+                    Notifications::pickUpManaCardFromSpell($player_id, $card, $pos);
                     Events::onManaPickedUpUnderSpell($spell['location_arg']);
                 }
             }

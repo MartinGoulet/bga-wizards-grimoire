@@ -22,6 +22,7 @@ class Delusion extends BaseCard {
             $card = ManaCard::getOnTopOnManaCoolDown($opponent_stack_pos, $opponent_id);
             if ($card !== null) {
                 ManaCard::addToHand($card['id']);
+                Notifications::pickUpManaCardFromSpell($player_id, $card, $opponent_stack_pos, $opponent_id);
                 Notifications::moveManaCard($player_id, [$card]);
                 Events::onManaPickedUpUnderSpell($opponent_stack_pos, $opponent_id);
             }

@@ -17,7 +17,7 @@ class FireBlast extends BaseCard {
         foreach ($cards as $card_id => $card) {
             ManaCard::addOnTopOfDiscard($card_id);
         }
-        Notifications::moveManaCard($player_id, $cards, false);
+        Notifications::discardManaCards($player_id, $cards);
 
         $this->dealDamage(7);
     }
