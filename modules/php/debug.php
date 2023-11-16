@@ -68,7 +68,7 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["ShadowAttack", "SilentSupport", "Possessed", "CoerciveAgreement", "Fracture", "DrainSoul"],
+            "2329672" => ["ShadowAttack", "SilentSupport", "Possessed", "CoerciveAgreement", "Fracture", "BattleVision"],
             "2329673" => ["WildBloom", "MistOfPain", "ArcaneEye", "Hoodwink", "FalseFace", "StoneCrush"],
         ];
 
@@ -125,8 +125,8 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(14, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 

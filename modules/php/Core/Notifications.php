@@ -290,6 +290,15 @@ class Notifications {
         ]);
     }
 
+    static function skipBattleVision(int $player_id) {
+        self::message(clienttranslate('${player_name} cannot use ${card_name} since he does not have a card in hand'), [
+            'player_id' => $player_id,
+            "player_name" => self::getPlayerName($player_id),
+            "card_name" => _("Battle vision"),
+            "i18n" => ["card_name"],
+        ]);
+    }
+
     static function skipChooseNewSpell() {
         $player_id = Players::getPlayerId();
         self::message(clienttranslate('${player_name} skips phase ${phase_name} since all his spells are used'), [

@@ -314,8 +314,13 @@ trait ActionTrait {
         Notifications::moveManaCard($player_id, [$card], false);
 
         if (Globals::getIsActiveBattleVision()) {
-            Globals::setInteractionPlayer(Players::getOpponentId());
-            $this->gamestate->nextState("battle_vision");
+            if(ManaCard::getHandCount(Players::getOpponentId()) > 0) {
+                Globals::setInteractionPlayer(Players::getOpponentId());
+                $this->gamestate->nextState("battle_vision");
+            } else {
+                Notifications::skipBattleVision(Players::getOpponentId());
+                $this->gamestate->nextState("attack");
+            }
         } else {
             $this->gamestate->nextState("attack");
         }
@@ -328,7 +333,7 @@ trait ActionTrait {
 
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
-            Notifications::discardManaCards(Players::getPlayerId(), [$card]);
+            Notifications::discardManaCardFromSpellName(Players::getPlayerId(), $card, clienttranslate('Battle vision'));
             Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
             Globals::setLastBasicAttackDamage(0);
             
