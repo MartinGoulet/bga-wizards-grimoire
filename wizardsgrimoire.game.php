@@ -222,6 +222,9 @@ class WizardsGrimoire extends Table {
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
         $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo) {
+            if (array_key_exists('banned', $card_type) && $card_type['banned'] == true) {
+                return false;
+            }
             switch ($card_type['icon']) {
                 case WG_ICON_SET_BASE_1:
                     return true;
@@ -400,7 +403,7 @@ class WizardsGrimoire extends Table {
             2329673, // MGoulet1
         ];
         foreach ($player_ids as $player_id) {
-            if(!in_array($player_id, $players)) {
+            if (!in_array($player_id, $players)) {
                 return false;
             }
         }

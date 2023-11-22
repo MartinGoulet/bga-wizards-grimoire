@@ -31,7 +31,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   2 => [
     "name" => clienttranslate("Overload"),
@@ -41,7 +40,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   3 => [
     "name" => clienttranslate("Mutation"),
@@ -51,7 +49,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   4 => [
     "name" => clienttranslate("Stone crush"),
@@ -61,7 +58,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   5 => [
     "name" => clienttranslate("Mist of pain"),
@@ -73,7 +69,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionMistOfPain",
-    "debug" => "lightgreen",
   ],
   6 => [
     "name" => clienttranslate("Arcane tactics"),
@@ -85,7 +80,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "player",
     "js_actions_interaction" => "actionArcaneTactics",
-    "debug" => "lightgreen",
   ],
   7 => [
     "name" => clienttranslate("Freeze"),
@@ -96,7 +90,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionFreeze",
-    "debug" => "lightgreen",
   ],
   8 => [
     "name" => clienttranslate("Energy reserve"),
@@ -107,7 +100,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionEnergyReserve",
-    "debug" => "darkorange",
   ],
   9 => [
     "name" => clienttranslate("Fracture"),
@@ -119,7 +111,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "interaction" => "player",
     "js_actions_interaction" => "actionFracture",
-    "debug" => "darkorange",
   ],
   10 => [
     "name" => clienttranslate("Gleam of hope"),
@@ -129,7 +120,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   11 => [
     "name" => clienttranslate("Rejuvenation"),
@@ -140,7 +130,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionRejuvenation",
-    "debug" => "lightgreen",
   ],
   12 => [
     "name" => clienttranslate("Shackled motion"),
@@ -151,7 +140,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionShackledMotion",
-    "debug" => "darkorange",
   ],
   13 => [
     "name" => clienttranslate("Living wind"),
@@ -161,7 +149,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   14 => [
     "name" => clienttranslate("Coercive agreement"),
@@ -172,7 +159,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionCoerciveAgreement",
-    "debug" => "darkorange",
   ],
   15 => [
     "name" => clienttranslate("Arcane eye"),
@@ -182,7 +168,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   16 => [
     "name" => clienttranslate("Haste"),
@@ -192,7 +177,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   17 => [
     "name" => clienttranslate("Renewed fervor"),
@@ -202,7 +186,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   18 => [
     "name" => clienttranslate("Secret oath"),
@@ -212,7 +195,7 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
+    "banned" => true,
   ],
   19 => [
     "name" => clienttranslate("Time distortion"),
@@ -223,7 +206,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionTimeDistortion",
-    "debug" => "lightgreen",
   ],
   20 => [
     "name" => clienttranslate("Betrayal"),
@@ -233,7 +215,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   21 => [
     "name" => clienttranslate("Blood lust"),
@@ -243,7 +224,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   22 => [
     "name" => clienttranslate("Delusion"),
@@ -254,7 +234,6 @@ $this->card_types = [
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionDelusion",
-    "debug" => "darkorange",
   ],
   23 => [
     "name" => clienttranslate("Vile laughter"),
@@ -264,7 +243,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   24 => [
     "name" => clienttranslate("Doom drop"),
@@ -275,7 +253,6 @@ $this->card_types = [
     "activation_auto" => true,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   25 => [
     "name" => clienttranslate("Energy storm"),
@@ -285,7 +262,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   26 => [
     "name" => clienttranslate("Fire blast"),
@@ -295,7 +271,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   27 => [
     "name" => clienttranslate("Painful vision"),
@@ -305,7 +280,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   28 => [
     "name" => clienttranslate("Possessed"),
@@ -317,7 +291,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionPossessed",
-    "debug" => "lightgreen",
   ],
   29 => [
     "name" => clienttranslate("Second strike"),
@@ -327,7 +300,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   30 => [
     "name" => clienttranslate("Trap attack"),
@@ -338,7 +310,6 @@ $this->card_types = [
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionTrapAttack",
-    "debug" => "darkorange",
   ],
   31 => [
     "name" => clienttranslate("Energy shield"),
@@ -349,7 +320,6 @@ $this->card_types = [
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionEnergyShield",
-    "debug" => "lightgreen",
   ],
   32 => [
     "name" => clienttranslate("Growth"),
@@ -359,7 +329,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 3,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   33 => [
     "name" => clienttranslate("Fury"),
@@ -369,7 +338,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   34 => [
     "name" => clienttranslate("Hellstorm"),
@@ -379,7 +347,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   35 => [
     "name" => clienttranslate("Shadow attack"),
@@ -390,7 +357,6 @@ $this->card_types = [
     "cost" => 4,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionShadowAttack",
-    "debug" => "lightgreen",
   ],
   36 => [
     "name" => clienttranslate("Crushing blow"),
@@ -400,7 +366,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 5,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   37 => [
     "name" => clienttranslate("False face"),
@@ -410,7 +375,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "lightgreen",
   ],
   38 => [
     "name" => clienttranslate("Quick swap"),
@@ -422,7 +386,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "js_actions_delayed" => "actionQuickSwap",
-    "debug" => "orange",
   ],
   39 => [
     "name" => clienttranslate("Lullaby"),
@@ -432,7 +395,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "lightgreen",
   ],
   40 => [
     "name" => clienttranslate("Amnesia"),
@@ -442,7 +404,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "lightgreen",
   ],
   41 => [
     "name" => clienttranslate("Hoodwink"),
@@ -452,7 +413,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "lightgreen",
   ],
   42 => [
     "name" => clienttranslate("Wild bloom"),
@@ -464,7 +424,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "js_actions_delayed" => "actionWildBloom",
-    "debug" => "lightgreen",
   ],
   43 => [
     "name" => clienttranslate("Tsunami"),
@@ -474,7 +433,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
-    "debug" => "lightgreen",
   ],
   44 => [
     "name" => clienttranslate("Twist of fate"),
@@ -485,7 +443,6 @@ $this->card_types = [
     "cost" => 3,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "js_actions" => "actionTwistOfFate",
-    "debug" => "lightgreen",
   ],
   45 => [
     "name" => clienttranslate("Fatal flaw"),
@@ -496,7 +453,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "js_actions" => "actionFatalFlaw",
-    "debug" => "lightgreen",
   ],
   46 => [
     "name" => clienttranslate("Affliction"),
@@ -508,7 +464,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_KICKSTARTER_1,
     "interaction" => "player",
     "js_actions_interaction" => "actionAffliction",
-    "debug" => "lightgreen",
   ],
   47 => [
     "name" => clienttranslate("Friendly truce"),
@@ -520,7 +475,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionFriendlyTruce",
-    "debug" => "darkorange",
   ],
   48 => [
     "name" => clienttranslate("Windstorm"),
@@ -530,7 +484,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   49 => [
     "name" => clienttranslate("Guilty bond"),
@@ -541,7 +494,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionGuiltyBond",
-    "debug" => "darkorange",
   ],
   50 => [
     "name" => clienttranslate("Trance state"),
@@ -551,7 +503,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   51 => [
     "name" => clienttranslate("Renewal"),
@@ -561,7 +512,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   52 => [
     "name" => clienttranslate("Toxic gift"),
@@ -572,7 +522,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionToxicGift",
-    "debug" => "darkorange",
   ],
   53 => [
     "name" => clienttranslate("Wrath"),
@@ -584,7 +533,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "opponent",
     "js_actions_interaction" => "actionWrath",
-    "debug" => "lightgreen",
   ],
   54 => [
     "name" => clienttranslate("Reckless attack"),
@@ -595,7 +543,6 @@ $this->card_types = [
     "activation_auto" => true,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   55 => [
     "name" => clienttranslate("Shared power"),
@@ -606,7 +553,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionShadowPower",
-    "debug" => "lightgreen",
   ],
   56 => [
     "name" => clienttranslate("Sleight of hand"),
@@ -616,7 +562,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   57 => [
     "name" => clienttranslate("Soul pact"),
@@ -626,7 +571,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "lightgreen",
   ],
   58 => [
     "name" => clienttranslate("Mirror image"),
@@ -637,7 +581,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionMirrorImage",
-    "debug" => "darkorange",
   ],
   59 => [
     "name" => clienttranslate("Battle vision"),
@@ -647,7 +590,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   60 => [
     "name" => clienttranslate("Silent support"),
@@ -659,7 +601,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions_delayed" => "actionSilentSupport",
-    "debug" => "lightgreen",
   ],
   61 => [
     "name" => clienttranslate("Power hungry"),
@@ -669,7 +610,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "lightgreen",
   ],
   62 => [
     "name" => clienttranslate("Sneaky deal"),
@@ -680,7 +620,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_1,
     "js_actions" => "actionSneakyDeal",
-    "debug" => "darkorange",
   ],
   63 => [
     "name" => clienttranslate("Puppetmaster"),
@@ -690,7 +629,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_ONGOING,
     "cost" => 1,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   64 => [
     "name" => clienttranslate("Contamination"),
@@ -701,7 +639,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionContamination",
-    "debug" => "darkorange",
   ],
   65 => [
     "name" => clienttranslate("Dance of pain"),
@@ -712,7 +649,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
     "js_actions" => "actionDanceOfPain",
-    "debug" => "darkorange",
   ],
   66 => [
     "name" => clienttranslate("Drain soul"),
@@ -722,7 +658,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_1,
-    "debug" => "darkorange",
   ],
   67 => [
     "name" => clienttranslate("Ice storm"),
@@ -732,7 +667,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   68 => [
     "name" => clienttranslate("After shock"),
@@ -744,7 +678,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_2,
     "interaction" => "player",
     "js_actions_interaction" => "actionAfterShock",
-    "debug" => "lightgreen",
   ],
   69 => [
     "name" => clienttranslate("Bad fortune"),
@@ -756,7 +689,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_BASE_1,
     "interaction" => "player",
     "js_actions_interaction" => "actionBadFortune",
-    "debug" => "darkorange",
   ],
   70 => [
     "name" => clienttranslate("Force of nature"),
@@ -766,7 +698,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_BASE_2,
-    "debug" => "darkorange",
   ],
   101 => [
     "name" => clienttranslate("Backfire"),
@@ -776,7 +707,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_SAND_1,
-    "debug" => "darkorange",
   ],
   102 => [
     "name" => clienttranslate("Echo"),
@@ -788,7 +718,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_SAND_1,
     "js_actions" => "actionEcho",
     "js_actions_interaction" => "actionEchoInteraction",
-    "debug" => "darkorange",
   ],
   103 => [
     "name" => clienttranslate("Invisible friend"),
@@ -798,7 +727,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_SAND_1,
-    "debug" => "darkorange",
   ],
   104 => [
     "name" => clienttranslate("Symbiosis"),
@@ -808,7 +736,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 1,
     "icon" => WG_ICON_SET_SAND_1,
-    "debug" => "darkorange",
   ],
   105 => [
     "name" => clienttranslate("Death spiral"),
@@ -818,7 +745,6 @@ $this->card_types = [
     "activation" => WG_SPELL_ACTIVATION_INSTANT,
     "cost" => 2,
     "icon" => WG_ICON_SET_SAND_1,
-    "debug" => "darkorange",
   ],
   106 => [
     "name" => clienttranslate("Transfigure"),
@@ -829,7 +755,6 @@ $this->card_types = [
     "cost" => 2,
     "icon" => WG_ICON_SET_SAND_1,
     "js_actions" => "actionTransfigure",
-    "debug" => "darkorange",
   ],
   107 => [
     "name" => clienttranslate("Shadow oath"),
@@ -840,7 +765,6 @@ $this->card_types = [
     "cost" => 1,
     "icon" => WG_ICON_SET_SAND_1,
     "js_actions" => "actionShadowOath",
-    "debug" => "darkorange",
   ],
   108 => [
     "name" => clienttranslate("Eclipse"),
@@ -852,7 +776,6 @@ $this->card_types = [
     "icon" => WG_ICON_SET_SAND_1,
     "interaction" => "player",
     "js_actions_interaction" => "actionEclipse",
-    "debug" => "darkorange",
   ],
   // --- gen php end --- 
 ];

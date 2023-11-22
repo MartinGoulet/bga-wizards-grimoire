@@ -58,7 +58,6 @@ interface CardType {
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
    js_actions_delayed?: string[] | string;
-   debug: "red" | "yellow" | "darkorange";
 }
 
 interface SpellCard extends Card {

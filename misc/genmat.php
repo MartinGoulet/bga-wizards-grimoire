@@ -63,7 +63,7 @@ $g_index = 1;
 $g_trans = [ 'name','tooltip','tooltip_action','gametext', 'description' ];
 $g_separator = ';';
 $g_separator_sub = '';
-$g_noquotes = [ 'type', 'activation', 'icon', "activation_auto" ];
+$g_noquotes = [ 'type', 'activation', 'icon', "activation_auto", "banned" ];
 
 function handle_header($fields) {
     global $g_field_names;
