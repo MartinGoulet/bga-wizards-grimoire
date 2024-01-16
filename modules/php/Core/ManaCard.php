@@ -117,7 +117,7 @@ class ManaCard {
         $card = $deck->getCardOnTop(CardLocation::Deck());
         $deck->pickCardForLocation(CardLocation::Deck(), "temp");
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
-        Notifications::moveManaCard($player_id, [$card]);
+        Notifications::dealFromDeckToManaCoolDown($player_id, $card, $position);
         Events::onAddManaUnderSpell($player_id, $position);
         Game::undoSavepoint();
     }

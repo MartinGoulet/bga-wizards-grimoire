@@ -147,6 +147,24 @@ class Notifications {
         ]);
     }
 
+    static function dealFromDeckToManaCoolDown($player_id, $card, $position) {
+        $args = [
+            'player_id' => Players::getPlayerId(),
+            'player_name' => self::getPlayerName(Players::getPlayerId()),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position, $player_id)),
+            'i18n' => ['card_name'],
+        ];
+
+        $message = clienttranslate('${player_name} puts a mana card on ${card_name} from the deck');
+        self::messageTo(Players::getOpponentIdOf($player_id), $message, $args);
+
+        $message = clienttranslate('${player_name} puts a ${mana_values} on ${card_name} from the deck');
+        $args['mana_values'] = self::getPowerValues([$card]);
+        self::messageTo($player_id, $message, $args);
+
+        self::moveManaCard($player_id, [$card]);
+    }
+
     static function discardManaCards($player_id, $cards) {
         $message = clienttranslate('${player_name} discards ${mana_values}');
         self::message($message, [
