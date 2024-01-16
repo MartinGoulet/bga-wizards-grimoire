@@ -186,7 +186,7 @@ class Notifications {
             $spell_player_id = $player_id;
         }
         $message = clienttranslate('${player_name} pick up ${mana_values} from ${card_name}');
-        self::message($message, [
+        self::messageTo($player_id, $message, [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
             'mana_values' => self::getPowerValues([$card]),
