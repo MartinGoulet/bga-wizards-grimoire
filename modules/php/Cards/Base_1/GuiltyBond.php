@@ -12,6 +12,12 @@ class GuiltyBond extends BaseCard {
 
     public function castSpell($args) {
         // Show your opponent a mana from your hand. Deal 2 damage if they have a mana of the same power in their hand
+
+        if (sizeof($args) == 0) {
+            Notifications::spellNoEffect();
+            return;
+        }
+
         $mana_id = intval(array_shift($args));
         $card = ManaCard::isInHand($mana_id);
 

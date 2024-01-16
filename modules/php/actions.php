@@ -224,9 +224,10 @@ trait ActionTrait {
         }
     }
 
-    function activateInstantSpell($spell, $args) {
+    function activateInstantSpell($spell, $args, $card_name = null) {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
+        $cardClass->card_name = $card_name;
         $res = $cardClass->castSpell($args);
 
         if($res === "stop") {

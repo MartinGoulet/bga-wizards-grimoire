@@ -248,7 +248,7 @@ class ActionManager {
 
    private actionGuiltyBond() {
       const msg = _("${you} may select ${nbr} mana card(s) from your hand");
-      this.selectManaHand(1, msg, true);
+      this.selectManaHand(1, msg, true, { canCancel: true, skip: { label: "Pass" } });
    }
 
    private actionMistOfPain() {

@@ -8,10 +8,11 @@ use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Core\SpellCard;
 use WizardsGrimoire\Core\Stats;
 
 abstract class BaseCard {
+
+    public $card_name = null;
 
     public function castSpell($args) {
         throw new BgaSystemException('Not implemented : castSpell of ' . get_class($this));
@@ -26,10 +27,6 @@ abstract class BaseCard {
 
     public function isDelayedSpellTrigger() {
         return true;
-    }
-
-    protected function isCurrentCardPlayed() {
-        return $this->getCard()['id'] === Globals::getSpellPlayed() || Globals::getSpellPlayed() === 0;
     }
 
     protected function dealDamage(int $damage, int $opponent_id = -1, bool $recordDamage = true) {
@@ -60,10 +57,7 @@ abstract class BaseCard {
     }
 
     protected function getCardName() {
-        if(!$this->isCurrentCardPlayed()) {
-            $spell = SpellCard::get(Globals::getSpellPlayed());
-            return SpellCard::getName($spell);
-        }
+        if($this->card_name !== null) return $this->card_name;
         return $this->getCardNameFromType();
     }
 

@@ -34,7 +34,7 @@ class EchoCard extends BaseCard {
         if($card_info['class'] === "Amnesia") {
             $this->dealDamage(Globals::getCardTimesPlayed(102));
         } else {
-            Game::get()->activateInstantSpell($spell, $args);
+            Game::get()->activateInstantSpell($spell, $args, _('Echo'));
             return "stop";
         }
     }

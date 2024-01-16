@@ -2081,7 +2081,7 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionGuiltyBond = function () {
         var msg = _("${you} may select ${nbr} mana card(s) from your hand");
-        this.selectManaHand(1, msg, true);
+        this.selectManaHand(1, msg, true, { canCancel: true, skip: { label: "Pass" } });
     };
     ActionManager.prototype.actionMistOfPain = function () {
         var msg = _("${you} may discard up to ${nbr} mana card(s) from your hand");
