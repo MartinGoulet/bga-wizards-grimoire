@@ -169,6 +169,18 @@ class Notifications {
         self::moveManaCard($player_id, [$card], false);
     }
 
+    static function discardManaCardForBattleVision($player_id, $card) {
+        $message = clienttranslate('${player_name} discards ${mana_values} for ${card_name}');
+        self::message($message, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_values' => self::getPowerValues([$card]),
+            'card_name' => clienttranslate('Battle vision'),
+            'i18n' => ['card_name'],
+        ]);
+        self::moveManaCard($player_id, [$card], false);
+    }
+
     static function pickUpManaCardFromSpell($player_id, $card, $position, $spell_player_id = null) {
         if($spell_player_id == null) {
             $spell_player_id = $player_id;

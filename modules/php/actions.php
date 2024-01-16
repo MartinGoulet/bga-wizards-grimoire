@@ -333,6 +333,7 @@ trait ActionTrait {
 
         if ($damage == Globals::getCurrentBasicAttackPower()) {
             ManaCard::addOnTopOfDiscard($mana_id);
+            Notifications::discardManaCardForBattleVision(Players::getPlayerId(), $card);
             Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
             Globals::setLastBasicAttackDamage(0);
             
