@@ -2533,7 +2533,9 @@ var ActionManager = (function () {
         if (previous_spell_id > 0 && previous_spell_cost <= 1) {
             var spell = this.game.spellsManager.getCardById(previous_spell_id);
             var card_type = this.game.getCardType(spell);
-            this.addActionPriv(card_type.js_actions);
+            if (spell.type !== SpellType.Echo) {
+                this.addActionPriv(card_type.js_actions);
+            }
         }
         this.activateNextAction();
     };

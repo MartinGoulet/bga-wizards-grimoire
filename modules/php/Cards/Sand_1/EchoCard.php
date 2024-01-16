@@ -29,6 +29,11 @@ class EchoCard extends BaseCard {
             Notifications::spellNoEffect();
             return;
         }
+
+        if($card_info['class'] === 'EchoCard') {
+            $this->dealDamage(3);
+            return;
+        }
         
         Notifications::echoSpell(Players::getPlayerId(), $spell);
         if($card_info['class'] === "Amnesia") {
