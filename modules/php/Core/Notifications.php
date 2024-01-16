@@ -156,8 +156,8 @@ class Notifications {
         ];
 
         $message = clienttranslate('${player_name} puts a mana card on ${card_name} from the deck');
-        self::messageTo(Players::getOpponentIdOf($player_id), $message, $args);
-
+        self::message($message, $args, $player_id);
+        
         $message = clienttranslate('${player_name} puts a ${mana_values} on ${card_name} from the deck');
         $args['mana_values'] = self::getPowerValues([$card]);
         self::messageTo($player_id, $message, $args);
@@ -200,7 +200,7 @@ class Notifications {
     }
 
     static function pickUpManaCardFromSpell($player_id, $card, $position, $spell_player_id = null) {
-        if($spell_player_id == null) {
+        if ($spell_player_id == null) {
             $spell_player_id = $player_id;
         }
         $message = clienttranslate('${player_name} pick up ${mana_values} from ${card_name}');
@@ -225,16 +225,22 @@ class Notifications {
     }
 
     static function fracture($player_id, $card, $position_from, $position_to) {
-        $message = clienttranslate('${player_name} transfers ${mana_values} from ${card_name} to ${card_name2}');
-        self::message($message, [
+        $args = [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName($player_id),
             'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
-            'mana_values' => self::getPowerValues([$card]),
             'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position_from, $player_id)),
             'card_name2' => SpellCard::getName(SpellCard::getFromRepertoire($position_to, $player_id)),
             'i18n' => ['card_name', 'card_name2'],
-        ]);
+        ];
+        
+        $message = clienttranslate('${player_name} transfers a mana card from ${card_name} to ${card_name2}');
+        self::message($message, $args, $player_id);
+
+        $message = clienttranslate('${player_name} transfers ${mana_values} from ${card_name} to ${card_name2}');
+        $args['mana_values'] = self::getPowerValues([$card]);
+        self::messageTo($player_id, $message, $args);
+
         self::moveManaCard($player_id, [$card], false);
     }
 
