@@ -215,10 +215,11 @@ class Notifications {
 
     static function giveManaCards($player_id, $cards) {
         $message = clienttranslate('${player_name} gives ${mana_values} to ${player_name2}');
+        $other_player_id = Players::getOpponentIdOf($player_id);
         self::message($message, [
-            'player_id' => intval($player_id),
-            'player_name' => self::getPlayerName($player_id),
-            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'player_id' => $other_player_id ,
+            'player_name' => self::getPlayerName($other_player_id ),
+            'player_name2' => self::getPlayerName($player_id),
             'mana_values' => self::getPowerValues($cards),
         ]);
         self::moveManaCard($player_id, $cards, false);
