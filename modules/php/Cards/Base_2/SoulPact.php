@@ -17,8 +17,8 @@ class SoulPact extends BaseCard {
             return;
         }
 
-        $card_info = SpellCard::getCardInfo($spell)['type'];
-        if ($card_info == WG_SPELL_TYPE_ATTACK) {
+        $card_info = SpellCard::getCardInfo($spell);
+        if ($card_info['type'] == WG_SPELL_TYPE_ATTACK && $card_info['activation'] == WG_SPELL_ACTIVATION_INSTANT) {
             $this->drawManaCards(Globals::getPreviousSpellDamage());
         } else {
             Notifications::spellNoEffect();
