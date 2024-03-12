@@ -201,6 +201,7 @@ class Hand extends HandStock<ManaCard> {
                this.hand_counter.toValue(count);
                this.element.dataset.count = count.toString();
             })
+            .then(() => this.updateOverlap())
             .then(() => resolve(true));
       });
    }
@@ -210,5 +211,19 @@ class Hand extends HandStock<ManaCard> {
       const count = this.getCards().length;
       this.hand_counter.toValue(count);
       this.element.dataset.count = count.toString();
+      this.updateOverlap();
+   }
+
+   private updateOverlap() {
+      if (this.getCards().length > 20) {
+         const overlap = (100 * this.getCards().length - 738) / (this.getCards().length - 1);
+         this.element.style.setProperty("--card-overlap", `${overlap}px`);
+         this.element.style.setProperty("--card-shift", `0px`);
+         this.element.style.setProperty("--card-inclination", `0deg`);
+      } else {
+         this.element.style.setProperty("--card-shift", `6px`);
+         this.element.style.setProperty("--card-overlap", `30px`);
+         this.element.style.setProperty("--card-inclination", `6deg`);
+      }
    }
 }

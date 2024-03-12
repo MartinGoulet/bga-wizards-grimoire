@@ -1867,6 +1867,7 @@ var Hand = (function (_super) {
                 _this.hand_counter.toValue(count);
                 _this.element.dataset.count = count.toString();
             })
+                .then(function () { return _this.updateOverlap(); })
                 .then(function () { return resolve(true); });
         });
     };
@@ -1875,6 +1876,20 @@ var Hand = (function (_super) {
         var count = this.getCards().length;
         this.hand_counter.toValue(count);
         this.element.dataset.count = count.toString();
+        this.updateOverlap();
+    };
+    Hand.prototype.updateOverlap = function () {
+        if (this.getCards().length > 20) {
+            var overlap = (100 * this.getCards().length - 738) / (this.getCards().length - 1);
+            this.element.style.setProperty("--card-overlap", "".concat(overlap, "px"));
+            this.element.style.setProperty("--card-shift", "0px");
+            this.element.style.setProperty("--card-inclination", "0deg");
+        }
+        else {
+            this.element.style.setProperty("--card-shift", "6px");
+            this.element.style.setProperty("--card-overlap", "30px");
+            this.element.style.setProperty("--card-inclination", "6deg");
+        }
     };
     return Hand;
 }(HandStock));

@@ -68,16 +68,16 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["ShadowAttack", "SilentSupport", "Possessed", "CoerciveAgreement", "Fracture", "BattleVision"],
-            "2329673" => ["WildBloom", "MistOfPain", "ArcaneEye", "Hoodwink", "FalseFace", "StoneCrush"],
+            "2329672" => ["WildBloom", "EchoCard", "GuiltyBond", "Hoodwink", "SneakyDeal", "SecondStrike"],
+            "2329673" => ["FalseFace", "DanceOfPain", "Freeze", "CoerciveAgreement", "Fracture", "StoneCrush"],
         ];
 
         $spells_pool = [];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
         $players_spell_mana = [
-            "2329672" => [0, 1, 1, 0, 0, 0],
-            "2329673" => [1, 0, 1, 2, 0, 0],
+            "2329672" => [1, 0, 0, 0, 0, 0],
+            "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -125,7 +125,7 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(15, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
