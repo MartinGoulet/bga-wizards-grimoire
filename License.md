@@ -1,24 +1,20 @@
-Board Game Arena (BGA) License
+Copyright (c) 2011-2024 GitHub Inc.
 
-Developers producing software and associated documentation files 
-(the "Software") to create a game adaptation on the BGA studio platform agree 
-that the Software:
- - can be used on Board Game Arena (BGA) to run the game, with no limitations 
- whatsoever;
- - can be modified by BGA site administrators to fit the purpose of the site, to
- fix bugs or in the purpose of re-factoring;
- - can be freely reused and adapted by developers for other games on the BGA 
-studio platform.
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-BGA will give credit to the developer of a published game through the game
-description page, by referencing his BGA user name and his real name, unless the
- developer explicitly requests anonymity.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-Developers can also publish the code they contributed under any licence they
-have an interest in, as long as they include the following mention as a code
-comment:
-   “This code has been produced on the BGA studio platform for use on
-    http://boardgamearena.com”.
-
-All rights on the idea and graphics of a game stay with the licensor and 
-author(s) respectively.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
