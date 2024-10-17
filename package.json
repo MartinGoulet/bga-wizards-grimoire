@@ -7,7 +7,7 @@
     "bga-cards": "github:thoun/bga-cards#2.0.1",
     "bga-jump-to": "github:thoun/bga-jump-to#1.0.0",
     "bga-studio-mg": "^0.1.5",
-    "bga-zoom": "github:thoun/bga-zoom#0.1.0",
+    "bga-zoom": "github:thoun/bga-zoom#1.0.4",
     "sass": "^1.62.1",
     "typescript": "^5.0.4"
   },
