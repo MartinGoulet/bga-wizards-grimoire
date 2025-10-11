@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Sand_1;
+namespace WizardsGrimoireExt\Cards\Sand_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\Notifications;
 
 class Symbiosis extends BaseCard {
 

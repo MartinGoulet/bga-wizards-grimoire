@@ -1,14 +1,14 @@
 <?php
 
-namespace WizardsGrimoire\Cards;
+namespace WizardsGrimoireExt\Cards;
 
 use BgaSystemException;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Core\Stats;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\Stats;
 
 abstract class BaseCard {
 

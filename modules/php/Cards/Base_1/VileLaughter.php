@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_1;
+namespace WizardsGrimoireExt\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\ManaCard;
 
 class VileLaughter extends BaseCard {
 

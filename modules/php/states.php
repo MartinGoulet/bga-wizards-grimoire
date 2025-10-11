@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Notifications;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Notifications;
 
 trait StateTrait {
 

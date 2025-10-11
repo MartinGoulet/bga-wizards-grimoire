@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Sand_1;
+namespace WizardsGrimoireExt\Cards\Sand_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Players;
 
 class Backfire extends BaseCard {
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_1;
+namespace WizardsGrimoireExt\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoireExt\Cards\BaseCard;
 use BgaSystemException;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class FriendlyTruce extends BaseCard {
 

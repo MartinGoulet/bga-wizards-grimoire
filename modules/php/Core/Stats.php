@@ -1,6 +1,6 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
 use BgaSystemException;
 

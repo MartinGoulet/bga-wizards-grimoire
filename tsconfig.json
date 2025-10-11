@@ -5,7 +5,7 @@
       "module": "none",
       "lib": ["dom", "esnext"],  
       "sourceMap": false,
-      "outFile": "wizardsgrimoire.js",
+      "outFile": "wizardsgrimoireext.js",
       "removeComments": true,
       "strict": false,
     },
@@ -29,7 +29,6 @@
         "node_modules/bga-cards/src/stocks/deck.ts",
         "node_modules/bga-cards/src/stocks/line-stock.ts",
         "node_modules/bga-cards/src/stocks/slot-stock.ts",
-        "node_modules/bga-cards/src/stocks/hand-stock.ts",
         "node_modules/bga-cards/src/card-manager.ts",
         "node_modules/bga-cards/src/sort.ts",
 
@@ -42,36 +41,21 @@
         "src/managers/notification.ts",
         "src/managers/state.ts",
 
-        "src/player-panel.ts",
         "src/player-table.ts",
         "src/table-center.ts",
-        "src/game-options.ts",
-        "src/modal.ts",
 
-        "src/states/discard-mana.ts",
         "src/states/cast-spell.ts",
-        "src/states/cast-spell-interaction.ts",
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
-        "src/states/basic-attack-battle-vision.ts",
 
         "src/states/activate-delayed-spell.ts",
-        "src/states/bad-fortune.ts",
         "src/states/cast-spell-with-mana.ts",
-        "src/states/eclipse.ts",
         "src/states/question.ts",
-        "src/states/player-new-turn.ts",
-        "src/states/replace-spell.ts",
         "src/states/select-mana.ts",
         "src/states/select-mana-deck.ts",
         "src/states/select-mana-discard.ts",
         "src/states/select-mana-hand.ts",
-        "src/states/select-mana-return-deck.ts",
-        "src/states/select-spell.ts",
-        "src/states/select-spell-pool.ts",
 
-        "src/types.ts",
-        
         "src/define.ts"
     ]
 }

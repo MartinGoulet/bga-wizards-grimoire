@@ -1,13 +1,13 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_1;
+namespace WizardsGrimoireExt\Cards\Base_1;
 
 use BgaSystemException;
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
 
 class ShackledMotion extends BaseCard {
 

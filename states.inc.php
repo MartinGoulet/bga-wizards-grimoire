@@ -3,7 +3,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * WizardsGrimoire implementation : © Martin Goulet <martin.goulet@live.ca>
+ * WizardsGrimoireExt implementation : © Martin Goulet <martin.goulet@live.ca>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -11,7 +11,7 @@
  * 
  * states.inc.php
  *
- * WizardsGrimoire game states description
+ * WizardsGrimoireExt game states description
  *
  */
 
@@ -358,7 +358,7 @@ $basicAttackStates = [
     ]
 ];
 
-$stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+$stSpellCooldownActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates(
     2,
     ST_SPELL_CD_ACTIVATE_DELAYED,
     ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
@@ -367,7 +367,7 @@ $stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_SPELL_COOL_DOWN_ONGOING,
 );
 
-$stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_SWITCH_OPPONENT,
@@ -376,7 +376,7 @@ $stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_CAST_SPELL_START
 );
 
-$stCastSpellActiveDeplayedOpponent = WizardsGrimoire::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayedOpponent = WizardsGrimoireExt::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_OPPONENT_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT,

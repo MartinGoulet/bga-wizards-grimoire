@@ -1,13 +1,13 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_2;
+namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class CoerciveAgreement extends BaseCard {
 

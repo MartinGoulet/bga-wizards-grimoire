@@ -3,13 +3,13 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * WizardsGrimoire implementation : © Martin Goulet <martin.goulet@live.ca>
+ * WizardsGrimoireExt implementation : © Martin Goulet <martin.goulet@live.ca>
  * 
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
  * -----
  * 
- * wizardsgrimoire.game.php
+ * wizardsgrimoireext.game.php
  *
  * This is the main file for your game logic.
  *
@@ -20,7 +20,7 @@
 
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
-    if ($classParts[0] == 'WizardsGrimoire') {
+    if ($classParts[0] == 'WizardsGrimoireExt') {
         array_shift($classParts);
         $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
         if (file_exists($file)) {
@@ -39,24 +39,24 @@ require_once('modules/php/debug.php');
 require_once('modules/php/states.php');
 require_once('modules/php/constants.inc.php');
 
-use WizardsGrimoire\Core\ActionTrait;
-use WizardsGrimoire\Core\ArgsTrait;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Core\SpellCard;
-use WizardsGrimoire\Core\StateTrait;
-use WizardsGrimoire\DebugTrait;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Core\ActionTrait;
+use WizardsGrimoireExt\Core\ArgsTrait;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
+use WizardsGrimoireExt\Core\StateTrait;
+use WizardsGrimoireExt\DebugTrait;
+use WizardsGrimoireExt\Objects\CardLocation;
 
-class WizardsGrimoire extends Table {
+class WizardsGrimoireExt extends Table {
     use ActionTrait;
     use ArgsTrait;
     use StateTrait;
     use DebugTrait;
 
-    /** @var WizardsGrimoire */
+    /** @var WizardsGrimoireExt */
     public static $instance = null;
 
     /** @var Deck */
@@ -126,7 +126,7 @@ class WizardsGrimoire extends Table {
 
     protected function getGameName() {
         // Used for translations and stuff. Please do not modify.
-        return "wizardsgrimoire";
+        return "wizardsgrimoireext";
     }
 
     /*
@@ -417,7 +417,7 @@ class WizardsGrimoire extends Table {
 
     /*
         Each time a player is doing some game action, one of the methods below is called.
-        (note: each method below must match an input method in wizardsgrimoire.action.php)
+        (note: each method below must match an input method in wizardsgrimoireext.action.php)
     */
 
     /*

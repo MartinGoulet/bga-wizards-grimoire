@@ -1,13 +1,13 @@
 <?php
 
-namespace WizardsGrimoire;
+namespace WizardsGrimoireExt;
 
 use BgaUserException;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 trait DebugTrait {
 

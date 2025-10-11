@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_1;
+namespace WizardsGrimoireExt\Cards\Base_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Players;
 
 class Betrayal extends BaseCard {
 

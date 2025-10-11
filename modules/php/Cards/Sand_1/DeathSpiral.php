@@ -1,11 +1,11 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Sand_1;
+namespace WizardsGrimoireExt\Cards\Sand_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\SpellCard;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class DeathSpiral extends BaseCard {
 

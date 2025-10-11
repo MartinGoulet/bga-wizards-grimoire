@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
 use BgaSystemException;
 use BgaUserException;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 trait ActionTrait {
 

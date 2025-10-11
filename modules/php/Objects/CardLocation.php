@@ -1,6 +1,6 @@
 <?php
 
-namespace WizardsGrimoire\Objects;
+namespace WizardsGrimoireExt\Objects;
 
 class CardLocation {
     static function Deck() {

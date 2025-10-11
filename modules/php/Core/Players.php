@@ -1,8 +1,8 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 /*
  * Players manager : allows to easily access players ...

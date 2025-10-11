@@ -1469,11 +1469,11 @@ var isDebug = window.location.host == "studio.boardgamearena.com" || window.loca
 var log = isDebug ? console.log.bind(window.console) : function () { };
 var LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
 var arrayRange = function (start, end) { return Array.from(Array(end - start + 1).keys()).map(function (x) { return x + start; }); };
-var WizardsGrimoire = (function () {
-    function WizardsGrimoire() {
+var WizardsGrimoireExt = (function () {
+    function WizardsGrimoireExt() {
         this.TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
     }
-    WizardsGrimoire.prototype.setup = function (gamedatas) {
+    WizardsGrimoireExt.prototype.setup = function (gamedatas) {
         log(gamedatas);
         this.notifManager = new NotificationManager(this);
         this.spellsManager = new SpellCardManager(this);
@@ -1507,20 +1507,20 @@ var WizardsGrimoire = (function () {
         this.addTooltipHtmlToClass("hand-icon-wrapper", _("Number of cards in hand"), 0);
         this.setupNotifications();
     };
-    WizardsGrimoire.prototype.onEnteringState = function (stateName, args) {
+    WizardsGrimoireExt.prototype.onEnteringState = function (stateName, args) {
         this.stateManager.onEnteringState(stateName, args);
     };
-    WizardsGrimoire.prototype.onLeavingState = function (stateName) {
+    WizardsGrimoireExt.prototype.onLeavingState = function (stateName) {
         this.stateManager.onLeavingState(stateName);
     };
-    WizardsGrimoire.prototype.onUpdateActionButtons = function (stateName, args) {
+    WizardsGrimoireExt.prototype.onUpdateActionButtons = function (stateName, args) {
         this.stateManager.onUpdateActionButtons(stateName, args);
     };
-    WizardsGrimoire.prototype.addActionButtonDisabled = function (id, label, action) {
+    WizardsGrimoireExt.prototype.addActionButtonDisabled = function (id, label, action) {
         this.addActionButton(id, label, action);
         this.disableButton(id);
     };
-    WizardsGrimoire.prototype.addActionButtonClientCancel = function () {
+    WizardsGrimoireExt.prototype.addActionButtonClientCancel = function () {
         var _this = this;
         var handleCancel = function (evt) {
             evt.stopPropagation();
@@ -1529,20 +1529,20 @@ var WizardsGrimoire = (function () {
         };
         this.addActionButtonGray("btnCancelAction", _("Cancel"), handleCancel);
     };
-    WizardsGrimoire.prototype.addActionButtonPass = function () {
+    WizardsGrimoireExt.prototype.addActionButtonPass = function () {
         var _this = this;
         var handlePass = function () {
             _this.takeAction("pass");
         };
         this.addActionButtonRed("btn_pass", _("Pass"), handlePass);
     };
-    WizardsGrimoire.prototype.addActionButtonGray = function (id, label, action) {
+    WizardsGrimoireExt.prototype.addActionButtonGray = function (id, label, action) {
         this.addActionButton(id, label, action, null, null, "gray");
     };
-    WizardsGrimoire.prototype.addActionButtonRed = function (id, label, action) {
+    WizardsGrimoireExt.prototype.addActionButtonRed = function (id, label, action) {
         this.addActionButton(id, label, action, null, null, "red");
     };
-    WizardsGrimoire.prototype.addActionButtonUndo = function () {
+    WizardsGrimoireExt.prototype.addActionButtonUndo = function () {
         var _this = this;
         var handleUndo = function () {
             if (_this.checkAction("undo")) {
@@ -1551,7 +1551,7 @@ var WizardsGrimoire = (function () {
         };
         this.addActionButton("btn_undo", _("Undo"), handleUndo, null, null, "gray");
     };
-    WizardsGrimoire.prototype.createPlayerPanels = function (gamedatas) {
+    WizardsGrimoireExt.prototype.createPlayerPanels = function (gamedatas) {
         var _this = this;
         this.playersPanels = [];
         var isFirst = true;
@@ -1562,7 +1562,7 @@ var WizardsGrimoire = (function () {
             isFirst = false;
         });
     };
-    WizardsGrimoire.prototype.createPlayerTables = function (gamedatas) {
+    WizardsGrimoireExt.prototype.createPlayerTables = function (gamedatas) {
         var _this = this;
         this.playersTables = [];
         gamedatas.players_order.forEach(function (player_id) {
@@ -1572,7 +1572,7 @@ var WizardsGrimoire = (function () {
             _this.playersTables.push(table);
         });
     };
-    WizardsGrimoire.prototype.toggleButtonEnable = function (id, enabled, color) {
+    WizardsGrimoireExt.prototype.toggleButtonEnable = function (id, enabled, color) {
         if (color === void 0) { color = "blue"; }
         if (enabled) {
             this.enableButton(id, color);
@@ -1581,7 +1581,7 @@ var WizardsGrimoire = (function () {
             this.disableButton(id);
         }
     };
-    WizardsGrimoire.prototype.disableButton = function (id) {
+    WizardsGrimoireExt.prototype.disableButton = function (id) {
         var el = document.getElementById(id);
         if (el) {
             el.classList.remove("bgabutton_blue");
@@ -1589,7 +1589,7 @@ var WizardsGrimoire = (function () {
             el.classList.add("bgabutton_disabled");
         }
     };
-    WizardsGrimoire.prototype.enableButton = function (id, color) {
+    WizardsGrimoireExt.prototype.enableButton = function (id, color) {
         if (color === void 0) { color = "blue"; }
         var el = document.getElementById(id);
         if (el) {
@@ -1597,10 +1597,10 @@ var WizardsGrimoire = (function () {
             el.classList.remove("bgabutton_disabled");
         }
     };
-    WizardsGrimoire.prototype.getCardType = function (card) {
+    WizardsGrimoireExt.prototype.getCardType = function (card) {
         return this.gamedatas.card_types[card.type];
     };
-    WizardsGrimoire.prototype.getSpellCost = function (spell) {
+    WizardsGrimoireExt.prototype.getSpellCost = function (spell) {
         var _a = this.getCardType(spell), cost = _a.cost, type = _a.type;
         var player_table = this.getCurrentPlayerTable();
         cost = cost - player_table.getDiscountNextSpell();
@@ -1618,33 +1618,33 @@ var WizardsGrimoire = (function () {
         }
         return Math.max(cost, 0);
     };
-    WizardsGrimoire.prototype.getPower = function (card) {
+    WizardsGrimoireExt.prototype.getPower = function (card) {
         var value = Number(card["type"]);
         if (document.getElementById("table").classList.contains("wg-ongoing-spell-growth")) {
             value++;
         }
         return value;
     };
-    WizardsGrimoire.prototype.getOpponentId = function () {
+    WizardsGrimoireExt.prototype.getOpponentId = function () {
         return Number(this.gamedatas.opponent_id);
     };
-    WizardsGrimoire.prototype.getPlayerId = function () {
+    WizardsGrimoireExt.prototype.getPlayerId = function () {
         return Number(this.player_id);
     };
-    WizardsGrimoire.prototype.getPlayerPanel = function (playerId) {
+    WizardsGrimoireExt.prototype.getPlayerPanel = function (playerId) {
         return this.playersPanels.find(function (playerPanel) { return playerPanel.player_id === playerId; });
     };
-    WizardsGrimoire.prototype.getPlayerTable = function (playerId) {
+    WizardsGrimoireExt.prototype.getPlayerTable = function (playerId) {
         return this.playersTables.find(function (playerTable) { return playerTable.player_id === playerId; });
     };
-    WizardsGrimoire.prototype.getCurrentPlayerTable = function () {
+    WizardsGrimoireExt.prototype.getCurrentPlayerTable = function () {
         return this.getPlayerTable(this.getPlayerId());
     };
-    WizardsGrimoire.prototype.markCardAsSelected = function (card) {
+    WizardsGrimoireExt.prototype.markCardAsSelected = function (card) {
         var div = this.spellsManager.getCardElement(card);
         div.classList.add("wg-selected");
     };
-    WizardsGrimoire.prototype.restoreGameState = function () {
+    WizardsGrimoireExt.prototype.restoreGameState = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -1661,7 +1661,7 @@ var WizardsGrimoire = (function () {
             });
         });
     };
-    WizardsGrimoire.prototype.clearSelection = function () {
+    WizardsGrimoireExt.prototype.clearSelection = function () {
         log("clearSelection");
         this.tableCenter.spellPool.unselectAll();
         this.playersTables.forEach(function (table) {
@@ -1677,31 +1677,31 @@ var WizardsGrimoire = (function () {
             node.classList.remove("wg-deck-was-selected");
         });
     };
-    WizardsGrimoire.prototype.setGamestateDescription = function (property) {
+    WizardsGrimoireExt.prototype.setGamestateDescription = function (property) {
         if (property === void 0) { property = ""; }
         var originalState = this.gamedatas.gamestates[this.gamedatas.gamestate.id];
         this.gamedatas.gamestate.description = "".concat(originalState["description" + property]);
         this.gamedatas.gamestate.descriptionmyturn = "".concat(originalState["descriptionmyturn" + property]);
         this.updatePageTitle();
     };
-    WizardsGrimoire.prototype.setTooltip = function (id, html) {
+    WizardsGrimoireExt.prototype.setTooltip = function (id, html) {
         this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
     };
-    WizardsGrimoire.prototype.takeAction = function (action, data, onSuccess, onComplete) {
+    WizardsGrimoireExt.prototype.takeAction = function (action, data, onSuccess, onComplete) {
         data = data || {};
         data.lock = true;
         onSuccess = onSuccess !== null && onSuccess !== void 0 ? onSuccess : function (result) { };
         onComplete = onComplete !== null && onComplete !== void 0 ? onComplete : function (is_error) { };
-        this.ajaxcall("/wizardsgrimoire/wizardsgrimoire/".concat(action, ".html"), data, this, onSuccess, onComplete);
+        this.ajaxcall("/wizardsgrimoireext/wizardsgrimoireext/".concat(action, ".html"), data, this, onSuccess, onComplete);
     };
-    WizardsGrimoire.prototype.toggleOngoingSpell = function (value) {
+    WizardsGrimoireExt.prototype.toggleOngoingSpell = function (value) {
         document.getElementById("table").classList.toggle("wg-ongoing-spell-".concat(value.name), value.active);
     };
-    WizardsGrimoire.prototype.setupNotifications = function () {
+    WizardsGrimoireExt.prototype.setupNotifications = function () {
         log("notifications subscriptions setup");
         this.notifManager.setup();
     };
-    WizardsGrimoire.prototype.format_string_recursive = function (log, args) {
+    WizardsGrimoireExt.prototype.format_string_recursive = function (log, args) {
         try {
             if (log && args && !args.processed) {
                 args.processed = true;
@@ -1737,13 +1737,13 @@ var WizardsGrimoire = (function () {
             debugger;
         }
     };
-    WizardsGrimoire.prototype.formatGametext = function (rawText) {
+    WizardsGrimoireExt.prototype.formatGametext = function (rawText) {
         if (!rawText)
             return "";
         var value = rawText.replace(",", ",<br />").replace(":", ":<br />");
         return "<p>" + value.split(".").join(".</p><p>") + "</p>";
     };
-    return WizardsGrimoire;
+    return WizardsGrimoireExt;
 }());
 var HiddenDeck = (function (_super) {
     __extends(HiddenDeck, _super);
@@ -4878,5 +4878,5 @@ define([
     "ebg/stock",
     g_gamethemeurl + "modules/js/core_patch_tooltip_position.js",
 ], function (dojo, declare) {
-    return declare("bgagame.wizardsgrimoire", [ebg.core.gamegui, ebg.core.core_patch_tooltip_position], new WizardsGrimoire());
+    return declare("bgagame.wizardsgrimoireext", [ebg.core.gamegui, ebg.core.core_patch_tooltip_position], new WizardsGrimoireExt());
 });

@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
 use APP_DbObject;
-use WizardsGrimoire;
+use WizardsGrimoireExt;
 
 /*
  * Game: a wrapper over table object to allow more generic modules
@@ -11,7 +11,7 @@ use WizardsGrimoire;
 
 class Game extends APP_DbObject {
     public static function get() {
-        return WizardsGrimoire::get();
+        return WizardsGrimoireExt::get();
     }
 
     public static function undoSavepoint() {

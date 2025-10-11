@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
-use WizardsGrimoire\Cards\Base_2\SecretOath;
-use WizardsGrimoire\Cards\KickStarter_1\Lullaby;
+use WizardsGrimoireExt\Cards\Base_2\SecretOath;
+use WizardsGrimoireExt\Cards\KickStarter_1\Lullaby;
 
 /*
  * Events: handle events

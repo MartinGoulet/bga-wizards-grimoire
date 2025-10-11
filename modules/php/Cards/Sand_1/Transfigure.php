@@ -1,11 +1,11 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Sand_1;
+namespace WizardsGrimoireExt\Cards\Sand_1;
 
 use BgaUserException;
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\SpellCard;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class Transfigure extends BaseCard {
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_2;
+namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Globals;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\SpellCard;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class ForceOfNature extends BaseCard {
 

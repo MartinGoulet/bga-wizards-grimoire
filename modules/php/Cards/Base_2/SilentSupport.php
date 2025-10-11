@@ -1,12 +1,12 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_2;
+namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Events;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Events;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
 
 class SilentSupport extends BaseCard {
 

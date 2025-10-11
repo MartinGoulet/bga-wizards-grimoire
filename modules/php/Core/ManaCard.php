@@ -1,12 +1,12 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
 use BgaSystemException;
-use WizardsGrimoire\Core\Game;
-use WizardsGrimoire\Core\Notifications;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Core\Game;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class ManaCard {
 

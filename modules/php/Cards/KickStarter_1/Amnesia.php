@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Cards\KickStarter_1;
+namespace WizardsGrimoireExt\Cards\KickStarter_1;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Globals;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Globals;
 
 class Amnesia extends BaseCard {
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_2;
+namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\ManaCard;
-use WizardsGrimoire\Core\SpellCard;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class PainfulVision extends BaseCard {
 

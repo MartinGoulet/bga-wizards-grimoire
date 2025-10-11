@@ -1,10 +1,10 @@
 <?php
 
-namespace WizardsGrimoire\Core;
+namespace WizardsGrimoireExt\Core;
 
 use BgaUserException;
-use WizardsGrimoire\Core\Players;
-use WizardsGrimoire\Objects\CardLocation;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class SpellCard {
 
@@ -42,7 +42,7 @@ class SpellCard {
         // Get info of the card
         $card_type = Game::get()->card_types[$card['type']];
         // Create the class for the card logic
-        $className = "WizardsGrimoire\\Cards\\" . $card_type['icon'] . "\\" . $card_type['class'];
+        $className = "WizardsGrimoireExt\\Cards\\" . $card_type['icon'] . "\\" . $card_type['class'];
         /** @var BaseCard */
         $cardClass = new $className();
         return $cardClass;

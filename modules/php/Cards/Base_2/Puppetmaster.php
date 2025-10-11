@@ -1,9 +1,9 @@
 <?php
 
-namespace WizardsGrimoire\Cards\Base_2;
+namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Globals;
+use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Core\Globals;
 
 class Puppetmaster extends BaseCard {
 
