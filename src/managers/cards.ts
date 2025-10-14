@@ -8,7 +8,7 @@ function formatGametext2(rawText: string) {
 }
 
 class SpellCardManager extends CardManager<SpellCard> {
-   constructor(public game: WizardsGrimoire) {
+   constructor(public game: Game) {
       super(game, {
          getId: (card) => `spell-card-${card.id}`,
          setupDiv: (card: SpellCard, div: HTMLElement) => {
@@ -22,7 +22,11 @@ class SpellCardManager extends CardManager<SpellCard> {
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-spell-front");
             if (card.type !== null) {
-               div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+               if(Number(card.type) < 200) {
+                  div.classList.add(Number(card.type) <= 70 ? "base_game" : "promo_shifting_sand");
+               } else {
+                  div.classList.add("shifting_sand_set");
+               }
             }
 
             if (div.childNodes.length == 1 && card.type) {
@@ -111,7 +115,7 @@ class SpellCardManager extends CardManager<SpellCard> {
 }
 
 class ManaCardManager extends CardManager<ManaCard> {
-   constructor(public game: WizardsGrimoire) {
+   constructor(public game: Game) {
       super(game, {
          getId: (card) => `mana-card-${card.id}`,
          setupDiv: (card: ManaCard, div: HTMLElement) => {
@@ -155,7 +159,7 @@ class ManaCardManager extends CardManager<ManaCard> {
 }
 
 class TooltipManager extends CardManager<SpellCard> {
-   constructor(public game: WizardsGrimoire) {
+   constructor(public game: Game) {
       super(game, {
          getId: (card) => `tooltip-spell-card-${card.id}`,
          setupDiv: (card: SpellCard, div: HTMLElement) => {
@@ -169,7 +173,11 @@ class TooltipManager extends CardManager<SpellCard> {
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-spell-front");
             if (card.type !== null) {
-               div.classList.add(Number(card.type) <= 70 ? "base_game" : "shifting_sand");
+               if(Number(card.type) < 200) {
+                  div.classList.add(Number(card.type) <= 70 ? "base_game" : "promo_shifting_sand");
+               } else {
+                  div.classList.add("shifting_sand_set");
+               }
             }
 
             if (div.childNodes.length == 1 && card.type) {
@@ -202,7 +210,7 @@ class TooltipManager extends CardManager<SpellCard> {
 }
 
 class ManaDiscardManager extends CardManager<ManaCard> {
-   constructor(public game: WizardsGrimoire) {
+   constructor(public game: Game) {
       super(game, {
          getId: (card) => `discard-mana-card-${card.id}`,
          setupDiv: (card: ManaCard, div: HTMLElement) => {

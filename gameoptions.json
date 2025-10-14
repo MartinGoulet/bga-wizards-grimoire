@@ -1,0 +1,80 @@
+{
+    "103": {
+        "name": "Deck",
+        "default": 1,
+        "values": {
+            "1": {
+                "name": "Base Game",
+                "tmdisplay": "Base Game",
+                "description": "Use the base game deck only"
+            },
+            "2": {
+                "name": "Shifting Sand",
+                "tmdisplay": "Shifting Sand",
+                "description": "Use the Shifting Sand deck"
+            }
+        }
+    },
+    "100": {
+        "name": "Difficulty",
+        "default": 2,
+        "values": {
+            "1": {
+                "name": "Beginner",
+                "tmdisplay": "Beginner",
+                "description": "Spell pool of 8 cards, only cards with 1 star"
+            },
+            "2": {
+                "name": "Advanced",
+                "tmdisplay": "Advanced",
+                "description": "Spell pool of 10 cards, all cards are available"
+            }
+        }
+    },
+    "101": {
+        "name": "Lost Pages expansion",
+        "default": 2,
+        "values": {
+            "2": {
+                "name": "Yes",
+                "tmdisplay": "Lost Pages expansion",
+                "description": "Add a mini expansion of 10 spell cards from the first kickstarter campaign"
+            },
+            "1": {
+                "name": "No"
+            }
+        },
+        "displaycondition": [
+            {
+                "type": "otheroption",
+                "id": 103,
+                "value": [
+                    1
+                ]
+            }
+        ]
+    },
+    "102": {
+        "name": "Shifting Sands Kickstarter Promo",
+        "default": 1,
+        "values": {
+            "2": {
+                "name": "Yes",
+                "tmdisplay": "Shifting Sands Kickstarter Promo",
+                "description": "Add some spells from the upcoming Shifting Sands Kickstarter campaign"
+            },
+            "1": {
+                "name": "No"
+            }
+        },
+        "displaycondition": [
+            {
+                "type": "otheroption",
+                "id": 103,
+                "value": [
+                    1
+                ]
+            }
+        ]
+    }
+}

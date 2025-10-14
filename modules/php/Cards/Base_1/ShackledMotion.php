@@ -2,9 +2,9 @@
 
 namespace WizardsGrimoireExt\Cards\Base_1;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
@@ -26,7 +26,7 @@ class ShackledMotion extends BaseCard {
                     ManaCard::addOnTopOfDiscard($card_id);
                 }
                 Notifications::discardManaCards($opponent_id, $cards_before);
-                Game::undoSavepoint();
+                Game::get()->undoSavepoint();
                 break;
 
             default:

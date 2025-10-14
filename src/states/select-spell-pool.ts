@@ -1,5 +1,5 @@
 class SelectSpellPoolStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: any): void {
       if (!this.game.isCurrentPlayerActive()) return;

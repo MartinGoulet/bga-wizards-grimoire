@@ -39,9 +39,9 @@ class TableCenter {
    public manaRevealed: LineStock<ManaCard>;
    public basicAttack: LineStock<ManaCard>;
 
-   public mana_counter: { [number: number]: ebg.counter } = {};
+   public mana_counter: { [number: number]: Counter } = {};
 
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       this.place(`<span class="wg-title">${_("Basic Attack")}</span>`, "basic-attack-wrapper");
       this.place(`<div id="basic-attack"></div>`, "basic-attack-wrapper");
       this.place(`<span class="wg-title">${_("Revealed Mana")}</span>`, "mana-revealed-wrapper");
@@ -153,10 +153,10 @@ class TableCenter {
       this.manaDiscardDisplay.setSelectionMode(toDisplay ? "multiple" : "none");
    }
 
-   public onRefillSpell(card: SpellCard) {
+   public async onRefillSpell(card: SpellCard) {
       const topHiddenCard = { ...card, isHidden: true };
       this.spellDeck.setCardNumber(this.spellDeck.getCardNumber(), topHiddenCard);
-      this.spellPool.addCard(card);
+      await this.spellPool.addCard(card);
    }
 
    private place(html: string, element: string) {

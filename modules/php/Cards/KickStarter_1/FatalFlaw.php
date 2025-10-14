@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\KickStarter_1;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
@@ -20,7 +20,7 @@ class FatalFlaw extends BaseCard {
             $card = ManaCard::getOnTopOnManaCoolDown($position, Players::getOpponentId());
             Notifications::revealManaCardCooldown(Players::getOpponentId(), $card, $this->getCardName());
             $this->dealDamage(ManaCard::getPower($card) + 1);
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
@@ -11,6 +11,8 @@ use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\Stats;
 
 abstract class BaseCard {
+
+    public int $id = 0;
 
     public $card_name = null;
 

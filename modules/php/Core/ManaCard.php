@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -54,7 +54,7 @@ class ManaCard {
         return Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
 
-    public static function draw($count, $player_id = 0, string $card_name = null) {
+    public static function draw($count, $player_id = 0, string|null $card_name = null) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -79,7 +79,7 @@ class ManaCard {
         }
 
         Game::get()->incStat($count, WG_STAT_NBR_MANA_DRAW, $player_id);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
 
         return $result;
     }
@@ -119,7 +119,7 @@ class ManaCard {
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
         Notifications::dealFromDeckToManaCoolDown($player_id, $card, $position);
         Events::onAddManaUnderSpell($player_id, $position);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 
     public static function discardManaFromSpell(int $position, int $player_id = 0) {
@@ -134,7 +134,7 @@ class ManaCard {
         Notifications::discardManaCardFromSpell(Players::getPlayerId(), $card, $position);
 
         if($player_id == Players::getOpponentId()) {
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
 
         Events::onManaDiscarded($card, $position, $player_id);
@@ -277,7 +277,7 @@ class ManaCard {
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
             
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
             return $mana_cards;
         } else {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
@@ -292,7 +292,7 @@ class ManaCard {
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_2);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before,  false);
 
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
             return array_merge($mana_cards_1, $mana_cards_2);
         }
     }

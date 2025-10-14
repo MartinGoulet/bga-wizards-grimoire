@@ -2,6 +2,10 @@
 
 namespace WizardsGrimoireExt\Core;
 
+
+use Bga\GameFramework\Actions\Types\JsonParam;
+use Bga\GameFramework\Actions\Types\IntArrayParam;
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 use BgaUserException;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -68,9 +72,7 @@ trait ActionTrait {
         $this->gamestate->nextState();
     }
 
-    public function chooseSpell(int $card_id) {
-        $this->checkAction('chooseSpell');
-
+    public function actChooseSpell(int $card_id) {
         $card = SpellCard::get($card_id);
 
         if ($card == null) {
@@ -107,12 +109,24 @@ trait ActionTrait {
         Globals::setLastAddedSpell($newSpell['id']);
 
         Stats::chooseSpell($playerId, $card);
+        
+        $this->triggerOnAddSpellToRepertoire($card);
 
         $turn_number = Game::get()->getStat(WG_STAT_TURN_NUMBER);
         if ($turn_number <= 3) {
             $this->gamestate->nextState('next_player');
         } else {
             $this->gamestate->nextState('end');
+        }
+    }
+
+    private function triggerOnAddSpellToRepertoire(array $spellCard) {
+        $cards = SpellCard::getOngoingActiveSpells(Players::getPlayerId());
+        foreach ($cards as $card_id => $card) {
+            $instance = SpellCard::getInstanceOfCard($card);
+            if (method_exists($instance, 'onAddSpellToRepertoire')) {
+                $instance->onAddSpellToRepertoire($spellCard);
+            }
         }
     }
 
@@ -135,8 +149,21 @@ trait ActionTrait {
         $this->gamestate->nextState('end');
     }
 
-    public function castSpell(int $card_id, $args) {
-        $this->checkAction('castSpell');
+    public function actCastSpell(int $card_id, #[JsonParam(associative: false, alphanum: false)] object $args) {
+        // var_dump([
+        //     'card_id' => $card_id,
+        //     'args' => $args
+        // ]);
+        // throw new \BgaSystemException("Debug");
+        if(is_array($args->values)) {
+            $args = $args->values;
+        } else {
+            $args = $args->values ? [$args->values] : [];
+        }
+        $this->castSpell($card_id, $args);
+    }
+
+    public function castSpell(int $card_id, array $args) {
         $player_id = intval($this->getActivePlayerId());
         // Get the card and verify ownership
         $spell = SpellCard::isInRepertoire($card_id, $player_id);
@@ -189,6 +216,8 @@ trait ActionTrait {
 
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
+        Globals::setConsecutivelyAttackSpellCountBefore(Globals::getConsecutivelyAttackSpellCount());
+
         switch ($card_type['type']) {
             case WG_SPELL_TYPE_ATTACK:
                 Globals::incConsecutivelyAttackSpellCount(1);
@@ -198,6 +227,7 @@ trait ActionTrait {
                 Globals::setConsecutivelyAttackSpellCount(0);
                 break;
         }
+
         Globals::incCardTimesPlayed(intval($spell['type']));
 
         Globals::setPreviousSpellPlayed(Globals::getSpellPlayed());
@@ -287,7 +317,7 @@ trait ActionTrait {
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
         if(Globals::getInteractionPlayer() !== $player_id) {
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
 
         if (Players::getPlayerLife(Players::getOpponentId()) <= 0) {
@@ -297,8 +327,9 @@ trait ActionTrait {
         }
     }
 
-    public function basicAttack(int $mana_id) {
-        $this->checkAction('basicAttack');
+    public function actBasicAttack(int $id) {
+        $mana_id = $id;
+        $this->checkAction('actBasicAttack');
         $player_id = Players::getPlayerId();
         $card = ManaCard::isInHand($mana_id, $player_id);
         $damage = ManaCard::getPower($card);
@@ -307,6 +338,8 @@ trait ActionTrait {
         if (Globals::getIsActivePuppetmaster() && Globals::getPreviousBasicAttackPower() != $damage) {
             throw new BgaUserException("The power not match the previous attack");
         }
+
+        $damage = $this->modifyBasicAttackDamage($damage);
 
         Globals::setCurrentBasicAttackPower($damage);
 
@@ -327,6 +360,17 @@ trait ActionTrait {
         }
     }
 
+    private function modifyBasicAttackDamage(int $damage) {
+        $cards = SpellCard::getOngoingActiveSpells(Players::getPlayerId());
+        foreach ($cards as $card_id => $card) {
+            $instance = SpellCard::getInstanceOfCard($card);
+            if (method_exists($instance, 'onModifyBasicAttackDamage')) {
+                $damage = $instance->onModifyBasicAttackDamage($damage);
+            }
+        }
+        return $damage;
+    }
+
     public function blockBasicAttack($mana_id) {
         $this->checkAction('blockBasicAttack');
         $card = ManaCard::isInHand($mana_id, Players::getOpponentId());
@@ -344,9 +388,7 @@ trait ActionTrait {
         }
     }
 
-    public function pass() {
-        $this->checkAction('pass');
-
+    public function actPass() {
         if ($this->gamestate->state_id() == ST_BASIC_ATTACK) {
             Globals::setPreviousBasicAttackPower(0);
             Globals::setLastBasicAttackDamage(0);
@@ -355,9 +397,8 @@ trait ActionTrait {
         $this->gamestate->nextState('pass');
     }
 
-    function undo() {
-        $this->checkAction("undo");
-        Game::undoRestorePoint();
+    function actUndo() {
+        Game::get()->undoRestorePoint();
     }
 
     //////////////////////////////////////////////////////////////////////////////

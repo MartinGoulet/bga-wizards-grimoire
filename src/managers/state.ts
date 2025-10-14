@@ -30,7 +30,7 @@ class StateManager {
    private readonly states: { [statename: string]: StateHandler };
    private readonly client_states: StateHandler[] = [];
 
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       this.states = {
          [states.client.badFortune]: new BadFortuneStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),

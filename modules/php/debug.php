@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Players;
@@ -136,7 +136,7 @@ trait DebugTrait {
         Globals::setIsActivePowerHungry(false, 0);
         Globals::setIsActivePuppetmaster(false, 0);
         Globals::setIsActiveSecretOath(false, 0);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 
     public function addManaDiscardPile() {

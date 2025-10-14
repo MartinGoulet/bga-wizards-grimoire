@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
@@ -16,7 +16,7 @@ class SecretOath extends BaseCard {
         Globals::setIsActiveSecretOath($value, $player_id);
         
         if ($value == true) {
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
     }
 

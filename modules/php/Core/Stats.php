@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 
 /*

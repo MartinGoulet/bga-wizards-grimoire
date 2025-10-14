@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -45,6 +46,7 @@ class SpellCard {
         $className = "WizardsGrimoireExt\\Cards\\" . $card_type['icon'] . "\\" . $card_type['class'];
         /** @var BaseCard */
         $cardClass = new $className();
+        $cardClass->id = intval($card['id']);
         return $cardClass;
     }
 
@@ -132,6 +134,6 @@ class SpellCard {
         Globals::setLastAddedSpell($newSpell['id']);
 
         Notifications::refillSpell($player_id, $newSpell);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 }

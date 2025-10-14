@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\Globals;
 
 class Growth extends BaseCard {
@@ -13,7 +13,7 @@ class Growth extends BaseCard {
         Globals::setIsActiveGrowth($value, $player_id);
         
         if ($value == true && Globals::getIsActiveSecretOath()) {
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
     }
 }

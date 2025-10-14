@@ -1,5 +1,5 @@
 class CastSpellStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellArgs): void {
       this.game.clearSelection();
@@ -28,7 +28,7 @@ class CastSpellStates implements StateHandler {
                const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
                const selectedSpell: SpellCard = repertoire.getSelection()[0];
                this.game.markCardAsSelected(selectedSpell);
-               this.game.actionManager.setup("castSpell", "actionCastMana");
+               this.game.actionManager.setup("actCastSpell", "actionCastMana");
                this.game.actionManager.addAction(selectedSpell);
                this.game.actionManager.activateNextAction();
             }, 10);
@@ -43,10 +43,15 @@ class CastSpellStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: CastSpellArgs): void {
-      const handleCastSpell = () => {};
+      const handleCastSpell = async () => {
+         const selectedSpell = this.game.getCurrentPlayerTable().spell_repertoire.getSelection()[0];
+         if (selectedSpell != null) {
+            await this.game.bgaPerformAction("actCastSpell", { id: selectedSpell.id });
+         }
+      };
 
-      const handlePass = () => {
-         this.game.takeAction("pass");
+      const handlePass = async () => {
+         await this.game.bgaPerformAction("actPass");
       };
 
       if (this.hasSpellAvailable()) {

@@ -1,11 +1,15 @@
-interface WizardsGrimoirePlayerData extends BgaPlayer {
+interface WizardsGrimoirePlayerData extends Player {
    turn: number;
    // Add Player data
 }
 
+declare const wg: {
+    core_patch_tooltip_position: any
+}
+
 type PlayerBoardObject = { [player_id: number]: PlayerBoardInfo };
 
-interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerData> {
+interface WizardsGrimoireGamedatas extends Gamedatas<WizardsGrimoirePlayerData> {
    slot_count: 8 | 10;
    slot_cards: SpellCard[];
 
@@ -27,6 +31,8 @@ interface WizardsGrimoireGamedatas extends BgaGamedatas<WizardsGrimoirePlayerDat
       front_1: boolean;
       front_2: boolean;
    };
+
+   card_set: "base" | "shifting_sand";
 }
 
 interface OngoingSpell {

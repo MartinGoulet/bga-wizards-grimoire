@@ -1,10 +1,10 @@
 class CastSpellInteractionStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellInteractionArgs): void {
       this.game.markCardAsSelected(args.spell);
       if (!this.game.isCurrentPlayerActive()) return;
-      this.game.actionManager.setup("castSpellInteraction");
+      this.game.actionManager.setup("actCastSpellInteraction");
       this.game.actionManager.addActionInteraction(args.spell);
       if (args.spell.type === SpellType.Echo) {
          // Echo

@@ -1,5 +1,5 @@
 class SelectManaDiscardStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
    onEnteringState(args: SelectManaDiscardArgs): void {
       this.game.tableCenter.moveManaDiscardPile(true);
       const deck = this.game.tableCenter.manaDiscardDisplay;

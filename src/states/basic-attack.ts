@@ -1,5 +1,5 @@
 class BasicAttackStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: BasicAttackStates): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -21,11 +21,11 @@ class BasicAttackStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: BasicAttackStates): void {
-      const handleCastSpell = () => {
+      const handleCastSpell = async () => {
          const { hand } = this.game.getCurrentPlayerTable();
          const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
-            this.game.takeAction("basicAttack", { id: selectedMana.id });
+            await this.game.bgaPerformAction("actBasicAttack", { id: selectedMana.id });
          }
       };
 

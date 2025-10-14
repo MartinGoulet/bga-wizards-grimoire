@@ -1,5 +1,5 @@
 class BasicAttackBattleVisionStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: BasicAttackBattleVisionArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -23,11 +23,11 @@ class BasicAttackBattleVisionStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: BasicAttackBattleVisionArgs): void {
-      const handleSelect = () => {
+      const handleSelect = async () => {
          const { hand } = this.game.getCurrentPlayerTable();
          const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
-            this.game.takeAction("blockBasicAttack", { id: selectedMana.id });
+            await this.game.bgaPerformAction("actBlockBasicAttack", { id: selectedMana.id });
          }
       };
 

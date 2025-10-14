@@ -4,11 +4,11 @@ class PlayerTable {
    public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: Hand;
-   public health: ebg.counter;
+   public health: Counter;
 
    private current_player: boolean;
 
-   constructor(public game: WizardsGrimoire, player: WizardsGrimoirePlayerData) {
+   constructor(public game: Game, player: WizardsGrimoirePlayerData) {
       this.player_id = Number(player.id);
       this.current_player = this.player_id == this.game.getPlayerId();
 

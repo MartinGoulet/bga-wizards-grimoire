@@ -172,7 +172,7 @@ class Hand extends HandStock<ManaCard> {
       manager: CardManager<ManaCard>,
       element: HTMLElement,
       protected current_player: boolean,
-      protected hand_counter: ebg.counter,
+      protected hand_counter: Counter,
    ) {
       super(manager, element, {
          // center: true,

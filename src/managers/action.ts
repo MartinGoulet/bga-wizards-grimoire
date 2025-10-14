@@ -1,4 +1,4 @@
-type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpell" | "replaceSpell";
+type TakeActionType = "actCastSpell" | "actCastSpellInteraction" | "actActivateDelayedSpell" | "actReplaceSpell";
 
 class ActionManager {
    private actions: string[] = [];
@@ -6,9 +6,9 @@ class ActionManager {
    private current_card: SpellCard[];
    private take_action: TakeActionType;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
-   public setup(takeAction: TakeActionType = "castSpell", newAction?: string) {
+   public setup(takeAction: TakeActionType = "actCastSpell", newAction?: string) {
       log("actionmanager.reset");
 
       this.reset();
@@ -72,7 +72,7 @@ class ActionManager {
       return this;
    }
 
-   public activateNextAction() {
+   public async activateNextAction() {
       log("activateNextAction");
       log(this.actions_args);
       if (this.actions.length > 0) {
@@ -89,12 +89,16 @@ class ActionManager {
          is_error ? this.game.restoreGameState() : this.game.clearSelection();
       };
 
+      const values = { values: this.actions_args };
+
       const data = {
          card_id: this.current_card[0].id,
-         args: this.actions_args.join(";"),
+         args: JSON.stringify(values),
       };
 
-      this.game.takeAction(this.take_action, data, null, handleError);
+      console.log("Data to send:", data);
+
+      await this.game.bgaPerformAction(this.take_action, data).catch(handleError);
    }
 
    public getCurrentCard(): SpellCard {
@@ -122,9 +126,9 @@ class ActionManager {
       const args: SelectSpellPoolStatesArgs = {
          skip: {
             label: "Pass",
-            action: () => {
+            action: async () => {
                this.actions.splice(0);
-               this.game.takeAction("pass");
+               await this.game.bgaPerformAction("actPass");
             },
          },
          cancel: false,
@@ -162,7 +166,7 @@ class ActionManager {
       });
    }
 
-   private actionCastSpell_Submit() {
+   private async actionCastSpell_Submit() {
       const new_spell_id = Number(this.actions_args[0]);
       const old_spell_pos = Number(this.actions_args[1]);
 
@@ -175,15 +179,12 @@ class ActionManager {
          is_error ? this.game.restoreGameState() : this.game.clearSelection();
       };
 
-      this.game.takeAction(
-         "replaceSpell",
-         {
+      await this.game
+         .bgaPerformAction("actReplaceSpell", {
             new_spell_id,
             old_spell_id,
-         },
-         null,
-         handleError,
-      );
+         })
+         .catch(handleError);
    }
 
    /////////////////////////////////////////////////////////////
@@ -243,12 +244,18 @@ class ActionManager {
 
    private actionFriendlyTruce() {
       const msg = _("${you} may give ${nbr} cards from your hand or pass");
-      this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
+      this.selectManaHand(3, msg, true, {
+         canCancel: false,
+         skip: { label: "Pass" },
+      });
    }
 
    private actionGuiltyBond() {
       const msg = _("${you} may select ${nbr} mana card(s) from your hand");
-      this.selectManaHand(1, msg, true, { canCancel: true, skip: { label: "Pass" } });
+      this.selectManaHand(1, msg, true, {
+         canCancel: true,
+         skip: { label: "Pass" },
+      });
    }
 
    private actionMistOfPain() {
@@ -330,7 +337,7 @@ class ActionManager {
 
    private actionTimeDistortion() {
       const msg = _("${you} may select up to ${nbr} mana card(s)");
-      this.selectMana(2, msg, false);
+      this.selectManaDeck(2, msg, false);
    }
 
    private actionToxicGift() {
@@ -506,8 +513,7 @@ class ActionManager {
    }
 
    private actionFatalFlaw() {
-      const canIgnore =
-         this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
+      const canIgnore = this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
       this.actionSelectManaCoolDownOpponent(canIgnore);
    }
 
@@ -625,6 +631,70 @@ class ActionManager {
       this.activateNextAction();
    }
 
+   ///////////////////////////////////////////////////////////////////////////////////
+   //    _____ _     _  __ _   _                _____                 _       __
+   //   / ____| |   (_)/ _| | (_)              / ____|               | |     /_ |
+   //  | (___ | |__  _| |_| |_ _ _ __   __ _  | (___   __ _ _ __   __| |___   | |
+   //   \___ \| '_ \| |  _| __| | '_ \ / _` |  \___ \ / _` | '_ \ / _` / __|  | |
+   //   ____) | | | | | | | |_| | | | | (_| |  ____) | (_| | | | | (_| \__ \  | |
+   //  |_____/|_| |_|_|_|  \__|_|_| |_|\__, | |_____/ \__,_|_| |_|\__,_|___/  |_|
+   //                                   __/ |
+   //                                  |___/
+   ///////////////////////////////////////////////////////////////////////////////////
+
+   private actionIceBlast() {
+      const label1 = _("Discard your hand and deal 5 damage");
+      const label2 = _("Place a mana card from the mana deck on one of your opponent's spells");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: label2,
+               action: () => this.actionSelectSpellOpponent(),
+            },
+         ],
+      });
+   }
+
+   private actionPsychicPain() {
+      const msg = _("${you} may select ${nbr} mana card(s) to place on top of Mana Deck");
+      this.selectManaHand(1, msg, false, {
+         skip: {
+            label: _("Pass"),
+            message: _("Are you sure that you don't want to place a mana card on top of the Mana Deck?"),
+         },
+      });
+   }
+
+   private actionRevelation() {
+      // this.selectMana(1, _("${you} may select ${nbr} mana card(s) to reveal"), true);
+      this.actionSelectManaFrom();
+   }
+
+   private actionSplitSoul() {
+      const label1 = _("Draw 4 cards");
+      const label2 = _("Discard a mana card off 2 of your other spells");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: label2,
+               action: () => this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card(s)"), false),
+            },
+         ],
+      });
+   }
+   
    ///////////////////////////////////////////////////////////////////////////////////
    //     _____                      _                         _   _
    //    / ____|                    (_)              /\       | | (_)
@@ -962,7 +1032,12 @@ class ActionManager {
    private returnManaCardToDeck(msg: string, count: number, canCancel: boolean, canPass: boolean = false) {
       msg = msg.replace("${nbr}", count.toString());
 
-      const args = { count, canCancel, exact: true, canPass } as SelectManaReturnDeckStatesArgs;
+      const args = {
+         count,
+         canCancel,
+         exact: true,
+         canPass,
+      } as SelectManaReturnDeckStatesArgs;
 
       this.game.setClientState(states.client.selectManaReturnDeck, {
          descriptionmyturn: this.getCardName() + " : " + msg,

@@ -2,7 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
-use WizardsGrimoireExt\Core\Game;
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Core\Notifications;
 
 trait StateTrait {
@@ -27,7 +27,7 @@ trait StateTrait {
         Globals::resetOnNewTurn();
 
         Events::onCheckOngoingActiveSpell();
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
@@ -199,7 +199,7 @@ trait StateTrait {
     function stReturnToCurrentPlayerDelayedSpell() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
         Globals::setInteractionPlayer(0);
         $next_state = sizeof(Globals::getCoolDownDelayedSpellIds()) > 0 ? "delayed" : "end";
@@ -209,14 +209,14 @@ trait StateTrait {
     function stReturnToCurrentPlayer() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
         Globals::setInteractionPlayer(0);
         Game::get()->gamestate->nextState();
     }
 
     function stSwithPlayer() {
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
         $opponent_id = Players::getOpponentId();
         Players::setPlayerId($opponent_id);
         $this->giveExtraTime($opponent_id);
@@ -262,7 +262,7 @@ trait StateTrait {
         if (Globals::getIsActivePowerHungry()) {
             ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);

@@ -17,6 +17,10 @@ define('WG_GAME_OPTION_EXT_KICKSTARTER_1', 'gameOptionKickStarter1');
 define('WG_GAME_OPTION_SHIFT_SAND_PROMO_ID', 102);
 define('WG_GAME_OPTION_SHIFT_SAND_PROMO', 'gameOptionShiftingSandPromo');
 
+const WG_GAME_OPTION_SET = 'gameOptionSet';
+const WG_GAME_OPTION_SET_ID = 103;
+const WG_GAME_OPTION_SET_BASE = 1;
+const WG_GAME_OPTION_SET_SHIFTING_SAND = 2;
 
 /*
  * Game variables
@@ -157,3 +161,5 @@ define('WG_ICON_SET_BASE_1', 'Base_1');
 define('WG_ICON_SET_BASE_2', 'Base_2');
 define('WG_ICON_SET_KICKSTARTER_1', 'KickStarter_1');
 define('WG_ICON_SET_SAND_1', 'Sand_1');
+const WG_ICON_SET_SHIFTING_SAND_1 = 'Shifting_Sand_1';
+const WG_ICON_SET_SHIFTING_SAND_2 = 'Shifting_Sand_2';

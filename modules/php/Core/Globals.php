@@ -3,12 +3,13 @@
 namespace WizardsGrimoireExt\Core;
 
 use APP_DbObject;
+use Bga\Games\wizardsgrimoireext\Game;
 
 /*
  * Globals: Access to global variables
  */
 
-class Globals extends APP_DbObject {
+class Globals {
 
     public static function resetOnNewTurn() {
         Globals::setDiscountAttackSpell(0);
@@ -77,6 +78,14 @@ class Globals extends APP_DbObject {
 
     public static function setCoolDownOngoingSpellIds(array $spell_delayed_ids) {
         return Globals::set(WG_GV_COOLDOWN_ONGOING_SPELLS, $spell_delayed_ids);
+    }
+
+    public static function getConsecutivelyAttackSpellCountBefore() {
+        return Game::get()->globals->get('consecutively_attack_spell_cast_before', 0);
+    }
+
+    public static function setConsecutivelyAttackSpellCountBefore(int $value) {
+        Game::get()->globals->set('consecutively_attack_spell_cast_before', $value);
     }
 
     public static function getConsecutivelyAttackSpellCount() {
@@ -285,12 +294,12 @@ class Globals extends APP_DbObject {
 
     private static function set(string $name, /*object|array*/ $obj) {
         $jsonObj = json_encode($obj);
-        self::DbQuery("INSERT INTO `global_variables`(`name`, `value`)  VALUES ('$name', '$jsonObj') ON DUPLICATE KEY UPDATE `value` = '$jsonObj'");
+        Game::get()->DbQuery("INSERT INTO `global_variables`(`name`, `value`)  VALUES ('$name', '$jsonObj') ON DUPLICATE KEY UPDATE `value` = '$jsonObj'");
     }
 
     private static function get(string $name, $asArray = null) {
         /** @var string */
-        $json_obj = self::getUniqueValueFromDB("SELECT `value` FROM `global_variables` where `name` = '$name'");
+        $json_obj = Game::get()->getUniqueValueFromDB("SELECT `value` FROM `global_variables` where `name` = '$name'");
         if ($json_obj) {
             $object = json_decode($json_obj, $asArray);
             return $object;

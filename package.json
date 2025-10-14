@@ -3,19 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "wizardsgrimoireext.js",
-  "dependencies": {
-  },
   "devDependencies": {
     "bga-cards": "github:thoun/bga-cards#2.0.1",
-    "bga-zoom": "github:thoun/bga-zoom#0.1.0",
-    "bga-studio-mg": "^0.1.5",
-    "sass": "^1.62.1",
-    "typescript": "^5.0.4"
+    "bga-zoom": "github:thoun/bga-zoom",
+    "sass": "^1",
+    "typescript": "^5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ts": "tsc",
-    "build:scss": "sass --no-source-map src/wizards-grimoire.scss wizardsgrimoireext.css"
+    "build:scss": "sass --no-source-map src/wizards-grimoire.scss wizardsgrimoireext.css",
+    "watch:ts": "tsc --watch",
+    "watch:scss": "sass --no-source-map --watch src/wizards-grimoire.scss wizardsgrimoireext.css"
   },
   "author": "",
   "license": "ISC"

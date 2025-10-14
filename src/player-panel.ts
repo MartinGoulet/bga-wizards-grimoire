@@ -1,12 +1,12 @@
 class PlayerPanel {
    public player_id: number;
-   public hand_counter: ebg.counter;
-   public turn_counter: ebg.counter;
+   public hand_counter: Counter;
+   public turn_counter: Counter;
 
-   public last_attack_power: ebg.counter;
-   public last_attack_damage: ebg.counter;
+   public last_attack_power: Counter;
+   public last_attack_damage: Counter;
 
-   constructor(public game: WizardsGrimoire, player: WizardsGrimoirePlayerData, public isFirst: boolean) {
+   constructor(public game: Game, player: WizardsGrimoirePlayerData, public isFirst: boolean) {
       this.player_id = Number(player.id);
 
       let smallBoard = document.getElementById(`player_small_board_${player.id}`);

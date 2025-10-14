@@ -2,6 +2,8 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\Games\wizardsgrimoireext\Game;
+
 class Notifications {
 
     static function activateSpell($player_id, $card_name) {
@@ -20,6 +22,7 @@ class Notifications {
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "mana_values" => [ManaCard::getPower($mana_card)],
+            'card' => $mana_card,
         ]);
     }
 

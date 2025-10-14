@@ -4,33 +4,13 @@ const log = isDebug ? console.log.bind(window.console) : function () {};
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
 const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
 
-interface WizardsGrimoire
-   extends ebg.core.gamegui,
-      BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas> {
-   dontPreloadImage(image_file_name: string): void;
-   ensureSpecificGameImageLoading(image_file_names_array: string[]);
-   displayScoring(
-      anchor_id: string,
-      color: string,
-      score: number,
-      duration: number,
-      offset_x?: number,
-      offset_y?: number,
-   ): void;
-   fadeOutAndDestroy(id: string, duration?: number, delay?: number): void;
-   showMessage(msg: string, type: "info" | "error" | "only_to_log"): void;
-   updatePlayerOrdering(): void;
-   addTooltip(
-      nodeId: string,
-      helpStringTranslated: string,
-      actionStringTranslated: string,
-      delay?: number,
-   ): void;
-   addTooltipHtmlToClass(cssClass: string, html: string, delay?: number): void;
+interface Game extends GameGui<WizardsGrimoireGamedatas> {
+   notifqueue: GameNotifQueue;
+   updatePlayerOrdering: () => void;
 }
 
-class WizardsGrimoire
-   implements ebg.core.gamegui, BgaGame<WizardsGrimoirePlayerData, WizardsGrimoireGamedatas>
+
+class Game implements Game
 {
    private TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
 
@@ -94,6 +74,8 @@ class WizardsGrimoire
       this.createPlayerPanels(gamedatas);
       this.createPlayerTables(gamedatas);
 
+      document.getElementById("table").dataset.cardSet = gamedatas.card_set;
+
       this.zoomManager = new ZoomManager({
          element: document.getElementById("table"),
          smooth: false,
@@ -150,8 +132,8 @@ class WizardsGrimoire
    }
 
    public addActionButtonPass() {
-      const handlePass = () => {
-         this.takeAction("pass");
+      const handlePass = async () => {
+         await this.bgaPerformAction("actPass");
       };
       this.addActionButtonRed("btn_pass", _("Pass"), handlePass);
    }
@@ -165,9 +147,9 @@ class WizardsGrimoire
    }
 
    public addActionButtonUndo() {
-      const handleUndo = () => {
-         if (this.checkAction("undo")) {
-            this.takeAction("undo");
+      const handleUndo = async () => {
+         if (this.checkAction("actUndo")) {
+            await this.bgaPerformAction("actUndo");
          }
       };
 
@@ -315,25 +297,6 @@ class WizardsGrimoire
       this.addTooltipHtml(id, html, this.TOOLTIP_DELAY);
    }
 
-   public takeAction(
-      action: string,
-      data?: any,
-      onSuccess?: (result: any) => void,
-      onComplete?: (is_error: boolean) => void,
-   ) {
-      data = data || {};
-      data.lock = true;
-      onSuccess = onSuccess ?? function (result: any) {};
-      onComplete = onComplete ?? function (is_error: boolean) {};
-      (this as any).ajaxcall(
-         `/wizardsgrimoire/wizardsgrimoire/${action}.html`,
-         data,
-         this,
-         onSuccess,
-         onComplete,
-      );
-   }
-
    toggleOngoingSpell(value: OngoingSpell) {
       document.getElementById("table").classList.toggle(`wg-ongoing-spell-${value.name}`, value.active);
    }
@@ -358,8 +321,7 @@ class WizardsGrimoire
    ///////////////////////////////////////////////////
    //// Logs
 
-   /* @Override */
-   format_string_recursive(log: string, args: any) {
+   bgaFormatText(log: string, args: any) {
       try {
          if (log && args && !args.processed) {
             args.processed = true;
@@ -393,11 +355,8 @@ class WizardsGrimoire
       } catch (e) {
          console.error(log, args, "Exception thrown", e.stack);
       }
-      try {
-         return this.inherited(arguments);
-      } catch {
-         debugger;
-      }
+
+      return { log, args };
    }
 
    formatGametext(rawText: string) {

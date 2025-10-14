@@ -15,6 +15,8 @@
  *
  */
 
+use Bga\Games\wizardsgrimoireext\Game;
+
 /*
    Game state machine is a tool used to facilitate game developpement by doing common stuff that can be set up
    in a very easy way from this configuration file.
@@ -102,7 +104,7 @@ $chooseSpellStates = [
         "descriptionmyturn" => clienttranslate('${you} must discard to 10 mana cards'),
         "args" => "argBase",
         "type" => "activeplayer",
-        "possibleactions" => ["discardMana"],
+        "possibleactions" => ["actDiscardMana"],
         "transitions" => [
             "" => ST_CHOOSE_NEW_SPELL_START,
         ]
@@ -128,7 +130,7 @@ $chooseSpellStates = [
         "descriptionmyturnReplace" => clienttranslate('${you} may choose to replace a spell or pass'),
         "args" => "argBase",
         "type" => "activeplayer",
-        "possibleactions" => ["chooseSpell", "replaceSpell", "pass"],
+        "possibleactions" => ["actChooseSpell", "actReplaceSpell", "actPass"],
         "transitions" => [
             "next_player" => ST_NEXT_PLAYER,
             "pass" => ST_SPELL_COOL_DOWN,
@@ -194,7 +196,7 @@ $castSpellsStates = [
         "descriptionmyturn" => clienttranslate('${you} may cast a spell or pass'),
         "type" => "activeplayer",
         "args" => "argCastSpell",
-        "possibleactions" => ["castSpell", "pass", "undo"],
+        "possibleactions" => ["actCastSpell", "actPass", "actUndo"],
         "transitions" => [
             "cast" => ST_CAST_SPELL_START,
             "undo" => ST_CAST_SPELL_START,
@@ -224,7 +226,7 @@ $castSpellsStates = [
         "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
         "type" => "activeplayer",
         "args" => "argCastSpellInteraction",
-        "possibleactions" => ["castSpellInteraction"],
+        "possibleactions" => ["actCastSpellInteraction"],
         "transitions" => [
             "return" => ST_CAST_SPELL_RETURN_CURRENT_PLAYER,
             "dead" => ST_PRE_END_OF_GAME,
@@ -281,7 +283,7 @@ $basicAttackStates = [
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to deal damage'),
         "args" => "argBasicAttack",
         "type" => "activeplayer",
-        "possibleactions" => ["basicAttack", "pass", "undo"],
+        "possibleactions" => ["actBasicAttack", "actPass", "actUndo"],
         "transitions" => [
             "attack" => ST_BASIC_ATTACK_DAMAGE,
             "undo" => ST_CAST_SPELL_START,
@@ -307,7 +309,7 @@ $basicAttackStates = [
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to block the damage'),
         "args" => "argBattleVision",
         "type" => "activeplayer",
-        "possibleactions" => ["blockBasicAttack", "pass"],
+        "possibleactions" => ["actBlockBasicAttack", "actPass"],
         "transitions" => [
             "pass" => ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER,
             "block" => ST_BASIC_ATTACK_END,
@@ -358,7 +360,7 @@ $basicAttackStates = [
     ]
 ];
 
-$stSpellCooldownActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates(
+$stSpellCooldownActiveDeplayed = Game::getActiveDelayedSpellStates(
     2,
     ST_SPELL_CD_ACTIVATE_DELAYED,
     ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
@@ -367,7 +369,7 @@ $stSpellCooldownActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates
     ST_SPELL_COOL_DOWN_ONGOING,
 );
 
-$stCastSpellActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayed = Game::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_SWITCH_OPPONENT,
@@ -376,7 +378,7 @@ $stCastSpellActiveDeplayed = WizardsGrimoireExt::getActiveDelayedSpellStates(
     ST_CAST_SPELL_START
 );
 
-$stCastSpellActiveDeplayedOpponent = WizardsGrimoireExt::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayedOpponent = Game::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_OPPONENT_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT,

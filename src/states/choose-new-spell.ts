@@ -1,7 +1,7 @@
 class ChooseNewSpellStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: any): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -16,7 +16,7 @@ class ChooseNewSpellStates implements StateHandler {
       } else {
          const available_slots = this.player_table.getSpellSlotAvailables();
          if (available_slots.length > 0) {
-            this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+            this.game.actionManager.setup("actReplaceSpell", "actionCastSpell_Replace");
             this.game.actionManager.activateNextAction();
          }
       }
@@ -41,15 +41,15 @@ class ChooseNewSpellStates implements StateHandler {
    onUpdateActionButtons(args: any): void {
       this.player_table = this.game.getCurrentPlayerTable();
 
-      const handleConfirm = () => {
+      const handleConfirm = async () => {
          const selectedSpell = this.game.tableCenter.spellPool.getSelection()[0];
          if (selectedSpell != null) {
-            this.game.takeAction("chooseSpell", { id: selectedSpell.id });
+            await this.game.bgaPerformAction("actChooseSpell", { card_id: selectedSpell.id });
          }
       };
 
       const handleReplace = () => {
-         this.game.actionManager.setup("replaceSpell", "actionCastSpell_Replace");
+         this.game.actionManager.setup("actReplaceSpell", "actionCastSpell_Replace");
          this.game.actionManager.activateNextAction();
       };
 

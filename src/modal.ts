@@ -1,7 +1,7 @@
 class Modal {
    public cards: LineStock<SpellCard>;
 
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       const display = document.getElementById("modal-display");
       if (display) {
          display.parentElement.removeChild(display);

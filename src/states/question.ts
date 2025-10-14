@@ -1,12 +1,14 @@
 class QuestionStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
    onEnteringState(args: QuestionArgs): void {}
    onLeavingState(): void {}
    onUpdateActionButtons(args: QuestionArgs): void {
       const { options, cancel } = args;
       let index = 0;
-      options?.forEach(({ label, action, color }) => {
-         this.game.addActionButton(`btn_action_${index++}`, label, action, null, null, color);
+      options?.forEach(({ label, action }) => {
+         this.game.statusBar.addActionButton(label, action, {
+            id: `btn_action_${index++}`,
+         })
       });
       if (cancel) {
          this.game.addActionButtonClientCancel();
@@ -21,7 +23,7 @@ interface QuestionArgs {
    options: {
       label: string;
       action: () => void;
-      color?: BgaButtonColor;
+      // color?: BgaButtonColor;
    }[];
    cancel: boolean;
 }

@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\Base_1;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Game;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
@@ -37,6 +37,6 @@ class GuiltyBond extends BaseCard {
             Notifications::spellNoEffect();
         }
 
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 }
