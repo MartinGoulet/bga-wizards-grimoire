@@ -54,9 +54,7 @@ trait ActionTrait {
         }
     }
 
-    public function discardMana(array $card_ids) {
-        $this->checkAction('discardMana');
-
+    public function actDiscardMana(#[IntArrayParam()] array $card_ids) {
         $hand_count = ManaCard::getHandCount();
         if ($hand_count - sizeof($card_ids) !== 10) {
             throw new BgaSystemException("Not enough mana discarded");
@@ -90,11 +88,18 @@ trait ActionTrait {
             throw new \BgaSystemException("Use replaceSpell action");
         }
 
-        $this->deck_spells->moveCard(
-            $card_id,
-            $cardDestination,
-            $nbr_spells + 1
-        );
+        $spells = SpellCard::getCardsFromRepertoire($playerId);
+        $position = 1;
+        foreach ($spells as $spell) {
+            $pos = SpellCard::getPositionInRepertoire($spell);
+            if ($pos == $position) {
+                $position++;
+            } else if ($pos > $position) {
+                break;
+            }
+        }   
+
+        $this->deck_spells->moveCard($card_id, $cardDestination, $position);
 
         $newSpell = $this->deck_spells->pickCardForLocation(
             CardLocation::Deck(),
@@ -109,7 +114,7 @@ trait ActionTrait {
         Globals::setLastAddedSpell($newSpell['id']);
 
         Stats::chooseSpell($playerId, $card);
-        
+
         $this->triggerOnAddSpellToRepertoire($card);
 
         $turn_number = Game::get()->getStat(WG_STAT_TURN_NUMBER);
@@ -130,11 +135,9 @@ trait ActionTrait {
         }
     }
 
-    public function replaceSpell(int $old_card_id, int $new_card_id) {
-        $this->checkAction('replaceSpell');
-
-        $old_card = SpellCard::get($old_card_id);
-        $new_card = SpellCard::get($new_card_id);
+    public function actReplaceSpell(int $old_spell_id, int $new_spell_id) {
+        $old_card = SpellCard::get($old_spell_id);
+        $new_card = SpellCard::get($new_spell_id);
         $player_id = Players::getPlayerId();
         $spell_count = Game::get()->deck_spells->countCardInLocation(CardLocation::PlayerSpellRepertoire($player_id));
 
@@ -146,6 +149,8 @@ trait ActionTrait {
 
         SpellCard::replaceSpell($old_card, $new_card);
 
+        $this->triggerOnAddSpellToRepertoire(SpellCard::get($new_spell_id));
+
         $this->gamestate->nextState('end');
     }
 
@@ -155,7 +160,7 @@ trait ActionTrait {
         //     'args' => $args
         // ]);
         // throw new \BgaSystemException("Debug");
-        if(is_array($args->values)) {
+        if (is_array($args->values)) {
             $args = $args->values;
         } else {
             $args = $args->values ? [$args->values] : [];
@@ -260,7 +265,7 @@ trait ActionTrait {
         $cardClass->card_name = $card_name;
         $res = $cardClass->castSpell($args);
 
-        if($res === "stop") {
+        if ($res === "stop") {
             return;
         }
 
@@ -316,7 +321,7 @@ trait ActionTrait {
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card
         $cardClass->castSpellInteraction($args);
-        if(Globals::getInteractionPlayer() !== $player_id) {
+        if (Globals::getInteractionPlayer() !== $player_id) {
             Game::get()->undoSavepoint();
         }
 
@@ -348,7 +353,7 @@ trait ActionTrait {
         Notifications::moveManaCard($player_id, [$card], false);
 
         if (Globals::getIsActiveBattleVision()) {
-            if(ManaCard::getHandCount(Players::getOpponentId()) > 0) {
+            if (ManaCard::getHandCount(Players::getOpponentId()) > 0) {
                 Globals::setInteractionPlayer(Players::getOpponentId());
                 $this->gamestate->nextState("battle_vision");
             } else {
@@ -381,7 +386,7 @@ trait ActionTrait {
             Notifications::discardManaCardForBattleVision(Players::getPlayerId(), $card);
             Globals::setPreviousBasicAttackPower(Globals::getCurrentBasicAttackPower());
             Globals::setLastBasicAttackDamage(0);
-            
+
             Game::get()->gamestate->nextState("block");
         } else {
             throw new BgaUserException(_("Wrong Mana Power"));

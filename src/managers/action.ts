@@ -642,6 +642,22 @@ class ActionManager {
    //                                  |___/
    ///////////////////////////////////////////////////////////////////////////////////
 
+   private actionCyclone() {
+      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.activateNextAction();
+   }
+
+   private actionDanceOfAgony() {
+      const player_table = this.game.getCurrentPlayerTable();
+      if (player_table.hand.getCards().length <= 4) {
+         this.activateNextAction();
+         return;
+      }
+
+      const count = player_table.hand.getCards().length - 4;
+      this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+   }
+
    private actionIceBlast() {
       const label1 = _("Discard your hand and deal 5 damage");
       const label2 = _("Place a mana card from the mana deck on one of your opponent's spells");
@@ -669,6 +685,11 @@ class ActionManager {
             message: _("Are you sure that you don't want to place a mana card on top of the Mana Deck?"),
          },
       });
+   }
+
+   private actionSpiritDance() {
+      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.activateNextAction();
    }
 
    private actionRevelation() {

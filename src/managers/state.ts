@@ -59,8 +59,9 @@ class StateManager {
    onEnteringState(stateName: string, args: any): void {
       log("Entering state: " + stateName);
 
-      if (args.phase) {
-         this.game.gameOptions.setPhase(Number(args.phase));
+      const phase = args?.phase ?? args?.args?.phase ?? null;
+      if (phase) {
+         this.game.gameOptions.setPhase(Number(phase));
       } else {
          this.game.gameOptions.setPhase(99);
       }

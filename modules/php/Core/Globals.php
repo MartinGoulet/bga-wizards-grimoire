@@ -288,6 +288,14 @@ class Globals {
         Game::get()->setGameStateValue(WG_VAR_SPELL_PLAYED, $card_id);
     }
 
+    public static function getFrozenGobletActive() {
+        return Game::get()->globals->get('frozen_goblet_active', false);
+    }
+
+    public static function setFrozenGobletActive(bool $active) {
+        Game::get()->globals->set('frozen_goblet_active', $active);
+    }
+
     /*************************
      **** GENERIC METHODS ****
      *************************/

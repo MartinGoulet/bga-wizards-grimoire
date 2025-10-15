@@ -183,6 +183,13 @@ class ManaCard {
         return Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
 
+    public static function getCardsOnManaCoolDown(int $position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        return Game::get()->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
+    }
+
     public static function getOnTopOfDeck() {
         return Game::get()->deck_manas->getCardOnTop(CardLocation::Deck());
     }

@@ -176,7 +176,12 @@ trait StateTrait {
     }
 
     function stGainMana() {
-        ManaCard::draw(3);
+        if(Globals::getFrozenGobletActive()) {
+            ManaCard::draw(1);
+            Globals::setFrozenGobletActive(false);
+        } else {
+            ManaCard::draw(3);
+        }
         $this->gamestate->nextState();
     }
 

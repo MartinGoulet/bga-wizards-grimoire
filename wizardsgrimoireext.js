@@ -2530,6 +2530,19 @@ var ActionManager = (function () {
         this.addAction(selectedSpell);
         this.activateNextAction();
     };
+    ActionManager.prototype.actionCyclone = function () {
+        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionDanceOfAgony = function () {
+        var player_table = this.game.getCurrentPlayerTable();
+        if (player_table.hand.getCards().length <= 4) {
+            this.activateNextAction();
+            return;
+        }
+        var count = player_table.hand.getCards().length - 4;
+        this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+    };
     ActionManager.prototype.actionIceBlast = function () {
         var _this = this;
         var label1 = _("Discard your hand and deal 5 damage");
@@ -2556,6 +2569,10 @@ var ActionManager = (function () {
                 message: _("Are you sure that you don't want to place a mana card on top of the Mana Deck?"),
             },
         });
+    };
+    ActionManager.prototype.actionSpiritDance = function () {
+        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+        this.activateNextAction();
     };
     ActionManager.prototype.actionRevelation = function () {
         this.actionSelectManaFrom();
@@ -3274,16 +3291,17 @@ var StateManager = (function () {
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        var _a, _b;
+        var _a, _b, _c, _d, _e;
         log("Entering state: " + stateName);
-        if (args.phase) {
-            this.game.gameOptions.setPhase(Number(args.phase));
+        var phase = (_c = (_a = args === null || args === void 0 ? void 0 : args.phase) !== null && _a !== void 0 ? _a : (_b = args === null || args === void 0 ? void 0 : args.args) === null || _b === void 0 ? void 0 : _b.phase) !== null && _c !== void 0 ? _c : null;
+        if (phase) {
+            this.game.gameOptions.setPhase(Number(phase));
         }
         else {
             this.game.gameOptions.setPhase(99);
         }
-        if ((_a = args.args) === null || _a === void 0 ? void 0 : _a.ongoing_spells) {
-            var _c = args.args, ongoing_spells = _c.ongoing_spells, players_1 = _c.players, last_added_spell = _c.last_added_spell;
+        if ((_d = args.args) === null || _d === void 0 ? void 0 : _d.ongoing_spells) {
+            var _f = args.args, ongoing_spells = _f.ongoing_spells, players_1 = _f.players, last_added_spell = _f.last_added_spell;
             ongoing_spells.forEach(function (value) {
                 if (value.active)
                     log(value);
@@ -3293,7 +3311,7 @@ var StateManager = (function () {
                 var value = Number(players_1[player_id]);
                 _this.game.getPlayerPanel(Number(player_id)).turn_counter.setValue(value);
             });
-            (_b = document.querySelector(".wg-last-added-spell")) === null || _b === void 0 ? void 0 : _b.classList.remove("wg-last-added-spell");
+            (_e = document.querySelector(".wg-last-added-spell")) === null || _e === void 0 ? void 0 : _e.classList.remove("wg-last-added-spell");
             if (Number(last_added_spell) > 0) {
                 this.game.spellsManager
                     .getCardElement({ id: last_added_spell })
@@ -3918,7 +3936,7 @@ var DiscardManaStates = (function () {
                         selected_card_ids = this.player_table.hand.getSelection().map(function (x) { return x.id; });
                         if (!(selected_card_ids.length == this.nbr_cards_to_discard)) return [3, 2];
                         return [4, this.game.bgaPerformAction("actDiscardMana", {
-                                args: selected_card_ids.join(";"),
+                                card_ids: selected_card_ids.join(","),
                             })];
                     case 1:
                         _a.sent();

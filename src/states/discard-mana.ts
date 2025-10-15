@@ -32,7 +32,7 @@ class DiscardManaStates implements StateHandler {
          const selected_card_ids = this.player_table.hand.getSelection().map((x) => x.id);
          if (selected_card_ids.length == this.nbr_cards_to_discard) {
             await this.game.bgaPerformAction("actDiscardMana", {
-               args: selected_card_ids.join(";"),
+               card_ids: selected_card_ids.join(","),
             });
          }
       };

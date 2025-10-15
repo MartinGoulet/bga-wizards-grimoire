@@ -44,6 +44,7 @@ require_once('constants.inc.php');
 use WizardsGrimoireExt\Core\ActionTrait;
 use WizardsGrimoireExt\Core\ArgsTrait;
 use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;

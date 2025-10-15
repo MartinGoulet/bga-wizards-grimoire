@@ -98,6 +98,25 @@ class SpellCard {
         return $card;
     }
 
+    public static function destroyRelic(array $spell) {
+        $player_id = Players::getPlayerId();
+        $position = SpellCard::getPositionInRepertoire($spell);
+
+        // Discard all mana on the relic
+        $manas = ManaCard::getCardsOnManaCoolDown($position, $player_id);
+        foreach ($manas as $mana_id => $mana) {
+            ManaCard::addOnTopOfDiscard($mana_id);
+        }
+        if (count($manas) > 0) {
+            Notifications::discardManaCards($player_id, $manas);
+        }
+
+        // Discard spell
+        Game::get()->deck_spells->insertCardOnExtremePosition($spell['id'], CardLocation::Discard(), true);
+        $discarded_card = SpellCard::get($spell['id']);
+        Notifications::destroySpell($player_id, $discarded_card);
+    }
+
     public static function replaceSpell($old_spell, $new_spell, $move = "replace") {
         $player_id = Players::getPlayerId();
 
