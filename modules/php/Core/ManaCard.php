@@ -47,11 +47,11 @@ class ManaCard {
         );
     }
 
-    public static function countOnTopOfManaCoolDown(int $position, int $player_id = 0) {
+    public static function countOnTopOfManaCoolDown(int $position, int $player_id = 0): int {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
-        return Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
+        return intval(Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position)));
     }
 
     public static function draw($count, $player_id = 0, string|null $card_name = null) {
@@ -199,6 +199,22 @@ class ManaCard {
         if (Globals::getIsActiveGrowth()) {
             $power++;
         }
+
+        $player_id = Players::getPlayerId();
+        $isSunkenSkullActive = Globals::getSunkenSkullActivePlayer() == $player_id;
+        if ($isSunkenSkullActive) {
+            $power--;
+        }
+
+        $activeOngoingSpells = SpellCard::getOngoingActiveSpells($player_id);
+        foreach ($activeOngoingSpells as $spell) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            if (method_exists($instance, 'onModifyManaPower')) {
+                $power = $instance->onModifyManaPower($power);
+            }
+        }
+        
+
         return $power;
     }
 

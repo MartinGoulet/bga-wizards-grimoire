@@ -17,6 +17,11 @@ class SpellCard {
         return Game::get()->card_types[$card['type']];
     }
 
+    public static function getPlayerId($spell) {
+        $info = explode('_', $spell['location']);
+        return intval(array_pop($info));
+    }
+
     public static function getPositionInRepertoire($spell) {
         return intval($spell['location_arg']);
     }
@@ -37,14 +42,14 @@ class SpellCard {
     }
 
     /**
-     * @return BaseCard
+     * @return \WizardsGrimoireExt\Cards\BaseCard
      */
     public static function getInstanceOfCard($card) {
         // Get info of the card
         $card_type = Game::get()->card_types[$card['type']];
         // Create the class for the card logic
         $className = "WizardsGrimoireExt\\Cards\\" . $card_type['icon'] . "\\" . $card_type['class'];
-        /** @var BaseCard */
+        /** @var \WizardsGrimoireExt\Cards\BaseCard */
         $cardClass = new $className();
         $cardClass->id = intval($card['id']);
         return $cardClass;
@@ -63,6 +68,15 @@ class SpellCard {
                 && ManaCard::countOnTopOfManaCoolDown($card['location_arg']) > 0;
         });
         return $ongoing_active_spell;
+    }
+
+    public static function getOngoingSpells($player_id) {
+        $spells = self::getCardsFromRepertoire($player_id);
+        $ongoing_spell = array_filter($spells, function ($card) use ($player_id) {
+            $card_type = self::getCardInfo($card);
+            return $card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING;
+        });
+        return $ongoing_spell;
     }
 
     public static function getDelayedActiveSpells($player_id) {
@@ -92,7 +106,7 @@ class SpellCard {
         $card = SpellCard::get($card_id);
 
         if ($card['location'] != CardLocation::PlayerSpellRepertoire($player_id)) {
-            throw new \BgaSystemException(Game::get()->translate("You don't own the card"));
+            throw new \BgaSystemException("You don't own the card " . $card_id);
         }
 
         return $card;
@@ -154,5 +168,41 @@ class SpellCard {
 
         Notifications::refillSpell($player_id, $newSpell);
         Game::get()->undoSavepoint();
+    }
+
+    public static function addNewSpell($new_spell) {
+        $player_id = Players::getPlayerId();
+
+        $position = self::getFirstAvailableSpellPosition($player_id);
+
+        // Choose spell
+        Game::get()->deck_spells->moveCard(
+            $new_spell['id'],
+            CardLocation::PlayerSpellRepertoire($player_id),
+            $position
+        );
+
+        $card = SpellCard::get($new_spell['id']);
+        Notifications::chooseSpell($player_id, $card);
+        Stats::replaceSpell($player_id, $card);
+
+        $newSpell = Game::get()->deck_spells->pickCardForLocation(
+            CardLocation::Deck(),
+            CardLocation::SpellSlot(),
+            $new_spell['location_arg'],
+        );
+        Globals::setLastAddedSpell($newSpell['id']);
+
+        Notifications::refillSpell($player_id, $newSpell);
+        Game::get()->undoSavepoint();
+    }
+
+    public static function getFirstAvailableSpellPosition(int $player_id): int {
+        $spells = self::getCardsFromRepertoire($player_id);
+        $positions = array_map(fn($s) => SpellCard::getPositionInRepertoire($s), $spells);
+        sort($positions);
+        $emptyPositions = array_diff(range(1, 6), $positions);
+        $position = intval(array_shift($emptyPositions));
+        return $position;
     }
 }

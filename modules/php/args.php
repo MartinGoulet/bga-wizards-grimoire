@@ -3,6 +3,7 @@
 namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
+use WizardsGrimoireExt\Cards\Shifting_Sand_1\Blossom;
 
 trait ArgsTrait {
 
@@ -65,6 +66,24 @@ trait ArgsTrait {
                 return ManaCard::getPower($card) == $value;
             });
         }
+        $isActiveGlassShield = $this->isActiveGlassShield();
+        if ($isActiveGlassShield) {
+            $powers = [];
+            foreach ($cards as $card) {
+                $power = ManaCard::getPower($card);
+                if (!isset($powers[$power])) {
+                    $powers[$power] = [];
+                }
+                $powers[$power][] = $card;
+            }
+            $cardTemps = [];
+            foreach ($powers as $powerGroup) {
+                if (count($powerGroup) > 1) {
+                    $cardTemps = array_merge($cardTemps, $powerGroup);
+                }
+            }
+            $cards = $cardTemps;
+        }
         $args = $this->getArgsBase();
         $args['_private'] = [
             'active' => [
@@ -73,6 +92,19 @@ trait ArgsTrait {
         ];
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
+    }
+
+    private function isActiveGlassShield(): bool {
+        $opponentSpellActive = SpellCard::getOngoingSpells(Players::getOpponentId());
+
+        $opponentSpellActive = array_filter($opponentSpellActive, function ($spell) {
+            /** @var \WizardsGrimoireExt\Cards\OngoingBaseCard $instance */
+            $instance = SpellCard::getInstanceOfCard($spell);
+            return $instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield 
+                && $instance->isActive();
+        });
+
+        return !empty($opponentSpellActive);
     }
 
     //////////////////////////////////////////
@@ -103,8 +135,41 @@ trait ArgsTrait {
             [
                 "name" => "secretoath",
                 "active" => Globals::getIsActiveSecretOath(),
+            ],
+            [
+                "name" => "sunkenskull",
+                "active" => Globals::getSunkenSkullActivePlayer() == Players::getPlayerId(),
             ]
         ];
+
+        $ongoingSpellActive = SpellCard::getOngoingSpells(Players::getPlayerId());
+        foreach ($ongoingSpellActive as $spell) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\Blossom) {
+                $ongoing_spell[] = [
+                    "name" => "blossom",
+                    "active" => $instance->isActive(),
+                ];
+            }
+        }
+
+        $opponentSpellActive = SpellCard::getOngoingSpells(Players::getOpponentId());
+
+        $opponentSpellActive = array_filter($opponentSpellActive, function ($spell) {
+            /** @var \WizardsGrimoireExt\Cards\OngoingBaseCard $instance */
+            $instance = SpellCard::getInstanceOfCard($spell);
+            return $instance->isActive();
+        });
+
+        foreach ($opponentSpellActive as $spell) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield) {
+                $ongoing_spell[] = [
+                    "name" => "glassshield",
+                    "active" => $instance->isActive(),
+                ];
+            }
+        }
 
         $first_player = Players::getPlayerId();
         $second_player = Players::getOpponentIdOf($first_player);

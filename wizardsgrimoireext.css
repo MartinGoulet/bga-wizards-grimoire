@@ -1850,7 +1850,31 @@ body > .card {
   background-position-y: -150px;
 }
 
+.wg-ongoing-spell-sunkenskull [data-sunken_skull=false] .sunkenskull_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -555px;
+  background-position-y: -296px;
+}
+
+.wg-ongoing-spell-blossom .blossom_icon {
+  background-image: url("img/shifting_sands-front.jpg");
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -645px;
+  background-position-y: -849px;
+}
+
+.wg-ongoing-spell-glassshield [data-glass_shield=false] .glassshield_icon {
+  background-image: url("img/shifting_sands-front.jpg");
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -255px;
+  background-position-y: -170px;
+}
+
 [data-discount-next-attack="1"] .secondstrike_icon {
+  background-image: url("img/shifting_sands-front.jpg");
   display: flex;
   border: 2px solid white;
   background-position-x: -847px;

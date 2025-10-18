@@ -24,6 +24,7 @@ class PlayerTable {
          `data-lullaby="false"`,
          `data-puppetmaster="false"`,
          `data-secret_oath="false"`,
+         `data-glass_shield="false"`,
       ];
 
       const html = `
@@ -71,6 +72,8 @@ class PlayerTable {
          this.setupSecretOath();
          this.setupGrowth();
          this.setupPowerHungry();
+         this.setupSunkenSkull();
+         this.setupGlassShield();
       }
 
       this.spell_repertoire = new SpellRepertoire(
@@ -332,6 +335,30 @@ class PlayerTable {
          gametext: _(
             "If you have a 4 power mana in your hand, you must give it to your opponent immediately",
          ),
+      });
+   }
+
+   private setupSunkenSkull() {
+      this.setupIcon({
+         id: "sunkenskull",
+         title: _("Sunken skull"),
+         gametext: _("All your mana cards have -1 power"),
+      });
+   }
+
+   private setupBlossom() {
+      this.setupIcon({
+         id: "blossom",
+         title: _("Blossom"),
+         gametext: _("Increase the power of all mana by 2 during your turn"),
+      });
+   }
+
+   private setupGlassShield() {
+      this.setupIcon({
+         id: "glassshield",
+         title: _("Glass shield"),
+         gametext: _("For your basic attack, you must reveal a card of the same power in order to deal damage"),
       });
    }
 

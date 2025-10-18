@@ -24,6 +24,13 @@ class Globals {
         Globals::setInteractionPlayer(0);
         Globals::setCoolDownDelayedSpellIds([]);
         Globals::setCardsTimesPlayed([]);
+
+        $player_id = Players::getPlayerId();
+        $sunken_skull_player = Globals::getSunkenSkullActivePlayer();
+        // Reset when the player with Sunken Skull ends their turn
+        if ($sunken_skull_player > 0 && $sunken_skull_player != $player_id) {
+            Globals::setSunkenSkullActivePlayer(0);
+        }
     }
 
     public static function getCardsTimesPlayed() {
@@ -294,6 +301,14 @@ class Globals {
 
     public static function setFrozenGobletActive(bool $active) {
         Game::get()->globals->set('frozen_goblet_active', $active);
+    }
+
+    public static function getSunkenSkullActivePlayer() {
+        return Game::get()->globals->get('sunken_skull_active_player', 0);
+    }
+
+    public static function setSunkenSkullActivePlayer(int $player_id) {
+        Game::get()->globals->set('sunken_skull_active_player', $player_id);
     }
 
     /*************************

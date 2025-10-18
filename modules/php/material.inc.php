@@ -878,6 +878,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 1,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'js_actions' => "actionDevotion",
 ],
  211 => [ 
   'name' => clienttranslate("Shadow oath"),
@@ -997,6 +998,8 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionBelch",
 ],
  224 => [ 
   'name' => clienttranslate("Madness"),
@@ -1116,6 +1119,9 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionReplaceRelic",
+  'is_relic' => true,
 ],
  237 => [ 
   'name' => clienttranslate("Mirage"),
@@ -1241,7 +1247,7 @@ $this->card_types = [
   'class' => "Blossom",
   'description' => clienttranslate("As long as this spell has exactly 3 mana cards on it, increase the power of all mana by 2 during your turn"),
   'type' => WG_SPELL_TYPE_UTILITY,
-  'activation' => WG_SPELL_ACTIVATION_INSTANT,
+  'activation' => WG_SPELL_ACTIVATION_ONGOING,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
@@ -1271,6 +1277,9 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionReplaceRelic",
+  'is_relic' => true,
 ],
  254 => [ 
   'name' => clienttranslate("Dance of agony"),

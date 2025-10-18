@@ -642,6 +642,16 @@ class ActionManager {
    //                                  |___/
    ///////////////////////////////////////////////////////////////////////////////////
 
+   private actionBelch() {
+      const msg = _("${you} must move all revealed mana cards");
+      this.game.setClientState(states.client.belch, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
    private actionCyclone() {
       this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
       this.activateNextAction();
@@ -656,6 +666,25 @@ class ActionManager {
 
       const count = player_table.hand.getCards().length - 4;
       this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+   }
+
+   private actionDevotion() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Draw 2 cards"),
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: _("Discard a mana card off 1 of your other spells"),
+               action: () => {
+                  this.actions.push("actionSelectManaFrom");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
    }
 
    private actionIceBlast() {
@@ -687,14 +716,24 @@ class ActionManager {
       });
    }
 
-   private actionSpiritDance() {
-      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
-      this.activateNextAction();
+   private actionReplaceRelic() {
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
    }
 
    private actionRevelation() {
       // this.selectMana(1, _("${you} may select ${nbr} mana card(s) to reveal"), true);
       this.actionSelectManaFrom();
+   }
+
+   private actionSpiritDance() {
+      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.activateNextAction();
    }
 
    private actionSplitSoul() {
@@ -715,7 +754,7 @@ class ActionManager {
          ],
       });
    }
-   
+
    ///////////////////////////////////////////////////////////////////////////////////
    //     _____                      _                         _   _
    //    / ____|                    (_)              /\       | | (_)

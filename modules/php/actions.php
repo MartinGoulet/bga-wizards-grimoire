@@ -88,16 +88,7 @@ trait ActionTrait {
             throw new \BgaSystemException("Use replaceSpell action");
         }
 
-        $spells = SpellCard::getCardsFromRepertoire($playerId);
-        $position = 1;
-        foreach ($spells as $spell) {
-            $pos = SpellCard::getPositionInRepertoire($spell);
-            if ($pos == $position) {
-                $position++;
-            } else if ($pos > $position) {
-                break;
-            }
-        }   
+        $position = SpellCard::getFirstAvailableSpellPosition($playerId);
 
         $this->deck_spells->moveCard($card_id, $cardDestination, $position);
 
@@ -312,11 +303,25 @@ trait ActionTrait {
         }
     }
 
-    public function castSpellInteraction($args) {
-        $this->checkAction('castSpellInteraction');
+    public function actCastSpellInteraction(#[JsonParam(associative: false, alphanum: false)] object $args) {
+        if (is_array($args->values)) {
+            $args = $args->values;
+        } else {
+            $args = $args->values ? [$args->values] : [];
+        }
+        $this->castSpellInteraction($args);
+    }
+
+    public function castSpellInteraction(array $args) {
         $player_id = Players::getPlayerId();
         // Get the card and verify ownership
-        $spell = SpellCard::isInRepertoire(Globals::getSpellPlayed(), $player_id);
+        $spell_id = Globals::getSpellPlayed();
+        $spell = SpellCard::get($spell_id);
+        $card_type = SpellCard::getCardInfo($spell);
+        if(isset($card_type['is_relic']) && $card_type['is_relic'] && $card_type['js_actions_interaction'] == 'actionReplaceRelic') {
+        } else {
+            $spell = SpellCard::isInRepertoire($spell_id, $player_id);
+        }
 
         $cardClass = SpellCard::getInstanceOfCard($spell);
         // Execute the ability of the card

@@ -162,6 +162,9 @@ class SpellRepertoire extends SlotStock<SpellCard> {
          case "SecretOath":
             element.dataset.secret_oath = "" + value;
             break;
+         case "GlassShield":
+            element.dataset.glass_shield = "" + value;
+            break;
       }
    }
 }

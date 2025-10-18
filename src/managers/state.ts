@@ -2,6 +2,7 @@ const states = {
    client: {
       arcaneTactics: "client_arcaneTactics",
       badFortune: "client_badFortune",
+      belch: "client_belch",
       castSpellWithMana: "client_castSpellWithMana",
       eclipse: "client_eclipse",
       question: "client_question",
@@ -33,6 +34,7 @@ class StateManager {
    constructor(private game: Game) {
       this.states = {
          [states.client.badFortune]: new BadFortuneStates(game),
+         [states.client.belch]: new BelchStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
          [states.client.eclipse]: new EclipseStates(game),
          [states.client.question]: new QuestionStates(game),
@@ -69,6 +71,7 @@ class StateManager {
       if (args.args?.ongoing_spells) {
          const { ongoing_spells, players, last_added_spell } = args.args;
 
+         log("ongoing_spells", ongoing_spells);
          ongoing_spells.forEach((value) => {
             if (value.active) log(value);
             this.game.toggleOngoingSpell(value);

@@ -1909,6 +1909,9 @@ var SpellRepertoire = (function (_super) {
             case "SecretOath":
                 element.dataset.secret_oath = "" + value;
                 break;
+            case "GlassShield":
+                element.dataset.glass_shield = "" + value;
+                break;
         }
     };
     return SpellRepertoire;
@@ -2530,6 +2533,15 @@ var ActionManager = (function () {
         this.addAction(selectedSpell);
         this.activateNextAction();
     };
+    ActionManager.prototype.actionBelch = function () {
+        var msg = _("${you} must move all revealed mana cards");
+        this.game.setClientState(states.client.belch, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                cancel: true,
+            },
+        });
+    };
     ActionManager.prototype.actionCyclone = function () {
         this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
         this.activateNextAction();
@@ -2542,6 +2554,25 @@ var ActionManager = (function () {
         }
         var count = player_table.hand.getCards().length - 4;
         this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+    };
+    ActionManager.prototype.actionDevotion = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Draw 2 cards"),
+                    action: function () { return _this.activateNextAction(); },
+                },
+                {
+                    label: _("Discard a mana card off 1 of your other spells"),
+                    action: function () {
+                        _this.actions.push("actionSelectManaFrom");
+                        _this.activateNextAction();
+                    },
+                },
+            ],
+        });
     };
     ActionManager.prototype.actionIceBlast = function () {
         var _this = this;
@@ -2570,12 +2601,21 @@ var ActionManager = (function () {
             },
         });
     };
-    ActionManager.prototype.actionSpiritDance = function () {
-        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
-        this.activateNextAction();
+    ActionManager.prototype.actionReplaceRelic = function () {
+        var msg = _("${you} must select a spell in the spell pool");
+        this.game.setClientState(states.client.selectSpellPool, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                cancel: true,
+            },
+        });
     };
     ActionManager.prototype.actionRevelation = function () {
         this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionSpiritDance = function () {
+        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+        this.activateNextAction();
     };
     ActionManager.prototype.actionSplitSoul = function () {
         var _this = this;
@@ -3238,6 +3278,7 @@ var states = {
     client: {
         arcaneTactics: "client_arcaneTactics",
         badFortune: "client_badFortune",
+        belch: "client_belch",
         castSpellWithMana: "client_castSpellWithMana",
         eclipse: "client_eclipse",
         question: "client_question",
@@ -3268,6 +3309,7 @@ var StateManager = (function () {
         this.client_states = [];
         this.states = (_a = {},
             _a[states.client.badFortune] = new BadFortuneStates(game),
+            _a[states.client.belch] = new BelchStates(game),
             _a[states.client.castSpellWithMana] = new CastSpellWithManaStates(game),
             _a[states.client.eclipse] = new EclipseStates(game),
             _a[states.client.question] = new QuestionStates(game),
@@ -3302,6 +3344,7 @@ var StateManager = (function () {
         }
         if ((_d = args.args) === null || _d === void 0 ? void 0 : _d.ongoing_spells) {
             var _f = args.args, ongoing_spells = _f.ongoing_spells, players_1 = _f.players, last_added_spell = _f.last_added_spell;
+            log("ongoing_spells", ongoing_spells);
             ongoing_spells.forEach(function (value) {
                 if (value.active)
                     log(value);
@@ -3429,6 +3472,7 @@ var PlayerTable = (function () {
             "data-lullaby=\"false\"",
             "data-puppetmaster=\"false\"",
             "data-secret_oath=\"false\"",
+            "data-glass_shield=\"false\"",
         ];
         var html = "\n            <div id=\"player-table-".concat(pId, "\" style=\"--color: #").concat(pColor, "\" ").concat(dataset.join(" "), ">\n               <div class=\"player-table whiteblock\">\n                  <span class=\"wg-title\">").concat(pName, "</span>\n                  <div id=\"player-table-").concat(pId, "-spell-repertoire\" class=\"spell-repertoire\"></div>\n                  <div id=\"player-table-").concat(pId, "-mana-cooldown\" class=\"mana-cooldown\">\n                     <div id=\"player_table-").concat(pId, "-mana-deck-1\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-1\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-2\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-2\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-3\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-3\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-4\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-4\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-5\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-5\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                     <div id=\"player_table-").concat(pId, "-mana-deck-6\" class=\"mana-deck\">\n                        <div id=\"player_table-").concat(pId, "-mana-cooldown-icon-6\" class=\"mana-cooldown-icon\"></div>\n                     </div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-health\" class=\"wg-health\">\n                     <div id=\"player-table-").concat(pId, "-health-value\"></div>\n                     <div class=\"wg-health-icon\"></div>\n                  </div>\n                  <div id=\"player-table-").concat(pId, "-hand-cards\" class=\"hand cards\" data-player-id=\"").concat(pId, "\" data-my-hand=\"").concat(pCurrent, "\"></div>\n                  <div id=\"player-table-").concat(pId, "-extra-icons\" class=\"player-table-extra-icons\"></div>\n               </div>\n            </div>");
         document.getElementById("tables").insertAdjacentHTML("beforeend", html);
@@ -3441,6 +3485,8 @@ var PlayerTable = (function () {
             this.setupSecretOath();
             this.setupGrowth();
             this.setupPowerHungry();
+            this.setupSunkenSkull();
+            this.setupGlassShield();
         }
         this.spell_repertoire = new SpellRepertoire(game.spellsManager, document.getElementById("player-table-".concat(this.player_id, "-spell-repertoire")), this);
         var _loop_3 = function (index) {
@@ -3667,6 +3713,27 @@ var PlayerTable = (function () {
             id: "secretoath",
             title: _("Secret oath"),
             gametext: _("If you have a 4 power mana in your hand, you must give it to your opponent immediately"),
+        });
+    };
+    PlayerTable.prototype.setupSunkenSkull = function () {
+        this.setupIcon({
+            id: "sunkenskull",
+            title: _("Sunken skull"),
+            gametext: _("All your mana cards have -1 power"),
+        });
+    };
+    PlayerTable.prototype.setupBlossom = function () {
+        this.setupIcon({
+            id: "blossom",
+            title: _("Blossom"),
+            gametext: _("Increase the power of all mana by 2 during your turn"),
+        });
+    };
+    PlayerTable.prototype.setupGlassShield = function () {
+        this.setupIcon({
+            id: "glassshield",
+            title: _("Glass shield"),
+            gametext: _("For your basic attack, you must reveal a card of the same power in order to deal damage"),
         });
     };
     PlayerTable.prototype.setupIcon = function (_a) {
@@ -4354,6 +4421,124 @@ var BadFortuneStates = (function () {
         return this.mana_count == this.deck_cards.length;
     };
     return BadFortuneStates;
+}());
+var BelchStates = (function () {
+    function BelchStates(game) {
+        this.game = game;
+        this.mana_count = 0;
+    }
+    BelchStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        var _a = this.game.tableCenter, manaRevealed = _a.manaRevealed, manaDeck = _a.manaDeck, manaDiscard = _a.manaDiscard;
+        this.mana_count = manaRevealed.getCards().length;
+        this.deck_cards = [];
+        this.discard_cards = [];
+        manaRevealed.setSelectionMode('single');
+        manaRevealed.onSelectionChange = function (selection) {
+            _this.game.toggleButtonEnable('btnMoveToDiscard', selection.length > 0, 'blue');
+            _this.game.toggleButtonEnable('btnMoveToManaDeck', selection.length > 0, 'blue');
+        };
+        var handleReturn = function (cards) { return __awaiter(_this, void 0, void 0, function () {
+            var card;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (cards.length == 0)
+                            return [2];
+                        card = cards.pop();
+                        return [4, this.game.tableCenter.manaRevealed.addCard(card)];
+                    case 1:
+                        _a.sent();
+                        this.game.toggleButtonEnable("btnCancel", this.deck_cards.length > 0, "gray");
+                        return [2];
+                }
+            });
+        }); };
+        this.game.tableCenter.manaDeck.onCardClick = function () { return handleReturn(_this.deck_cards); };
+        this.game.tableCenter.manaDiscard.onCardClick = function () { return handleReturn(_this.discard_cards); };
+    };
+    BelchStates.prototype.onLeavingState = function () {
+        this.deck_cards = [];
+        this.game.tableCenter.manaRevealed.onCardClick = null;
+        this.game.tableCenter.manaDeck.onCardClick = null;
+    };
+    BelchStates.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleDiscard = function () { return __awaiter(_this, void 0, void 0, function () {
+            var selectedCard;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        selectedCard = this.game.tableCenter.manaRevealed.getSelection().pop();
+                        if (!selectedCard)
+                            return [2];
+                        this.discard_cards.push(selectedCard);
+                        return [4, this.game.tableCenter.manaDiscard.addCard(selectedCard)];
+                    case 1:
+                        _a.sent();
+                        this.game.toggleButtonEnable('btnConfirm', this.deck_cards.length + this.discard_cards.length == this.mana_count, 'blue');
+                        return [2];
+                }
+            });
+        }); };
+        var handleReturnToDeck = function () { return __awaiter(_this, void 0, void 0, function () {
+            var selectedCard;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        selectedCard = this.game.tableCenter.manaRevealed.getSelection().pop();
+                        if (!selectedCard)
+                            return [2];
+                        this.deck_cards.push(selectedCard);
+                        return [4, this.game.tableCenter.manaDeck.addCard(selectedCard)];
+                    case 1:
+                        _a.sent();
+                        this.game.toggleButtonEnable('btnConfirm', this.deck_cards.length + this.discard_cards.length == this.mana_count, 'blue');
+                        return [2];
+                }
+            });
+        }); };
+        this.game.statusBar.addActionButton(_("Move to Mana Deck"), handleReturnToDeck, {
+            id: 'btnMoveToManaDeck',
+        });
+        this.game.statusBar.addActionButton(_("Move to Discard"), handleDiscard, {
+            id: 'btnMoveToDiscard',
+        });
+        this.game.disableButton('btnMoveToDiscard');
+        this.game.disableButton('btnMoveToManaDeck');
+        var handleConfirm = function () {
+            if (_this.deck_cards.length + _this.discard_cards.length != _this.mana_count)
+                return;
+            _this.game.actionManager.addArgument(_this.deck_cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.addArgument(_this.discard_cards.map(function (x) { return x.id; }).join(","));
+            _this.game.actionManager.activateNextAction();
+        };
+        var handleCancel = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.game.tableCenter.manaRevealed.addCards(this.deck_cards.splice(0, this.deck_cards.length))];
+                    case 1:
+                        _a.sent();
+                        return [4, this.game.tableCenter.manaRevealed.addCards(this.discard_cards.splice(0, this.discard_cards.length))];
+                    case 2:
+                        _a.sent();
+                        this.deck_cards = [];
+                        this.discard_cards = [];
+                        this.game.disableButton("btnConfirm");
+                        return [2];
+                }
+            });
+        }); };
+        this.game.addActionButton("btnConfirm", _("Confirm"), handleConfirm);
+        this.game.addActionButtonGray("btnCancel", _("Reset"), handleCancel);
+        this.game.disableButton("btnConfirm");
+    };
+    BelchStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    return BelchStates;
 }());
 var CastSpellWithManaStates = (function () {
     function CastSpellWithManaStates(game) {
