@@ -11,6 +11,7 @@ class CastSpellStates implements StateHandler {
       player_table.setDiscountNextSpell(args.discount_next_spell);
       player_table.setPreviousSpellPlayed(args.previous_spell_played);
       player_table.setPreviousSpellCost(args.previous_spell_cost);
+      player_table.setCursedMindIncreaseCost(args.cursed_mind);
 
       const selectableCards = repertoire
          .getCards()
@@ -85,5 +86,6 @@ interface CastSpellArgs {
    discount_next_spell: number;
    previous_spell_played: number;
    previous_spell_cost: number;
+   cursed_mind: number;
    undo: boolean;
 }

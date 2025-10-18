@@ -732,7 +732,7 @@ class ActionManager {
    }
 
    private actionSpiritDance() {
-      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.actions.push("actionOpponentSelectManaFrom", "actionOpponentSelectManaTo");
       this.activateNextAction();
    }
 
@@ -849,8 +849,10 @@ class ActionManager {
       });
    }
 
-   private actionSelectManaFrom() {
-      const player_table = this.game.getCurrentPlayerTable();
+   private actionSelectManaFrom(player_id: number = 0) {
+      if(player_id == 0) player_id = this.game.getPlayerId();
+
+      const player_table = this.game.getPlayerTable(player_id);
 
       const emptyDecks = player_table
          .getManaDeckWithSpellOver()
@@ -860,9 +862,10 @@ class ActionManager {
       const argsSuppl = {
          exclude: emptyDecks,
          ignore: null,
+         player_id: player_id,
       };
 
-      if (this.actions.length > 0 && this.actions[0] == "actionSelectManaTo") {
+      if (this.actions.length > 0 && ['actionSelectManaTo', 'actionOpponentSelectManaTo'].includes(this.actions[0])) {
          argsSuppl.ignore = () => {
             // Remove the actionSelectManaTo
             this.actions.shift();
@@ -877,17 +880,28 @@ class ActionManager {
       this.selectManaDeck(1, msgFrom, true, argsSuppl);
    }
 
-   private actionSelectManaTo() {
+   private actionSelectManaTo(player_id: number = 0) {
+      if(player_id == 0) player_id = this.game.getPlayerId();
+
       const manaDeckPosition: number = Number(this.actions_args[this.actions_args.length - 1]);
-      const player_table = this.game.getCurrentPlayerTable();
+      const player_table = this.game.getPlayerTable(player_id);
       player_table.mana_cooldown[manaDeckPosition].forceSelected();
 
       const argsSuppl = {
          exclude: [manaDeckPosition],
+         player_id: player_id,
       };
 
       const msg = _("${you} must select ${nbr} mana cool down pile for the destination");
       this.selectManaDeck(1, msg, true, argsSuppl);
+   }
+
+   private actionOpponentSelectManaTo() {
+      this.actionSelectManaTo(this.game.getOpponentId());
+   }
+
+   private actionOpponentSelectManaFrom() {
+      this.actionSelectManaFrom(this.game.getOpponentId());
    }
 
    private actionSelectTwoManaCardFromDiscard() {

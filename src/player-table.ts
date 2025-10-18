@@ -20,6 +20,7 @@ class PlayerTable {
          `data-current-player="${pCurrent}"`,
          `data-discount-next-spell="0"`,
          `data-discount-next-attack="0"`,
+         `data-cursed-mind="0"`,
          `data-battle_vision="false"`,
          `data-lullaby="false"`,
          `data-puppetmaster="false"`,
@@ -233,6 +234,14 @@ class PlayerTable {
 
    setDiscountNextSpell(amount: number) {
       this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
+   }
+
+   setCursedMindIncreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.cursedMind = amount.toString();
+   }
+
+   getCursedMindIncreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.cursedMind);
    }
 
    getPreviousSpellCost() {

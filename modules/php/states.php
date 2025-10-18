@@ -264,6 +264,14 @@ trait StateTrait {
     function stBasicAttackEnd() {
         $card = ManaCard::getBasicAttack();
 
+        if (SpellCard::isActiveGlassShield(Players::getOpponentId())) {
+            $power = ManaCard::getPower($card);
+            $hand = ManaCard::getHand();
+            $cardsSamePower = array_filter($hand, fn($c) => $c['id'] != $card['id'] && ManaCard::getPower($c) === $power);
+            $cardSamePower = array_shift($cardsSamePower);
+            Notifications::revealManaCardHand(Players::getPlayerId(), [$cardSamePower]);
+        }
+
         if (Globals::getIsActivePowerHungry()) {
             ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);

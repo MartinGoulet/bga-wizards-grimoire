@@ -174,7 +174,7 @@ trait ActionTrait {
         $card_type = SpellCard::getCardInfo($spell);
         $cost = intval($card_type['cost']);
 
-        $cost = $cost - Globals::getDiscountNextSpell();
+        $cost = $cost - Globals::getDiscountNextSpell() + Globals::getCursedMindIncreaseCost();
         Globals::setDiscountNextSpell(0);
         if ($card_type['type'] == WG_SPELL_TYPE_ATTACK) {
             $cost = $cost - Globals::getDiscountAttackSpell();
@@ -208,6 +208,14 @@ trait ActionTrait {
         } else {
             $mana_cards_before = [];
             $mana_cards_after = [];
+        }
+
+        $spells = SpellCard::getCardsFromRepertoire();
+        foreach ($spells as $spell_card) {
+            $card_instance = SpellCard::getInstanceOfCard($spell_card);
+            if (method_exists($card_instance, 'onBeforeCastSpell')) {
+                $card_instance->onBeforeCastSpell();
+            }
         }
 
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);

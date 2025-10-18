@@ -248,6 +248,26 @@ class Notifications {
         self::moveManaCard($player_id, [$card], false);
     }
 
+    static function moveOpponentManaCard($player_id, $card, $position_from, $position_to) {
+        $args = [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position_from, $player_id)),
+            'card_name2' => SpellCard::getName(SpellCard::getFromRepertoire($position_to, $player_id)),
+            'i18n' => ['card_name', 'card_name2'],
+        ];
+        
+        $message = clienttranslate('${player_name} transfers a mana card from ${card_name} to ${card_name2}');
+        self::message($message, $args, $player_id);
+
+        $message = clienttranslate('${player_name} transfers ${mana_values} from ${card_name} to ${card_name2}');
+        $args['mana_values'] = self::getPowerValues([$card]);
+        self::messageTo($player_id, $message, $args);
+
+        self::moveManaCard($player_id, [$card], true);
+    }
+
     static function moveManaCard($player_id, $cards_before, $anonimyze = true) {
         $args = [
             'player_id' => intval($player_id),

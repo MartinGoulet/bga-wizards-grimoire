@@ -22,13 +22,13 @@ class SpiritDance extends BaseCard {
 
         $src_deck_pos = intval(array_shift($args));
         $dest_deck_pos = intval(array_shift($args));
-        $player_id = Players::getPlayerId();
+        $player_id = Players::getOpponentId();
 
-        $src_top_card = ManaCard::hasUnderSpell($src_deck_pos);
+        $src_top_card = ManaCard::hasUnderSpell($src_deck_pos, $player_id);
 
-        ManaCard::addOnTopOfManaCoolDown($src_top_card['id'], $dest_deck_pos);
+        ManaCard::addOnTopOfManaCoolDown($src_top_card['id'], $dest_deck_pos, $player_id);
 
-        Notifications::fracture($player_id, $src_top_card, $src_deck_pos, $dest_deck_pos);
+        Notifications::moveOpponentManaCard($player_id, $src_top_card, $src_deck_pos, $dest_deck_pos);
         Events::onAddManaUnderSpell($player_id, $dest_deck_pos);
         Events::onManaPickedUpUnderSpell($src_deck_pos, $player_id);
     }

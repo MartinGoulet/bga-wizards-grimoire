@@ -40,6 +40,7 @@ trait ArgsTrait {
         $args["discount_next_spell"] = Globals::getDiscountNextSpell(true);
         $args["previous_spell_played"] = Globals::getSpellPlayed();
         $args["previous_spell_cost"] = Globals::getSpellCost();
+        $args["cursed_mind"] = Globals::getCursedMindIncreaseCost();
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
     }
@@ -66,7 +67,7 @@ trait ArgsTrait {
                 return ManaCard::getPower($card) == $value;
             });
         }
-        $isActiveGlassShield = $this->isActiveGlassShield();
+        $isActiveGlassShield = SpellCard::isActiveGlassShield(Players::getOpponentId());
         if ($isActiveGlassShield) {
             $powers = [];
             foreach ($cards as $card) {
@@ -92,19 +93,6 @@ trait ArgsTrait {
         ];
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
-    }
-
-    private function isActiveGlassShield(): bool {
-        $opponentSpellActive = SpellCard::getOngoingSpells(Players::getOpponentId());
-
-        $opponentSpellActive = array_filter($opponentSpellActive, function ($spell) {
-            /** @var \WizardsGrimoireExt\Cards\OngoingBaseCard $instance */
-            $instance = SpellCard::getInstanceOfCard($spell);
-            return $instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield 
-                && $instance->isActive();
-        });
-
-        return !empty($opponentSpellActive);
     }
 
     //////////////////////////////////////////

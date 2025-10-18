@@ -115,6 +115,14 @@ class Globals {
         Game::get()->setGameStateValue(WG_VAR_DISCOUNT_ATTACK_SPELL, $value);
     }
 
+    public static function getCursedMindIncreaseCost() {
+        return Game::get()->globals->get('cursed_mind_increase_cost', 0);
+    }
+
+    public static function setCursedMindIncreaseCost(int $value) {
+        Game::get()->globals->set('cursed_mind_increase_cost', $value);
+    }
+
     public static function getDiscountNextSpell() {
         return intval(Game::get()->getGameStateValue(WG_VAR_DISCOUNT_NEXT_SPELL));
     }

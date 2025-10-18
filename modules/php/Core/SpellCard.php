@@ -205,4 +205,15 @@ class SpellCard {
         $position = intval(array_shift($emptyPositions));
         return $position;
     }
+
+    public static function isActiveGlassShield(int $player_id): bool {
+        $ongoingSpellActive = self::getOngoingSpells($player_id);
+        foreach ($ongoingSpellActive as $spell) {
+            $instance = self::getInstanceOfCard($spell);
+            if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield) {
+                return $instance->isActive();
+            }
+        }
+        return false;
+    }
 }

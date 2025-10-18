@@ -210,7 +210,7 @@ class Game implements Game
       let { cost, type } = this.getCardType(spell);
       const player_table = this.getCurrentPlayerTable();
 
-      cost = cost - player_table.getDiscountNextSpell();
+      cost = cost - player_table.getDiscountNextSpell() + player_table.getCursedMindIncreaseCost();
       if (type == "red") {
          cost = cost - player_table.getDiscountNextAttack();
       }

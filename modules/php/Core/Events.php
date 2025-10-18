@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\Base_2\SecretOath;
 use WizardsGrimoireExt\Cards\KickStarter_1\Lullaby;
 
@@ -56,7 +57,7 @@ class Events {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         } else if ($player_id == Players::getOpponentId()) {
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
         $spell = SpellCard::getFromRepertoire($position, $player_id);
         $card_type = SpellCard::getCardInfo($spell);

@@ -1,22 +1,6 @@
 class NotificationManager {
    constructor(private game: Game) {}
 
-   // setup() {
-   //    this.subscribeEvent("onChooseSpell", 500);
-   //    this.subscribeEvent("onDiscardSpell", 500);
-   //    this.subscribeEvent("onRefillSpell", 500);
-   //    this.subscribeEvent("onDrawManaCards", 650, true);
-   //    this.subscribeEvent("onMoveManaCards", undefined, true);
-   //    this.subscribeEvent("onManaDeckShuffle", 2500);
-   //    this.subscribeEvent("onRevealManaCardCooldown", 500);
-   //    this.subscribeEvent("onHealthChanged", 500);
-
-   //    this.game.notifqueue.setIgnoreNotificationCheck(
-   //       "message",
-   //       (notif: any) => notif.args.excluded_player_id && notif.args.excluded_player_id == this.game.player_id,
-   //    );
-   // }
-
    setup() {
       this.game.bgaSetupPromiseNotifications({ handlers: [this] });
 

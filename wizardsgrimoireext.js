@@ -1617,7 +1617,7 @@ var Game = (function () {
     Game.prototype.getSpellCost = function (spell) {
         var _a = this.getCardType(spell), cost = _a.cost, type = _a.type;
         var player_table = this.getCurrentPlayerTable();
-        cost = cost - player_table.getDiscountNextSpell();
+        cost = cost - player_table.getDiscountNextSpell() + player_table.getCursedMindIncreaseCost();
         if (type == "red") {
             cost = cost - player_table.getDiscountNextAttack();
         }
@@ -2614,7 +2614,7 @@ var ActionManager = (function () {
         this.actionSelectManaFrom();
     };
     ActionManager.prototype.actionSpiritDance = function () {
-        this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+        this.actions.push("actionOpponentSelectManaFrom", "actionOpponentSelectManaTo");
         this.activateNextAction();
     };
     ActionManager.prototype.actionSplitSoul = function () {
@@ -2706,9 +2706,12 @@ var ActionManager = (function () {
             args: args,
         });
     };
-    ActionManager.prototype.actionSelectManaFrom = function () {
+    ActionManager.prototype.actionSelectManaFrom = function (player_id) {
         var _this = this;
-        var player_table = this.game.getCurrentPlayerTable();
+        if (player_id === void 0) { player_id = 0; }
+        if (player_id == 0)
+            player_id = this.game.getPlayerId();
+        var player_table = this.game.getPlayerTable(player_id);
         var emptyDecks = player_table
             .getManaDeckWithSpellOver()
             .filter(function (deck) { return deck.isEmpty(); })
@@ -2716,8 +2719,9 @@ var ActionManager = (function () {
         var argsSuppl = {
             exclude: emptyDecks,
             ignore: null,
+            player_id: player_id,
         };
-        if (this.actions.length > 0 && this.actions[0] == "actionSelectManaTo") {
+        if (this.actions.length > 0 && ['actionSelectManaTo', 'actionOpponentSelectManaTo'].includes(this.actions[0])) {
             argsSuppl.ignore = function () {
                 _this.actions.shift();
                 _this.activateNextAction();
@@ -2728,15 +2732,25 @@ var ActionManager = (function () {
             : _("${you} must select ${nbr} mana card(s)");
         this.selectManaDeck(1, msgFrom, true, argsSuppl);
     };
-    ActionManager.prototype.actionSelectManaTo = function () {
+    ActionManager.prototype.actionSelectManaTo = function (player_id) {
+        if (player_id === void 0) { player_id = 0; }
+        if (player_id == 0)
+            player_id = this.game.getPlayerId();
         var manaDeckPosition = Number(this.actions_args[this.actions_args.length - 1]);
-        var player_table = this.game.getCurrentPlayerTable();
+        var player_table = this.game.getPlayerTable(player_id);
         player_table.mana_cooldown[manaDeckPosition].forceSelected();
         var argsSuppl = {
             exclude: [manaDeckPosition],
+            player_id: player_id,
         };
         var msg = _("${you} must select ${nbr} mana cool down pile for the destination");
         this.selectManaDeck(1, msg, true, argsSuppl);
+    };
+    ActionManager.prototype.actionOpponentSelectManaTo = function () {
+        this.actionSelectManaTo(this.game.getOpponentId());
+    };
+    ActionManager.prototype.actionOpponentSelectManaFrom = function () {
+        this.actionSelectManaFrom(this.game.getOpponentId());
     };
     ActionManager.prototype.actionSelectTwoManaCardFromDiscard = function () {
         var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "2");
@@ -3468,6 +3482,7 @@ var PlayerTable = (function () {
             "data-current-player=\"".concat(pCurrent, "\""),
             "data-discount-next-spell=\"0\"",
             "data-discount-next-attack=\"0\"",
+            "data-cursed-mind=\"0\"",
             "data-battle_vision=\"false\"",
             "data-lullaby=\"false\"",
             "data-puppetmaster=\"false\"",
@@ -3630,6 +3645,12 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.setDiscountNextSpell = function (amount) {
         this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
+    };
+    PlayerTable.prototype.setCursedMindIncreaseCost = function (amount) {
+        this.getPlayerTableDiv().dataset.cursedMind = amount.toString();
+    };
+    PlayerTable.prototype.getCursedMindIncreaseCost = function () {
+        return Number(this.getPlayerTableDiv().dataset.cursedMind);
     };
     PlayerTable.prototype.getPreviousSpellCost = function () {
         return Number(this.getPlayerTableDiv().dataset.previousSpellCost);
@@ -4034,6 +4055,7 @@ var CastSpellStates = (function () {
         player_table.setDiscountNextSpell(args.discount_next_spell);
         player_table.setPreviousSpellPlayed(args.previous_spell_played);
         player_table.setPreviousSpellCost(args.previous_spell_cost);
+        player_table.setCursedMindIncreaseCost(args.cursed_mind);
         var selectableCards = repertoire
             .getCards()
             .filter(function (card) {
