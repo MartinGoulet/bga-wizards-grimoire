@@ -4,6 +4,7 @@ namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
+use BgaUserException;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -15,7 +16,13 @@ class ManaCard {
     }
 
     public static function addOnTopOfDiscard($card_id) {
-        Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
+        $card = ManaCard::get($card_id);
+        if (self::isCrystalShard($card)) {
+            Game::get()->deck_manas->moveCard($card_id, 'removed');
+            self::moveSpellCrystalShardToDiscard($card);
+        } else {
+            Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
+        }
     }
 
     public static function addCardsToHand($cards, $player_id = 0) {
@@ -52,6 +59,20 @@ class ManaCard {
             $player_id = Players::getPlayerId();
         }
         return intval(Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position)));
+    }
+
+    public static function createCrystalShard(): array {
+        /** @var \Bga\GameFramework\Components\Deck $deck */
+        $deck = Game::get()->deck_manas;
+
+        $sql = "INSERT INTO manas (card_type, card_type_arg, card_location, card_location_arg)
+                VALUES (5, 1, 'temp', 0)";
+        Game::get()->DbQuery($sql);
+
+        $card = $deck->getCardOnTop('temp');
+
+        $deck->moveCard($card['id'], CardLocation::Hand(), Players::getPlayerId());
+        return $deck->getCard($card['id']);
     }
 
     public static function draw($count, $player_id = 0, string|null $card_name = null) {
@@ -133,7 +154,7 @@ class ManaCard {
         ManaCard::addOnTopOfDiscard($card['id']);
         Notifications::discardManaCardFromSpell(Players::getPlayerId(), $card, $position);
 
-        if($player_id == Players::getOpponentId()) {
+        if ($player_id == Players::getOpponentId()) {
             Game::get()->undoSavepoint();
         }
 
@@ -213,7 +234,7 @@ class ManaCard {
                 $power = $instance->onModifyManaPower($power);
             }
         }
-        
+
 
         return $power;
     }
@@ -299,7 +320,7 @@ class ManaCard {
             $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
-            
+
             Game::get()->undoSavepoint();
             return $mana_cards;
         } else {
@@ -318,5 +339,35 @@ class ManaCard {
             Game::get()->undoSavepoint();
             return array_merge($mana_cards_1, $mana_cards_2);
         }
+    }
+
+    public static function isSpellCard($card): bool {
+        return isset($card['type_arg']) && intval($card['type_arg']) > 0;
+    }
+
+    public static function discardSpellCard($card) {
+        if (self::isCrystalShard($card)) {
+            $deck = Game::get()->deck_manas;
+            $deck->moveCard($card['id'], 'removed');
+            self::moveSpellCrystalShardToDiscard($card);
+        } else {
+            throw new BgaSystemException("Only Crystal Shard spell cards can be discarded.");
+        }
+    }
+
+    private static function moveSpellCrystalShardToDiscard(array $mana) {
+        /** @var \Bga\GameFramework\Components\Deck $deckSpell */
+        $deckSpell = Game::get()->deck_spells;
+        $spell = $deckSpell->getCardOnTop('crystal');
+        if (empty($spell)) {
+            throw new BgaSystemException("No Crystal Shard spell card available to discard.");
+        }
+        $deckSpell->insertCardOnExtremePosition($spell['id'], CardLocation::Discard(), true);
+        $spell = $deckSpell->getCard($spell['id']);
+        Notifications::crystalShardDiscard(Players::getPlayerId(), $spell, $mana);
+    }
+
+    public static function isCrystalShard($card): bool {
+        return intval($card['type']) == 5 && intval($card['type_arg']) == 1;
     }
 }

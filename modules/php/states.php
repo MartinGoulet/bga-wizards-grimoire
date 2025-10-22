@@ -276,6 +276,8 @@ trait StateTrait {
             ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
             Game::get()->undoSavepoint();
+        } else if (ManaCard::isSpellCard($card)) {
+            ManaCard::discardSpellCard($card);
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);

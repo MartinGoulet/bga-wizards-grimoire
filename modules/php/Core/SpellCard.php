@@ -112,7 +112,7 @@ class SpellCard {
         return $card;
     }
 
-    public static function destroyRelic(array $spell) {
+    public static function destroyRelic(array $spell, string $destination = "discard") {
         $player_id = Players::getPlayerId();
         $position = SpellCard::getPositionInRepertoire($spell);
 
@@ -126,9 +126,9 @@ class SpellCard {
         }
 
         // Discard spell
-        Game::get()->deck_spells->insertCardOnExtremePosition($spell['id'], CardLocation::Discard(), true);
+        Game::get()->deck_spells->insertCardOnExtremePosition($spell['id'], $destination, true);
         $discarded_card = SpellCard::get($spell['id']);
-        Notifications::destroySpell($player_id, $discarded_card);
+        Notifications::destroySpell($player_id, $discarded_card, $destination);
     }
 
     public static function replaceSpell($old_spell, $new_spell, $move = "replace") {

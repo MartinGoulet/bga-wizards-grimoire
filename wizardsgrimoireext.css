@@ -18,6 +18,12 @@
   background-position-x: -300%;
 }
 
+#table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] {
+  background: url("img/shifting_sands-front.jpg");
+  background-size: 1000% 700%;
+  background-position: -200% -500%;
+}
+
 .wg-card {
   width: var(--width);
   height: var(--height);

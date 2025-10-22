@@ -2574,6 +2574,33 @@ var ActionManager = (function () {
             ],
         });
     };
+    ActionManager.prototype.actionExchangeLife = function () {
+        var _this = this;
+        var args = {
+            cancel: true,
+            options: [
+                {
+                    label: _("Yes"),
+                    action: function () {
+                        _this.addArgument("1");
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: _("No"),
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.activateNextAction();
+                    },
+                    color: "alert",
+                },
+            ],
+        };
+        this.game.setClientState(states.client.question, {
+            descriptionmyturn: "".concat(this.getCardName(), " : ").concat(_("Do you want to exchange hands with your opponent?")),
+            args: args,
+        });
+    };
     ActionManager.prototype.actionIceBlast = function () {
         var _this = this;
         var label1 = _("Discard your hand and deal 5 damage");
@@ -2613,6 +2640,20 @@ var ActionManager = (function () {
     ActionManager.prototype.actionRevelation = function () {
         this.actionSelectManaFrom();
     };
+    ActionManager.prototype.actionSecondLifePick = function () {
+        this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionSongOfShadows = function () {
+        var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+        this.game.setClientState(states.client.selectManaDiscard, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                count: 1,
+                exact: true,
+            },
+        });
+    };
     ActionManager.prototype.actionSpiritDance = function () {
         this.actions.push("actionOpponentSelectManaFrom", "actionOpponentSelectManaTo");
         this.activateNextAction();
@@ -2631,6 +2672,28 @@ var ActionManager = (function () {
                 {
                     label: label2,
                     action: function () { return _this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card(s)"), false); },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionUnchained = function () {
+        var _this = this;
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: _("Deal 5 damage"),
+                    action: function () {
+                        _this.addArgument("1");
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: _("Gain 5 health"),
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.activateNextAction();
+                    },
                 },
             ],
         });
@@ -3008,9 +3071,11 @@ var ManaCardManager = (function (_super) {
                 div.classList.add("wg-card-mana");
                 div.dataset.cardId = "" + card.id;
                 div.dataset.type = "" + card.type;
+                div.dataset.type_arg = "" + card.type_arg;
             },
             setupFrontDiv: function (card, div) {
                 div.dataset.type = "" + card.type;
+                div.dataset.type_arg = "" + card.type_arg;
                 div.classList.add("wg-card-mana-front");
                 var growthID = "".concat(_this.getId(card), "-growth-id");
                 if (!document.getElementById(growthID)) {
@@ -3121,13 +3186,18 @@ var NotificationManager = (function () {
     }
     NotificationManager.prototype.setup = function () {
         var _this = this;
-        this.game.bgaSetupPromiseNotifications({ handlers: [this] });
+        this.game.bgaSetupPromiseNotifications({
+            handlers: [this],
+            onStart: function (notifName, msg, args) {
+                console.log("Notification started: ".concat(notifName), args);
+            },
+        });
         var getNotifs = function () {
             return Object.getOwnPropertyNames(Object.getPrototypeOf(_this))
-                .filter(function (prop) { return prop.startsWith('notif_') && typeof _this[prop] === 'function'; })
+                .filter(function (prop) { return prop.startsWith("notif_") && typeof _this[prop] === "function"; })
                 .map(function (prop) { return prop.slice(6); });
         };
-        __spreadArray(['message'], getNotifs(), true).forEach(function (eventName) {
+        __spreadArray(["message"], getNotifs(), true).forEach(function (eventName) {
             _this.game.notifqueue.setIgnoreNotificationCheck(eventName, function (notif) {
                 var skip = notif.args.excluded_player_id && Number(notif.args.excluded_player_id) == _this.game.getPlayerId();
                 return skip;
@@ -3162,6 +3232,32 @@ var NotificationManager = (function () {
                         _a.sent();
                         return [4, this.game.wait(500)];
                     case 2:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_onDestroySpell = function (args) {
+        return __awaiter(this, void 0, void 0, function () {
+            var player_id, card, destination, stock;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        player_id = args.player_id, card = args.card, destination = args.destination;
+                        debugger;
+                        if (!(destination === "discard")) return [3, 2];
+                        return [4, this.game.tableCenter.spellDiscard.addCard(card)];
+                    case 1:
+                        _a.sent();
+                        return [3, 3];
+                    case 2:
+                        stock = this.game.spellsManager.getCardStock(card);
+                        if (stock)
+                            stock.removeCard(card);
+                        _a.label = 3;
+                    case 3: return [4, this.game.wait(500)];
+                    case 4:
                         _a.sent();
                         return [2];
                 }
@@ -3280,6 +3376,48 @@ var NotificationManager = (function () {
                         }
                         return [4, this.game.wait(250)];
                     case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_onCrystalShard = function (args) {
+        return __awaiter(this, void 0, void 0, function () {
+            var player_id, spell, mana, playerTable, fromElement;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        player_id = args.player_id, spell = args.spell, mana = args.mana;
+                        playerTable = this.game.getPlayerTable(player_id);
+                        fromElement = this.game.spellsManager.getCardElement(spell).parentElement;
+                        playerTable.spell_repertoire.removeCard(spell);
+                        return [4, playerTable.hand.addCard(mana, { fromElement: fromElement })];
+                    case 1:
+                        _a.sent();
+                        return [4, this.game.wait(500)];
+                    case 2:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_onCrystalShardDiscard = function (args) {
+        return __awaiter(this, void 0, void 0, function () {
+            var spell, mana, fromElement, manaStock;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        spell = args.spell, mana = args.mana;
+                        fromElement = this.game.manasManager.getCardElement(mana).parentElement;
+                        manaStock = this.game.manasManager.getCardStock(mana);
+                        manaStock.removeCard(mana);
+                        return [4, this.game.tableCenter.spellDiscard.addCard(spell, { fromElement: fromElement })];
+                    case 1:
+                        _a.sent();
+                        return [4, this.game.wait(500)];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
@@ -4753,9 +4891,10 @@ var QuestionStates = (function () {
         var options = args.options, cancel = args.cancel;
         var index = 0;
         options === null || options === void 0 ? void 0 : options.forEach(function (_a) {
-            var label = _a.label, action = _a.action;
+            var label = _a.label, action = _a.action, color = _a.color;
             _this.game.statusBar.addActionButton(label, action, {
                 id: "btn_action_".concat(index++),
+                color: color
             });
         });
         if (cancel) {

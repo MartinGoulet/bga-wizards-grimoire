@@ -42,6 +42,10 @@ class Events {
                 $instance->isOngoingSpellActive($count > 0, $player_id);
                 break;
         }
+
+        if($mana_card['type'] == 5 && $mana_card['type_arg'] == 1) {
+            Game::get()->deck_manas->moveCard($mana_card['id'], 'removed', $player_id);
+        }
     }
 
     public static function onAddManaUnderSpell($player_id, $position) {

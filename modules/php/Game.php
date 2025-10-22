@@ -44,7 +44,6 @@ require_once('constants.inc.php');
 use WizardsGrimoireExt\Core\ActionTrait;
 use WizardsGrimoireExt\Core\ArgsTrait;
 use WizardsGrimoireExt\Core\Globals;
-use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
@@ -58,14 +57,11 @@ class Game extends \Bga\GameFramework\Table {
     use StateTrait;
     use DebugTrait;
 
-    /** @var WizardsGrimoireExt */
+    /** @var Game */
     public static $instance = null;
 
-    /** @var \Bga\GameFramework\Components\Deck */
-    public $deck_spells;
-
-    /** @var \Bga\GameFramework\Components\Deck */
-    public $deck_manas;
+    public \Bga\GameFramework\Components\Deck $deck_spells;
+    public \Bga\GameFramework\Components\Deck $deck_manas;
 
     public $card_types;
     public $mana_cards;
@@ -366,6 +362,10 @@ class Game extends \Bga\GameFramework\Table {
 
         $result['players_order'] = array_keys(Players::getPlayersInOrder($current_player_id));
 
+        if($this->getBgaEnvironment() === 'studio') {
+            $result['debug_spells'] = array_values(self::getCollectionFromDB("SELECT * FROM spells ORDER BY card_type"));
+            $result['debug_manas'] = array_values(self::getCollectionFromDB("SELECT * FROM manas"));
+        }
         // $result['debug_spells'] = array_values(self::getCollectionFromDB("SELECT * FROM spells ORDER BY card_type"));
         // $result['debug_manas'] = self::getCollectionFromDB("SELECT * FROM manas");
         // $result['debug_globals'] = self::getCollectionFromDB("SELECT * FROM global");

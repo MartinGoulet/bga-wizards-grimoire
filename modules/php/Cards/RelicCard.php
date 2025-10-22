@@ -1,6 +1,6 @@
 <?php
 
-namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
+namespace WizardsGrimoireExt\Cards;
 
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\SpellCard;

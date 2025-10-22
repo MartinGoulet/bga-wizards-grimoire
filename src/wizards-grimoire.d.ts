@@ -49,7 +49,7 @@ interface PlayerBoardInfo {
 interface Card {
    id: number;
    type: string;
-   // type_arg: string;
+   type_arg: string;
    location: string;
    location_arg: number;
 }

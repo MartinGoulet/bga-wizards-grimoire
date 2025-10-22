@@ -1068,11 +1068,12 @@ $this->card_types = [
  231 => [ 
   'name' => clienttranslate("Song of shadows"),
   'class' => "SongOfShadows",
-  'description' => clienttranslate("Gain 5 mana. Give you opponent 1 mana card of your choice from the discard pile"),
+  'description' => clienttranslate("Gain 5 mana. Give your opponent 1 mana card of your choice from the discard pile"),
   'type' => WG_SPELL_TYPE_REGENERATION,
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'js_actions' => "actionSongOfShadows",
 ],
  232 => [ 
   'name' => clienttranslate("Transfigure"),
@@ -1110,6 +1111,9 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'js_actions' => "actionSecondLifePick",
+  'interaction' => "player",
+  'js_actions_interaction' => "actionFracture",
 ],
  236 => [ 
   'name' => clienttranslate("Sunken skull"),
@@ -1191,9 +1195,10 @@ $this->card_types = [
   'class' => "ExchangeLife",
   'description' => clienttranslate("Deal 3 damage. You may swap the mana cards in your hand with the mana cards in your opponent's hand"),
   'type' => WG_SPELL_TYPE_ATTACK,
-  'activation' => WG_SPELL_ACTIVATION_ONGOING,
+  'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'js_actions' => "actionExchangeLife",
 ],
  245 => [ 
   'name' => clienttranslate("Trample"),
@@ -1329,6 +1334,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 5,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'js_actions' => "actionUnchained",
 ],
  259 => [ 
   'name' => clienttranslate("Sandstorm"),

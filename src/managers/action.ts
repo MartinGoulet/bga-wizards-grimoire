@@ -687,6 +687,34 @@ class ActionManager {
       });
    }
 
+   private actionExchangeLife() {
+      const args: QuestionArgs = {
+         cancel: true,
+         options: [
+            {
+               label: _("Yes"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("No"),
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+               color: "alert",
+            },
+         ],
+      }
+
+      this.game.setClientState(states.client.question, {
+         descriptionmyturn: `${this.getCardName()} : ${_("Do you want to exchange hands with your opponent?")}`,
+         args,
+      });
+   }
+
    private actionIceBlast() {
       const label1 = _("Discard your hand and deal 5 damage");
       const label2 = _("Place a mana card from the mana deck on one of your opponent's spells");
@@ -731,6 +759,22 @@ class ActionManager {
       this.actionSelectManaFrom();
    }
 
+   private actionSecondLifePick() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionSongOfShadows() {
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+         } as SelectManaDiscardArgs,
+      });
+   }
+
    private actionSpiritDance() {
       this.actions.push("actionOpponentSelectManaFrom", "actionOpponentSelectManaTo");
       this.activateNextAction();
@@ -753,6 +797,28 @@ class ActionManager {
             },
          ],
       });
+   }
+
+   private actionUnchained() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Deal 5 damage"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Gain 5 health"),
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      })
    }
 
    ///////////////////////////////////////////////////////////////////////////////////

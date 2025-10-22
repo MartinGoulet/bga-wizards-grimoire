@@ -31,6 +31,24 @@ abstract class BaseCard {
         return true;
     }
 
+    protected function healPlayer(int $heal, int $player_id = 0) {
+
+        if ($player_id <= 0) {
+            $player_id = Players::getPlayerId();
+        }
+
+        $life = Players::getPlayerLife($player_id);
+        $life_remaining = $life + $heal;
+        Players::setPlayerLife($player_id, $life_remaining);
+
+        Notifications::healFromCard(
+            $this->getCardName(),
+            $player_id,
+            $heal,
+            $life_remaining
+        );
+    }
+
     protected function dealDamage(int $damage, int $opponent_id = -1, bool $recordDamage = true) {
 
         if ($opponent_id <= 0) {

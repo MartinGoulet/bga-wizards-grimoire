@@ -3,6 +3,7 @@
 namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
+use BgaUserException;
 
 class Notifications {
 
@@ -61,12 +62,40 @@ class Notifications {
         ]);
     }
 
-    static function destroySpell($player_id, $card) {
-        self::notifyAll('onDiscardSpell', '${player_name} destroys ${card_name}', [
+    static function crystalShard($player_id, $spell, $mana) {
+        $msg = clienttranslate('${player_name} creates a ${mana_value} power mana');
+        self::notifyAll('onCrystalShard', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_value' => 5,
+            'spell' => $spell,
+            'mana' => $mana,
+            'preserve' => ['mana', 'spell'],
+        ]);
+    }
+
+    static function crystalShardDiscard(int $player_id, array $spell, array $mana) {
+        
+        $msg = clienttranslate('${player_name} discards ${card_name} to the discard');
+        self::notifyAll('onCrystalShardDiscard', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'card_name' => SpellCard::getName($spell),
+            'spell' => $spell,
+            'mana' => $mana,
+            'preserve' => ['mana', 'spell'],
+            'i18n' => ['card_name'],
+        ]);
+    }
+
+    static function destroySpell($player_id, $card, $destination) {
+        self::notifyAll('onDestroySpell', '${player_name} destroys ${card_name}', [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName(intval($player_id)),
             'card' => $card,
             'card_name' => SpellCard::getName($card),
+            'destination' => $destination,
+            'preserve' => ['destination'],
             'i18n' => ['card_name'],
         ]);
     }
@@ -132,6 +161,15 @@ class Notifications {
             'card_name' => clienttranslate("Echo"),
             'card_name2' => SpellCard::getName($spell),
             'i18n' => ['card_name', 'card_name2'],
+        ]);
+    }
+
+    static function exchangeManaHands(int $player_id) {
+        $msg = clienttranslate('${player_name} exchanges mana hands with ${player_name2}');
+        self::message($msg, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
         ]);
     }
 
@@ -273,9 +311,23 @@ class Notifications {
             'player_id' => intval($player_id),
         ];
 
+        // $special_manas = array_filter($cards_before, function ($card) {
+        //     return ManaCard::isCrystalShard($card);
+        // });
+
+        // if(!empty($special_manas)) {
+        //     $crystal_shard = array_shift($special_manas);
+        //     $spell_crystal_shard = Game::get()->deck_spells->getCardOnTop('discard');
+        //     self::crystalShardDiscard($player_id, $spell_crystal_shard, $crystal_shard);
+        // }
+
+        $cards = array_filter($cards_before, function ($card) {
+            return !ManaCard::isCrystalShard($card);
+        });
+
         $cards = array_values(array_map(function ($card) {
             return ManaCard::get($card['id']);
-        }, $cards_before));
+        }, $cards));
 
         $args['cards_after'] = array_values($cards);
         self::notify($player_id, 'onMoveManaCards', '', $args);
@@ -284,6 +336,20 @@ class Notifications {
             $args['cards_after'] = array_values(Game::anonynizeCards($cards));
         }
         self::notifyAll('onMoveManaCards', '', $args, $player_id);
+    }
+
+    public static function healFromCard(string $card_name, int $player_id, int $heal, int $life_remaining) {
+        $message = clienttranslate('${player_name} heals ${heal} from ${card_name}');
+
+        self::notifyAll('onHealthChanged', $message, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "life_remaining" => $life_remaining,
+            "heal" => $heal,
+            "nbr_heal" => $heal,
+            "card_name" => $card_name,
+            "i18n" => ["card_name"],
+        ]);
     }
 
     public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {
