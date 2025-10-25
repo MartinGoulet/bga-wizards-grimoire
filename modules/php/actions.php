@@ -146,11 +146,6 @@ trait ActionTrait {
     }
 
     public function actCastSpell(int $card_id, #[JsonParam(associative: false, alphanum: false)] object $args) {
-        // var_dump([
-        //     'card_id' => $card_id,
-        //     'args' => $args
-        // ]);
-        // throw new \BgaSystemException("Debug");
         if (is_array($args->values)) {
             $args = $args->values;
         } else {
@@ -174,7 +169,17 @@ trait ActionTrait {
         $card_type = SpellCard::getCardInfo($spell);
         $cost = intval($card_type['cost']);
 
-        $cost = $cost - Globals::getDiscountNextSpell() + Globals::getCursedMindIncreaseCost();
+        $cost = $cost
+            - Globals::getDiscountNextSpell()
+            + Globals::getCursedMindIncreaseCost()
+            + Globals::getCrescendoIncreaseCost();
+
+        $premonition_discount = Globals::getDiscountPremonition();
+        if ($premonition_discount > 0) {
+            $cost--;
+            Globals::setDiscountPremonition($premonition_discount - 1);
+        }
+
         Globals::setDiscountNextSpell(0);
         if ($card_type['type'] == WG_SPELL_TYPE_ATTACK) {
             $cost = $cost - Globals::getDiscountAttackSpell();
@@ -209,6 +214,8 @@ trait ActionTrait {
             $mana_cards_before = [];
             $mana_cards_after = [];
         }
+
+        Globals::setPlayedSpellsThisTurn(array_merge(Globals::getPlayedSpellsThisTurn(), [$spell['id']]));
 
         $spells = SpellCard::getCardsFromRepertoire();
         foreach ($spells as $spell_card) {
@@ -326,7 +333,7 @@ trait ActionTrait {
         $spell_id = Globals::getSpellPlayed();
         $spell = SpellCard::get($spell_id);
         $card_type = SpellCard::getCardInfo($spell);
-        if(isset($card_type['is_relic']) && $card_type['is_relic'] && $card_type['js_actions_interaction'] == 'actionReplaceRelic') {
+        if (isset($card_type['is_relic']) && $card_type['is_relic'] && $card_type['js_actions_interaction'] == 'actionReplaceRelic') {
         } else {
             $spell = SpellCard::isInRepertoire($spell_id, $player_id);
         }

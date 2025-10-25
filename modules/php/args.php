@@ -36,11 +36,13 @@ trait ArgsTrait {
 
     function argCastSpell() {
         $args = $this->getArgsBase();
-        $args["discount_attack_spell"] = Globals::getDiscountAttackSpell(true);
-        $args["discount_next_spell"] = Globals::getDiscountNextSpell(true);
+        $args["discount_attack_spell"] = Globals::getDiscountAttackSpell();
+        $args["discount_next_spell"] = Globals::getDiscountNextSpell();
         $args["previous_spell_played"] = Globals::getSpellPlayed();
         $args["previous_spell_cost"] = Globals::getSpellCost();
         $args["cursed_mind"] = Globals::getCursedMindIncreaseCost();
+        $args["crescendo"] = Globals::getCrescendoIncreaseCost();
+        $args['premonition_discount'] = Globals::getDiscountPremonition();
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
         return $args;
     }
@@ -49,6 +51,12 @@ trait ArgsTrait {
         $args = $this->getArgsBase();
         $args["spell"] = SpellCard::get(Globals::getSpellPlayed());
         $args["previous_spell_played"] = Globals::getPreviousSpellPlayed();
+
+        $instance = SpellCard::getInstanceOfCard($args["spell"]);
+        if (method_exists($instance, 'getCastSpellInteractionArgs')) {
+            $interactionArgs = $instance->getCastSpellInteractionArgs();
+            $args = array_merge($args, $interactionArgs);
+        }
         return $args;
     }
 

@@ -42,6 +42,14 @@ class SelectManaDiscardStates implements StateHandler {
       this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
       this.game.disableButton("btn_confirm");
 
+      const handleIgnore = () => {
+         const text = _("Are-you sure you want to ignore this effect?");
+         this.game.confirmationDialog(text, args.ignore);
+      };
+      if (args.ignore) {
+         this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
+      }
+
       this.game.addActionButtonClientCancel();
    }
    restoreGameState() {
@@ -57,4 +65,5 @@ interface SelectManaDiscardArgs {
    player_id: number;
    count: number;
    exact: boolean;
+   ignore?: () => void;
 }

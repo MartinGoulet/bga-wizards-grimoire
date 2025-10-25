@@ -1,9 +1,13 @@
 class CastSpellInteractionStates implements StateHandler {
+   public args: CastSpellInteractionArgs
    constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellInteractionArgs): void {
+      this.args = args;
       this.game.markCardAsSelected(args.spell);
       if (!this.game.isCurrentPlayerActive()) return;
+
+      debugger;
       this.game.actionManager.setup("actCastSpellInteraction");
       this.game.actionManager.addActionInteraction(args.spell);
       if (args.spell.type === SpellType.Echo) {
@@ -15,7 +19,9 @@ class CastSpellInteractionStates implements StateHandler {
       }, 10);
    }
 
-   onLeavingState(): void {}
+   onLeavingState(): void {
+      this.args = undefined;
+   }
 
    onUpdateActionButtons(args: CastSpellInteractionArgs): void {}
 

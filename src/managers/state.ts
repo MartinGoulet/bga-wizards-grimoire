@@ -28,7 +28,7 @@ const states = {
 };
 
 class StateManager {
-   private readonly states: { [statename: string]: StateHandler };
+   public readonly states: { [statename: string]: StateHandler };
    private readonly client_states: StateHandler[] = [];
 
    constructor(private game: Game) {

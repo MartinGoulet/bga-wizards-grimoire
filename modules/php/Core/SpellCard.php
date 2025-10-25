@@ -114,6 +114,19 @@ class SpellCard {
 
     public static function destroyRelic(array $spell, string $destination = "discard") {
         $player_id = Players::getPlayerId();
+
+        self::discardAllManaCardsOnSpell($spell, $player_id);
+
+        // Discard spell
+        Game::get()->deck_spells->insertCardOnExtremePosition($spell['id'], $destination, true);
+        $discarded_card = SpellCard::get($spell['id']);
+        Notifications::destroySpell($player_id, $discarded_card, $destination);
+    }
+
+    public static function discardAllManaCardsOnSpell(array $spell, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
         $position = SpellCard::getPositionInRepertoire($spell);
 
         // Discard all mana on the relic
@@ -124,15 +137,12 @@ class SpellCard {
         if (count($manas) > 0) {
             Notifications::discardManaCards($player_id, $manas);
         }
-
-        // Discard spell
-        Game::get()->deck_spells->insertCardOnExtremePosition($spell['id'], $destination, true);
-        $discarded_card = SpellCard::get($spell['id']);
-        Notifications::destroySpell($player_id, $discarded_card, $destination);
     }
 
-    public static function replaceSpell($old_spell, $new_spell, $move = "replace") {
-        $player_id = Players::getPlayerId();
+    public static function replaceSpell($old_spell, $new_spell, $move = "replace", $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }   
 
         // Discard old spell
         Game::get()->deck_spells->insertCardOnExtremePosition($old_spell['id'], CardLocation::Discard(), true);
@@ -142,7 +152,7 @@ class SpellCard {
                 Notifications::discardSpell($player_id, $discarded_card);
                 break;
             case "destroy":
-                Notifications::destroySpell($player_id, $discarded_card);
+                Notifications::destroySpell($player_id, $discarded_card, 'discard');
                 break;
             default:
                 throw new BgaUserException("Invalid move");

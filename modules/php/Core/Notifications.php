@@ -311,16 +311,6 @@ class Notifications {
             'player_id' => intval($player_id),
         ];
 
-        // $special_manas = array_filter($cards_before, function ($card) {
-        //     return ManaCard::isCrystalShard($card);
-        // });
-
-        // if(!empty($special_manas)) {
-        //     $crystal_shard = array_shift($special_manas);
-        //     $spell_crystal_shard = Game::get()->deck_spells->getCardOnTop('discard');
-        //     self::crystalShardDiscard($player_id, $spell_crystal_shard, $crystal_shard);
-        // }
-
         $cards = array_filter($cards_before, function ($card) {
             return !ManaCard::isCrystalShard($card);
         });

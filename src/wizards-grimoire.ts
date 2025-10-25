@@ -1,5 +1,4 @@
-const isDebug =
-   window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
+const isDebug = window.location.host == "studio.boardgamearena.com" || window.location.hash.indexOf("debug") > -1;
 const log = isDebug ? console.log.bind(window.console) : function () {};
 const LOCAL_STORAGE_ZOOM_KEY = "wizards-grimoire-zoom";
 const arrayRange = (start, end) => Array.from(Array(end - start + 1).keys()).map((x) => x + start);
@@ -9,9 +8,7 @@ interface Game extends GameGui<WizardsGrimoireGamedatas> {
    updatePlayerOrdering: () => void;
 }
 
-
-class Game implements Game
-{
+class Game implements Game {
    private TOOLTIP_DELAY = document.body.classList.contains("touch-device") ? 1500 : undefined;
 
    public readonly gamedatas: WizardsGrimoireGamedatas;
@@ -210,9 +207,17 @@ class Game implements Game
       let { cost, type } = this.getCardType(spell);
       const player_table = this.getCurrentPlayerTable();
 
-      cost = cost - player_table.getDiscountNextSpell() + player_table.getCursedMindIncreaseCost();
+      cost = cost 
+         - player_table.getDiscountNextSpell() 
+         + player_table.getCursedMindIncreaseCost()
+         + player_table.getCrescendoIncreaseCost();
+
+      if (player_table.getPremonitionDiscount() > 0) {
+         cost--;
+      }
+
       if (type == "red") {
-         cost = cost - player_table.getDiscountNextAttack();
+         cost -= player_table.getDiscountNextAttack();
       }
 
       if (spell.type === SpellType.DeathSpiral) {

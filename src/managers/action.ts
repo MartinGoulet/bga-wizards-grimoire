@@ -642,6 +642,18 @@ class ActionManager {
    //                                  |___/
    ///////////////////////////////////////////////////////////////////////////////////
 
+   private actionAnimalAmbush() {
+      const msg = _("${you} may select an opponent's spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getOpponentId(),
+            cancel: true,
+            pass: true,
+         } as SelectSpellArgs,
+      });
+   }
+
    private actionBelch() {
       const msg = _("${you} must move all revealed mana cards");
       this.game.setClientState(states.client.belch, {
@@ -649,6 +661,25 @@ class ActionManager {
          args: {
             cancel: true,
          },
+      });
+   }
+
+   private actionCorruption() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
       });
    }
 
@@ -666,6 +697,11 @@ class ActionManager {
 
       const count = player_table.hand.getCards().length - 4;
       this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+   }
+
+   private actionDarkOffering() {
+      this.actions.push("actionSelectManaFrom", "actionSelectSpellOpponent");
+      this.activateNextAction();
    }
 
    private actionDevotion() {
@@ -707,11 +743,50 @@ class ActionManager {
                color: "alert",
             },
          ],
-      }
+      };
 
       this.game.setClientState(states.client.question, {
          descriptionmyturn: `${this.getCardName()} : ${_("Do you want to exchange hands with your opponent?")}`,
          args,
+      });
+   }
+
+   private actionGloom() {
+      this.actions.push("actionGloomDiscard", "actionGloomSpell");
+      this.activateNextAction();
+   }
+
+   private actionGloomDiscard() {
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+            ignore: () => {
+               this.actions.shift();
+               this.activateNextAction();
+            },
+         } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionGloomSpell() {
+      const msg = _("${you} must select one of your other spell");
+      const player_table = this.game.getCurrentPlayerTable();
+      
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== this.getCurrentCard().id;
+      });
+
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
       });
    }
 
@@ -729,6 +804,29 @@ class ActionManager {
             {
                label: label2,
                action: () => this.actionSelectSpellOpponent(),
+            },
+         ],
+      });
+   }
+
+   private actionPlague() {
+      const label1 = _("Deal 2 damage to yourself and draw 4 cards");
+      const label2 = _("Ignore");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => this.activateNextAction(),
+               color: "alert",
             },
          ],
       });
@@ -757,6 +855,14 @@ class ActionManager {
    private actionRevelation() {
       // this.selectMana(1, _("${you} may select ${nbr} mana card(s) to reveal"), true);
       this.actionSelectManaFrom();
+   }
+
+   private actionRigmarole() {
+      const msg = _("${you} may give ${nbr} cards from your hand or pass");
+      this.selectManaHand(1, msg, true, {
+         canCancel: false,
+         skip: { label: "Pass" },
+      });
    }
 
    private actionSecondLifePick() {
@@ -799,6 +905,92 @@ class ActionManager {
       });
    }
 
+   private actionTransference() {
+      const label1 = _("Draw 6 cards");
+      const label2 = _("Draw 2 cards and destroy a spell card");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.addActionPriv("actionTransferenceSelectPlayer");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTransferenceSelectPlayer() {
+      const label1 = _("Select yourself");
+      const label2 = _("Select your opponent");
+
+      this.question({
+         cancel: false,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.addActionPriv(["actionTransferenceSelectSpell", "actionTransfigure_Pool"]);
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.addActionPriv("actionSelectSpellOpponent");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTransferenceSelectSpell() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must select one of your other spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionTransferenceOpponent() {
+      const state = this.game.stateManager.states[states.server.castSpellInteraction] as CastSpellInteractionStates;
+      const { transference_spell } = state.args as any as { transference_spell: Card };
+
+      this.game.markCardAsSelected(transference_spell);
+
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
    private actionUnchained() {
       this.question({
          cancel: true,
@@ -818,7 +1010,7 @@ class ActionManager {
                },
             },
          ],
-      })
+      });
    }
 
    ///////////////////////////////////////////////////////////////////////////////////
@@ -916,7 +1108,7 @@ class ActionManager {
    }
 
    private actionSelectManaFrom(player_id: number = 0) {
-      if(player_id == 0) player_id = this.game.getPlayerId();
+      if (player_id == 0) player_id = this.game.getPlayerId();
 
       const player_table = this.game.getPlayerTable(player_id);
 
@@ -931,7 +1123,7 @@ class ActionManager {
          player_id: player_id,
       };
 
-      if (this.actions.length > 0 && ['actionSelectManaTo', 'actionOpponentSelectManaTo'].includes(this.actions[0])) {
+      if (this.actions.length > 0 && ["actionSelectManaTo", "actionOpponentSelectManaTo"].includes(this.actions[0])) {
          argsSuppl.ignore = () => {
             // Remove the actionSelectManaTo
             this.actions.shift();
@@ -947,7 +1139,7 @@ class ActionManager {
    }
 
    private actionSelectManaTo(player_id: number = 0) {
-      if(player_id == 0) player_id = this.game.getPlayerId();
+      if (player_id == 0) player_id = this.game.getPlayerId();
 
       const manaDeckPosition: number = Number(this.actions_args[this.actions_args.length - 1]);
       const player_table = this.game.getPlayerTable(player_id);

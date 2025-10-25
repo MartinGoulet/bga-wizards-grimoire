@@ -38,7 +38,6 @@ class NotificationManager {
 
    private async notif_onDestroySpell(args: { player_id: number; card: SpellCard; destination: string }) {
       const { player_id, card, destination } = args;
-      debugger;
       if (destination === "discard") {
          await this.game.tableCenter.spellDiscard.addCard(card);
       } else {

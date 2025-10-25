@@ -18,7 +18,11 @@ class SelectManaHandStates implements StateHandler {
          }
       };
 
-      this.player_table.hand.setSelectionMode("multiple");
+      if(args.exact && args.count === 1) {
+         this.player_table.hand.setSelectionMode("single");
+      } else {
+         this.player_table.hand.setSelectionMode("multiple");
+      }
       this.player_table.hand.onSelectionChange = handleChange;
    }
 

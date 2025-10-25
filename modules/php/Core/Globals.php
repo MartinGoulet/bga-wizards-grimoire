@@ -24,6 +24,10 @@ class Globals {
         Globals::setInteractionPlayer(0);
         Globals::setCoolDownDelayedSpellIds([]);
         Globals::setCardsTimesPlayed([]);
+        Globals::setCursedMindIncreaseCost(0);
+        Globals::setCrescendoIncreaseCost(0);
+        Globals::setDiscountPremonition(0);
+        Globals::setPlayedSpellsThisTurn([]);
 
         $player_id = Players::getPlayerId();
         $sunken_skull_player = Globals::getSunkenSkullActivePlayer();
@@ -121,6 +125,22 @@ class Globals {
 
     public static function setCursedMindIncreaseCost(int $value) {
         Game::get()->globals->set('cursed_mind_increase_cost', $value);
+    }
+
+    public static function setCrescendoIncreaseCost(int $value) {
+        Game::get()->globals->set('crescendo_increase_cost', $value);
+    }
+
+    public static function getCrescendoIncreaseCost() {
+        return Game::get()->globals->get('crescendo_increase_cost', 0);
+    }
+
+    public static function getDiscountPremonition() {
+        return intval(Game::get()->globals->get('discount_premonition', 0));
+    }
+
+    public static function setDiscountPremonition(int $value) {
+        Game::get()->globals->set('discount_premonition', $value);
     }
 
     public static function getDiscountNextSpell() {
@@ -317,6 +337,14 @@ class Globals {
 
     public static function setSunkenSkullActivePlayer(int $player_id) {
         Game::get()->globals->set('sunken_skull_active_player', $player_id);
+    }
+
+    public static function getPlayedSpellsThisTurn() {
+        return Game::get()->globals->get('played_spells_this_turn', []);
+    }
+
+    public static function setPlayedSpellsThisTurn(array $spells) {
+        Game::get()->globals->set('played_spells_this_turn', $spells);
     }
 
     /*************************

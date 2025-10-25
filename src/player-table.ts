@@ -21,6 +21,7 @@ class PlayerTable {
          `data-discount-next-spell="0"`,
          `data-discount-next-attack="0"`,
          `data-cursed-mind="0"`,
+         `data-crescendo="0"`,
          `data-battle_vision="false"`,
          `data-lullaby="false"`,
          `data-puppetmaster="false"`,
@@ -242,6 +243,22 @@ class PlayerTable {
 
    getCursedMindIncreaseCost() {
       return Number(this.getPlayerTableDiv().dataset.cursedMind);
+   }
+
+   getCrescendoIncreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.crescendo);
+   }
+
+   setCrescendoIncreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.crescendo = amount.toString();
+   }
+
+   setPremonitionDiscount(amount: number) {
+      this.getPlayerTableDiv().dataset.premonitionDiscount = amount.toString();
+   }
+   
+   getPremonitionDiscount() {
+      return Number(this.getPlayerTableDiv().dataset.premonitionDiscount);
    }
 
    getPreviousSpellCost() {

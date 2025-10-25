@@ -851,6 +851,8 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 1,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionRigmarole",
 ],
  208 => [ 
   'name' => clienttranslate("Symbiosis"),
@@ -934,6 +936,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionGloom",
 ],
  217 => [ 
   'name' => clienttranslate("Fever dream"),
@@ -980,15 +983,17 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionPlague",
 ],
  222 => [ 
   'name' => clienttranslate("Dark offering"),
-  'class' => "Dark Offering",
-  'description' => clienttranslate("Pick up a mana card off 1 of your other spells and give it to your opponent. Dela damage equals to its power"),
+  'class' => "DarkOffering",
+  'description' => clienttranslate("Pick up a mana card off 1 of your other spells and give it to your opponent. Deal damage equals to its power"),
   'type' => WG_SPELL_TYPE_ATTACK,
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionDarkOffering",
 ],
  223 => [ 
   'name' => clienttranslate("Belch"),
@@ -1153,6 +1158,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionAnimalAmbush",
 ],
  240 => [ 
   'name' => clienttranslate("Savage strike"),
@@ -1222,11 +1228,12 @@ $this->card_types = [
  247 => [ 
   'name' => clienttranslate("Corruption"),
   'class' => "Corruption",
-  'description' => clienttranslate("Deal damage equal to the quantity of mana cards on 1 of your other spells. Then discard 2 mana cards off  of it"),
+  'description' => clienttranslate("Deal damage equal to the quantity of mana cards on 1 of your other spells. Then discard 2 mana cards off of it"),
   'type' => WG_SPELL_TYPE_ATTACK,
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionCorruption",
 ],
  248 => [ 
   'name' => clienttranslate("Transference"),
@@ -1236,6 +1243,8 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionTransference",
+  'js_actions_interaction' => "actionTransferenceOpponent",
 ],
  249 => [ 
   'name' => clienttranslate("Spirit dance"),

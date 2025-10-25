@@ -1617,9 +1617,15 @@ var Game = (function () {
     Game.prototype.getSpellCost = function (spell) {
         var _a = this.getCardType(spell), cost = _a.cost, type = _a.type;
         var player_table = this.getCurrentPlayerTable();
-        cost = cost - player_table.getDiscountNextSpell() + player_table.getCursedMindIncreaseCost();
+        cost = cost
+            - player_table.getDiscountNextSpell()
+            + player_table.getCursedMindIncreaseCost()
+            + player_table.getCrescendoIncreaseCost();
+        if (player_table.getPremonitionDiscount() > 0) {
+            cost--;
+        }
         if (type == "red") {
-            cost = cost - player_table.getDiscountNextAttack();
+            cost -= player_table.getDiscountNextAttack();
         }
         if (spell.type === SpellType.DeathSpiral) {
             var previous_spell_id = Number(player_table.getPreviousSpellPlayed());
@@ -2533,12 +2539,40 @@ var ActionManager = (function () {
         this.addAction(selectedSpell);
         this.activateNextAction();
     };
+    ActionManager.prototype.actionAnimalAmbush = function () {
+        var msg = _("${you} may select an opponent's spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getOpponentId(),
+                cancel: true,
+                pass: true,
+            },
+        });
+    };
     ActionManager.prototype.actionBelch = function () {
         var msg = _("${you} must move all revealed mana cards");
         this.game.setClientState(states.client.belch, {
             descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 cancel: true,
+            },
+        });
+    };
+    ActionManager.prototype.actionCorruption = function () {
+        var player_table = this.game.getCurrentPlayerTable();
+        var current_card = this.getCurrentCard();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== current_card.id;
+        });
+        var msg = _("${you} must select one of your spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                pass: false,
             },
         });
     };
@@ -2554,6 +2588,10 @@ var ActionManager = (function () {
         }
         var count = player_table.hand.getCards().length - 4;
         this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+    };
+    ActionManager.prototype.actionDarkOffering = function () {
+        this.actions.push("actionSelectManaFrom", "actionSelectSpellOpponent");
+        this.activateNextAction();
     };
     ActionManager.prototype.actionDevotion = function () {
         var _this = this;
@@ -2601,6 +2639,42 @@ var ActionManager = (function () {
             args: args,
         });
     };
+    ActionManager.prototype.actionGloom = function () {
+        this.actions.push("actionGloomDiscard", "actionGloomSpell");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionGloomDiscard = function () {
+        var _this = this;
+        var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+        this.game.setClientState(states.client.selectManaDiscard, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                count: 1,
+                exact: true,
+                ignore: function () {
+                    _this.actions.shift();
+                    _this.activateNextAction();
+                },
+            },
+        });
+    };
+    ActionManager.prototype.actionGloomSpell = function () {
+        var _this = this;
+        var msg = _("${you} must select one of your other spell");
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== _this.getCurrentCard().id;
+        });
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+            },
+        });
+    };
     ActionManager.prototype.actionIceBlast = function () {
         var _this = this;
         var label1 = _("Discard your hand and deal 5 damage");
@@ -2615,6 +2689,28 @@ var ActionManager = (function () {
                 {
                     label: label2,
                     action: function () { return _this.actionSelectSpellOpponent(); },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionPlague = function () {
+        var _this = this;
+        var label1 = _("Deal 2 damage to yourself and draw 4 cards");
+        var label2 = _("Ignore");
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: label1,
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: label2,
+                    action: function () { return _this.activateNextAction(); },
+                    color: "alert",
                 },
             ],
         });
@@ -2639,6 +2735,13 @@ var ActionManager = (function () {
     };
     ActionManager.prototype.actionRevelation = function () {
         this.actionSelectManaFrom();
+    };
+    ActionManager.prototype.actionRigmarole = function () {
+        var msg = _("${you} may give ${nbr} cards from your hand or pass");
+        this.selectManaHand(1, msg, true, {
+            canCancel: false,
+            skip: { label: "Pass" },
+        });
     };
     ActionManager.prototype.actionSecondLifePick = function () {
         this.actionSelectManaFrom();
@@ -2674,6 +2777,85 @@ var ActionManager = (function () {
                     action: function () { return _this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card(s)"), false); },
                 },
             ],
+        });
+    };
+    ActionManager.prototype.actionTransference = function () {
+        var _this = this;
+        var label1 = _("Draw 6 cards");
+        var label2 = _("Draw 2 cards and destroy a spell card");
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: label1,
+                    action: function () {
+                        _this.addArgument("1");
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: label2,
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.addActionPriv("actionTransferenceSelectPlayer");
+                        _this.activateNextAction();
+                    },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionTransferenceSelectPlayer = function () {
+        var _this = this;
+        var label1 = _("Select yourself");
+        var label2 = _("Select your opponent");
+        this.question({
+            cancel: false,
+            options: [
+                {
+                    label: label1,
+                    action: function () {
+                        _this.addArgument("1");
+                        _this.addActionPriv(["actionTransferenceSelectSpell", "actionTransfigure_Pool"]);
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: label2,
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.addActionPriv("actionSelectSpellOpponent");
+                        _this.activateNextAction();
+                    },
+                },
+            ],
+        });
+    };
+    ActionManager.prototype.actionTransferenceSelectSpell = function () {
+        var player_table = this.game.getCurrentPlayerTable();
+        var current_card = this.getCurrentCard();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== current_card.id;
+        });
+        var msg = _("${you} must select one of your other spell");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+            },
+        });
+    };
+    ActionManager.prototype.actionTransferenceOpponent = function () {
+        var state = this.game.stateManager.states[states.server.castSpellInteraction];
+        var transference_spell = state.args.transference_spell;
+        this.game.markCardAsSelected(transference_spell);
+        var msg = _("${you} must select a spell in the spell pool");
+        this.game.setClientState(states.client.selectSpellPool, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                cancel: true,
+            },
         });
     };
     ActionManager.prototype.actionUnchained = function () {
@@ -2784,7 +2966,7 @@ var ActionManager = (function () {
             ignore: null,
             player_id: player_id,
         };
-        if (this.actions.length > 0 && ['actionSelectManaTo', 'actionOpponentSelectManaTo'].includes(this.actions[0])) {
+        if (this.actions.length > 0 && ["actionSelectManaTo", "actionOpponentSelectManaTo"].includes(this.actions[0])) {
             argsSuppl.ignore = function () {
                 _this.actions.shift();
                 _this.activateNextAction();
@@ -3245,7 +3427,6 @@ var NotificationManager = (function () {
                 switch (_a.label) {
                     case 0:
                         player_id = args.player_id, card = args.card, destination = args.destination;
-                        debugger;
                         if (!(destination === "discard")) return [3, 2];
                         return [4, this.game.tableCenter.spellDiscard.addCard(card)];
                     case 1:
@@ -3621,6 +3802,7 @@ var PlayerTable = (function () {
             "data-discount-next-spell=\"0\"",
             "data-discount-next-attack=\"0\"",
             "data-cursed-mind=\"0\"",
+            "data-crescendo=\"0\"",
             "data-battle_vision=\"false\"",
             "data-lullaby=\"false\"",
             "data-puppetmaster=\"false\"",
@@ -3789,6 +3971,18 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.getCursedMindIncreaseCost = function () {
         return Number(this.getPlayerTableDiv().dataset.cursedMind);
+    };
+    PlayerTable.prototype.getCrescendoIncreaseCost = function () {
+        return Number(this.getPlayerTableDiv().dataset.crescendo);
+    };
+    PlayerTable.prototype.setCrescendoIncreaseCost = function (amount) {
+        this.getPlayerTableDiv().dataset.crescendo = amount.toString();
+    };
+    PlayerTable.prototype.setPremonitionDiscount = function (amount) {
+        this.getPlayerTableDiv().dataset.premonitionDiscount = amount.toString();
+    };
+    PlayerTable.prototype.getPremonitionDiscount = function () {
+        return Number(this.getPlayerTableDiv().dataset.premonitionDiscount);
     };
     PlayerTable.prototype.getPreviousSpellCost = function () {
         return Number(this.getPlayerTableDiv().dataset.previousSpellCost);
@@ -4194,6 +4388,8 @@ var CastSpellStates = (function () {
         player_table.setPreviousSpellPlayed(args.previous_spell_played);
         player_table.setPreviousSpellCost(args.previous_spell_cost);
         player_table.setCursedMindIncreaseCost(args.cursed_mind);
+        player_table.setCrescendoIncreaseCost(args.crescendo);
+        player_table.setPremonitionDiscount(args['premonition_discount']);
         var selectableCards = repertoire
             .getCards()
             .filter(function (card) {
@@ -4276,9 +4472,11 @@ var CastSpellInteractionStates = (function () {
     }
     CastSpellInteractionStates.prototype.onEnteringState = function (args) {
         var _this = this;
+        this.args = args;
         this.game.markCardAsSelected(args.spell);
         if (!this.game.isCurrentPlayerActive())
             return;
+        debugger;
         this.game.actionManager.setup("actCastSpellInteraction");
         this.game.actionManager.addActionInteraction(args.spell);
         if (args.spell.type === SpellType.Echo) {
@@ -4288,7 +4486,9 @@ var CastSpellInteractionStates = (function () {
             _this.game.actionManager.activateNextAction();
         }, 10);
     };
-    CastSpellInteractionStates.prototype.onLeavingState = function () { };
+    CastSpellInteractionStates.prototype.onLeavingState = function () {
+        this.args = undefined;
+    };
     CastSpellInteractionStates.prototype.onUpdateActionButtons = function (args) { };
     CastSpellInteractionStates.prototype.restoreGameState = function () {
         return new Promise(function (resolve) { return resolve(true); });
@@ -5205,6 +5405,13 @@ var SelectManaDiscardStates = (function () {
         };
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         this.game.disableButton("btn_confirm");
+        var handleIgnore = function () {
+            var text = _("Are-you sure you want to ignore this effect?");
+            _this.game.confirmationDialog(text, args.ignore);
+        };
+        if (args.ignore) {
+            this.game.addActionButtonRed("btn_ignore", _("Ignore"), handleIgnore);
+        }
         this.game.addActionButtonClientCancel();
     };
     SelectManaDiscardStates.prototype.restoreGameState = function () {
@@ -5236,7 +5443,12 @@ var SelectManaHandStates = (function () {
                 _this.game.toggleButtonEnable("btn_confirm", nbr_cards_selected <= count);
             }
         };
-        this.player_table.hand.setSelectionMode("multiple");
+        if (args.exact && args.count === 1) {
+            this.player_table.hand.setSelectionMode("single");
+        }
+        else {
+            this.player_table.hand.setSelectionMode("multiple");
+        }
         this.player_table.hand.onSelectionChange = handleChange;
     };
     SelectManaHandStates.prototype.onLeavingState = function () {
