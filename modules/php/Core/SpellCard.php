@@ -142,13 +142,14 @@ class SpellCard {
     public static function replaceSpell($old_spell, $new_spell, $move = "replace", $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
-        }   
+        }
 
         // Discard old spell
         Game::get()->deck_spells->insertCardOnExtremePosition($old_spell['id'], CardLocation::Discard(), true);
         $discarded_card = SpellCard::get($old_spell['id']);
-        switch($move) {
-            case "replace": 
+        switch ($move) {
+            case "replace":
+            case "replaceSeeingStone":
                 Notifications::discardSpell($player_id, $discarded_card);
                 break;
             case "destroy":
@@ -169,14 +170,16 @@ class SpellCard {
         Notifications::chooseSpell($player_id, $card);
         Stats::replaceSpell($player_id, $card);
 
-        $newSpell = Game::get()->deck_spells->pickCardForLocation(
-            CardLocation::Deck(),
-            CardLocation::SpellSlot(),
-            $new_spell['location_arg'],
-        );
-        Globals::setLastAddedSpell($newSpell['id']);
+        if ($move !== "replaceSeeingStone") {
+            $newSpell = Game::get()->deck_spells->pickCardForLocation(
+                CardLocation::Deck(),
+                CardLocation::SpellSlot(),
+                $new_spell['location_arg'],
+            );
+            Globals::setLastAddedSpell($newSpell['id']);
 
-        Notifications::refillSpell($player_id, $newSpell);
+            Notifications::refillSpell($player_id, $newSpell);
+        }
         Game::get()->undoSavepoint();
     }
 

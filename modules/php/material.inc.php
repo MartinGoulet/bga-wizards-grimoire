@@ -1186,6 +1186,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionRaiseTheDead",
 ],
  243 => [ 
   'name' => clienttranslate("Multiply"),
@@ -1273,6 +1274,9 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionReplaceRelic",
+  'is_relic' => true,
 ],
  252 => [ 
   'name' => clienttranslate("Crystal shard"),

@@ -24,6 +24,7 @@ const states = {
       basicAttackBattleVision: "basicAttackBattleVision",
       activateDelayedSpell: "activateDelayedSpell",
       playerNewTurn: "playerNewTurn",
+      spellSeeingStone: "spellSeeingStone",
    },
 };
 
@@ -55,6 +56,7 @@ class StateManager {
          [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
          [states.server.playerNewTurn]: new PlayerNewTurnStates(game),
+         [states.server.spellSeeingStone]: new SpellSeeingStoneState(game),
       };
    }
 

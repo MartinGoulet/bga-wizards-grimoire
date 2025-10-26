@@ -842,6 +842,10 @@ class ActionManager {
       });
    }
 
+   private actionRaiseTheDead() {
+      this.actionTransferenceSelectSpell();
+   }
+
    private actionReplaceRelic() {
       const msg = _("${you} must select a spell in the spell pool");
       this.game.setClientState(states.client.selectSpellPool, {

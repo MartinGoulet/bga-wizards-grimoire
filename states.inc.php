@@ -206,6 +206,7 @@ $castSpellsStates = [
             "dead" => ST_PRE_END_OF_GAME,
             "delayed" => ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
             "delayed_opponent" => ST_CAST_SPELL_SWITCH_TO_OPPONENT,
+            "seeing_stone" => ST_SPELL_SEEING_STONE,
         ]
     ],
 

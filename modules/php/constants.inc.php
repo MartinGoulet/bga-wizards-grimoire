@@ -112,6 +112,8 @@ define('ST_BASIC_ATTACK_END', 65);
 
 define('ST_NEXT_PLAYER', 7);
 
+const ST_SPELL_SEEING_STONE = 70;
+
 
 /*
  * Statistic variables 

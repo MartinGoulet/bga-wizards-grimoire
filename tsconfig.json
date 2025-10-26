@@ -67,6 +67,7 @@
         "src/states/select-mana-return-deck.ts",
         "src/states/select-spell.ts",
         "src/states/select-spell-pool.ts",
+        "src/states/spell-seeing-stone.ts",
 
         "src/types.ts",
         

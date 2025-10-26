@@ -1493,6 +1493,7 @@ body > .card {
 
 #basic-attack-wrapper,
 #mana-revealed-wrapper,
+#spell-revealed-wrapper,
 #mana-discard-display-wrapper {
   --color: black;
   padding-top: 25px;
@@ -1506,6 +1507,7 @@ body > .card {
 }
 #basic-attack-wrapper .wg-title,
 #mana-revealed-wrapper .wg-title,
+#spell-revealed-wrapper .wg-title,
 #mana-discard-display-wrapper .wg-title {
   top: 20px;
 }
@@ -1524,11 +1526,28 @@ body > .card {
   margin-top: 5px;
 }
 
+#spell-revealed-wrapper {
+  flex-grow: 1;
+  display: none;
+  --width: 110px;
+  --height: 154px;
+}
+#spell-revealed-wrapper #spell-revealed {
+  margin-top: 5px;
+}
+
 #mana-discard-display-wrapper {
   flex-basis: 100%;
 }
 #mana-discard-display-wrapper #mana-discard-display {
   margin-top: 5px;
+}
+
+.gamestate_spellSeeingStone #mana-revealed-wrapper {
+  display: none;
+}
+.gamestate_spellSeeingStone #spell-revealed-wrapper {
+  display: block;
 }
 
 .deck .discard {

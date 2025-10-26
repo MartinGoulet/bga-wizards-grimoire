@@ -2724,6 +2724,9 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionRaiseTheDead = function () {
+        this.actionTransferenceSelectSpell();
+    };
     ActionManager.prototype.actionReplaceRelic = function () {
         var msg = _("${you} must select a spell in the spell pool");
         this.game.setClientState(states.client.selectSpellPool, {
@@ -3633,6 +3636,7 @@ var states = {
         basicAttackBattleVision: "basicAttackBattleVision",
         activateDelayedSpell: "activateDelayedSpell",
         playerNewTurn: "playerNewTurn",
+        spellSeeingStone: "spellSeeingStone",
     },
 };
 var StateManager = (function () {
@@ -3662,6 +3666,7 @@ var StateManager = (function () {
             _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
             _a[states.server.playerNewTurn] = new PlayerNewTurnStates(game),
+            _a[states.server.spellSeeingStone] = new SpellSeeingStoneState(game),
             _a);
     }
     StateManager.prototype.onEnteringState = function (stateName, args) {
@@ -4134,10 +4139,13 @@ var TableCenter = (function () {
         this.place("<div id=\"mana-revealed\"></div>", "mana-revealed-wrapper");
         this.place("<span class=\"wg-title\">".concat(_("Discard"), "</span>"), "mana-discard-display-wrapper");
         this.place("<div id=\"mana-discard-display\"></div>", "mana-discard-display-wrapper");
+        this.place("<span class=\"wg-title\">".concat(_("Revealed Spell"), "</span>"), "spell-revealed-wrapper");
+        this.place("<div id=\"spell-revealed\"></div>", "spell-revealed-wrapper");
         this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
         this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
         this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
         this.manaDiscard = new DiscardPile(game.manasManager, document.getElementById("mana-discard"));
+        this.spellRevealed = new LineStock(game.spellsManager, document.getElementById("spell-revealed"));
         this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
             slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
             slotClasses: ["wg-spell-slot"],
@@ -5688,6 +5696,85 @@ var SelectSpellPoolStates = (function () {
         return new Promise(function (resolve) { return resolve(true); });
     };
     return SelectSpellPoolStates;
+}());
+var SpellSeeingStoneState = (function () {
+    function SpellSeeingStoneState(game) {
+        this.game = game;
+        this.card_order = [];
+    }
+    SpellSeeingStoneState.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        log("Entering spell seeing stone state", args);
+        (function () { return __awaiter(_this, void 0, void 0, function () {
+            var spellRevealed;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.game.wait(500)];
+                    case 1:
+                        _a.sent();
+                        this.card_order = [];
+                        spellRevealed = this.game.tableCenter.spellRevealed;
+                        return [4, spellRevealed.addCards(args._private.cards, {
+                                fromStock: this.game.tableCenter.spellDeck,
+                            }, undefined, 750)];
+                    case 2:
+                        _a.sent();
+                        spellRevealed.onCardClick = function (card) { return __awaiter(_this, void 0, void 0, function () {
+                            var newCard;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        this.card_order.push(card);
+                                        newCard = { id: card.id, isHidden: true };
+                                        return [4, this.game.tableCenter.spellDeck.addCard(newCard)];
+                                    case 1:
+                                        _a.sent();
+                                        this.game.toggleButtonEnable('btnReorder', spellRevealed.getCards().length === 0);
+                                        this.game.toggleButtonEnable('btnReorderReplace', spellRevealed.getCards().length === 1);
+                                        return [2];
+                                }
+                            });
+                        }); };
+                        return [2];
+                }
+            });
+        }); })();
+    };
+    SpellSeeingStoneState.prototype.onLeavingState = function () { };
+    SpellSeeingStoneState.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var spellRevealed = this.game.tableCenter.spellRevealed;
+        var handleReorder = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.game.bgaPerformAction("actSelectSpellSeeingStone", {
+                    cardOrder: this.card_order.map(function (card) { return card.id; }).join(","),
+                    replaceSpellId: 0,
+                });
+                return [2];
+            });
+        }); };
+        var handleReorderReplace = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.game.bgaPerformAction("actSelectSpellSeeingStone", {
+                    cardOrder: this.card_order.map(function (card) { return card.id; }).join(","),
+                    replaceSpellId: spellRevealed.getCards()[0].id,
+                });
+                return [2];
+            });
+        }); };
+        this.game.addActionButton("btnReorderReplace", _("Replace"), handleReorderReplace);
+        this.game.addActionButton("btnReorder", _("Reorder only"), handleReorder);
+        this.game.toggleButtonEnable("btnReorder", false);
+        this.game.toggleButtonEnable("btnReorderReplace", false);
+        this.game.addActionButtonClientCancel();
+    };
+    SpellSeeingStoneState.prototype.restoreGameState = function () {
+        return Promise.resolve(true);
+    };
+    return SpellSeeingStoneState;
 }());
 var SpellType = {
     Echo: "102",
