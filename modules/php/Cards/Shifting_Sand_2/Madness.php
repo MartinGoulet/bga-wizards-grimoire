@@ -14,15 +14,20 @@ class Madness extends BaseCard {
         $this->dealDamage(2);
     }
 
-    public function discount() {
-        $spell = SpellCard::get(Globals::getSpellPlayed());
-        if ($spell == null) {
-            Notifications::spellNoEffect();
-            return;
+    public function getSpellDiscount() {
+
+        // This spell costs 2 less if the previous spell you cast cost 3 or more.
+        $spellIds = Globals::getPlayedSpellsThisTurn();
+
+        if (intval(current($spellIds)) == $this->id) {
+            return 0;
+        } else {
+            $previousSpellId = intval(current($spellIds));
         }
 
-        $cost = Globals::getSpellCost();
+        $previousSpell = SpellCard::get($previousSpellId);
+        $cost = SpellCard::getCardInfo($previousSpell)['cost'];
+        // var_dump($cost);
         return $cost >= 3 ? 2 : 0;
     }
-
 }

@@ -2,6 +2,7 @@ class CastSpellStates implements StateHandler {
    constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellArgs): void {
+      log("Entering CastSpell state", args);
       this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
       const player_table = this.game.getCurrentPlayerTable();
@@ -14,6 +15,7 @@ class CastSpellStates implements StateHandler {
       player_table.setCursedMindIncreaseCost(args.cursed_mind);
       player_table.setCrescendoIncreaseCost(args.crescendo);
       player_table.setPremonitionDiscount(args['premonition_discount']);
+      player_table.spell_discount = args.spell_discount;
 
       const selectableCards = repertoire
          .getCards()
@@ -91,4 +93,5 @@ interface CastSpellArgs {
    cursed_mind: number;
    crescendo: number;
    undo: boolean;
+   spell_discount: Record<number, number>;
 }

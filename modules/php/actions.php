@@ -191,6 +191,12 @@ trait ActionTrait {
             $cost = $cost - intval($instance->discount());
         }
 
+        // Reduce cost from spell specific discount
+        $spell_discount = $this->getSpellsDiscount();
+        if (isset($spell_discount[intval($spell['id'])])) {
+            $cost = $cost - intval($spell_discount[intval($spell['id'])]);
+        }
+
         $cost = $cost < 0 ? 0 : $cost;
 
         if ($cost == 0 && sizeof($mana_ids) == 1 && $mana_ids[0] == "") {
@@ -215,7 +221,7 @@ trait ActionTrait {
             $mana_cards_after = [];
         }
 
-        Globals::setPlayedSpellsThisTurn(array_merge(Globals::getPlayedSpellsThisTurn(), [$spell['id']]));
+        Globals::setPlayedSpellsThisTurn(array_merge([$spell['id']], Globals::getPlayedSpellsThisTurn()));
 
         $spells = SpellCard::getCardsFromRepertoire();
         foreach ($spells as $spell_card) {

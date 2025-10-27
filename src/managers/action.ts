@@ -809,6 +809,10 @@ class ActionManager {
       });
    }
 
+   private actionMirage() {
+      this.actionSelectManaFrom();
+   }
+
    private actionPlague() {
       const label1 = _("Deal 2 damage to yourself and draw 4 cards");
       const label2 = _("Ignore");

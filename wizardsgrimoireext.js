@@ -1627,6 +1627,10 @@ var Game = (function () {
         if (type == "red") {
             cost -= player_table.getDiscountNextAttack();
         }
+        var spell_discount = player_table.spell_discount[Number(spell.id)] || 0;
+        if (spell_discount > 0) {
+            cost -= spell_discount;
+        }
         if (spell.type === SpellType.DeathSpiral) {
             var previous_spell_id = Number(player_table.getPreviousSpellPlayed());
             if (previous_spell_id > 0) {
@@ -2692,6 +2696,9 @@ var ActionManager = (function () {
                 },
             ],
         });
+    };
+    ActionManager.prototype.actionMirage = function () {
+        this.actionSelectManaFrom();
     };
     ActionManager.prototype.actionPlague = function () {
         var _this = this;
@@ -3796,6 +3803,7 @@ var PlayerTable = (function () {
         var _this = this;
         var _a;
         this.game = game;
+        this.spell_discount = {};
         this.mana_cooldown = {};
         this.player_id = Number(player.id);
         this.current_player = this.player_id == this.game.getPlayerId();
@@ -4386,6 +4394,7 @@ var CastSpellStates = (function () {
     }
     CastSpellStates.prototype.onEnteringState = function (args) {
         var _this = this;
+        log("Entering CastSpell state", args);
         this.game.clearSelection();
         if (!this.game.isCurrentPlayerActive())
             return;
@@ -4398,6 +4407,7 @@ var CastSpellStates = (function () {
         player_table.setCursedMindIncreaseCost(args.cursed_mind);
         player_table.setCrescendoIncreaseCost(args.crescendo);
         player_table.setPremonitionDiscount(args['premonition_discount']);
+        player_table.spell_discount = args.spell_discount;
         var selectableCards = repertoire
             .getCards()
             .filter(function (card) {

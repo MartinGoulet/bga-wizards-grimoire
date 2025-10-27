@@ -1,6 +1,8 @@
 class PlayerTable {
    public player_id: number;
 
+   public spell_discount: Record<number, number> = {};
+
    public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: Hand;

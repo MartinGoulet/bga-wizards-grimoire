@@ -44,7 +44,25 @@ trait ArgsTrait {
         $args["crescendo"] = Globals::getCrescendoIncreaseCost();
         $args['premonition_discount'] = Globals::getDiscountPremonition();
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
+
+        $args['spell_discount'] = $this->getSpellsDiscount();
+
         return $args;
+    }
+
+    public function getSpellsDiscount() : array {
+        $spells = SpellCard::getCardsFromRepertoire();
+        $spellManaDiscount = [];
+
+        foreach ($spells as $spell) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            if (!method_exists($instance, 'getSpellDiscount')) {
+                continue;
+            }
+            $spellManaDiscount[intval($spell['id'])] = $instance->getSpellDiscount();
+        }
+
+        return $spellManaDiscount;
     }
 
     function argCastSpellInteraction() {

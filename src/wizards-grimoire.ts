@@ -220,6 +220,11 @@ class Game implements Game {
          cost -= player_table.getDiscountNextAttack();
       }
 
+      const spell_discount = player_table.spell_discount[Number(spell.id)] || 0;
+      if (spell_discount > 0) {
+         cost -= spell_discount;
+      }
+
       if (spell.type === SpellType.DeathSpiral) {
          const previous_spell_id = Number(player_table.getPreviousSpellPlayed());
          if (previous_spell_id > 0) {
