@@ -21,8 +21,16 @@ trait ActionTrait {
         (note: each method below must match an input method in nicodemus.action.php)
     */
 
+    public function actActivateDelayedSpell(int $card_id, #[JsonParam(associative: false, alphanum: false)] object $args) {
+        if (is_array($args->values)) {
+            $args = $args->values;
+        } else {
+            $args = $args->values ? [$args->values] : [];
+        }
+        $this->activateDelayedSpell($card_id, $args);
+    }
+
     public function activateDelayedSpell(int $card_id, array $args) {
-        $this->checkAction('activateDelayedSpell');
         $spell = SpellCard::isInRepertoire($card_id);
         $delayed_spells_ids = Globals::getCoolDownDelayedSpellIds();
         $is_authorize = in_array($spell['id'], $delayed_spells_ids);
@@ -402,8 +410,7 @@ trait ActionTrait {
         return $damage;
     }
 
-    public function blockBasicAttack($mana_id) {
-        $this->checkAction('blockBasicAttack');
+    public function actBlockBasicAttack(int $mana_id) {
         $card = ManaCard::isInHand($mana_id, Players::getOpponentId());
         $damage = ManaCard::getPower($card);
 
