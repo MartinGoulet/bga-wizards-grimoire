@@ -161,6 +161,32 @@ class ManaCard {
         Events::onManaDiscarded($card, $position, $player_id);
     }
 
+    public static function exchangeManaCoolDownBetweenPositions(int $position1, int $position2, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+
+        $manas1 = self::getCardsOnManaCoolDown($position1, $player_id);
+        $manas2 = self::getCardsOnManaCoolDown($position2, $player_id);
+
+        $manaIds1 = array_column($manas1, 'id');
+        $manaIds2 = array_column($manas2, 'id');
+
+        if(!empty($manaIds1)) {
+            $location = CardLocation::PlayerManaCoolDown($player_id, $position2);
+            $sql = "UPDATE manas SET card_location = '{$location}' WHERE card_id IN (" . implode(',', $manaIds1) . ")";
+            Game::get()->DbQuery($sql);
+            Notifications::moveManaCard($player_id, $manas1);
+        }
+
+        if(!empty($manaIds2)) {
+            $location = CardLocation::PlayerManaCoolDown($player_id, $position1);
+            $sql = "UPDATE manas SET card_location = '{$location}' WHERE card_id IN (" . implode(',', $manaIds2) . ")";
+            Game::get()->DbQuery($sql);
+            Notifications::moveManaCard($player_id, $manas2);
+        }
+    }
+
     public static function get(int $card_id) {
         return Game::get()->deck_manas->getCard($card_id);
     }

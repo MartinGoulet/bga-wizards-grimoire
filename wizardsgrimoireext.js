@@ -2868,6 +2868,25 @@ var ActionManager = (function () {
             },
         });
     };
+    ActionManager.prototype.actionWizardsGambit = function () {
+        var _this = this;
+        var msg = _("${you} must select one of your other spell");
+        var player_table = this.game.getCurrentPlayerTable();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== _this.getCurrentCard().id;
+        });
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+                ignore: function () {
+                    _this.activateNextAction();
+                },
+            },
+        });
+    };
     ActionManager.prototype.actionUnchained = function () {
         var _this = this;
         this.question({

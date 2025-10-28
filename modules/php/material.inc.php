@@ -1023,6 +1023,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
+  'js_actions' => "actionWizardsGambit",
 ],
  226 => [ 
   'name' => clienttranslate("Earthquake"),

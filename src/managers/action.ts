@@ -999,6 +999,27 @@ class ActionManager {
       });
    }
 
+   private actionWizardsGambit() {
+      const msg = _("${you} must select one of your other spell");
+      const player_table = this.game.getCurrentPlayerTable();
+      
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== this.getCurrentCard().id;
+      });
+
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            ignore: () => {
+               this.activateNextAction();
+            },
+         } as SelectSpellArgs,
+      });
+   }
+
    private actionUnchained() {
       this.question({
          cancel: true,
