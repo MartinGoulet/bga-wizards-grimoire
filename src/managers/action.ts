@@ -878,6 +878,10 @@ class ActionManager {
    }
 
    private actionSongOfShadows() {
+      if (this.game.tableCenter.manaDiscard.getCards().length == 0) {
+         this.activateNextAction();
+         return;
+      }
       const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
       this.game.setClientState(states.client.selectManaDiscard, {
          descriptionmyturn: this.getCardName() + " : " + msg,

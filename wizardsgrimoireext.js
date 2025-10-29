@@ -2757,6 +2757,10 @@ var ActionManager = (function () {
         this.actionSelectManaFrom();
     };
     ActionManager.prototype.actionSongOfShadows = function () {
+        if (this.game.tableCenter.manaDiscard.getCards().length == 0) {
+            this.activateNextAction();
+            return;
+        }
         var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
         this.game.setClientState(states.client.selectManaDiscard, {
             descriptionmyturn: this.getCardName() + " : " + msg,
