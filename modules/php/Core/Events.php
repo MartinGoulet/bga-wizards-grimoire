@@ -22,6 +22,8 @@ class Events {
             $player_id = Players::getPlayerId();
         }
         $spell = SpellCard::getFromRepertoire($position, $player_id);
+        if(empty($spell)) return;
+        
         $card_type = SpellCard::getCardInfo($spell);
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_DELAYED:

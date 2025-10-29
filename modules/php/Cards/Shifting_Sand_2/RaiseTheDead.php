@@ -19,7 +19,7 @@ class RaiseTheDead extends BaseCard {
 
         foreach (range(1, 6) as $position) {
             $spell = SpellCard::getFromRepertoire($position);
-            if (!in_array($spell['id'], [$this->id, $excluded_spell_id])) {
+            if (!empty($spell) && !in_array($spell['id'], [$this->id, $excluded_spell_id])) {
                 ManaCard::dealFromDeckToManaCoolDown($position);
             }
         }

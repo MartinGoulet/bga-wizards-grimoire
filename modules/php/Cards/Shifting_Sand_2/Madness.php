@@ -26,6 +26,9 @@ class Madness extends BaseCard {
         }
 
         $previousSpell = SpellCard::get($previousSpellId);
+        if(empty($previousSpell)) {
+            return 0;
+        }
         $cost = SpellCard::getCardInfo($previousSpell)['cost'];
         // var_dump($cost);
         return $cost >= 3 ? 2 : 0;

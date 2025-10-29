@@ -46,6 +46,13 @@ trait StateTrait {
 
     function stSpellCoolDownInstantDelayed() {
 
+        for($i = 1; $i <= 6; $i++) {
+            $spell = SpellCard::getFromRepertoire($i);
+            if (empty($spell) && ManaCard::countOnTopOfManaCoolDown($i) > 0) {
+                SpellCard::discardAllManaCardsInPosition($i);
+            }
+        }
+
         $this->stSpellCoolDownInstant();
         $this->stSpellCoolDownDelayed();
         $this->stSpellCoolDownRememberOngoing();

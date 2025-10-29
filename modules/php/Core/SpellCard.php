@@ -55,7 +55,10 @@ class SpellCard {
         return $cardClass;
     }
 
-    public static function getName($card) {
+    public static function getName(array $card) {
+        if (empty($card)) {
+            throw new BgaUserException("Card not found");
+        }
         $card_type = Game::get()->card_types[$card['type']];
         return $card_type['name'];
     }
@@ -124,10 +127,14 @@ class SpellCard {
     }
 
     public static function discardAllManaCardsOnSpell(array $spell, int $player_id = 0) {
+        $position = SpellCard::getPositionInRepertoire($spell);
+        self::discardAllManaCardsInPosition($position, $player_id);
+    }
+
+    public static function discardAllManaCardsInPosition(int $position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
-        $position = SpellCard::getPositionInRepertoire($spell);
 
         // Discard all mana on the relic
         $manas = ManaCard::getCardsOnManaCoolDown($position, $player_id);
