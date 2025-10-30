@@ -4,8 +4,6 @@ namespace WizardsGrimoireExt\Cards\Shifting_Sand_2;
 
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\Globals;
-use WizardsGrimoireExt\Core\Notifications;
-use WizardsGrimoireExt\Core\SpellCard;
 
 class Madness extends BaseCard {
 
@@ -15,22 +13,6 @@ class Madness extends BaseCard {
     }
 
     public function getSpellDiscount() {
-
-        // This spell costs 2 less if the previous spell you cast cost 3 or more.
-        $spellIds = Globals::getPlayedSpellsThisTurn();
-
-        if (intval(current($spellIds)) == $this->id) {
-            return 0;
-        } else {
-            $previousSpellId = intval(current($spellIds));
-        }
-
-        $previousSpell = SpellCard::get($previousSpellId);
-        if(empty($previousSpell)) {
-            return 0;
-        }
-        $cost = SpellCard::getCardInfo($previousSpell)['cost'];
-        // var_dump($cost);
-        return $cost >= 3 ? 2 : 0;
+        return Globals::getSpellCost() >= 3 ? 2 : 0;
     }
 }
