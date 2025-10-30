@@ -11,7 +11,7 @@ class CursedMind extends BaseCard {
         Globals::setCursedMindIncreaseCost(1);
     }
 
-    public function onBeforeCastSpell() {
+    public function onAfterCastSpell() {
         if (Globals::getCursedMindIncreaseCost() > 0) {
             $this->dealDamage(4);
             Globals::setCursedMindIncreaseCost(0);

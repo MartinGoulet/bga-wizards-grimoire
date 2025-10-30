@@ -11,8 +11,9 @@ class Crescendo extends BaseCard {
         Globals::setCrescendoIncreaseCost(1);
     }
 
-    public function onBeforeCastSpell() {
-        if (Globals::getCrescendoIncreaseCost() > 0) {
+    public function onAfterCastSpell() {
+        $lastSpellId = Globals::getSpellPlayed();
+        if ($lastSpellId != $this->id && Globals::getCrescendoIncreaseCost() > 0) {
             $this->drawManaCards(4);
             Globals::setCrescendoIncreaseCost(0);
         }

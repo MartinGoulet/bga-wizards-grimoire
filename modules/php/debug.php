@@ -68,8 +68,8 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["Mirage", "WizardsGambit", "Madness", "Transference", "DreamTheft", "Rewind"],
-            "2329673" => ["SeeingStone", "Trample", "RaiseTheDead", "BlankSlate", "Gloom", "DarkOffering"],
+            "2329672" => ["RaiseTheDead", "Devotion", "Premonition", "Transference", "DreamTheft", "Rewind"],
+            "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         ];
 
         $spells_pool = [];

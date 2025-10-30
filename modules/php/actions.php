@@ -231,14 +231,6 @@ trait ActionTrait {
 
         Globals::setPlayedSpellsThisTurn(array_merge([$spell['id']], Globals::getPlayedSpellsThisTurn()));
 
-        $spells = SpellCard::getCardsFromRepertoire();
-        foreach ($spells as $spell_card) {
-            $card_instance = SpellCard::getInstanceOfCard($spell_card);
-            if (method_exists($card_instance, 'onBeforeCastSpell')) {
-                $card_instance->onBeforeCastSpell();
-            }
-        }
-
         Notifications::castSpell($player_id, $card_type['name'], $mana_cards_before, $mana_cards_after);
 
         Globals::setConsecutivelyAttackSpellCountBefore(Globals::getConsecutivelyAttackSpellCount());

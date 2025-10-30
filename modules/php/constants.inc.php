@@ -113,6 +113,7 @@ define('ST_BASIC_ATTACK_END', 65);
 define('ST_NEXT_PLAYER', 7);
 
 const ST_SPELL_SEEING_STONE = 70;
+const ST_CAST_SPELL_END = 71;
 
 
 /*
@@ -165,3 +166,4 @@ define('WG_ICON_SET_KICKSTARTER_1', 'KickStarter_1');
 define('WG_ICON_SET_SAND_1', 'Sand_1');
 const WG_ICON_SET_SHIFTING_SAND_1 = 'Shifting_Sand_1';
 const WG_ICON_SET_SHIFTING_SAND_2 = 'Shifting_Sand_2';
+const WG_ICON_SET_FORBIDDEN_SCROLLS = 'Forbidden_Scrolls';

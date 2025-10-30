@@ -198,7 +198,7 @@ $castSpellsStates = [
         "args" => "argCastSpell",
         "possibleactions" => ["actCastSpell", "actPass", "actUndo"],
         "transitions" => [
-            "cast" => ST_CAST_SPELL_START,
+            "cast" => ST_CAST_SPELL_END,
             "undo" => ST_CAST_SPELL_START,
             "pass" => ST_BASIC_ATTACK_START,
             "player" => ST_CAST_SPELL_INTERACTION,
@@ -240,7 +240,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stReturnToCurrentPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL_START,
+            "" => ST_CAST_SPELL_END,
         ]
     ],
 
@@ -260,7 +260,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stSwithPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL_START,
+            "" => ST_CAST_SPELL_END,
         ]
     ],
 ];
