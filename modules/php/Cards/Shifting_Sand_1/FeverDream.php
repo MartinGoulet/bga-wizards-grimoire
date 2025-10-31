@@ -2,9 +2,13 @@
 
 namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
 
-use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 
-class FeverDream extends BaseCard {
+class FeverDream extends OngoingBaseCard {
+
+    public function isActive(): bool {
+        return $this->isActiveAtLeastOneMana();
+    }
 
     public function onAddSpellToRepertoire(array $card) {
         $this->dealDamage(2);

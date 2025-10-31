@@ -76,7 +76,7 @@ trait DebugTrait {
             "2329673" => ["SavageStrike", "SongOfShadows", "MaskOfTheBeast"],
         ];
 
-        $spells_pool = [];
+        $spells_pool = ['FeverDream'];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
         // $players_spell_mana = [
