@@ -67,17 +67,25 @@ trait DebugTrait {
         Globals::setSpellCost(0);
         Globals::setSpellPlayed(0);
 
+        // $players_spell_cards = [
+        //     "2329672" => ["RaiseTheDead", "Devotion", "Premonition", "Transference", "DreamTheft", "Rewind"],
+        //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
+        // ];
         $players_spell_cards = [
-            "2329672" => ["RaiseTheDead", "Devotion", "Premonition", "Transference", "DreamTheft", "Rewind"],
-            "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
+            "2329672" => ["Premonition", "FrozenGoblet"],
+            "2329673" => ["SavageStrike", "SongOfShadows", "MaskOfTheBeast"],
         ];
 
         $spells_pool = [];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
+        // $players_spell_mana = [
+        //     "2329672" => [0, 0, 0, 0, 0, 0],
+        //     "2329673" => [0, 0, 0, 0, 0, 0],
+        // ];
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329672" => [0, 0],
+            "2329673" => [0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
