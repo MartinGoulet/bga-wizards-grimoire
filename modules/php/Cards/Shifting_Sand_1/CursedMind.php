@@ -4,6 +4,7 @@ namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
 
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class CursedMind extends BaseCard {
 
@@ -14,7 +15,9 @@ class CursedMind extends BaseCard {
     public function onAfterCastSpell() {
         $lastSpellId = Globals::getSpellPlayed();
         if ($lastSpellId != $this->id && Globals::getCursedMindIncreaseCost() > 0) {
-            $this->dealDamage(4);
+            $spell = SpellCard::get($lastSpellId);
+            $instance = SpellCard::getInstanceOfCard($spell);
+            $instance->dealDamage(4);
             Globals::setCursedMindIncreaseCost(0);
         }
     }
