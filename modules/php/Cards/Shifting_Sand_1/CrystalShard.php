@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
 
-use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\RelicCard;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;

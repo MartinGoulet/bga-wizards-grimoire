@@ -7,7 +7,6 @@ class CastSpellInteractionStates implements StateHandler {
       this.game.markCardAsSelected(args.spell);
       if (!this.game.isCurrentPlayerActive()) return;
 
-      debugger;
       this.game.actionManager.setup("actCastSpellInteraction");
       this.game.actionManager.addActionInteraction(args.spell);
       if (args.spell.type === SpellType.Echo) {

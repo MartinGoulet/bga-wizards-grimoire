@@ -1665,8 +1665,9 @@ var Game = (function () {
         return this.getPlayerTable(this.getPlayerId());
     };
     Game.prototype.markCardAsSelected = function (card) {
+        var _a;
         var div = this.spellsManager.getCardElement(card);
-        div.classList.add("wg-selected");
+        (_a = div === null || div === void 0 ? void 0 : div.classList) === null || _a === void 0 ? void 0 : _a.add("wg-selected");
     };
     Game.prototype.restoreGameState = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -4530,7 +4531,6 @@ var CastSpellInteractionStates = (function () {
         this.game.markCardAsSelected(args.spell);
         if (!this.game.isCurrentPlayerActive())
             return;
-        debugger;
         this.game.actionManager.setup("actCastSpellInteraction");
         this.game.actionManager.addActionInteraction(args.spell);
         if (args.spell.type === SpellType.Echo) {

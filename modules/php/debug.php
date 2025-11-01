@@ -72,7 +72,7 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["RaiseTheDead", "DanceOfAgony", "DarkOffering", "CursedMind", "Revelation"],
+            "2329672" => ["RaiseTheDead", "DanceOfAgony", "DarkOffering", "CursedMind", "CrystalShard"],
             "2329673" => ["SecondLife", "Devotion", "Corruption", "SpiritDance"],
         ];
 

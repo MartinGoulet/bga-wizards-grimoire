@@ -268,7 +268,7 @@ class Game implements Game {
 
    public markCardAsSelected(card: SpellCard) {
       const div = this.spellsManager.getCardElement(card);
-      div.classList.add("wg-selected");
+      div?.classList?.add("wg-selected");
    }
 
    async restoreGameState() {

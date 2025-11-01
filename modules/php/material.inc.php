@@ -1291,6 +1291,9 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
+  'interaction' => "player",
+  'js_actions_interaction' => "actionReplaceRelic",
+  'is_relic' => true,
 ],
  253 => [ 
   'name' => clienttranslate("Frozen goblet"),
