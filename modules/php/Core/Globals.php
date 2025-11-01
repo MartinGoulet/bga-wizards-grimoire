@@ -2,7 +2,6 @@
 
 namespace WizardsGrimoireExt\Core;
 
-use APP_DbObject;
 use Bga\Games\wizardsgrimoireext\Game;
 
 /*

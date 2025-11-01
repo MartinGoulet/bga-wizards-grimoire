@@ -72,8 +72,8 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["Premonition", "FrozenGoblet"],
-            "2329673" => ["SavageStrike", "SongOfShadows", "MaskOfTheBeast"],
+            "2329672" => ["RaiseTheDead", "DanceOfAgony", "DarkOffering", "Earthquake"],
+            "2329673" => ["SecondLife", "Devotion", "Corruption", "SpiritDance"],
         ];
 
         $spells_pool = ['FeverDream'];

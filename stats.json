@@ -1,0 +1,106 @@
+{
+    "table": {
+        "turns_number": {
+            "id": 10,
+            "name": "Number of turns",
+            "type": "int"
+        }
+    },
+    "player": {
+        "turns_number": {
+            "id": 10,
+            "name": "Number of turns",
+            "type": "int"
+        },
+        "win_first_spell_choice": {
+            "id": 11,
+            "name": "Win rate with first spell choice",
+            "type": "int"
+        },
+        "win_first_attacker": {
+            "id": 12,
+            "name": "Win rate with as first attacker",
+            "type": "int"
+        },
+        "nbr_draft": {
+            "id": 20,
+            "name": "Number of spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_red": {
+            "id": 21,
+            "name": "Number of attack spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_green": {
+            "id": 22,
+            "name": "Number of regeneration spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_purple": {
+            "id": 23,
+            "name": "Number of utility spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_cost_1": {
+            "id": 25,
+            "name": "Number of 1 cost spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_cost_2": {
+            "id": 26,
+            "name": "Number of 2 cost spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_cost_3": {
+            "id": 27,
+            "name": "Number of 3 cost spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_cost_4": {
+            "id": 28,
+            "name": "Number of 4 cost spells drafted",
+            "type": "int"
+        },
+        "nbr_draft_cost_5": {
+            "id": 29,
+            "name": "Number of 5 cost spells drafted",
+            "type": "int"
+        },
+        "nbr_dmg_spells_2": {
+            "id": 30,
+            "name": "Damage when having 2 spells",
+            "type": "int"
+        },
+        "nbr_dmg_spells_3": {
+            "id": 31,
+            "name": "Damage when having 3 spells",
+            "type": "int"
+        },
+        "nbr_dmg_spells_4": {
+            "id": 32,
+            "name": "Damage when having 4 spells",
+            "type": "int"
+        },
+        "nbr_dmg_spells_5": {
+            "id": 33,
+            "name": "Damage when having 5 spells",
+            "type": "int"
+        },
+        "nbr_dmg_spells_6": {
+            "id": 34,
+            "name": "Damage when having 6 spells",
+            "type": "int"
+        },
+        "nbr_dmg_basic_attack": {
+            "id": 38,
+            "name": "Damage with basic attack",
+            "type": "int"
+        },
+        "nbr_mana_draw": {
+            "id": 70,
+            "name": "Number of mana cards drawn",
+            "type": "int"
+        }
+    }
+}

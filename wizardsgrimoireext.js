@@ -2594,7 +2594,7 @@ var ActionManager = (function () {
         this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
     };
     ActionManager.prototype.actionDarkOffering = function () {
-        this.actions.push("actionSelectManaFrom", "actionSelectSpellOpponent");
+        this.actions.push("actionSelectManaFrom");
         this.activateNextAction();
     };
     ActionManager.prototype.actionDevotion = function () {

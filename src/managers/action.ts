@@ -700,7 +700,7 @@ class ActionManager {
    }
 
    private actionDarkOffering() {
-      this.actions.push("actionSelectManaFrom", "actionSelectSpellOpponent");
+      this.actions.push("actionSelectManaFrom");
       this.activateNextAction();
    }
 
