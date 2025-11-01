@@ -2744,7 +2744,20 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionRevelation = function () {
-        this.actionSelectManaFrom();
+        var msg = _("${you} may select up to ${nbr} mana card(s)");
+        var exclude = [];
+        var args = {
+            player_id: this.game.getPlayerId(),
+            card: this.getCurrentCard(),
+            count: 1,
+            exact: true,
+            exclude: exclude,
+            nbr: 1,
+        };
+        this.game.setClientState(states.client.selectManaDeck, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: args,
+        });
     };
     ActionManager.prototype.actionRigmarole = function () {
         var msg = _("${you} may give ${nbr} cards from your hand or pass");

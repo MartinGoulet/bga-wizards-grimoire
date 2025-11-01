@@ -861,8 +861,22 @@ class ActionManager {
    }
 
    private actionRevelation() {
-      // this.selectMana(1, _("${you} may select ${nbr} mana card(s) to reveal"), true);
-      this.actionSelectManaFrom();
+      const msg = _("${you} may select up to ${nbr} mana card(s)");
+      const exclude: number[] = [];
+
+      const args = {
+         player_id: this.game.getPlayerId(),
+         card: this.getCurrentCard(),
+         count: 1,
+         exact: true,
+         exclude,
+         nbr: 1,
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args,
+      });
    }
 
    private actionRigmarole() {
