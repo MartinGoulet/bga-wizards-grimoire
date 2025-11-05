@@ -4,6 +4,7 @@ namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class Notifications {
 
@@ -311,13 +312,14 @@ class Notifications {
             'player_id' => intval($player_id),
         ];
 
-        $cards = array_filter($cards_before, function ($card) {
-            return !ManaCard::isCrystalShard($card);
-        });
-
         $cards = array_values(array_map(function ($card) {
             return ManaCard::get($card['id']);
-        }, $cards));
+        }, $cards_before));
+
+        $cards = array_filter($cards, function ($card) {
+            $exclude = ManaCard::isCrystalShard($card) && $card['location'] == CardLocation::Discard();
+            return !$exclude;
+        });
 
         $args['cards_after'] = array_values($cards);
         self::notify($player_id, 'onMoveManaCards', '', $args);

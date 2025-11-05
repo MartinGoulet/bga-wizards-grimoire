@@ -57,7 +57,10 @@ trait DebugTrait {
 
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
         $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
+        $sql = "DELETE FROM `card` WHERE card_id > 60";
+        Game::get()->DbQuery($sql);
         $mana_deck->shuffle(CardLocation::Deck());
+
 
         Globals::setSkipInteraction(false);
         Globals::setPreviousBasicAttackPower(2);
@@ -72,7 +75,7 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["FeverDream", "SunkenSkull", "DarkOffering", "CursedMind", "CrystalShard"],
+            "2329672" => ["CrystalShard", "ShadowOath", "DarkOffering", "CursedMind"],
             "2329673" => ["SecondLife", "Devotion", "Corruption", "SpiritDance"],
         ];
 
@@ -85,7 +88,7 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329672" => [1, 0, 0, 0, 0],
+            "2329672" => [0, 0, 0, 0, 0],
             "2329673" => [0, 0, 0],
         ];
 
@@ -155,7 +158,7 @@ trait DebugTrait {
 
     private function getCardByClassName($class_name) {
         $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
-            return array_key_exists('class', $card) && $card['class'] == $class_name;
+            return array_key_exists('class', $card) && $card['class'] == $class_name && $card['icon'] !== WG_ICON_SET_SAND_1;
         });
         $types = array_keys($card_types);
         $type = array_shift($types);
