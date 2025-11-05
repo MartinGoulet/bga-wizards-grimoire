@@ -11,6 +11,11 @@ use WizardsGrimoireExt\Objects\CardLocation;
 
 class ManaCard {
 
+    public static function delete(int $card_id) {
+        $sql = "DELETE FROM manas WHERE card_id = $card_id";
+        Game::get()->DbQuery($sql);
+    }
+
     public static function addOnTopOfDeck($card_id) {
         Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Deck(), true);
     }
@@ -18,7 +23,7 @@ class ManaCard {
     public static function addOnTopOfDiscard($card_id) {
         $card = ManaCard::get($card_id);
         if (self::isCrystalShard($card)) {
-            Game::get()->deck_manas->moveCard($card_id, 'removed');
+            self::delete($card_id);
             self::moveSpellCrystalShardToDiscard($card);
         } else {
             Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
@@ -373,8 +378,9 @@ class ManaCard {
 
     public static function discardSpellCard($card) {
         if (self::isCrystalShard($card)) {
-            $deck = Game::get()->deck_manas;
-            $deck->moveCard($card['id'], 'removed');
+            // $deck = Game::get()->deck_manas;
+            // $deck->moveCard($card['id'], 'removed');
+            self::delete($card['id']);
             self::moveSpellCrystalShardToDiscard($card);
         } else {
             throw new BgaSystemException("Only Crystal Shard spell cards can be discarded.");

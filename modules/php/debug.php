@@ -57,7 +57,7 @@ trait DebugTrait {
 
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
         $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
-        $sql = "DELETE FROM `card` WHERE card_id > 60";
+        $sql = "DELETE FROM `manas` WHERE card_id > 60";
         Game::get()->DbQuery($sql);
         $mana_deck->shuffle(CardLocation::Deck());
 
@@ -75,8 +75,8 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["CrystalShard", "ShadowOath", "DarkOffering", "CursedMind"],
-            "2329673" => ["SecondLife", "Devotion", "Corruption", "SpiritDance"],
+            "2329673" => ["CrystalShard", "ShadowOath", "Corruption", "CursedMind"],
+            "2329672" => ["SecondLife", "Devotion", "DreamTheft", "SpiritDance"],
         ];
 
         $spells_pool = [];

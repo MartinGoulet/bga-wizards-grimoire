@@ -1,4 +1,5 @@
-#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back, #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front {
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back,
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front {
   background: url("img/mana-shifting-sand.jpg");
   background-size: 500% 100%;
 }
@@ -22,6 +23,16 @@
   background: url("img/shifting_sands-front.jpg");
   background-size: 1000% 700%;
   background-position: -200% -500%;
+}
+#table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] .wg-icon-crystal-shard {
+  position: absolute;
+  font-size: 40px;
+  top: 95px;
+  left: calc(50% - 11px);
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  font-weight: bold;
+  pointer-events: none;
 }
 
 .wg-card {

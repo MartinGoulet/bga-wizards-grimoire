@@ -3310,6 +3310,10 @@ var ManaCardManager = (function (_super) {
                 if (!document.getElementById(growthID)) {
                     div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>"));
                 }
+                if (div.dataset.type == "5" && div.dataset.type_arg == "1") {
+                    div.querySelectorAll(".wg-icon-crystal-shard").forEach(function (e) { return e.remove(); });
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-icon-crystal-shard\">5</div>");
+                }
             },
             setupBackDiv: function (card, div) {
                 div.classList.add("wg-card-mana-back");

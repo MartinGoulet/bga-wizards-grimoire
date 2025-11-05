@@ -46,7 +46,7 @@ class Events {
         }
 
         if($mana_card['type'] == 5 && $mana_card['type_arg'] == 1) {
-            Game::get()->deck_manas->moveCard($mana_card['id'], 'removed', $player_id);
+            ManaCard::delete($mana_card['id']);
         }
     }
 

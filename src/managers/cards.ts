@@ -137,6 +137,14 @@ class ManaCardManager extends CardManager<ManaCard> {
                   `<div id="${growthID}" class="wg-mana-icon wg-icon-growth">+1</div>`,
                );
             }
+
+            if( div.dataset.type == "5" && div.dataset.type_arg == "1" ) {
+               div.querySelectorAll(".wg-icon-crystal-shard").forEach( e => e.remove() );
+               div.insertAdjacentHTML(
+                  "afterbegin",
+                  `<div class="wg-icon-crystal-shard">5</div>`,
+               );
+            }
          },
          setupBackDiv: (card: ManaCard, div: HTMLElement) => {
             div.classList.add("wg-card-mana-back");

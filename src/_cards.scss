@@ -3,8 +3,9 @@
 // }
 
 #table[data-card-set="shifting_sand"] .wg-card {
-   .wg-card-mana-back, .wg-card-mana-front {
-      background: url('img/mana-shifting-sand.jpg');
+   .wg-card-mana-back,
+   .wg-card-mana-front {
+      background: url("img/mana-shifting-sand.jpg");
       background-size: 500% 100%;
    }
    .wg-card-mana-back {
@@ -20,9 +21,20 @@
 }
 
 #table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] {
-   background: url("img/shifting_sands-front.jpg"); 
+   background: url("img/shifting_sands-front.jpg");
    background-size: 1000% 700%;
    background-position: -200% -500%;
+
+   .wg-icon-crystal-shard {
+      position: absolute;
+      font-size: 40px;
+      top: 95px;
+      left: calc(50% - 11px);
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      font-weight: bold;
+      pointer-events: none;
+   }
 }
 
 .wg-card {
@@ -121,7 +133,6 @@
       }
    }
 }
-
 
 .wg-card .wg-card-spell-front.shifting_sand_set,
 .wg-tooltip-card .wg-card .shifting_sand {
