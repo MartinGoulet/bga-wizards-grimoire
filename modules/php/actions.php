@@ -124,16 +124,6 @@ trait ActionTrait {
         }
     }
 
-    private function triggerOnAddSpellToRepertoire(array $spellCard) {
-        $cards = SpellCard::getOngoingActiveSpells(Players::getPlayerId());
-        foreach ($cards as $card_id => $card) {
-            $instance = SpellCard::getInstanceOfCard($card);
-            if (method_exists($instance, 'onAddSpellToRepertoire')) {
-                $instance->onAddSpellToRepertoire($spellCard);
-            }
-        }
-    }
-
     public function actReplaceSpell(int $old_spell_id, int $new_spell_id) {
         $old_card = SpellCard::get($old_spell_id);
         $new_card = SpellCard::get($new_spell_id);

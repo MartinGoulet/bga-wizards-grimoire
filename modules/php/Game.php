@@ -39,6 +39,7 @@ require_once('actions.php');
 require_once('args.php');
 require_once('debug.php');
 require_once('states.php');
+require_once('utils.php');
 require_once('constants.inc.php');
 
 use WizardsGrimoireExt\Core\ActionTrait;
@@ -48,6 +49,7 @@ use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 use WizardsGrimoireExt\Core\StateTrait;
+use WizardsGrimoireExt\Core\UtilsTrait;
 use WizardsGrimoireExt\DebugTrait;
 use WizardsGrimoireExt\Objects\CardLocation;
 
@@ -56,6 +58,7 @@ class Game extends \Bga\GameFramework\Table {
     use ArgsTrait;
     use StateTrait;
     use DebugTrait;
+    use UtilsTrait;
 
     /** @var Game */
     public static $instance = null;

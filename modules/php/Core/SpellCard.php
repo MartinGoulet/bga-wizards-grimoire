@@ -206,6 +206,8 @@ class SpellCard {
         Notifications::chooseSpell($player_id, $card);
         Stats::replaceSpell($player_id, $card);
 
+        Game::get()->triggerOnAddSpellToRepertoire($new_spell);
+        
         $newSpell = Game::get()->deck_spells->pickCardForLocation(
             CardLocation::Deck(),
             CardLocation::SpellSlot(),
