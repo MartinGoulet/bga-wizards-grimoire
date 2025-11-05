@@ -27,11 +27,13 @@ class Belch extends BaseCard {
 
         $cards_before = ManaCard::getRevealedMana();
         foreach( $deck_card_ids as $card_id ) {
-            $card = ManaCard::addOnTopOfDeck($card_id);
+            if( $card_id == "" ) continue;
+            $card = ManaCard::addOnTopOfDeck(intval($card_id));
         }
 
         foreach( $discard_card_ids as $card_id ) {
-            $card = ManaCard::addOnTopOfDiscard($card_id);
+            if( $card_id == "" ) continue;
+            $card = ManaCard::addOnTopOfDiscard(intval($card_id));
         }
 
         Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
