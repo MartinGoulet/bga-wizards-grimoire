@@ -383,12 +383,21 @@ trait ActionTrait {
 
     private function modifyBasicAttackDamage(int $damage) {
         $cards = SpellCard::getOngoingActiveSpells(Players::getPlayerId());
+        $instancesByPriority = [];
         foreach ($cards as $card_id => $card) {
             $instance = SpellCard::getInstanceOfCard($card);
             if (method_exists($instance, 'onModifyBasicAttackDamage')) {
-                $damage = $instance->onModifyBasicAttackDamage($damage);
+                $priority = method_exists($instance, 'getPriority') ? $instance->getPriority() : 10;
+                $instancesByPriority[] = ['priority' => $priority, 'instance' => $instance];
             }
         }
+
+        usort($instancesByPriority, fn($a, $b) => $a['priority'] <=> $b['priority']);
+        foreach ($instancesByPriority as $entry) {
+            $instance = $entry['instance'];
+            $damage = $instance->onModifyBasicAttackDamage($damage);
+        }
+        
         return $damage;
     }
 

@@ -76,7 +76,7 @@ trait DebugTrait {
         // ];
         $players_spell_cards = [
             "2329673" => ["CrystalShard", "ShadowOath", "Corruption", "CursedMind"],
-            "2329672" => ["SecondLife", "Devotion", "DreamTheft", "SpiritDance"],
+            "2329672" => ["Multiply", "InfiniteFlame", "DreamTheft", "SpiritDance"],
         ];
 
         $spells_pool = [];
