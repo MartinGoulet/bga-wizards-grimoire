@@ -177,6 +177,10 @@ class SpellCard {
         Notifications::chooseSpell($player_id, $card);
         Stats::replaceSpell($player_id, $card);
 
+        if($player_id == Players::getPlayerId()) {
+            Game::get()->triggerOnAddSpellToRepertoire($card);
+        }
+
         if ($move !== "replaceSeeingStone") {
             $newSpell = Game::get()->deck_spells->pickCardForLocation(
                 CardLocation::Deck(),

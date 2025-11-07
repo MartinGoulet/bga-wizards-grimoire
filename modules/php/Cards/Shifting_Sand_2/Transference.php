@@ -5,7 +5,6 @@ namespace WizardsGrimoireExt\Cards\Shifting_Sand_2;
 use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\Globals;
-use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 
