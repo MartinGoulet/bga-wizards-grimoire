@@ -119,6 +119,19 @@ class Game extends \Bga\GameFramework\Table {
 
         $this->deck_spells = $this->deckFactory->createDeck('spells');
         $this->deck_manas = $this->deckFactory->createDeck('manas');
+
+        // automatically complete notification args when needed
+        $this->notify->addDecorator(function (string $message, array $args) {
+            if (isset($args['player_id']) && !isset($args['player_name']) && str_contains($message, '${player_name}')) {
+                $args['player_name'] = $this->getPlayerNameById($args['player_id']);
+            }
+
+            if (isset($args['player_id2']) && !isset($args['player_name2']) && str_contains($message, '${player_name2}')) {
+                $args['player_name2'] = $this->getPlayerNameById($args['player_id2']);
+            }
+            
+            return $args;
+        });
     }
 
     public static function get() {

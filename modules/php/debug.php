@@ -75,7 +75,7 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["Belch", "Transference", "Corruption", "CursedMind"],
+            "2329672" => ["Belch", "Transference", "Imagination", "CursedMind"],
             "2329673" => ["FireWalk", "InfiniteFlame", "DreamTheft", "SpiritDance"],
         ];
 
@@ -137,8 +137,8 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(15, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(15, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 

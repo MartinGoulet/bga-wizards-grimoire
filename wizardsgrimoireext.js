@@ -2698,6 +2698,30 @@ var ActionManager = (function () {
             ],
         });
     };
+    ActionManager.prototype.actionImagination = function () {
+        var _this = this;
+        var label1 = _("Draw 2 cards");
+        var label2 = _("Gain mana until you have the same quantity of mana cards as your opponent");
+        this.question({
+            cancel: true,
+            options: [
+                {
+                    label: label1,
+                    action: function () {
+                        _this.addArgument("1");
+                        _this.activateNextAction();
+                    },
+                },
+                {
+                    label: label2,
+                    action: function () {
+                        _this.addArgument("2");
+                        _this.activateNextAction();
+                    },
+                },
+            ],
+        });
+    };
     ActionManager.prototype.actionMirage = function () {
         this.actionSelectManaFrom();
     };

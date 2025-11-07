@@ -809,6 +809,31 @@ class ActionManager {
       });
    }
 
+   private actionImagination() {
+      const label1 = _("Draw 2 cards");
+      const label2 = _("Gain mana until you have the same quantity of mana cards as your opponent");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
    private actionMirage() {
       this.actionSelectManaFrom();
    }
