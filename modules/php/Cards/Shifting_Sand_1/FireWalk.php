@@ -18,12 +18,14 @@ class FireWalk extends BaseCard {
         if (count($hand) > 0) {
             $level_1 = array_filter($hand, fn($mana) => ManaCard::getPower($mana) == 1);
             if (count($level_1) > 0) {
-                $mana = current($level_1);
                 $spell = SpellCard::get($this->id);
                 $position = SpellCard::getPositionInRepertoire($spell);
 
-                ManaCard::addOnTopOfManaCoolDown($mana['id'], $position);
-                Notifications::moveManaCard(Players::getPlayerId(), [$mana]);
+                foreach ($level_1 as $mana) {
+                    ManaCard::addOnTopOfManaCoolDown($mana['id'], $position);
+                }
+
+                Notifications::moveManaCard(Players::getPlayerId(), $level_1);
             }   
         }
     }
