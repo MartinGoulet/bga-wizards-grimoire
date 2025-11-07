@@ -4849,27 +4849,23 @@ var BelchStates = (function () {
         var _this = this;
         if (!this.game.isCurrentPlayerActive())
             return;
-        var _a = this.game.tableCenter, manaRevealed = _a.manaRevealed, manaDeck = _a.manaDeck, manaDiscard = _a.manaDiscard;
+        var manaRevealed = this.game.tableCenter.manaRevealed;
         this.mana_count = manaRevealed.getCards().length;
         this.deck_cards = [];
         this.discard_cards = [];
-        manaRevealed.setSelectionMode('single');
+        manaRevealed.setSelectionMode("single");
         manaRevealed.onSelectionChange = function (selection) {
-            _this.game.toggleButtonEnable('btnMoveToDiscard', selection.length > 0, 'blue');
-            _this.game.toggleButtonEnable('btnMoveToManaDeck', selection.length > 0, 'blue');
+            _this.game.toggleButtonEnable("btnMoveToDiscard", selection.length > 0 && _this.deck_cards.length == 0, "blue");
+            _this.game.toggleButtonEnable("btnMoveToManaDeck", selection.length > 0 && _this.discard_cards.length == 0, "blue");
         };
         var handleReturn = function (cards) { return __awaiter(_this, void 0, void 0, function () {
-            var card;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        if (cards.length == 0)
-                            return [2];
-                        card = cards.pop();
-                        return [4, this.game.tableCenter.manaRevealed.addCard(card)];
+                    case 0: return [4, this.game.tableCenter.manaRevealed.addCards(cards)];
                     case 1:
                         _a.sent();
-                        this.game.toggleButtonEnable("btnCancel", this.deck_cards.length > 0, "gray");
+                        cards.splice(0, cards.length);
+                        this.game.toggleButtonEnable("btnCancel", true, "gray");
                         return [2];
                 }
             });
@@ -4879,53 +4875,72 @@ var BelchStates = (function () {
     };
     BelchStates.prototype.onLeavingState = function () {
         this.deck_cards = [];
+        this.discard_cards = [];
         this.game.tableCenter.manaRevealed.onCardClick = null;
         this.game.tableCenter.manaDeck.onCardClick = null;
     };
     BelchStates.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleDiscard = function () { return __awaiter(_this, void 0, void 0, function () {
-            var selectedCard;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        selectedCard = this.game.tableCenter.manaRevealed.getSelection().pop();
-                        if (!selectedCard)
-                            return [2];
-                        this.discard_cards.push(selectedCard);
-                        return [4, this.game.tableCenter.manaDiscard.addCard(selectedCard)];
+                    case 0: return [4, handleAddCardToPile(this.discard_cards, this.game.tableCenter.manaDiscard)];
                     case 1:
                         _a.sent();
-                        this.game.toggleButtonEnable('btnConfirm', this.deck_cards.length + this.discard_cards.length == this.mana_count, 'blue');
                         return [2];
                 }
             });
         }); };
         var handleReturnToDeck = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, handleAddCardToPile(this.deck_cards, this.game.tableCenter.manaDeck)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        }); };
+        var handleAddCardToPile = function (cards, pile) { return __awaiter(_this, void 0, void 0, function () {
             var selectedCard;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         selectedCard = this.game.tableCenter.manaRevealed.getSelection().pop();
                         if (!selectedCard)
                             return [2];
-                        this.deck_cards.push(selectedCard);
-                        return [4, this.game.tableCenter.manaDeck.addCard(selectedCard)];
+                        cards.push(selectedCard);
+                        return [4, pile.addCard(selectedCard)];
                     case 1:
                         _a.sent();
-                        this.game.toggleButtonEnable('btnConfirm', this.deck_cards.length + this.discard_cards.length == this.mana_count, 'blue');
+                        return [4, this.game.tableCenter.manaRevealed.getCards().forEach(function (card) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            cards.push(card);
+                                            return [4, pile.addCard(card)];
+                                        case 1:
+                                            _a.sent();
+                                            return [2];
+                                    }
+                                });
+                            }); })];
+                    case 2:
+                        _a.sent();
+                        this.game.toggleButtonEnable("btnConfirm", true, "blue");
                         return [2];
                 }
             });
         }); };
         this.game.statusBar.addActionButton(_("Move to Mana Deck"), handleReturnToDeck, {
-            id: 'btnMoveToManaDeck',
+            id: "btnMoveToManaDeck",
         });
         this.game.statusBar.addActionButton(_("Move to Discard"), handleDiscard, {
-            id: 'btnMoveToDiscard',
+            id: "btnMoveToDiscard",
         });
-        this.game.disableButton('btnMoveToDiscard');
-        this.game.disableButton('btnMoveToManaDeck');
+        this.game.disableButton("btnMoveToDiscard");
+        this.game.disableButton("btnMoveToManaDeck");
         var handleConfirm = function () {
             if (_this.deck_cards.length + _this.discard_cards.length != _this.mana_count)
                 return;
