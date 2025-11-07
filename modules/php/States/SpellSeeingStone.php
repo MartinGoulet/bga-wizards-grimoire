@@ -10,7 +10,6 @@ use Bga\GameFramework\States\PossibleAction;
 use Bga\Games\WizardsGrimoireExt\Game;
 use BgaUserException;
 use WizardsGrimoireExt\Core\Globals;
-use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\SpellCard;
 
 class SpellSeeingStone extends GameState
@@ -66,7 +65,11 @@ class SpellSeeingStone extends GameState
             $spellId = Globals::getSpellPlayed();
             $spell = SpellCard::get($spellId);
             SpellCard::discardAllManaCardsOnSpell($spell);
-            SpellCard::replaceSpell($spell, SpellCard::get($replaceSpellId), 'replaceSeeingStone');
+
+            $newSpell = SpellCard::get($replaceSpellId);
+            SpellCard::replaceSpell($spell, $newSpell, 'replaceSeeingStone');
+
+            $this->game->triggerOnAddSpellToRepertoire($newSpell);
             $this->game->gamestate->nextState('replace');
         } else {
             $this->game->gamestate->nextState('relic');

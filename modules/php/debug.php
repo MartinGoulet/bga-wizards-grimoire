@@ -75,8 +75,8 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329673" => ["CrystalShard", "ShadowOath", "Corruption", "CursedMind"],
-            "2329672" => ["FireWalk", "InfiniteFlame", "DreamTheft", "SpiritDance"],
+            "2329672" => ["FeverDream", "SeeingStone", "Corruption", "CursedMind"],
+            "2329673" => ["FireWalk", "InfiniteFlame", "DreamTheft", "SpiritDance"],
         ];
 
         $spells_pool = [];
@@ -88,7 +88,7 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0],
+            "2329672" => [2, 0, 0, 0, 0],
             "2329673" => [0, 0, 0],
         ];
 
