@@ -96,6 +96,7 @@ trait StateTrait {
 
         $cards = [];
         $spell_delayed = [];
+        $onAfterDiscardManaFromSpells = [];
 
         for ($i = 1; $i <= 6; $i++) {
             $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
@@ -110,6 +111,11 @@ trait StateTrait {
 
                     if ($spell_info['activation_auto'] == true) {
                         $instance->castSpell($mana_card);
+                        $onAfterDiscardManaFromSpells[] = [
+                            'instance' => $instance, 
+                            'spell' => $spell, 
+                            'mana' => $mana_card
+                        ];
                     } else {
                         if ($instance->isDelayedSpellTrigger()) {
                             $spell_delayed[] = $spell['id'];
@@ -123,6 +129,14 @@ trait StateTrait {
             Notifications::spellCooldownDelayed($cards);
             $player_id = intval($this->getActivePlayerId());
             Notifications::moveManaCard($player_id, $cards, false);
+        }
+
+        foreach ($onAfterDiscardManaFromSpells as $data) {
+            $instance = $data['instance'];
+            $mana = $data['spell'];
+            if (method_exists($instance, 'onAfterDiscardManaFromSpell')) {
+                $instance->onAfterDiscardManaFromSpell([$mana]);
+            }
         }
 
         if (sizeof($spell_delayed) > 0) {
