@@ -69,7 +69,6 @@ class SpellSeeingStone extends GameState
             $newSpell = SpellCard::get($replaceSpellId);
             SpellCard::replaceSpell($spell, $newSpell, 'replaceSeeingStone');
 
-            $this->game->triggerOnAddSpellToRepertoire($newSpell);
             $this->game->gamestate->nextState('replace');
         } else {
             $this->game->gamestate->nextState('relic');

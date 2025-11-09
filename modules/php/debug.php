@@ -75,11 +75,11 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["Belch", "Transference", "Imagination", "CursedMind"],
+            "2329672" => ["FeverDream", "SeeingStone", "Imagination", "CursedMind"],
             "2329673" => ["FireWalk", "InfiniteFlame", "DreamTheft", "SpiritDance"],
         ];
 
-        $spells_pool = [];
+        $spells_pool = ['SavageStrike'];
         // $spells_pool = ['FeverDream'];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
@@ -137,7 +137,7 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(5, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
         $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
