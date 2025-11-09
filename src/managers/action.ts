@@ -872,7 +872,21 @@ class ActionManager {
    }
 
    private actionRaiseTheDead() {
-      this.actionTransferenceSelectSpell();
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must choose a spell to not place a mana card on");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
+      });
    }
 
    private actionReplaceRelic() {

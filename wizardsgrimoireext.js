@@ -2757,7 +2757,20 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionRaiseTheDead = function () {
-        this.actionTransferenceSelectSpell();
+        var player_table = this.game.getCurrentPlayerTable();
+        var current_card = this.getCurrentCard();
+        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
+            return card.id !== current_card.id;
+        });
+        var msg = _("${you} must choose a spell to not place a mana card on");
+        this.game.setClientState(states.client.selectSpell, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                selection: selectableSpell,
+                cancel: true,
+            },
+        });
     };
     ActionManager.prototype.actionReplaceRelic = function () {
         var msg = _("${you} must select a spell in the spell pool");
