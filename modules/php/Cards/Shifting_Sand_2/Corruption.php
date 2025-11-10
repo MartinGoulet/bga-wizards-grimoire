@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Cards\Shifting_Sand_2;
 
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\SpellCard;
@@ -29,6 +30,11 @@ class Corruption extends BaseCard {
         $numToDiscard = min(2, $numManaCards);
         for ($i = 0; $i < $numToDiscard; $i++) {
             ManaCard::discardManaFromSpell($position);
+        }
+
+        if($numManaCards > 0)  {
+            $instance = SpellCard::getInstanceOfCard($targetSpell);
+            Game::get()->triggerOnAfterDiscardManaFromSpell($instance);
         }
 
     }

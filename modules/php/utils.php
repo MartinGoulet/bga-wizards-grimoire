@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use WizardsGrimoireExt\Cards\BaseCard;
 
 trait UtilsTrait {
 
@@ -15,4 +16,9 @@ trait UtilsTrait {
         }
     }
 
+    public function triggerOnAfterDiscardManaFromSpell(BaseCard $instance) {
+        if (method_exists($instance, 'onAfterDiscardManaFromSpell')) {
+            $instance->onAfterDiscardManaFromSpell();
+        }
+    }
 }

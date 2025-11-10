@@ -132,11 +132,7 @@ trait StateTrait {
         }
 
         foreach ($onAfterDiscardManaFromSpells as $data) {
-            $instance = $data['instance'];
-            $mana = $data['spell'];
-            if (method_exists($instance, 'onAfterDiscardManaFromSpell')) {
-                $instance->onAfterDiscardManaFromSpell([$mana]);
-            }
+            Game::get()->triggerOnAfterDiscardManaFromSpell($data['instance']);
         }
 
         if (sizeof($spell_delayed) > 0) {
