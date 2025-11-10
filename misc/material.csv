@@ -117,7 +117,7 @@ id|name|class|description|type|activation|activation_auto|cost|icon|js_actions|i
 237|Mirage|Mirage|Pick up a mana off 1 of your other spells. If it is a 3 or higher power mana, deal 2 damage|WG_SPELL_TYPE_UTILITY|WG_SPELL_ACTIVATION_INSTANT||2|WG_ICON_SET_SHIFTING_SAND_2|actionMirage|||||
 238|Premonition|Premonition|The next 2 spells you cast this turn each cost 1 less|WG_SPELL_TYPE_UTILITY|WG_SPELL_ACTIVATION_INSTANT||2|WG_ICON_SET_SHIFTING_SAND_2||||||
 239|Animal ambush|AnimalAmbush|Deal 2 damage. You may place a mana from the mana deck on one of your opponent's spells|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_INSTANT||3|WG_ICON_SET_SHIFTING_SAND_2|actionAnimalAmbush|||||
-240|Savage strike|SavageStrike|Deal damage qual to the highest power mana used to cast this spell|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_INSTANT||2|WG_ICON_SET_SHIFTING_SAND_2||||||
+240|Savage strike|SavageStrike|Deal damage equal to the highest power mana used to cast this spell|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_INSTANT||2|WG_ICON_SET_SHIFTING_SAND_2||||||
 241|Living fire|LivingFire|Deal 6 damage minus 1 for each of your other spells that have mana on them|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_INSTANT||3|WG_ICON_SET_SHIFTING_SAND_2||||||
 242|Raise the dead|RaiseTheDead|Deal 6 damage. Place a mana from the mana deck on all of your other spells except 1 of your choice|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_INSTANT||3|WG_ICON_SET_SHIFTING_SAND_2|actionRaiseTheDead|||||
 243|Multiply|Multiply|As long as this spell has exactly 3 mana cards on it, your basic attack damage is doubled|WG_SPELL_TYPE_ATTACK|WG_SPELL_ACTIVATION_ONGOING||3|WG_ICON_SET_SHIFTING_SAND_1||||||
