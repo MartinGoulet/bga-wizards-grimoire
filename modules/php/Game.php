@@ -243,13 +243,14 @@ class Game extends \Bga\GameFramework\Table {
         $gameOptionShiftingSandPromo = intval(self::getGameStateValue(WG_GAME_OPTION_SHIFT_SAND_PROMO));
         $gameoptionSetBase = intval(self::getGameStateValue(WG_GAME_OPTION_SET)) == WG_GAME_OPTION_SET_BASE;
         $gameoptionSetShiftingSand = intval(self::getGameStateValue(WG_GAME_OPTION_SET)) == WG_GAME_OPTION_SET_SHIFTING_SAND;
+        $gameoptionSetAllCards = intval(self::getGameStateValue(WG_GAME_OPTION_SET)) == WG_GAME_OPTION_SET_ALL;
 
         // $isAllPlayerAllowed = self::isAllPlayersAllowed(array_keys($players));
 
         $slot_count = $gameOptionDifficulty == WG_DIFFICULTY_BEGINNER ? 8 : 10;
         self::setGameStateInitialValue(WG_VAR_SLOT_COUNT, $slot_count);
 
-        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo, $gameoptionSetBase, $gameoptionSetShiftingSand) {
+        $cards_types = array_filter($this->card_types, function ($card_type) use ($gameOptionDifficulty, $gameOptionKickStarter1, $gameOptionShiftingSandPromo, $gameoptionSetBase, $gameoptionSetShiftingSand, $gameoptionSetAllCards) {
             if (array_key_exists('banned', $card_type) && $card_type['banned'] == true) {
                 return false;
             }
@@ -275,6 +276,10 @@ class Game extends \Bga\GameFramework\Table {
                     default:
                         return false;
                 }
+            } else if ($gameoptionSetAllCards) {
+                return !in_array($card_type['icon'], [WG_ICON_SET_SAND_1, WG_ICON_SET_FORBIDDEN_SCROLLS]);
+            } else {
+                return false;
             }
         });
 

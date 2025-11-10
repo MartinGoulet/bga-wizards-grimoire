@@ -21,6 +21,7 @@ const WG_GAME_OPTION_SET = 'gameOptionSet';
 const WG_GAME_OPTION_SET_ID = 103;
 const WG_GAME_OPTION_SET_BASE = 1;
 const WG_GAME_OPTION_SET_SHIFTING_SAND = 2;
+const WG_GAME_OPTION_SET_ALL = 50;
 
 /*
  * Game variables

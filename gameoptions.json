@@ -12,6 +12,11 @@
                 "name": "Shifting Sand",
                 "tmdisplay": "Shifting Sand",
                 "description": "Use the Shifting Sand deck"
+            },
+            "50": {
+                "name": "All cards",
+                "tmdisplay": "All cards",
+                "description": "Use all cards from both decks and expansions"
             }
         }
     },
