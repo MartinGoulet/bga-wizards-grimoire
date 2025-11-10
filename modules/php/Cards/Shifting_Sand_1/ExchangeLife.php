@@ -11,6 +11,9 @@ use WizardsGrimoireExt\Core\Players;
 class ExchangeLife extends BaseCard {
 
     public function castSpell($args) {
+
+        $this->dealDamage(3);
+        
         $exchangeHand = intval(array_shift($args)) == 1;
 
         if($exchangeHand) {
