@@ -3394,6 +3394,10 @@ var TooltipManager = (function (_super) {
                 div.id = "".concat(_this.getId(card), "-front");
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
+                var card_type = _this.game.getCardType(card);
+                if (card_type) {
+                    div.dataset.img = "" + card_type.img;
+                }
                 if (card.type !== null) {
                     if (Number(card.type) < 200) {
                         div.classList.add(Number(card.type) <= 70 ? "base_game" : "promo_shifting_sand");
@@ -3403,8 +3407,8 @@ var TooltipManager = (function (_super) {
                     }
                 }
                 if (div.childNodes.length == 1 && card.type) {
-                    var card_type = _this.game.getCardType(card);
-                    var name_2 = card_type.name, description = card_type.description;
+                    var card_type_1 = _this.game.getCardType(card);
+                    var name_2 = card_type_1.name, description = card_type_1.description;
                     var gametext = formatGametext2(_(description));
                     div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(_(name_2), "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(gametext, "</div>\n                  </div>"));
                 }

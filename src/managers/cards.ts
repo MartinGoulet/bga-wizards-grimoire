@@ -187,7 +187,14 @@ class TooltipManager extends CardManager<SpellCard> {
             div.id = `${this.getId(card)}-front`;
             div.dataset.type = "" + card.type;
             div.classList.add("wg-card-spell-front");
+            
+            const card_type = this.game.getCardType(card);
+            if(card_type) {
+               div.dataset.img = "" + card_type.img;
+            }
+            
             if (card.type !== null) {
+               
                if(Number(card.type) < 200) {
                   div.classList.add(Number(card.type) <= 70 ? "base_game" : "promo_shifting_sand");
                } else {

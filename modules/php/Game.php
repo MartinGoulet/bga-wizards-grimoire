@@ -419,7 +419,7 @@ class Game extends \Bga\GameFramework\Table {
                 $result['card_set'] = 'shifting_sand';
                 break;
             default:
-                $result['card_set'] = 'custom';
+                $result['card_set'] = 'shifting_sand';
                 break;
         }
 

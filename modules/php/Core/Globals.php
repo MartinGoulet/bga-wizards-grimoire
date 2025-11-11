@@ -346,6 +346,14 @@ class Globals {
         Game::get()->globals->set('played_spells_this_turn', $spells);
     }
 
+    public static function getNumberOfCardDrawByCardEffectThisTurn() {
+        return Game::get()->globals->get('number_of_card_draw_by_card_effect_this_turn', []);
+    }
+
+    public static function setNumberOfCardDrawByCardEffectThisTurn(array $values) {
+        Game::get()->globals->set('number_of_card_draw_by_card_effect_this_turn', $values);
+    }
+
     /*************************
      **** GENERIC METHODS ****
      *************************/

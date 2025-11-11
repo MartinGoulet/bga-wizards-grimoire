@@ -73,7 +73,14 @@ abstract class BaseCard {
     }
 
     protected function drawManaCards(int $nbr, int $player_id = 0) {
-        return ManaCard::draw($nbr, $player_id, $this->getCardName());
+        $info = Globals::getNumberOfCardDrawByCardEffectThisTurn();
+        if(!isset($info[$this->id])) {
+            $info[$this->id] = 0;
+        }
+        $cards = ManaCard::draw($nbr, $player_id, $this->getCardName());
+        $info[$this->id] += count($cards);
+        Globals::setNumberOfCardDrawByCardEffectThisTurn($info);
+        return $cards;
     }
 
     protected function getCardName() {
