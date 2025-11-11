@@ -225,7 +225,7 @@ class Game implements Game {
          cost -= spell_discount;
       }
 
-      if (spell.type === SpellType.DeathSpiral) {
+      if (spell.type === SpellType.Sand1.DeathSpiral) {
          const previous_spell_id = Number(player_table.getPreviousSpellPlayed());
          if (previous_spell_id > 0) {
             const previous_cost = Number(player_table.getPreviousSpellCost());

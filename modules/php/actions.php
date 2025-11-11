@@ -8,6 +8,7 @@ use Bga\GameFramework\Actions\Types\IntArrayParam;
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 use BgaUserException;
+use WizardsGrimoireExt\Cards\RelicCard;
 use WizardsGrimoireExt\Objects\CardLocation;
 
 trait ActionTrait {
@@ -266,6 +267,10 @@ trait ActionTrait {
         // Execute the ability of the card
         $cardClass->card_name = $card_name;
         $res = $cardClass->castSpell($args);
+
+        if ($cardClass instanceof RelicCard && $card_name !== "Echo") {
+            $cardClass->onDestroyRelic();
+        }
 
         if ($res === "stop") {
             return;

@@ -61,6 +61,7 @@ interface CardType {
    activation: "instant" | "delayed" | "ongoing";
    cost: number;
    icon: "Base_1" | "Base_2" | "KickStarter_1";
+   img: number;
    js_actions?: string[] | string;
    js_actions_interaction?: string[] | string;
    js_actions_delayed?: string[] | string;

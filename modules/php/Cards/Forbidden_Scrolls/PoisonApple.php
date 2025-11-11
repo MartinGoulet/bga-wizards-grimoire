@@ -1,16 +1,17 @@
 <?php
 
-namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
+namespace WizardsGrimoireExt\Cards\Forbidden_Scrolls;
 
 use WizardsGrimoireExt\Cards\RelicCard;
-use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 
-class SunkenSkull extends RelicCard {
+class PoisonApple extends RelicCard {
 
     public function castSpell($args) {
-        Globals::setSunkenSkullActivePlayer(Players::getOpponentId());
+        // Deal 2 damage to yourself. Gain 3 mana
+        $this->dealDamage(2, Players::getPlayerId());
+        $this->drawManaCards(3);
     }
     
     public function onDestroyRelic()

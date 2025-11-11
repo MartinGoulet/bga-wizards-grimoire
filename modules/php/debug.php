@@ -75,8 +75,8 @@ trait DebugTrait {
         //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["BlankSlate", "Corruption", "FireWalk", "CursedMind"],
-            "2329673" => ["Premonition", "InfiniteFlame", "DreamTheft", "SpiritDance"],
+            "2329672" => ["Bloodthirst", "EchoCard", "Glimmer", "HarnessEnergy", "PoisonApple"],
+            "2329673" => ["Quicksand", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "Wasteland"],
         ];
 
         $spells_pool = ['SavageStrike'];
@@ -88,8 +88,8 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329672" => [3, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0],
+            "2329672" => [0, 0, 0, 0, 0],
+            "2329673" => [0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {

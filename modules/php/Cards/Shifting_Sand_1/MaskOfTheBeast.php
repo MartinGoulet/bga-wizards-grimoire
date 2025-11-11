@@ -16,6 +16,10 @@ class MaskOfTheBeast extends RelicCard {
             ManaCard::addOnTopOfDiscard($mana['id']);
         }
         Notifications::discardManaCards(Players::getOpponentId(), $hand);
+    }
+    
+    public function onDestroyRelic()
+    {
         SpellCard::destroyRelic(SpellCard::get($this->id));
     }
 

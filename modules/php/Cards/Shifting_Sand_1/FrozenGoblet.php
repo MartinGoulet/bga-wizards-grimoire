@@ -10,6 +10,10 @@ class FrozenGoblet extends RelicCard {
 
     public function castSpell($args) {
         Globals::setFrozenGobletActive(true);
+    }
+    
+    public function onDestroyRelic()
+    {
         SpellCard::destroyRelic(SpellCard::get($this->id));
     }
 }

@@ -15,7 +15,11 @@ class CrystalShard extends RelicCard {
         $spell = SpellCard::get($this->id);
 
         Notifications::crystalShard(Players::getPlayerId(), $spell, $mana);
-
+    }
+    
+    public function onDestroyRelic()
+    {
+        $spell = SpellCard::get($this->id);
         SpellCard::destroyRelic($spell, 'crystal');
     }
 }

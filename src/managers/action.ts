@@ -1288,7 +1288,7 @@ class ActionManager {
       if (previous_spell_id > 0 && previous_spell_cost <= 1) {
          const spell = this.game.spellsManager.getCardById(previous_spell_id);
          const card_type = this.game.getCardType(spell);
-         if (spell.type !== SpellType.Echo) {
+         if (![SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(spell.type)) {
             this.addActionPriv(card_type.js_actions);
          }
       }

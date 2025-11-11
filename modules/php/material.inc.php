@@ -24,6 +24,7 @@
 $this->card_types = [
   // --- gen php begin ---
  1 => [ 
+  'img' => 1,
   'name' => clienttranslate("Touch the void"),
   'class' => "TouchTheVoid",
   'description' => clienttranslate("Deal damage equal to the quantity of mana cards on 1 of your spells"),
@@ -33,6 +34,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  2 => [ 
+  'img' => 2,
   'name' => clienttranslate("Overload"),
   'class' => "Overload",
   'description' => clienttranslate("Deal damage equal to the quantity of mana cards on 1 of your opponent's spell"),
@@ -42,6 +44,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  3 => [ 
+  'img' => 3,
   'name' => clienttranslate("Mutation"),
   'class' => "Mutation",
   'description' => clienttranslate("Gain 1 mana card. Deal damage equal to that mana's power"),
@@ -51,6 +54,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  4 => [ 
+  'img' => 4,
   'name' => clienttranslate("Stone crush"),
   'class' => "StoneCrush",
   'description' => clienttranslate("Deal 1 damage for each mana card in your opponent's hand"),
@@ -60,6 +64,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  5 => [ 
+  'img' => 5,
   'name' => clienttranslate("Mist of pain"),
   'class' => "MistOfPain",
   'description' => clienttranslate("Your opponent may discard up to 4 mana cards from their hand. For each mana they do not discard, deal 1 damage"),
@@ -71,6 +76,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionMistOfPain",
 ],
  6 => [ 
+  'img' => 6,
   'name' => clienttranslate("Arcane tactics"),
   'class' => "ArcaneTactics",
   'description' => clienttranslate("Gain 7 mana cards from the mana deck. Then place 4 mana cards from your hand on top of the mana deck in any order"),
@@ -82,6 +88,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionArcaneTactics",
 ],
  7 => [ 
+  'img' => 7,
   'name' => clienttranslate("Freeze"),
   'class' => "Freeze",
   'description' => clienttranslate("Choose 1: Gain 4 mana cards, or place a mana card from the mana deck on one of your opponent's spells"),
@@ -92,6 +99,7 @@ $this->card_types = [
   'js_actions' => "actionFreeze",
 ],
  8 => [ 
+  'img' => 8,
   'name' => clienttranslate("Energy reserve"),
   'class' => "EnergyReserve",
   'description' => clienttranslate("Pick up a mana card off 1 of your other spells. Gain mana equal to that mana's power"),
@@ -102,6 +110,7 @@ $this->card_types = [
   'js_actions' => "actionEnergyReserve",
 ],
  9 => [ 
+  'img' => 9,
   'name' => clienttranslate("Fracture"),
   'class' => "Fracture",
   'description' => clienttranslate("Gain 4 mana cards. You may move a mana card between 2 of your other spells"),
@@ -113,6 +122,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionFracture",
 ],
  10 => [ 
+  'img' => 10,
   'name' => clienttranslate("Gleam of hope"),
   'class' => "GleamOfHope",
   'description' => clienttranslate("Gain mana until you have 5 mana cards in your hand"),
@@ -122,6 +132,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  11 => [ 
+  'img' => 11,
   'name' => clienttranslate("Rejuvenation"),
   'class' => "Rejuvenation",
   'description' => clienttranslate("Choose 1: Gain 4 mana cards, or take 2 mana cards of any power from the discard pile"),
@@ -132,6 +143,7 @@ $this->card_types = [
   'js_actions' => "actionRejuvenation",
 ],
  12 => [ 
+  'img' => 12,
   'name' => clienttranslate("Shackled motion"),
   'class' => "ShackledMotion",
   'description' => clienttranslate("Choose 1: Gain 4 mana cards, or your opponent must discard their hand"),
@@ -142,6 +154,7 @@ $this->card_types = [
   'js_actions' => "actionShackledMotion",
 ],
  13 => [ 
+  'img' => 13,
   'name' => clienttranslate("Living wind"),
   'class' => "LivingWind",
   'description' => clienttranslate("Gain 6 mana cards, gain 1 fewer mana for each of your other spells that have a mana on them"),
@@ -151,6 +164,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  14 => [ 
+  'img' => 14,
   'name' => clienttranslate("Coercive agreement"),
   'class' => "CoerciveAgreement",
   'description' => clienttranslate("Choose 1: Take up to 3 randomly selected mana from your opponent's hand, or discard a mana card off 2 of your other spells"),
@@ -161,6 +175,7 @@ $this->card_types = [
   'js_actions' => "actionCoerciveAgreement",
 ],
  15 => [ 
+  'img' => 15,
   'name' => clienttranslate("Arcane eye"),
   'class' => "ArcaneEye",
   'description' => clienttranslate("Pick up a mana card off each of your spells that costs 3 or more"),
@@ -170,6 +185,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  16 => [ 
+  'img' => 16,
   'name' => clienttranslate("Haste"),
   'class' => "Haste",
   'description' => clienttranslate("The next time you cast a spell this turn, it costs 2 less"),
@@ -179,6 +195,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  17 => [ 
+  'img' => 17,
   'name' => clienttranslate("Renewed fervor"),
   'class' => "RenewedFervor",
   'description' => clienttranslate("Pick up a mana card off each of your instant attack spells that costs 2 or less"),
@@ -188,6 +205,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  18 => [ 
+  'img' => 18,
   'name' => clienttranslate("Secret oath"),
   'class' => "SecretOath",
   'description' => clienttranslate("As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately"),
@@ -198,6 +216,7 @@ $this->card_types = [
   'banned' => true,
 ],
  19 => [ 
+  'img' => 19,
   'name' => clienttranslate("Time distortion"),
   'class' => "TimeDistortion",
   'description' => clienttranslate("Pick up a mana card off 2 of your other spells"),
@@ -208,6 +227,7 @@ $this->card_types = [
   'js_actions' => "actionTimeDistortion",
 ],
  20 => [ 
+  'img' => 20,
   'name' => clienttranslate("Betrayal"),
   'class' => "Betrayal",
   'description' => clienttranslate("Deal 5 damage. Your opponent gains 3 mana cards"),
@@ -217,6 +237,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  21 => [ 
+  'img' => 21,
   'name' => clienttranslate("Blood lust"),
   'class' => "BloodLust",
   'description' => clienttranslate("Deal 1 damage. Deal an additionnal 2 damage for each attack spell cast consecutively before this spell"),
@@ -226,6 +247,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  22 => [ 
+  'img' => 22,
   'name' => clienttranslate("Delusion"),
   'class' => "Delusion",
   'description' => clienttranslate("Deal 3 damage. You may pick up a mana card off 1 of your opponent's spells"),
@@ -236,6 +258,7 @@ $this->card_types = [
   'js_actions' => "actionDelusion",
 ],
  23 => [ 
+  'img' => 23,
   'name' => clienttranslate("Vile laughter"),
   'class' => "VileLaughter",
   'description' => clienttranslate("Deal 6 damage, minus the highest power mana in your hand"),
@@ -245,6 +268,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  24 => [ 
+  'img' => 24,
   'name' => clienttranslate("Doom drop"),
   'class' => "DoomDrop",
   'description' => clienttranslate("Each time a mana card is discarded of this spell, deal damage equal to that mana's power"),
@@ -255,6 +279,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  25 => [ 
+  'img' => 25,
   'name' => clienttranslate("Energy storm"),
   'class' => "EnergyStorm",
   'description' => clienttranslate("Deal 3 damage. Deal 1 additional damage for each 4 power mana in your hand"),
@@ -264,6 +289,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  26 => [ 
+  'img' => 26,
   'name' => clienttranslate("Fire blast"),
   'class' => "FireBlast",
   'description' => clienttranslate("Discard all mana in your hand. Deal 7 damage"),
@@ -273,6 +299,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  27 => [ 
+  'img' => 27,
   'name' => clienttranslate("Painful vision"),
   'class' => "PainfulVision",
   'description' => clienttranslate("Deal 5 damage. Place a mana from the mana deck on all your spells with 1 mana card on them"),
@@ -282,6 +309,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  28 => [ 
+  'img' => 28,
   'name' => clienttranslate("Possessed"),
   'class' => "Possessed",
   'description' => clienttranslate("Deal 5 damage. Your opponent may give you a mana from their hand. If they do, reduce your damage by the mana's power"),
@@ -293,6 +321,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionPossessed",
 ],
  29 => [ 
+  'img' => 29,
   'name' => clienttranslate("Second strike"),
   'class' => "SecondStrike",
   'description' => clienttranslate("Deal 3 damage. The next time you cast an attack spell this turn, it costs 1 less"),
@@ -302,6 +331,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  30 => [ 
+  'img' => 30,
   'name' => clienttranslate("Trap attack"),
   'class' => "TrapAttack",
   'description' => clienttranslate("Pick up a mana card off 1 of your other spells. Deal damage equal to that mana's power"),
@@ -312,6 +342,7 @@ $this->card_types = [
   'js_actions' => "actionTrapAttack",
 ],
  31 => [ 
+  'img' => 31,
   'name' => clienttranslate("Energy shield"),
   'class' => "EnergyShield",
   'description' => clienttranslate("Pick up a mana card off 1 of your other spells. Place a mana card from the mana deck on 1 of your opponent's spells"),
@@ -322,6 +353,7 @@ $this->card_types = [
   'js_actions' => "actionEnergyShield",
 ],
  32 => [ 
+  'img' => 32,
   'name' => clienttranslate("Growth"),
   'class' => "Growth",
   'description' => clienttranslate("During your turn, increase the power of all mana by 1"),
@@ -331,6 +363,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  33 => [ 
+  'img' => 33,
   'name' => clienttranslate("Fury"),
   'class' => "Fury",
   'description' => clienttranslate("Deal 1 damage for each of your opponent's spells that have mana on them"),
@@ -340,6 +373,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  34 => [ 
+  'img' => 34,
   'name' => clienttranslate("Hellstorm"),
   'class' => "Hellstorm",
   'description' => clienttranslate("Gain 5 mana cards. Deal damage equal to the highest power mana you gain"),
@@ -349,6 +383,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  35 => [ 
+  'img' => 35,
   'name' => clienttranslate("Shadow attack"),
   'class' => "ShadowAttack",
   'description' => clienttranslate("Discard a mana card off 1 of your other spells. Deal damage and gain mana equal to that mana's power"),
@@ -359,6 +394,7 @@ $this->card_types = [
   'js_actions' => "actionShadowAttack",
 ],
  36 => [ 
+  'img' => 36,
   'name' => clienttranslate("Crushing blow"),
   'class' => "CrushingBlow",
   'description' => clienttranslate("Deal 6 damage"),
@@ -368,6 +404,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  37 => [ 
+  'img' => 37,
   'name' => clienttranslate("False face"),
   'class' => "FalseFace",
   'description' => clienttranslate("If you deal 1 or less damage during your basic attack phase, deal 3 damage when your turn ends"),
@@ -377,6 +414,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_KICKSTARTER_1,
 ],
  38 => [ 
+  'img' => 38,
   'name' => clienttranslate("Quick swap"),
   'class' => "QuickSwap",
   'description' => clienttranslate("Each time you discard off this spell, choose 1: deal 1 damage, or discard this spell and replace it with a new spell"),
@@ -388,6 +426,7 @@ $this->card_types = [
   'js_actions_delayed' => "actionQuickSwap",
 ],
  39 => [ 
+  'img' => 39,
   'name' => clienttranslate("Lullaby"),
   'class' => "Lullaby",
   'description' => clienttranslate("As long as there is mana on this spell, if you have 0 mana cards in your hand, gain 2 mana cards"),
@@ -397,6 +436,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_KICKSTARTER_1,
 ],
  40 => [ 
+  'img' => 40,
   'name' => clienttranslate("Amnesia"),
   'class' => "Amnesia",
   'description' => clienttranslate("Deal 1 damage. Deal 1 additional damage for each time this spell was cast previously this turn"),
@@ -406,6 +446,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_KICKSTARTER_1,
 ],
  41 => [ 
+  'img' => 41,
   'name' => clienttranslate("Hoodwink"),
   'class' => "Hoodwink",
   'description' => clienttranslate("Deal 6 damage, minus the damage your opponent dealt their last basic attack phase"),
@@ -415,6 +456,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_KICKSTARTER_1,
 ],
  42 => [ 
+  'img' => 42,
   'name' => clienttranslate("Wild bloom"),
   'class' => "WildBloom",
   'description' => clienttranslate("When you discard the last mana off this spell, you may immediately cast an instant spell of yours that has 0 mana on it for no cost"),
@@ -426,6 +468,7 @@ $this->card_types = [
   'js_actions_delayed' => "actionWildBloom",
 ],
  43 => [ 
+  'img' => 43,
   'name' => clienttranslate("Tsunami"),
   'class' => "Tsunami",
   'description' => clienttranslate("Gain 1 mana card. Deal 1 damage for each mana of a unique power in your hand"),
@@ -435,6 +478,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_KICKSTARTER_1,
 ],
  44 => [ 
+  'img' => 44,
   'name' => clienttranslate("Twist of fate"),
   'class' => "TwistOfFate",
   'description' => clienttranslate("Deal 2 damage. You may discard and replace 1 of your other spells with a new spell. Move all mana on it onto the new spell"),
@@ -445,6 +489,7 @@ $this->card_types = [
   'js_actions' => "actionTwistOfFate",
 ],
  45 => [ 
+  'img' => 45,
   'name' => clienttranslate("Fatal flaw"),
   'class' => "FatalFlaw",
   'description' => clienttranslate("Deal 1 damage. Reveal the top mana card on 1 of your opponents spells, dealing additional damage equal to it's power"),
@@ -455,6 +500,7 @@ $this->card_types = [
   'js_actions' => "actionFatalFlaw",
 ],
  46 => [ 
+  'img' => 46,
   'name' => clienttranslate("Affliction"),
   'class' => "Affliction",
   'description' => clienttranslate("Gain 4 mana cards. You may deal 1 damage to yourself. If you do, gain 2 extra cards"),
@@ -466,6 +512,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionAffliction",
 ],
  47 => [ 
+  'img' => 47,
   'name' => clienttranslate("Friendly truce"),
   'class' => "FriendlyTruce",
   'description' => clienttranslate("Your opponent may give you 3 cards from their hand. If they do not, gain 5 mana cards"),
@@ -477,6 +524,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionFriendlyTruce",
 ],
  48 => [ 
+  'img' => 48,
   'name' => clienttranslate("Windstorm"),
   'class' => "Windstorm",
   'description' => clienttranslate("Deal 2 damage, then reveal a mana card from the mana deck. If it's a 1 power mana card, place it on this spell"),
@@ -486,6 +534,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  49 => [ 
+  'img' => 49,
   'name' => clienttranslate("Guilty bond"),
   'class' => "GuiltyBond",
   'description' => clienttranslate("Show your opponent a mana from your hand. Deal 2 damage if they have a mana of the same power in their hand"),
@@ -496,6 +545,7 @@ $this->card_types = [
   'js_actions' => "actionGuiltyBond",
 ],
  50 => [ 
+  'img' => 50,
   'name' => clienttranslate("Trance state"),
   'class' => "TranceState",
   'description' => clienttranslate("Deal 3 damage, minus 1 damage for each mana card in your hand"),
@@ -505,6 +555,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  51 => [ 
+  'img' => 51,
   'name' => clienttranslate("Renewal"),
   'class' => "Renewal",
   'description' => clienttranslate("Gain mana until you have 4 mana cards in your hand"),
@@ -514,6 +565,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  52 => [ 
+  'img' => 52,
   'name' => clienttranslate("Toxic gift"),
   'class' => "ToxicGift",
   'description' => clienttranslate("Give your opponent a mana card from your hand. If you do, deal damage equal to its power"),
@@ -524,6 +576,7 @@ $this->card_types = [
   'js_actions' => "actionToxicGift",
 ],
  53 => [ 
+  'img' => 53,
   'name' => clienttranslate("Wrath"),
   'class' => "Wrath",
   'description' => clienttranslate("Your opponent may discard 2 mana cards from their hand. If they do not, deal 2 damage"),
@@ -535,6 +588,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionWrath",
 ],
  54 => [ 
+  'img' => 54,
   'name' => clienttranslate("Reckless attack"),
   'class' => "RecklessAttack",
   'description' => clienttranslate("Deal 1 damage each time you discard off this spell. If you discard a 4 power mana off this spell, deal 4 damage instead"),
@@ -545,6 +599,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  55 => [ 
+  'img' => 55,
   'name' => clienttranslate("Shared power"),
   'class' => "SharedPower",
   'description' => clienttranslate("You may give your opponent 1 mana card from your hand. If you do, gain 4 mana cards"),
@@ -555,6 +610,7 @@ $this->card_types = [
   'js_actions' => "actionShadowPower",
 ],
  56 => [ 
+  'img' => 56,
   'name' => clienttranslate("Sleight of hand"),
   'class' => "SleightOfHand",
   'description' => clienttranslate("Gain 1 mana card. Gain additional mana equal to that mana's power"),
@@ -564,6 +620,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  57 => [ 
+  'img' => 57,
   'name' => clienttranslate("Soul pact"),
   'class' => "SoulPact",
   'description' => clienttranslate("If the previous spell you cast this turn was an instant attack spell, gain mana equal to the damage dealt by that spell"),
@@ -573,6 +630,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  58 => [ 
+  'img' => 58,
   'name' => clienttranslate("Mirror image"),
   'class' => "MirrorImage",
   'description' => clienttranslate("Gain mana equal to the quantity of mana cards on 1 of your spells"),
@@ -583,6 +641,7 @@ $this->card_types = [
   'js_actions' => "actionMirrorImage",
 ],
  59 => [ 
+  'img' => 59,
   'name' => clienttranslate("Battle vision"),
   'class' => "BattleVision",
   'description' => clienttranslate("When your opponent basic attacks, you may discard a mana card of the same power from your hand to block the damage"),
@@ -592,6 +651,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  60 => [ 
+  'img' => 60,
   'name' => clienttranslate("Silent support"),
   'class' => "SilentSupport",
   'description' => clienttranslate("Each time you discard off this spell, pick up a mana off 1 of your other spells"),
@@ -603,6 +663,7 @@ $this->card_types = [
   'js_actions_delayed' => "actionSilentSupport",
 ],
  61 => [ 
+  'img' => 61,
   'name' => clienttranslate("Power hungry"),
   'class' => "PowerHungry",
   'description' => clienttranslate("Both players basic attack mana cards go to your hand instead of the discard pile"),
@@ -612,6 +673,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  62 => [ 
+  'img' => 62,
   'name' => clienttranslate("Sneaky deal"),
   'class' => "SneakyDeal",
   'description' => clienttranslate("Choose 1: Deal 1 damage, or discard a mana card off 1 of your other spells"),
@@ -622,6 +684,7 @@ $this->card_types = [
   'js_actions' => "actionSneakyDeal",
 ],
  63 => [ 
+  'img' => 63,
   'name' => clienttranslate("Puppetmaster"),
   'class' => "Puppetmaster",
   'description' => clienttranslate("In order to basic attack, your opponent must use a mana of the same power as you did during the previous basic attack phase"),
@@ -631,6 +694,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  64 => [ 
+  'img' => 64,
   'name' => clienttranslate("Contamination"),
   'class' => "Contamination",
   'description' => clienttranslate("Place 2 mana cards from your hand on the mana deck. If you do, deal 4 damage"),
@@ -641,6 +705,7 @@ $this->card_types = [
   'js_actions' => "actionContamination",
 ],
  65 => [ 
+  'img' => 65,
   'name' => clienttranslate("Dance of pain"),
   'class' => "DanceOfPain",
   'description' => clienttranslate("Deal 3 damage. Discard or gain mana until you have 2 mana cards in your hand"),
@@ -651,6 +716,7 @@ $this->card_types = [
   'js_actions' => "actionDanceOfPain",
 ],
  66 => [ 
+  'img' => 66,
   'name' => clienttranslate("Drain soul"),
   'class' => "DrainSoul",
   'description' => clienttranslate("Your opponent must give you the highest power card mana in their hand. Deal damage equal to that mana's power"),
@@ -660,6 +726,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_1,
 ],
  67 => [ 
+  'img' => 67,
   'name' => clienttranslate("Ice storm"),
   'class' => "IceStorm",
   'description' => clienttranslate("Deal 1 damage for each of your spells with exactly 1 mana card on them"),
@@ -669,6 +736,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  68 => [ 
+  'img' => 68,
   'name' => clienttranslate("After shock"),
   'class' => "AfterShock",
   'description' => clienttranslate("Gain 1 mana card. Place 1 mana card on the mana deck and deal damage equal to its power"),
@@ -680,6 +748,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionAfterShock",
 ],
  69 => [ 
+  'img' => 69,
   'name' => clienttranslate("Bad fortune"),
   'class' => "BadFortune",
   'description' => clienttranslate("Deal 4 damage. Reveal 3 cards from the mana deck. Place any revealed 1 power mana on this spell. Return the rest in any order"),
@@ -691,6 +760,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionBadFortune",
 ],
  70 => [ 
+  'img' => 70,
   'name' => clienttranslate("Force of nature"),
   'class' => "ForceOfNature",
   'description' => clienttranslate("Deal 4 damage, minus 1 damage for each of your other attack spells that have mana on them"),
@@ -700,6 +770,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_BASE_2,
 ],
  101 => [ 
+  'img' => 1,
   'name' => clienttranslate("Backfire"),
   'class' => "Backfire",
   'description' => clienttranslate("Your opponent gains 1 mana card. They take damage equal to its power"),
@@ -709,6 +780,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SAND_1,
 ],
  102 => [ 
+  'img' => 2,
   'name' => clienttranslate("Echo"),
   'class' => "EchoCard",
   'description' => clienttranslate("Deal 3 damage. If you cast 1 of your other instant spells immediately before this and it cost 1 or less, this spell gains that spell's effect"),
@@ -720,6 +792,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionEchoInteraction",
 ],
  103 => [ 
+  'img' => 3,
   'name' => clienttranslate("Invisible friend"),
   'class' => "InvisibleFriend",
   'description' => clienttranslate("Reveal 6 mana cards from the mana deck. Place the highest power mana back on the top of the mana deck. Gain the remaining 5 mana"),
@@ -729,6 +802,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SAND_1,
 ],
  104 => [ 
+  'img' => 4,
   'name' => clienttranslate("Symbiosis"),
   'class' => "Symbiosis",
   'description' => clienttranslate("Gain a quantity of mana cards equal to the damage dealt by your opponent's previous basic attack"),
@@ -738,6 +812,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SAND_1,
 ],
  105 => [ 
+  'img' => 5,
   'name' => clienttranslate("Death spiral"),
   'class' => "DeathSpiral",
   'description' => clienttranslate("This spell costs 0 if the previous spell you cast cost 3 or more. Deal 2 damage"),
@@ -747,6 +822,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SAND_1,
 ],
  106 => [ 
+  'img' => 6,
   'name' => clienttranslate("Transfigure"),
   'class' => "Transfigure",
   'description' => clienttranslate("Gain 4 mana. You may choose to gain 1 less mana to destroy 1 of your spells that has no mana on it"),
@@ -757,6 +833,7 @@ $this->card_types = [
   'js_actions' => "actionTransfigure",
 ],
  107 => [ 
+  'img' => 7,
   'name' => clienttranslate("Shadow oath"),
   'class' => "ShadowOath",
   'description' => clienttranslate("Pick up a mana card off one of your other spells. You opponent gains 1 mana card"),
@@ -767,6 +844,7 @@ $this->card_types = [
   'js_actions' => "actionShadowOath",
 ],
  108 => [ 
+  'img' => 8,
   'name' => clienttranslate("Eclipse"),
   'class' => "Eclipse",
   'description' => clienttranslate("Reveal 3 mana cards from the mana deck, place them on any mix of your spells or your opponent's spells"),
@@ -778,6 +856,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionEclipse",
 ],
  200 => [ 
+  'img' => 1,
   'name' => clienttranslate("Backfire"),
   'class' => "Backfire",
   'description' => clienttranslate("Your opponent gains 1 mana card. Deal damage equal to its power"),
@@ -787,6 +866,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  201 => [ 
+  'img' => 2,
   'name' => clienttranslate("Mind games"),
   'class' => "MindGames",
   'description' => clienttranslate("Deal damage equal to the lowest power mana in your opponent's hand"),
@@ -796,6 +876,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  202 => [ 
+  'img' => 3,
   'name' => clienttranslate("Psychic pain"),
   'class' => "PsychicPain",
   'description' => clienttranslate("Place 1 mana card from your hand on top of the mana deck. If you do, deal 2 damages"),
@@ -806,6 +887,7 @@ $this->card_types = [
   'js_actions' => "actionPsychicPain",
 ],
  203 => [ 
+  'img' => 4,
   'name' => clienttranslate("Infinite flame"),
   'class' => "InfiniteFlame",
   'description' => clienttranslate("Your basic attack damage is increased by the quantity of mana on this spell"),
@@ -815,6 +897,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  204 => [ 
+  'img' => 5,
   'name' => clienttranslate("Blank slate"),
   'class' => "BlankSlate",
   'description' => clienttranslate("When you discard off this spell, gain 3 mana. Pick up any remaining mana on this spell"),
@@ -825,6 +908,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  205 => [ 
+  'img' => 6,
   'name' => clienttranslate("Crescendo"),
   'class' => "Crescendo",
   'description' => clienttranslate("The next time you cast a spell this turn, it costs 1 more and instantly gains you 4 mana cards"),
@@ -834,6 +918,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  206 => [ 
+  'img' => 7,
   'name' => clienttranslate("Revelation"),
   'class' => "Revelation",
   'description' => clienttranslate("Reveal the top mana on 1 of your spells. Gain a quantity of mana equal to its power"),
@@ -844,6 +929,7 @@ $this->card_types = [
   'js_actions' => "actionRevelation",
 ],
  207 => [ 
+  'img' => 8,
   'name' => clienttranslate("Rigmarole"),
   'class' => "Rigmarole",
   'description' => clienttranslate("Gain 1 mana card. Your opponent must give you the lowest power mana in their hand. You may give you opponent a mana from your hand"),
@@ -855,6 +941,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionRigmarole",
 ],
  208 => [ 
+  'img' => 9,
   'name' => clienttranslate("Symbiosis"),
   'class' => "Symbiosis",
   'description' => clienttranslate("Gain a quantity of mana cards equal to the damage dealt by your opponent's previous basic attack"),
@@ -864,6 +951,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  209 => [ 
+  'img' => 10,
   'name' => clienttranslate("Imagination"),
   'class' => "Imagination",
   'description' => clienttranslate("Choose 1: Gain 2 mana cards, or gain mana until you have the same quantity of mana cards as your opponent"),
@@ -874,6 +962,7 @@ $this->card_types = [
   'js_actions' => "actionImagination",
 ],
  210 => [ 
+  'img' => 11,
   'name' => clienttranslate("Devotion"),
   'class' => "Devotion",
   'description' => clienttranslate("Choose 1: Gain 2 mana cards, or discard a mana off 1 of your other spells"),
@@ -884,6 +973,7 @@ $this->card_types = [
   'js_actions' => "actionDevotion",
 ],
  211 => [ 
+  'img' => 12,
   'name' => clienttranslate("Shadow oath"),
   'class' => "ShadowOath",
   'description' => clienttranslate("Pick up a mana card off one of your other spells. You opponent gains 1 mana card"),
@@ -894,6 +984,7 @@ $this->card_types = [
   'js_actions' => "actionShadowOath",
 ],
  212 => [ 
+  'img' => 13,
   'name' => clienttranslate("Glass shield"),
   'class' => "GlassShield",
   'description' => clienttranslate("When your opponent basic attacks they must reveal a mana card of the same power in their hand in order to deal damage"),
@@ -903,6 +994,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  213 => [ 
+  'img' => 14,
   'name' => clienttranslate("Fire walk"),
   'class' => "FireWalk",
   'description' => clienttranslate("Deal 4 damage. Place any 1 power mana still remaining in your hand onto this spell"),
@@ -912,6 +1004,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  214 => [ 
+  'img' => 15,
   'name' => clienttranslate("Brain drain"),
   'class' => "BrainDrain",
   'description' => clienttranslate("Deal damage equal to the lowest power mana in your hand"),
@@ -921,6 +1014,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  215 => [ 
+  'img' => 16,
   'name' => clienttranslate("Breathe fire"),
   'class' => "BreatheFire",
   'description' => clienttranslate("Deal 1 damage for each of your spells with exactly 2 mana cards on it"),
@@ -930,6 +1024,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  216 => [ 
+  'img' => 17,
   'name' => clienttranslate("Gloom"),
   'class' => "Gloom",
   'description' => clienttranslate("Deal 2 damage. You may take a mana of your choice from the discard pile and put it on 1 of your other spells"),
@@ -940,6 +1035,7 @@ $this->card_types = [
   'js_actions' => "actionGloom",
 ],
  217 => [ 
+  'img' => 18,
   'name' => clienttranslate("Fever dream"),
   'class' => "FeverDream",
   'description' => clienttranslate("Whenever you add a spell to your spell repertoire, deal 2 damage"),
@@ -949,6 +1045,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  218 => [ 
+  'img' => 19,
   'name' => clienttranslate("Cursed mind"),
   'class' => "CursedMind",
   'description' => clienttranslate("The next time you cast a spell this turn, it costs 1 more and instantly deals 4 damage"),
@@ -958,6 +1055,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  219 => [ 
+  'img' => 20,
   'name' => clienttranslate("Ice blast"),
   'class' => "IceBlast",
   'description' => clienttranslate("Choose 1: Discard your hand and deal 5 damage, or place a mana card from the mana deck on 1 of your opponent's spells"),
@@ -968,6 +1066,7 @@ $this->card_types = [
   'js_actions' => "actionIceBlast",
 ],
  220 => [ 
+  'img' => 21,
   'name' => clienttranslate("Isolation"),
   'class' => "Isolation",
   'description' => clienttranslate("Deal 4 damage, minus 2 for each of your regeneration and utility spells that have mana on them"),
@@ -977,6 +1076,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  221 => [ 
+  'img' => 22,
   'name' => clienttranslate("Plague"),
   'class' => "Plague",
   'description' => clienttranslate("Deal 2 damage. You may deal 2 damage to yourself. If you do, gain 4 mana cards"),
@@ -987,6 +1087,7 @@ $this->card_types = [
   'js_actions' => "actionPlague",
 ],
  222 => [ 
+  'img' => 23,
   'name' => clienttranslate("Dark offering"),
   'class' => "DarkOffering",
   'description' => clienttranslate("Pick up a mana card off 1 of your other spells and give it to your opponent. Deal damage equals to its power"),
@@ -997,6 +1098,7 @@ $this->card_types = [
   'js_actions' => "actionDarkOffering",
 ],
  223 => [ 
+  'img' => 24,
   'name' => clienttranslate("Belch"),
   'class' => "Belch",
   'description' => clienttranslate("Reveal 2 mana cards from the mana deck. Deal damage equal to the highest power mana revealed. Discard them or return them in any order"),
@@ -1008,6 +1110,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionBelch",
 ],
  224 => [ 
+  'img' => 25,
   'name' => clienttranslate("Madness"),
   'class' => "Madness",
   'description' => clienttranslate("This spell costs 2 less if the previous spell you cast cost 3 or more. Deal 2 damage"),
@@ -1017,6 +1120,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  225 => [ 
+  'img' => 26,
   'name' => clienttranslate("Wizard's gambit"),
   'class' => "WizardsGambit",
   'description' => clienttranslate("Deal 2 damage. Choose 1 of your spells. You may swap the mana on this spell with the chosen spell"),
@@ -1027,6 +1131,7 @@ $this->card_types = [
   'js_actions' => "actionWizardsGambit",
 ],
  226 => [ 
+  'img' => 27,
   'name' => clienttranslate("Earthquake"),
   'class' => "Earthquake",
   'description' => clienttranslate("Deal 2 damage for each card with unique mana power in your opponent's hand"),
@@ -1036,6 +1141,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  227 => [ 
+  'img' => 28,
   'name' => clienttranslate("Restoration"),
   'class' => "Restoration",
   'description' => clienttranslate("Gain 4 mana cards. Gain 1 additionnal mana card for each attack spell cas consecutively before this spell"),
@@ -1045,6 +1151,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  228 => [ 
+  'img' => 29,
   'name' => clienttranslate("Split soul"),
   'class' => "SplitSoul",
   'description' => clienttranslate("Choose 1: Gain 4 mana, or discard a mana card off 2 of your other spells"),
@@ -1055,6 +1162,7 @@ $this->card_types = [
   'js_actions' => "actionSplitSoul",
 ],
  229 => [ 
+  'img' => 30,
   'name' => clienttranslate("Dream theft"),
   'class' => "DreamTheft",
   'description' => clienttranslate("Gain 3 mana. You opponent must give you the highest powermana in their hand"),
@@ -1064,6 +1172,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  230 => [ 
+  'img' => 31,
   'name' => clienttranslate("Invisible friend"),
   'class' => "InvisibleFriend",
   'description' => clienttranslate("Reveal 6 mana cards from the mana deck. Place the highest power mana back on the top of the mana deck. Gain the remaining 5 mana"),
@@ -1073,6 +1182,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  231 => [ 
+  'img' => 32,
   'name' => clienttranslate("Song of shadows"),
   'class' => "SongOfShadows",
   'description' => clienttranslate("Gain 5 mana. Give your opponent 1 mana card of your choice from the discard pile"),
@@ -1083,6 +1193,7 @@ $this->card_types = [
   'js_actions' => "actionSongOfShadows",
 ],
  232 => [ 
+  'img' => 33,
   'name' => clienttranslate("Transfigure"),
   'class' => "Transfigure",
   'description' => clienttranslate("Gain 4 mana. You may choose to gain 1 less mana to destroy 1 of your spells that has no mana on it. It is immediately replaced with a new spell"),
@@ -1093,6 +1204,7 @@ $this->card_types = [
   'js_actions' => "actionTransfigure",
 ],
  233 => [ 
+  'img' => 34,
   'name' => clienttranslate("Rewind"),
   'class' => "Rewind",
   'description' => clienttranslate("Pick up mana off each of your other instant spells that have more than 1 mana on them"),
@@ -1102,6 +1214,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  234 => [ 
+  'img' => 35,
   'name' => clienttranslate("Mask of the beast"),
   'class' => "MaskOfTheBeast",
   'description' => clienttranslate("Your opponent must discard their hand"),
@@ -1114,6 +1227,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  235 => [ 
+  'img' => 36,
   'name' => clienttranslate("Second life"),
   'class' => "SecondLife",
   'description' => clienttranslate("Pick up a mana off 1 of your other spells. You may move a mana card between 2 of your other spells"),
@@ -1126,6 +1240,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionFracture",
 ],
  236 => [ 
+  'img' => 37,
   'name' => clienttranslate("Sunken skull"),
   'class' => "SunkenSkull",
   'description' => clienttranslate("During your opponent's next turn, the power of all mana is decreased by 1"),
@@ -1138,6 +1253,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  237 => [ 
+  'img' => 38,
   'name' => clienttranslate("Mirage"),
   'class' => "Mirage",
   'description' => clienttranslate("Pick up a mana off 1 of your other spells. If it is a 3 or higher power mana, deal 2 damage"),
@@ -1148,6 +1264,7 @@ $this->card_types = [
   'js_actions' => "actionMirage",
 ],
  238 => [ 
+  'img' => 39,
   'name' => clienttranslate("Premonition"),
   'class' => "Premonition",
   'description' => clienttranslate("The next 2 spells you cast this turn each cost 1 less"),
@@ -1157,6 +1274,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  239 => [ 
+  'img' => 40,
   'name' => clienttranslate("Animal ambush"),
   'class' => "AnimalAmbush",
   'description' => clienttranslate("Deal 2 damage. You may place a mana from the mana deck on one of your opponent's spells"),
@@ -1167,6 +1285,7 @@ $this->card_types = [
   'js_actions' => "actionAnimalAmbush",
 ],
  240 => [ 
+  'img' => 41,
   'name' => clienttranslate("Savage strike"),
   'class' => "SavageStrike",
   'description' => clienttranslate("Deal damage equal to the highest power mana used to cast this spell"),
@@ -1176,6 +1295,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  241 => [ 
+  'img' => 42,
   'name' => clienttranslate("Living fire"),
   'class' => "LivingFire",
   'description' => clienttranslate("Deal 6 damage minus 1 for each of your other spells that have mana on them"),
@@ -1185,6 +1305,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  242 => [ 
+  'img' => 43,
   'name' => clienttranslate("Raise the dead"),
   'class' => "RaiseTheDead",
   'description' => clienttranslate("Deal 6 damage. Place a mana from the mana deck on all of your other spells except 1 of your choice"),
@@ -1195,6 +1316,7 @@ $this->card_types = [
   'js_actions' => "actionRaiseTheDead",
 ],
  243 => [ 
+  'img' => 44,
   'name' => clienttranslate("Multiply"),
   'class' => "Multiply",
   'description' => clienttranslate("As long as this spell has exactly 3 mana cards on it, your basic attack damage is doubled"),
@@ -1204,6 +1326,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  244 => [ 
+  'img' => 45,
   'name' => clienttranslate("Exchange life"),
   'class' => "ExchangeLife",
   'description' => clienttranslate("Deal 3 damage. You may swap the mana cards in your hand with the mana cards in your opponent's hand"),
@@ -1214,6 +1337,7 @@ $this->card_types = [
   'js_actions' => "actionExchangeLife",
 ],
  245 => [ 
+  'img' => 46,
   'name' => clienttranslate("Trample"),
   'class' => "Trample",
   'description' => clienttranslate("Deal 1 damage. Deal an additional 2 damage for each other spell you cast this turn that cost 3 or greater"),
@@ -1223,6 +1347,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  246 => [ 
+  'img' => 47,
   'name' => clienttranslate("Cyclone"),
   'class' => "Cyclone",
   'description' => clienttranslate("Deal 3 damage. You may move a mana card between 2 of your other spells"),
@@ -1233,6 +1358,7 @@ $this->card_types = [
   'js_actions' => "actionCyclone",
 ],
  247 => [ 
+  'img' => 48,
   'name' => clienttranslate("Corruption"),
   'class' => "Corruption",
   'description' => clienttranslate("Deal damage equal to the quantity of mana cards on 1 of your other spells. Then discard 2 mana cards off of it"),
@@ -1243,6 +1369,7 @@ $this->card_types = [
   'js_actions' => "actionCorruption",
 ],
  248 => [ 
+  'img' => 49,
   'name' => clienttranslate("Transference"),
   'class' => "Transference",
   'description' => clienttranslate("Gain 6 mana. You may gain 4 less mana to destroy another spell. After the spell is destroyed, the owner of the spell replaces it"),
@@ -1254,6 +1381,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionTransferenceOpponent",
 ],
  249 => [ 
+  'img' => 50,
   'name' => clienttranslate("Spirit dance"),
   'class' => "SpiritDance",
   'description' => clienttranslate("Gain 6 mana. You may gain 2 less mana to move a mana between 2 of your opponent's spells"),
@@ -1264,6 +1392,7 @@ $this->card_types = [
   'js_actions' => "actionSpiritDance",
 ],
  250 => [ 
+  'img' => 51,
   'name' => clienttranslate("Blossom"),
   'class' => "Blossom",
   'description' => clienttranslate("As long as this spell has exactly 3 mana cards on it, increase the power of all mana by 2 during your turn"),
@@ -1273,6 +1402,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  251 => [ 
+  'img' => 52,
   'name' => clienttranslate("Seeing stone"),
   'class' => "SeeingStone",
   'description' => clienttranslate("Loot at the top 4 spells of the spell deck; you may choose 1 to replace this spell. Return all remaining spells in an order of your choosing"),
@@ -1285,6 +1415,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  252 => [ 
+  'img' => 53,
   'name' => clienttranslate("Crystal shard"),
   'class' => "CrystalShard",
   'description' => clienttranslate("Add this Relic to your hand. Treat it as a 5 power mana. Once discarded, it goes to the spell discard"),
@@ -1297,6 +1428,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  253 => [ 
+  'img' => 54,
   'name' => clienttranslate("Frozen goblet"),
   'class' => "FrozenGoblet",
   'description' => clienttranslate("Your opponent gains only1 mana at the start of their next turn"),
@@ -1309,6 +1441,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  254 => [ 
+  'img' => 55,
   'name' => clienttranslate("Dance of agony"),
   'class' => "DanceOfAgony",
   'description' => clienttranslate("Deal 4 damage. Discard or gain mana until you have 4 cards in your hand"),
@@ -1319,6 +1452,7 @@ $this->card_types = [
   'js_actions' => "actionDanceOfAgony",
 ],
  255 => [ 
+  'img' => 56,
   'name' => clienttranslate("Death spiral"),
   'class' => "DeathSpiral",
   'description' => clienttranslate("Each time you discard off this spell, deal 1 damage for each mana remaining on it"),
@@ -1329,6 +1463,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  256 => [ 
+  'img' => 57,
   'name' => clienttranslate("Soul shatter"),
   'class' => "SoulShatter",
   'description' => clienttranslate("Deal 4 damage. Deal additional damage equal to the highest power mana in your opponent's hand"),
@@ -1338,6 +1473,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
 ],
  257 => [ 
+  'img' => 58,
   'name' => clienttranslate("Eclipse"),
   'class' => "Eclipse",
   'description' => clienttranslate("Reveal 3 mana cards from the mana deck, place them on any mix of your spells or your opponent's spells"),
@@ -1349,6 +1485,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionEclipse",
 ],
  258 => [ 
+  'img' => 59,
   'name' => clienttranslate("Unchained"),
   'class' => "Unchained",
   'description' => clienttranslate("Choose 1: Deal 5 damage, or gain 5 health"),
@@ -1359,6 +1496,7 @@ $this->card_types = [
   'js_actions' => "actionUnchained",
 ],
  259 => [ 
+  'img' => 60,
   'name' => clienttranslate("Sandstorm"),
   'class' => "Sandstorm",
   'description' => clienttranslate("This spell costs 1 less for each consecutive regeneration and utility spell cast before this spell. Deal 4 damage"),
@@ -1368,6 +1506,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
 ],
  260 => [ 
+  'img' => 61,
   'name' => clienttranslate("Bloodthirst"),
   'class' => "Bloodthirst",
   'description' => clienttranslate("Each time you discard a mana off this spell, deal 3 damage minus the highest power mana in your hand"),
@@ -1378,6 +1517,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  261 => [ 
+  'img' => 63,
   'name' => clienttranslate("Poison apple"),
   'class' => "PoisonApple",
   'description' => clienttranslate("Deal 2 damage to yourself. Gain 3 mana"),
@@ -1385,10 +1525,12 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 0,
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
+  'interaction' => "player",
   'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  262 => [ 
+  'img' => 64,
   'name' => clienttranslate("Quicksand"),
   'class' => "Quicksand",
   'description' => clienttranslate("When you discard the last mana off this spell, deal 5 damage. If your opponent reveals a 3 power mana from their hand, deal 2 damage instead"),
@@ -1399,6 +1541,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  263 => [ 
+  'img' => 65,
   'name' => clienttranslate("Glimmer"),
   'class' => "Glimmer",
   'description' => clienttranslate("Gain mana until you gain a mana card that is 2 power of greater. Gain 3 more mana cards"),
@@ -1408,6 +1551,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  264 => [ 
+  'img' => 66,
   'name' => clienttranslate("Echo"),
   'class' => "EchoCard",
   'description' => clienttranslate("Deal 3 damage. If you cast 1 of your other instant spells immediately before this and it cost 1 or less, this spell gains that spell's effect"),
@@ -1419,6 +1563,7 @@ $this->card_types = [
   'js_actions_interaction' => "actionEchoInteraction",
 ],
  265 => [ 
+  'img' => 67,
   'name' => clienttranslate("Harness energy"),
   'class' => "HarnessEnergy",
   'description' => clienttranslate("If your previous spell you cast this turn was an instant regeneration spell, deal damage equal to the quantity of mana you gained"),
@@ -1428,6 +1573,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  266 => [ 
+  'img' => 68,
   'name' => clienttranslate("Wasteland"),
   'class' => "Wasteland",
   'description' => clienttranslate("Deal 2 damage. Deal 1 additionnal damage for each spell in the discard pile that was ever in your spell repertoire"),
@@ -1437,6 +1583,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  267 => [ 
+  'img' => 69,
   'name' => clienttranslate("Time walk"),
   'class' => "TimeWalk",
   'description' => clienttranslate("Gain 5 mana cards. You may choose to gain less mana. The next spell you cast this turn costs 1 less for each mana you chose not to gain"),
@@ -1446,6 +1593,7 @@ $this->card_types = [
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
 ],
  268 => [ 
+  'img' => 70,
   'name' => clienttranslate("Resurrection scroll"),
   'class' => "ResurrectionScroll",
   'description' => clienttranslate("Gain a mana of your choice from the mana discard. You may choose to replace this Relic with a spell from the spell discard or spell pool"),
@@ -1457,6 +1605,7 @@ $this->card_types = [
   'is_relic' => true,
 ],
  269 => [ 
+  'img' => 62,
   'name' => clienttranslate("Silencing amulet"),
   'class' => "SilencingAmulet",
   'description' => clienttranslate("Destroy a spell. After the spell is destroyed, the owner of the spell replaces it"),

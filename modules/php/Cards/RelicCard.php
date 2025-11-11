@@ -12,4 +12,7 @@ abstract class RelicCard extends BaseCard {
         $new_spell = SpellCard::get($new_spell_id);
         SpellCard::addNewSpell($new_spell);
     }
+
+    public abstract function onDestroyRelic();
+
 }

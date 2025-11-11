@@ -9,7 +9,7 @@ class CastSpellInteractionStates implements StateHandler {
 
       this.game.actionManager.setup("actCastSpellInteraction");
       this.game.actionManager.addActionInteraction(args.spell);
-      if (args.spell.type === SpellType.Echo) {
+      if ([SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(args.spell.type)) {
          // Echo
          this.game.actionManager.addArgument(args.previous_spell_played.toString());
       }

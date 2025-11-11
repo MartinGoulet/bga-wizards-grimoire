@@ -273,6 +273,8 @@ class Game extends \Bga\GameFramework\Table {
                         return true;
                     case WG_ICON_SET_SHIFTING_SAND_2:
                         return $gameOptionDifficulty == WG_DIFFICULTY_ADVANCED;
+                    case WG_ICON_SET_FORBIDDEN_SCROLLS:
+                        return $this->getBgaEnvironment() === 'studio';
                     default:
                         return false;
                 }

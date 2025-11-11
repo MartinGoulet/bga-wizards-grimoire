@@ -1631,7 +1631,7 @@ var Game = (function () {
         if (spell_discount > 0) {
             cost -= spell_discount;
         }
-        if (spell.type === SpellType.DeathSpiral) {
+        if (spell.type === SpellType.Sand1.DeathSpiral) {
             var previous_spell_id = Number(player_table.getPreviousSpellPlayed());
             if (previous_spell_id > 0) {
                 var previous_cost = Number(player_table.getPreviousSpellCost());
@@ -3108,7 +3108,7 @@ var ActionManager = (function () {
         if (previous_spell_id > 0 && previous_spell_cost <= 1) {
             var spell = this.game.spellsManager.getCardById(previous_spell_id);
             var card_type = this.game.getCardType(spell);
-            if (spell.type !== SpellType.Echo) {
+            if (![SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(spell.type)) {
                 this.addActionPriv(card_type.js_actions);
             }
         }
@@ -3263,6 +3263,10 @@ var SpellCardManager = (function (_super) {
                 div.id = "".concat(_this.getId(card), "-front");
                 div.dataset.type = "" + card.type;
                 div.classList.add("wg-card-spell-front");
+                var card_type = _this.game.getCardType(card);
+                if (card_type) {
+                    div.dataset.img = "" + card_type.img;
+                }
                 if (card.type !== null) {
                     if (Number(card.type) < 200) {
                         div.classList.add(Number(card.type) <= 70 ? "base_game" : "promo_shifting_sand");
@@ -3272,7 +3276,6 @@ var SpellCardManager = (function (_super) {
                     }
                 }
                 if (div.childNodes.length == 1 && card.type) {
-                    var card_type = _this.game.getCardType(card);
                     var name_1 = card_type.name, description = card_type.description;
                     var gametext = formatGametext2(_(description));
                     div.insertAdjacentHTML("afterbegin", "<div class=\"wg-card-gametext\">\n                     <div class=\"wg-card-gametext-title\">".concat(_(name_1), "</div>\n                     <div class=\"wg-card-gametext-divider\"></div>\n                     <div class=\"wg-card-gametext-text\">").concat(_(gametext), "</div>\n                  </div>"));
@@ -4574,7 +4577,7 @@ var CastSpellInteractionStates = (function () {
             return;
         this.game.actionManager.setup("actCastSpellInteraction");
         this.game.actionManager.addActionInteraction(args.spell);
-        if (args.spell.type === SpellType.Echo) {
+        if ([SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(args.spell.type)) {
             this.game.actionManager.addArgument(args.previous_spell_played.toString());
         }
         setTimeout(function () {
@@ -5879,8 +5882,13 @@ var SpellSeeingStoneState = (function () {
     return SpellSeeingStoneState;
 }());
 var SpellType = {
-    Echo: "102",
-    DeathSpiral: "105",
+    Sand1: {
+        DeathSpiral: "105",
+        Echo: "102",
+    },
+    ForbiddenScrolls: {
+        Echo: "264",
+    }
 };
 define([
     "dojo",
