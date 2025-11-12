@@ -29,6 +29,7 @@ class PlayerTable {
          `data-puppetmaster="false"`,
          `data-secret_oath="false"`,
          `data-glass_shield="false"`,
+         `data-sunken_skull="false"`,
       ];
 
       const html = `

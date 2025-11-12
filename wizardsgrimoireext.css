@@ -1059,6 +1059,10 @@
   display: inline-flex;
 }
 
+.wg-ongoing-spell-sunkenskull .wg-mana-icon.wg-icon-sunken-skull {
+  display: inline-flex;
+}
+
 .wg-mana-icon {
   display: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle type='text/css'%3E circle%7Bstroke:url(%23MyGradient)%7D %3C/style%3E%3Cdefs%3E%3ClinearGradient id='MyGradient'%3E%3Cstop offset='25%25' stop-color='%23BF9537' /%3E%3Cstop offset='95%25' stop-color='%23F2CD55' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='40' fill='black' stroke='yellow' stroke-width='10'/%3E%3C/svg%3E");
@@ -1887,11 +1891,12 @@ body > .card {
   background-position-y: -150px;
 }
 
-.wg-ongoing-spell-sunkenskull [data-sunken_skull=false] .sunkenskull_icon {
+.wg-ongoing-spell-sunkenskull .sunkenskull_icon {
   display: flex;
   border: 2px solid white;
-  background-position-x: -555px;
-  background-position-y: -296px;
+  background-position-x: -629px;
+  background-position-y: -451px;
+  background-image: url("img/shifting_sands-front.jpg");
 }
 
 .wg-ongoing-spell-blossom .blossom_icon {

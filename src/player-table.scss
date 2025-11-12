@@ -258,13 +258,12 @@
 }
 
 .wg-ongoing-spell-sunkenskull {
-   [data-sunken_skull="false"] {
-      .sunkenskull_icon {
-         display: flex;
-         border: 2px solid white;
-         background-position-x: -555px;
-         background-position-y: -296px;
-      }
+   .sunkenskull_icon {
+      display: flex;
+      border: 2px solid white;
+      background-position-x: -629px;
+      background-position-y: -451px;
+      background-image: url("img/shifting_sands-front.jpg");
    }
 }
 
@@ -285,7 +284,7 @@
          display: flex;
          border: 2px solid white;
          background-position-x: -255px;
-         background-position-y: -170px;   
+         background-position-y: -170px;
       }
    }
 }

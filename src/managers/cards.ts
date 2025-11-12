@@ -139,7 +139,8 @@ class ManaCardManager extends CardManager<ManaCard> {
             if (!document.getElementById(growthID)) {
                div.insertAdjacentHTML(
                   "afterbegin",
-                  `<div id="${growthID}" class="wg-mana-icon wg-icon-growth">+1</div>`,
+                  `<div id="${growthID}" class="wg-mana-icon wg-icon-growth">+1</div>
+                   <div class="wg-mana-icon wg-icon-sunken-skull">-1</div>`,
                );
             }
 
