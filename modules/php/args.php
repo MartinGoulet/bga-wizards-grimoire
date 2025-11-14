@@ -172,7 +172,10 @@ trait ArgsTrait {
         $opponentSpellActive = array_filter($opponentSpellActive, function ($spell) {
             /** @var \WizardsGrimoireExt\Cards\OngoingBaseCard $instance */
             $instance = SpellCard::getInstanceOfCard($spell);
-            return $instance->isActive();
+            if($instance instanceof \WizardsGrimoireExt\Cards\OngoingBaseCard) {
+                return $instance->isActive();
+            }
+            return false;
         });
 
         foreach ($opponentSpellActive as $spell) {
