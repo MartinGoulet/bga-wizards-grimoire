@@ -139,8 +139,6 @@ trait ActionTrait {
 
         SpellCard::replaceSpell($old_card, $new_card);
 
-        $this->triggerOnAddSpellToRepertoire(SpellCard::get($new_spell_id));
-
         $this->gamestate->nextState('end');
     }
 
