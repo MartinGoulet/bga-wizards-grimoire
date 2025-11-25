@@ -22,7 +22,7 @@ class SpellSeeingStoneState implements StateHandler {
 
          spellRevealed.onCardClick = async (card: SpellCard) => {
             this.card_order.push(card);
-            const newCard = { id: card.id, isHidden: true } as SpellCard;
+            const newCard = { ...card, isHidden: true } as SpellCard;
             await this.game.tableCenter.spellDeck.addCard(newCard);
             this.game.toggleButtonEnable('btnReorder', spellRevealed.getCards().length === 0);
             this.game.toggleButtonEnable('btnReorderReplace', spellRevealed.getCards().length === 1);
