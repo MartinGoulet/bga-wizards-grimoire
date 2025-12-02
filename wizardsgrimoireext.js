@@ -1619,6 +1619,7 @@ var Game = (function () {
         var player_table = this.getCurrentPlayerTable();
         cost = cost
             - player_table.getDiscountNextSpell()
+            - player_table.getTimeWalkDecreaseCost()
             + player_table.getCursedMindIncreaseCost()
             + player_table.getCrescendoIncreaseCost();
         if (player_table.getPremonitionDiscount() > 0) {
@@ -2023,6 +2024,13 @@ var ActionManager = (function () {
         var card_type = this.game.getCardType(card);
         log("actionmanager.addActionDelayed", card, card_type);
         this.addActionPriv(card_type.js_actions_delayed);
+        return this;
+    };
+    ActionManager.prototype.addActionRelic = function (card) {
+        this.current_card.push(card);
+        var card_type = this.game.getCardType(card);
+        log("actionmanager.addActionRelic", card, card_type);
+        this.addActionPriv("actionReplaceRelic");
         return this;
     };
     ActionManager.prototype.addActionPriv = function (actions) {
@@ -2777,7 +2785,48 @@ var ActionManager = (function () {
         this.game.setClientState(states.client.selectSpellPool, {
             descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
+                cancel: false,
+            },
+        });
+    };
+    ActionManager.prototype.actionResurrectionScroll = function () {
+        this.actions.push("actionResurrectionScrollMana", "actionResurrectionScrollSpell");
+        this.activateNextAction();
+    };
+    ActionManager.prototype.actionResurrectionScrollMana = function () {
+        var _this = this;
+        var msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+        this.game.setClientState(states.client.selectManaDiscard, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
+                player_id: this.game.getPlayerId(),
+                count: 1,
+                exact: true,
+                ignore: function () {
+                    _this.addArgument("0");
+                    _this.activateNextAction();
+                }
+            },
+        });
+    };
+    ActionManager.prototype.actionResurrectionScrollSpell = function () {
+        var _this = this;
+        var msg = _("${you} must select a spell in the spell pool or the discard pile");
+        this.game.setClientState(states.client.selectSpellPoolOrDiscard, {
+            descriptionmyturn: this.getCardName() + " : " + msg,
+            args: {
                 cancel: true,
+                skip: {
+                    label: _("Ignore"),
+                    action: function () {
+                        var ignore = function () {
+                            _this.addArgument("0");
+                            _this.activateNextAction();
+                        };
+                        var text = _("Are-you sure you want to ignore this effect?");
+                        _this.game.confirmationDialog(text, ignore);
+                    }
+                }
             },
         });
     };
@@ -2844,6 +2893,27 @@ var ActionManager = (function () {
             ],
         });
     };
+    ActionManager.prototype.actionTimeWalk = function () {
+        var _this = this;
+        var options = [
+            { label: _("Draw 5"), value: "5" },
+            { label: _("Draw 4"), value: "4" },
+            { label: _("Draw 3"), value: "3" },
+            { label: _("Draw 2"), value: "2" },
+            { label: _("Draw 1"), value: "1" },
+            { label: _("Draw 0"), value: "0" },
+        ];
+        this.question({
+            cancel: true,
+            options: options.map(function (opt) { return ({
+                label: opt.label,
+                action: function () {
+                    _this.addArgument(opt.value);
+                    _this.activateNextAction();
+                },
+            }); }),
+        });
+    };
     ActionManager.prototype.actionTransference = function () {
         var _this = this;
         var label1 = _("Draw 6 cards");
@@ -2874,7 +2944,7 @@ var ActionManager = (function () {
         var label1 = _("Select yourself");
         var label2 = _("Select your opponent");
         this.question({
-            cancel: false,
+            cancel: true,
             options: [
                 {
                     label: label1,
@@ -3718,6 +3788,7 @@ var states = {
         selectManaReturnDeck: "client_selectManaReturnDeck",
         selectSpell: "client_selectSpell",
         selectSpellPool: "client_selectSpellPool",
+        selectSpellPoolOrDiscard: "client_selectSpellPoolOrDiscard",
     },
     server: {
         discardMana: "discardMana",
@@ -3729,6 +3800,7 @@ var states = {
         activateDelayedSpell: "activateDelayedSpell",
         playerNewTurn: "playerNewTurn",
         spellSeeingStone: "spellSeeingStone",
+        relic: "relic",
     },
 };
 var StateManager = (function () {
@@ -3750,12 +3822,14 @@ var StateManager = (function () {
             _a[states.client.selectManaReturnDeck] = new SelectManaReturnDeckStates(game),
             _a[states.client.selectSpell] = new SelectSpellStates(game),
             _a[states.client.selectSpellPool] = new SelectSpellPoolStates(game),
+            _a[states.client.selectSpellPoolOrDiscard] = new SelectSpellPoolOrDiscardState(game),
             _a[states.server.activateDelayedSpell] = new ActivateDelayedSpellStates(game),
             _a[states.server.discardMana] = new DiscardManaStates(game),
             _a[states.server.basicAttack] = new BasicAttackStates(game),
             _a[states.server.basicAttackBattleVision] = new BasicAttackBattleVisionStates(game),
             _a[states.server.castSpell] = new CastSpellStates(game),
             _a[states.server.castSpellInteraction] = new CastSpellInteractionStates(game),
+            _a[states.server.relic] = new RelicStates(game),
             _a[states.server.chooseNewSpell] = new ChooseNewSpellStates(game),
             _a[states.server.playerNewTurn] = new PlayerNewTurnStates(game),
             _a[states.server.spellSeeingStone] = new SpellSeeingStoneState(game),
@@ -4076,6 +4150,12 @@ var PlayerTable = (function () {
     };
     PlayerTable.prototype.setCrescendoIncreaseCost = function (amount) {
         this.getPlayerTableDiv().dataset.crescendo = amount.toString();
+    };
+    PlayerTable.prototype.getTimeWalkDecreaseCost = function () {
+        return Number(this.getPlayerTableDiv().dataset.timeWalk);
+    };
+    PlayerTable.prototype.setTimeWalkDecreaseCost = function (amount) {
+        this.getPlayerTableDiv().dataset.timeWalk = amount.toString();
     };
     PlayerTable.prototype.setPremonitionDiscount = function (amount) {
         this.getPlayerTableDiv().dataset.premonitionDiscount = amount.toString();
@@ -4491,6 +4571,7 @@ var CastSpellStates = (function () {
         player_table.setPreviousSpellPlayed(args.previous_spell_played);
         player_table.setPreviousSpellCost(args.previous_spell_cost);
         player_table.setCursedMindIncreaseCost(args.cursed_mind);
+        player_table.setTimeWalkDecreaseCost(args.time_walk);
         player_table.setCrescendoIncreaseCost(args.crescendo);
         player_table.setPremonitionDiscount(args['premonition_discount']);
         player_table.spell_discount = args.spell_discount;
@@ -4597,6 +4678,31 @@ var CastSpellInteractionStates = (function () {
         return new Promise(function (resolve) { return resolve(true); });
     };
     return CastSpellInteractionStates;
+}());
+var RelicStates = (function () {
+    function RelicStates(game) {
+        this.game = game;
+    }
+    RelicStates.prototype.onEnteringState = function (args) {
+        var _this = this;
+        this.args = args;
+        this.game.markCardAsSelected(args.spell);
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.game.actionManager.setup("actCastSpellInteraction");
+        this.game.actionManager.addActionRelic(args.spell);
+        setTimeout(function () {
+            _this.game.actionManager.activateNextAction();
+        }, 10);
+    };
+    RelicStates.prototype.onLeavingState = function () {
+        this.args = undefined;
+    };
+    RelicStates.prototype.onUpdateActionButtons = function (args) { };
+    RelicStates.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    return RelicStates;
 }());
 var ChooseNewSpellStates = (function () {
     function ChooseNewSpellStates(game) {
@@ -5838,7 +5944,7 @@ var SpellSeeingStoneState = (function () {
                                 switch (_a.label) {
                                     case 0:
                                         this.card_order.push(card);
-                                        newCard = { id: card.id, isHidden: true };
+                                        newCard = __assign(__assign({}, card), { isHidden: true });
                                         return [4, this.game.tableCenter.spellDeck.addCard(newCard)];
                                     case 1:
                                         _a.sent();
@@ -5885,6 +5991,69 @@ var SpellSeeingStoneState = (function () {
         return Promise.resolve(true);
     };
     return SpellSeeingStoneState;
+}());
+var SelectSpellPoolOrDiscardState = (function () {
+    function SelectSpellPoolOrDiscardState(game) {
+        this.game = game;
+        this.discardedSpells = [];
+    }
+    SelectSpellPoolOrDiscardState.prototype.onEnteringState = function (args) {
+        var _this = this;
+        if (!this.game.isCurrentPlayerActive())
+            return;
+        this.game.tableCenter.spellPool.setSelectionMode("single");
+        this.game.tableCenter.spellPool.onSelectionChange = function (selection) {
+            _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+        };
+        this.discardedSpells = __spreadArray([], this.game.tableCenter.spellDiscard.getCards(), true);
+        var displaySpellRevealed = function () { return __awaiter(_this, void 0, void 0, function () {
+            var spellRevealed, spells;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        spellRevealed = this.game.tableCenter.spellRevealed;
+                        spells = this.discardedSpells.map(function (card) {
+                            var newCard = __assign({}, card);
+                            newCard.id = card.id + 100000;
+                            return newCard;
+                        });
+                        return [4, spellRevealed.addCards(spells)];
+                    case 1:
+                        _a.sent();
+                        spellRevealed.setSelectionMode("single");
+                        spellRevealed.onSelectionChange = function (selection) {
+                            _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+                        };
+                        return [2];
+                }
+            });
+        }); };
+        displaySpellRevealed();
+    };
+    SelectSpellPoolOrDiscardState.prototype.onLeavingState = function () {
+        this.game.tableCenter.spellPool.setSelectionMode("none");
+        this.game.tableCenter.spellPool.onSelectionChange = null;
+    };
+    SelectSpellPoolOrDiscardState.prototype.onUpdateActionButtons = function (args) {
+        var _this = this;
+        var handleConfirm = function () {
+            var spell = _this.game.tableCenter.spellPool.getSelection()[0];
+            _this.game.actionManager.addArgument(spell.id.toString());
+            _this.game.actionManager.activateNextAction();
+        };
+        this.game.addActionButtonDisabled("btn_confirm", _("Confirm"), handleConfirm);
+        if (args.skip) {
+            this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
+        }
+        if (args.cancel !== false) {
+            this.game.addActionButtonClientCancel();
+        }
+    };
+    SelectSpellPoolOrDiscardState.prototype.restoreGameState = function () {
+        return new Promise(function (resolve) { return resolve(true); });
+    };
+    return SelectSpellPoolOrDiscardState;
 }());
 var SpellType = {
     Sand1: {

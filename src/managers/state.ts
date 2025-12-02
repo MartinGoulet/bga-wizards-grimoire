@@ -14,6 +14,7 @@ const states = {
       selectManaReturnDeck: "client_selectManaReturnDeck",
       selectSpell: "client_selectSpell",
       selectSpellPool: "client_selectSpellPool",
+      selectSpellPoolOrDiscard: "client_selectSpellPoolOrDiscard",
    },
    server: {
       discardMana: "discardMana",
@@ -25,6 +26,7 @@ const states = {
       activateDelayedSpell: "activateDelayedSpell",
       playerNewTurn: "playerNewTurn",
       spellSeeingStone: "spellSeeingStone",
+      relic: "relic",
    },
 };
 
@@ -47,6 +49,7 @@ class StateManager {
          [states.client.selectManaReturnDeck]: new SelectManaReturnDeckStates(game),
          [states.client.selectSpell]: new SelectSpellStates(game),
          [states.client.selectSpellPool]: new SelectSpellPoolStates(game),
+         [states.client.selectSpellPoolOrDiscard]: new SelectSpellPoolOrDiscardState(game),
 
          [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.discardMana]: new DiscardManaStates(game),
@@ -54,6 +57,7 @@ class StateManager {
          [states.server.basicAttackBattleVision]: new BasicAttackBattleVisionStates(game),
          [states.server.castSpell]: new CastSpellStates(game),
          [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
+         [states.server.relic]: new RelicStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
          [states.server.playerNewTurn]: new PlayerNewTurnStates(game),
          [states.server.spellSeeingStone]: new SpellSeeingStoneState(game),

@@ -279,7 +279,7 @@ class Game extends \Bga\GameFramework\Table {
                         return false;
                 }
             } else if ($gameoptionSetAllCards) {
-                return !in_array($card_type['icon'], [WG_ICON_SET_SAND_1, WG_ICON_SET_FORBIDDEN_SCROLLS]);
+                return !in_array($card_type['icon'], [WG_ICON_SET_SAND_1]);
             } else {
                 return false;
             }

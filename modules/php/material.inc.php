@@ -1222,8 +1222,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  235 => [ 
@@ -1248,8 +1246,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 2,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  237 => [ 
@@ -1410,8 +1406,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_2,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  252 => [ 
@@ -1423,8 +1417,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  253 => [ 
@@ -1436,8 +1428,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_SHIFTING_SAND_1,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  254 => [ 
@@ -1525,8 +1515,6 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 0,
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
-  'interaction' => "player",
-  'js_actions_interaction' => "actionReplaceRelic",
   'is_relic' => true,
 ],
  262 => [ 
@@ -1591,6 +1579,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
+  'js_actions' => "actionTimeWalk",
 ],
  268 => [ 
   'img' => 70,
@@ -1601,7 +1590,7 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 3,
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
-  'js_actions_interaction' => "actionReplaceRelic",
+  'js_actions' => "actionResurrectionScroll",
   'is_relic' => true,
 ],
  269 => [ 
@@ -1613,7 +1602,8 @@ $this->card_types = [
   'activation' => WG_SPELL_ACTIVATION_INSTANT,
   'cost' => 5,
   'icon' => WG_ICON_SET_FORBIDDEN_SCROLLS,
-  'js_actions_interaction' => "actionReplaceRelic",
+  'js_actions' => "actionTransferenceSelectPlayer",
+  'js_actions_interaction' => "actionTransferenceOpponent",
   'is_relic' => true,
 ],
   // --- gen php end --- 

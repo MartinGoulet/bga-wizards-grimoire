@@ -41,6 +41,10 @@ class SpellCard {
         return Game::get()->deck_spells->getCardsInLocation(CardLocation::PlayerSpellRepertoire($player_id));
     }
 
+    public static function getCardsFromDiscardPile() {
+        return Game::get()->deck_spells->getCardsInLocation(CardLocation::Discard());
+    }
+
     /**
      * @return \WizardsGrimoireExt\Cards\BaseCard
      */
@@ -173,6 +177,10 @@ class SpellCard {
             $old_spell['location_arg']
         );
 
+        $playedSpellsIds = Globals::getPlayedSpellIdsThisGame($player_id);
+        $playedSpellsIds[] = $new_spell['id'];
+        Globals::setPlayedSpellIdsThisGame($player_id, $playedSpellsIds);
+
         $card = SpellCard::get($new_spell['id']);
         Notifications::chooseSpell($player_id, $card);
         Stats::replaceSpell($player_id, $card);
@@ -205,6 +213,10 @@ class SpellCard {
             CardLocation::PlayerSpellRepertoire($player_id),
             $position
         );
+
+        $playedSpellsIds = Globals::getPlayedSpellIdsThisGame($player_id);
+        $playedSpellsIds[] = $new_spell['id'];
+        Globals::setPlayedSpellIdsThisGame($player_id, $playedSpellsIds);
 
         $card = SpellCard::get($new_spell['id']);
         Notifications::chooseSpell($player_id, $card);
@@ -241,5 +253,9 @@ class SpellCard {
             }
         }
         return false;
+    }
+
+    public static function getDiscard() : array {
+        return Game::get()->deck_spells->getCardsInLocation(CardLocation::Discard());
     }
 }

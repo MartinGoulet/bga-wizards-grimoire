@@ -134,6 +134,14 @@ class Globals {
         return Game::get()->globals->get('crescendo_increase_cost', 0);
     }
 
+    public static function setTimeWalkDecreaseCost(int $value) {
+        Game::get()->globals->set('time_walk_decrease_cost', $value);
+    }
+    
+    public static function getTimeWalkDecreaseCost() {
+        return Game::get()->globals->get('time_walk_decrease_cost', 0);
+    }
+
     public static function getDiscountPremonition() {
         return intval(Game::get()->globals->get('discount_premonition', 0));
     }
@@ -352,6 +360,14 @@ class Globals {
 
     public static function setNumberOfCardDrawByCardEffectThisTurn(array $values) {
         Game::get()->globals->set('number_of_card_draw_by_card_effect_this_turn', $values);
+    }
+
+    public static function getPlayedSpellIdsThisGame(int $player_id) {
+        return Game::get()->globals->get('played_spell_ids_this_game_' . $player_id, []);
+    }
+
+    public static function setPlayedSpellIdsThisGame(int $player_id, array $spell_ids) {
+        Game::get()->globals->set('played_spell_ids_this_game_' . $player_id, $spell_ids);
     }
 
     /*************************

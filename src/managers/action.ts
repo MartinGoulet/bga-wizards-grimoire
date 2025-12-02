@@ -54,6 +54,14 @@ class ActionManager {
       return this;
    }
 
+   public addActionRelic(card: SpellCard) {
+      this.current_card.push(card);
+      const card_type = this.game.getCardType(card);
+      log("actionmanager.addActionRelic", card, card_type);
+      this.addActionPriv("actionReplaceRelic");
+      return this;
+   }
+
    private addActionPriv(actions?: string[] | string) {
       if (!actions) {
          log("actionmanager.addActionPriv no actions");
@@ -894,7 +902,49 @@ class ActionManager {
       this.game.setClientState(states.client.selectSpellPool, {
          descriptionmyturn: this.getCardName() + " : " + msg,
          args: {
+            cancel: false,
+         },
+      });
+   }
+
+   private actionResurrectionScroll() {
+      this.actions.push("actionResurrectionScrollMana", "actionResurrectionScrollSpell");
+      this.activateNextAction();
+   }
+
+   private actionResurrectionScrollMana() {
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+            ignore: () => {
+               this.addArgument("0");
+               this.activateNextAction();
+            }
+         } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionResurrectionScrollSpell() {
+      const msg = _("${you} must select a spell in the spell pool or the discard pile");
+      this.game.setClientState(states.client.selectSpellPoolOrDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
             cancel: true,
+            skip: {
+               label: _("Ignore"),
+               action: () => {
+                  const ignore = () => {
+                     this.addArgument("0");
+                     this.activateNextAction();
+                  };
+                  const text = _("Are-you sure you want to ignore this effect?");
+                  this.game.confirmationDialog(text, ignore);
+               }
+            }
          },
       });
    }
@@ -970,6 +1020,29 @@ class ActionManager {
       });
    }
 
+   private actionTimeWalk() {
+
+      const options = [
+         {label: _("Draw 5"), value: "5"},
+         {label: _("Draw 4"), value: "4"},
+         {label: _("Draw 3"), value: "3"},
+         {label: _("Draw 2"), value: "2"},
+         {label: _("Draw 1"), value: "1"},
+         {label: _("Draw 0"), value: "0"},
+      ];
+
+      this.question({
+         cancel: true,
+         options: options.map((opt) => ({
+            label: opt.label,
+            action: () => {
+               this.addArgument(opt.value);
+               this.activateNextAction();
+            },
+         })),
+      });
+   }
+
    private actionTransference() {
       const label1 = _("Draw 6 cards");
       const label2 = _("Draw 2 cards and destroy a spell card");
@@ -1001,7 +1074,7 @@ class ActionManager {
       const label2 = _("Select your opponent");
 
       this.question({
-         cancel: false,
+         cancel: true,
          options: [
             {
                label: label1,

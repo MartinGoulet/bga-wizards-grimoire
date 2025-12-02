@@ -30,6 +30,9 @@ class CastSpellEnd extends GameState {
     function onEnteringState(int $activePlayerId) {
 
         $spells = SpellCard::getCardsFromRepertoire();
+        $discard = SpellCard::getCardsFromDiscardPile();
+        $spells = array_merge($spells, $discard);
+        
         foreach ($spells as $spell_card) {
             $card_instance = SpellCard::getInstanceOfCard($spell_card);
             if (method_exists($card_instance, 'onAfterCastSpell')) {

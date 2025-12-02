@@ -1558,10 +1558,10 @@ body > .card {
   margin-top: 5px;
 }
 
-.gamestate_spellSeeingStone #mana-revealed-wrapper {
+.gamestate_spellSeeingStone #mana-revealed-wrapper, .gamestate_client_selectSpellPoolOrDiscard #mana-revealed-wrapper {
   display: none;
 }
-.gamestate_spellSeeingStone #spell-revealed-wrapper {
+.gamestate_spellSeeingStone #spell-revealed-wrapper, .gamestate_client_selectSpellPoolOrDiscard #spell-revealed-wrapper {
   display: block;
 }
 

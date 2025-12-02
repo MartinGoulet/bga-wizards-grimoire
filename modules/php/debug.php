@@ -71,15 +71,16 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         // $players_spell_cards = [
-        //     "2329672" => ["RaiseTheDead", "Devotion", "Premonition", "Transference", "DreamTheft", "Rewind"],
-        //     "2329673" => ["Madness", "Crescendo", "IceBlast", "BlankSlate", "Gloom", "DarkOffering"],
+        //     "2329673" => ["Crescendo", "SunkenSkull", "BlankSlate", "GlassShield", "SeeingStone"],
+        //     "2329672" => ["FeverDream", "SneakyDeal", "IceBlast", "Gloom", "DarkOffering"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["Bloodthirst", "EchoCard", "Glimmer", "HarnessEnergy", "PoisonApple"],
-            "2329673" => ["Quicksand", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "Wasteland"],
+            "2329672" => ["Bloodthirst", "EchoCard", "Glimmer", "HarnessEnergy", "Wasteland"],
+            "2329673" => ["FeverDream", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
         ];
 
         $spells_pool = ['SavageStrike'];
+        $spells_discard = [];
         // $spells_pool = ['FeverDream'];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
@@ -88,8 +89,8 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0, 0, 0],
+            "2329672" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -132,6 +133,15 @@ trait DebugTrait {
                 }
             } else {
                 $this->deck_spells->pickCardForLocation(CardLocation::Deck(), CardLocation::SpellSlot(), $i);
+            }
+        }
+
+        foreach ($spells_discard as $name) {
+            $card = $this->getCardByClassName($name);
+            if ($card !== null) {
+                $spell_deck->insertCardOnExtremePosition($card['id'], CardLocation::Discard(), true);
+            } else {
+                throw new BgaUserException("Wrong card name : " . $name);
             }
         }
 

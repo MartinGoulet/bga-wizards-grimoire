@@ -209,6 +209,7 @@ class Game implements Game {
 
       cost = cost 
          - player_table.getDiscountNextSpell() 
+         - player_table.getTimeWalkDecreaseCost()
          + player_table.getCursedMindIncreaseCost()
          + player_table.getCrescendoIncreaseCost();
 

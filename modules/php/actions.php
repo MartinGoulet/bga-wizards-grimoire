@@ -97,25 +97,7 @@ trait ActionTrait {
             throw new \BgaSystemException("Use replaceSpell action");
         }
 
-        $position = SpellCard::getFirstAvailableSpellPosition($playerId);
-
-        $this->deck_spells->moveCard($card_id, $cardDestination, $position);
-
-        $newSpell = $this->deck_spells->pickCardForLocation(
-            CardLocation::Deck(),
-            CardLocation::SpellSlot(),
-            $card['location_arg']
-        );
-
-        $card = SpellCard::get($card_id);
-
-        Notifications::chooseSpell($playerId, $card);
-        Notifications::refillSpell($playerId, $newSpell);
-        Globals::setLastAddedSpell($newSpell['id']);
-
-        Stats::chooseSpell($playerId, $card);
-
-        $this->triggerOnAddSpellToRepertoire($card);
+        SpellCard::addNewSpell($card);
 
         $turn_number = Game::get()->getStat(WG_STAT_TURN_NUMBER);
         if ($turn_number <= 3) {
@@ -168,6 +150,7 @@ trait ActionTrait {
 
         $cost = $cost
             - Globals::getDiscountNextSpell()
+            - Globals::getTimeWalkDecreaseCost()
             + Globals::getCursedMindIncreaseCost()
             + Globals::getCrescendoIncreaseCost();
 
@@ -266,7 +249,7 @@ trait ActionTrait {
         $cardClass->card_name = $card_name;
         $res = $cardClass->castSpell($args);
 
-        if ($cardClass instanceof RelicCard && $card_name !== "Echo") {
+        if ($card_name !== "Echo" && method_exists($cardClass, 'onDestroyRelic')) {
             $cardClass->onDestroyRelic();
         }
 

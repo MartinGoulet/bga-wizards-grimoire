@@ -256,6 +256,14 @@ class PlayerTable {
       this.getPlayerTableDiv().dataset.crescendo = amount.toString();
    }
 
+   getTimeWalkDecreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.timeWalk);
+   }
+
+   setTimeWalkDecreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.timeWalk = amount.toString();
+   }
+
    setPremonitionDiscount(amount: number) {
       this.getPlayerTableDiv().dataset.premonitionDiscount = amount.toString();
    }

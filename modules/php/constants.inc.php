@@ -116,6 +116,8 @@ define('ST_NEXT_PLAYER', 7);
 const ST_SPELL_SEEING_STONE = 70;
 const ST_CAST_SPELL_END = 71;
 
+const ST_RELIC = 73;
+
 
 /*
  * Statistic variables 

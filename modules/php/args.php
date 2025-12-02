@@ -41,6 +41,7 @@ trait ArgsTrait {
         $args["previous_spell_played"] = Globals::getSpellPlayed();
         $args["previous_spell_cost"] = Globals::getSpellCost();
         $args["cursed_mind"] = Globals::getCursedMindIncreaseCost();
+        $args["time_walk"] = Globals::getTimeWalkDecreaseCost();
         $args["crescendo"] = Globals::getCrescendoIncreaseCost();
         $args['premonition_discount'] = Globals::getDiscountPremonition();
         $args["undo"] = Game::get()->getGameStateValue(WG_VAR_UNDO_AVAILABLE) == 1;
@@ -124,7 +125,8 @@ trait ArgsTrait {
     //////////////////////////////////////////
     // Private methods
 
-    private function getArgsBase() {
+    public function getArgsBase() {
+        
         $ongoing_spell = [
             [
                 "name" => "battlevision",

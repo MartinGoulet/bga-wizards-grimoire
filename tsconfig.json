@@ -48,6 +48,7 @@
         "src/states/discard-mana.ts",
         "src/states/cast-spell.ts",
         "src/states/cast-spell-interaction.ts",
+        "src/states/relic.ts",
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
         "src/states/basic-attack-battle-vision.ts",
@@ -68,6 +69,7 @@
         "src/states/select-spell.ts",
         "src/states/select-spell-pool.ts",
         "src/states/spell-seeing-stone.ts",
+        "src/states/select-spell-pool-or-discard.ts",
 
         "src/types.ts",
         
