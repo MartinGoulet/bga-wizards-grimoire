@@ -27,7 +27,7 @@ class BasicAttackBattleVisionStates implements StateHandler {
          const { hand } = this.game.getCurrentPlayerTable();
          const selectedMana: ManaCard = hand.getSelection()[0];
          if (selectedMana) {
-            await this.game.bgaPerformAction("actBlockBasicAttack", { id: selectedMana.id });
+            await this.game.bgaPerformAction("actBlockBasicAttack", { mana_id: selectedMana.id });
          }
       };
 

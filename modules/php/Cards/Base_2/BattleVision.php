@@ -10,7 +10,7 @@ class BattleVision extends OngoingBaseCard {
 
     public function isActive(): bool {
         return $this->isActiveAtLeastOneMana() 
-            && SpellCard::isInRepertoireBool($this->id, Players::getPlayerId());
+            && SpellCard::isInRepertoireBool($this->id, Players::getOpponentId());
     }
 
     public function getArguments(): array {

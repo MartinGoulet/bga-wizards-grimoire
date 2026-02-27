@@ -4857,7 +4857,7 @@ var BasicAttackBattleVisionStates = (function () {
                         hand = this.game.getCurrentPlayerTable().hand;
                         selectedMana = hand.getSelection()[0];
                         if (!selectedMana) return [3, 2];
-                        return [4, this.game.bgaPerformAction("actBlockBasicAttack", { id: selectedMana.id })];
+                        return [4, this.game.bgaPerformAction("actBlockBasicAttack", { mana_id: selectedMana.id })];
                     case 1:
                         _a.sent();
                         _a.label = 2;
