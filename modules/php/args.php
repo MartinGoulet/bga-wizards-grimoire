@@ -3,6 +3,9 @@
 namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
+use WizardsGrimoireExt\Cards\Base_2\Growth;
+use WizardsGrimoireExt\Cards\Base_2\Puppetmaster;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Cards\Shifting_Sand_1\Blossom;
 
 trait ArgsTrait {
@@ -88,7 +91,10 @@ trait ArgsTrait {
 
     function argBasicAttack() {
         $cards = ManaCard::getHand();
-        if (Globals::getIsActivePuppetmaster()) {
+
+        /** @var Puppetmaster $pupperMaster */
+        $pupperMaster = SpellCard::getInstanceOfCardFromClass(Puppetmaster::class);
+        if ($pupperMaster->isActive()) {
             $value = Globals::getPreviousBasicAttackPower();
             $cards = array_filter($cards, function ($card) use ($value) {
                 return ManaCard::getPower($card) == $value;
@@ -126,69 +132,31 @@ trait ArgsTrait {
     // Private methods
 
     public function getArgsBase() {
-        
-        $ongoing_spell = [
-            [
-                "name" => "battlevision",
-                "active" => Globals::getIsActiveBattleVision(),
-            ],
-            [
-                "name" => "growth",
-                "active" => Globals::getIsActiveGrowth(),
-            ],
-            [
-                "name" => "lullaby",
-                "active" => Globals::getIsActiveLullaby(),
-            ],
-            [
-                "name" => "puppetmaster",
-                "active" => Globals::getIsActivePuppetmaster(),
-            ],
-            [
-                "name" => "powerhungry",
-                "active" => Globals::getIsActivePowerHungry(),
-            ],
-            [
-                "name" => "secretoath",
-                "active" => Globals::getIsActiveSecretOath(),
-            ],
-            [
-                "name" => "sunkenskull",
-                "active" => Globals::getSunkenSkullActivePlayer() == Players::getPlayerId(),
-            ]
-        ];
+        $names = ['secretoath', 'growth', 'falseface', 'lullaby', 'battlevision', 'powerhungry', 'puppetmaster', 
+                  'infiniteflame', 'glassshield', 'feverdream', 'multiply', 'blossom', 'sunkenskull'];
 
-        $ongoingSpellActive = SpellCard::getOngoingSpells(Players::getPlayerId());
-        foreach ($ongoingSpellActive as $spell) {
-            $instance = SpellCard::getInstanceOfCard($spell);
-            if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\Blossom) {
-                $ongoing_spell[] = [
-                    "name" => "blossom",
-                    "active" => $instance->isActive(),
-                ];
-            }
+        // Initialize associative array keyed by name, all inactive
+        $ongoing_spell = [];
+        foreach ($names as $n) {
+            $ongoing_spell[$n] = ['name' => $n, 'active' => false];
         }
 
-        $opponentSpellActive = SpellCard::getOngoingSpells(Players::getOpponentId());
+        $cards = array_merge(
+            SpellCard::getOngoingSpells(Players::getPlayerId()),
+            SpellCard::getOngoingSpells(Players::getOpponentId())
+        );
 
-        $opponentSpellActive = array_filter($opponentSpellActive, function ($spell) {
+        foreach ($cards as $spell) {
             /** @var \WizardsGrimoireExt\Cards\OngoingBaseCard $instance */
             $instance = SpellCard::getInstanceOfCard($spell);
-            if($instance instanceof \WizardsGrimoireExt\Cards\OngoingBaseCard) {
-                return $instance->isActive();
-            }
-            return false;
-        });
-
-        foreach ($opponentSpellActive as $spell) {
-            $instance = SpellCard::getInstanceOfCard($spell);
-            if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield) {
-                $ongoing_spell[] = [
-                    "name" => "glassshield",
-                    "active" => $instance->isActive(),
-                ];
-            }
+            $info = $instance->getArguments();
+            $ongoing_spell[$info['name']] = $info;
         }
+
+        $ongoing_spell['sunkenskull'] = [
+            'name' => 'sunkenskull',
+            'active' => Globals::getSunkenSkullActivePlayer() == Players::getPlayerId(),
+        ];
 
         $first_player = Players::getPlayerId();
         $second_player = Players::getOpponentIdOf($first_player);
@@ -196,8 +164,8 @@ trait ArgsTrait {
         $result = [
             'ongoing_spells' => array_values($ongoing_spell),
             'players' => [
-                $first_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $first_player),
-                $second_player => Game::get()->getStat(WG_STAT_TURN_NUMBER, $second_player),
+                $first_player => Game::get()->bga->playerStats->get(WG_STAT_TURN_NUMBER, $first_player),
+                $second_player => Game::get()->bga->playerStats->get(WG_STAT_TURN_NUMBER, $second_player),
             ],
             'last_added_spell' => Globals::getLastAddedSpell(),
         ];

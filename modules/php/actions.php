@@ -8,6 +8,9 @@ use Bga\GameFramework\Actions\Types\IntArrayParam;
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 use BgaUserException;
+use WizardsGrimoireExt\Cards\Base_2\BattleVision;
+use WizardsGrimoireExt\Cards\Base_2\Puppetmaster;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Cards\RelicCard;
 use WizardsGrimoireExt\Objects\CardLocation;
 
@@ -227,8 +230,10 @@ trait ActionTrait {
 
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_ONGOING:
+                /** @var OngoingBaseCard $cardClass */
                 $cardClass = SpellCard::getInstanceOfCard($spell);
-                $cardClass->isOngoingSpellActive(true, $player_id);
+                $cardClass->isActive();
+
                 $this->gamestate->nextState("cast");
                 Events::onCheckOngoingActiveSpell();
                 break;
@@ -315,7 +320,7 @@ trait ActionTrait {
         $spell_id = Globals::getSpellPlayed();
         $spell = SpellCard::get($spell_id);
         $card_type = SpellCard::getCardInfo($spell);
-        if (isset($card_type['is_relic']) && $card_type['is_relic'] && $card_type['js_actions_interaction'] == 'actionReplaceRelic') {
+        if (isset($card_type['is_relic']) && $card_type['is_relic'] && isset($card_type['js_actions_interaction']) && $card_type['js_actions_interaction'] == 'actionReplaceRelic') {
         } else {
             $spell = SpellCard::isInRepertoire($spell_id, $player_id);
         }
@@ -342,7 +347,9 @@ trait ActionTrait {
         $damage = ManaCard::getPower($card);
 
         // Puppetmaster verification
-        if (Globals::getIsActivePuppetmaster() && Globals::getPreviousBasicAttackPower() != $damage) {
+        /** @var Puppetmaster $pupperMaster */
+        $pupperMaster = SpellCard::getInstanceOfCardFromClass(Puppetmaster::class);
+        if ($pupperMaster->isActive() && Globals::getPreviousBasicAttackPower() != $damage) {
             throw new BgaUserException("The power not match the previous attack");
         }
 
@@ -354,7 +361,9 @@ trait ActionTrait {
         Notifications::basicAttackCard($player_id, $card);
         Notifications::moveManaCard($player_id, [$card], false);
 
-        if (Globals::getIsActiveBattleVision()) {
+        /** @var BattleVision $battleVision */
+        $battleVision = SpellCard::getInstanceOfCardFromClass(BattleVision::class);
+        if ($battleVision->isActive()) {
             if (ManaCard::getHandCount(Players::getOpponentId()) > 0) {
                 Globals::setInteractionPlayer(Players::getOpponentId());
                 $this->gamestate->nextState("battle_vision");

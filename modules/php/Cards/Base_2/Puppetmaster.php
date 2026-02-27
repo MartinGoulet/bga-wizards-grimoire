@@ -2,13 +2,22 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 
-class Puppetmaster extends BaseCard {
+class Puppetmaster extends OngoingBaseCard {
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        // In order to basic attack, your opponent must use a mana of the same power as you did during the previous basic attack phase
-        Globals::setIsActivePuppetMaster($value, $player_id);
+    public function isActive(): bool {
+        return $this->isActiveAtLeastOneMana()
+            && SpellCard::isInRepertoireBool($this->id, Players::getOpponentId());
     }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'puppetmaster',
+            'active' => $this->isActive(),
+        ];
+    }
+
 }

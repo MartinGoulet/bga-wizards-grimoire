@@ -8,7 +8,7 @@ class SelectSpellPoolOrDiscardState implements StateHandler {
 
       this.game.tableCenter.spellPool.setSelectionMode("single");
       this.game.tableCenter.spellPool.onSelectionChange = (selection: SpellCard[]) => {
-         this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+         this.checkButtonEnable();
       };
 
       this.discardedSpells = [...this.game.tableCenter.spellDiscard.getCards()];
@@ -18,12 +18,13 @@ class SelectSpellPoolOrDiscardState implements StateHandler {
          const spells = this.discardedSpells.map((card: SpellCard) => {
             const newCard: SpellCard = { ...card };
             newCard.id = card.id + 100000;
+            (newCard as any).originalId = card.id;
             return newCard;
          })
          await spellRevealed.addCards(spells);
          spellRevealed.setSelectionMode("single");
          spellRevealed.onSelectionChange = (selection: SpellCard[]) => {
-            this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+            this.checkButtonEnable();
          };
       };
 
@@ -37,7 +38,7 @@ class SelectSpellPoolOrDiscardState implements StateHandler {
 
    onUpdateActionButtons(args: SelectSpellPoolOrDiscardArgs): void {
       const handleConfirm = () => {
-         const spell = this.game.tableCenter.spellPool.getSelection()[0];
+         const spell = this.getSelection().pop();
          this.game.actionManager.addArgument(spell.id.toString());
          this.game.actionManager.activateNextAction();
       };
@@ -53,6 +54,19 @@ class SelectSpellPoolOrDiscardState implements StateHandler {
 
    restoreGameState(): Promise<boolean> {
       return new Promise<boolean>((resolve) => resolve(true));
+   }
+
+   checkButtonEnable(): void {
+      this.game.toggleButtonEnable("btn_confirm", this.getSelection().length === 1);
+   }
+
+   getSelection(): SpellCard[] {
+      const selection1 = this.game.tableCenter.spellPool.getSelection();
+      const selection2 = this.game.tableCenter.spellRevealed.getSelection();
+      selection2.forEach((card) => {
+         card.id = (card as any).originalId;
+      });
+      return selection1.concat(selection2);
    }
 }
 

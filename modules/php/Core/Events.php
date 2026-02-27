@@ -22,15 +22,17 @@ class Events {
             $player_id = Players::getPlayerId();
         }
         $spell = SpellCard::getFromRepertoire($position, $player_id);
-        if(empty($spell)) return;
-        
+        if (empty($spell)) return;
+
         $card_type = SpellCard::getCardInfo($spell);
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_DELAYED:
                 $instance = SpellCard::getInstanceOfCard($spell);
+
                 if ($instance->isDelayedSpellTrigger()) {
                     if ($card_type['activation_auto'] == true) {
                         $instance->castSpell($mana_card);
+                        Game::get()->triggerOnAfterDiscardManaFromSpell($instance);
                     } else {
                         $card_ids = Globals::getCoolDownDelayedSpellIds();
                         $card_ids[] = $spell['id'];
@@ -38,14 +40,14 @@ class Events {
                     }
                 }
                 break;
-            case WG_SPELL_ACTIVATION_ONGOING:
-                $instance = SpellCard::getInstanceOfCard($spell);
-                $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
-                $instance->isOngoingSpellActive($count > 0, $player_id);
-                break;
+                // case WG_SPELL_ACTIVATION_ONGOING:
+                //     $instance = SpellCard::getInstanceOfCard($spell);
+                //     $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
+                //     $instance->isOngoingSpellActive($count > 0, $player_id);
+                //     break;
         }
 
-        if($mana_card['type'] == 5 && $mana_card['type_arg'] == 1) {
+        if ($mana_card['type'] == 5 && $mana_card['type_arg'] == 1) {
             ManaCard::delete($mana_card['id']);
         }
     }

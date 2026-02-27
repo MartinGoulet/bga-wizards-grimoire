@@ -5,6 +5,7 @@ namespace WizardsGrimoireExt\Core;
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaSystemException;
 use BgaUserException;
+use WizardsGrimoireExt\Cards\Base_2\Growth;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -248,7 +249,10 @@ class ManaCard {
 
     public static function getPower($card) {
         $power = intval($card['type']);
-        if (Globals::getIsActiveGrowth()) {
+        
+        /** @var Growth $growth */
+        $growth = SpellCard::getInstanceOfCardFromClass(Growth::class);
+        if ($growth->isActive()) {
             $power++;
         }
 

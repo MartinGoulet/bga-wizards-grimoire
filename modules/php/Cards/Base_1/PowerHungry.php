@@ -2,12 +2,19 @@
 
 namespace WizardsGrimoireExt\Cards\Base_1;
 
-use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 
-class PowerHungry extends BaseCard {
+class PowerHungry extends OngoingBaseCard {
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        Globals::setIsActivePowerHungry($value, $player_id);
+    public function isActive(): bool {
+        return $this->isActiveAtLeastOneMana();
     }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'powerhungry',
+            'active' => $this->isActive(),
+        ];
+    }
+    
 }

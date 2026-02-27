@@ -2,26 +2,45 @@
 
 namespace WizardsGrimoireExt\Cards\KickStarter_1;
 
-use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\SpellCard;
 
-class Lullaby extends BaseCard {
+class Lullaby extends OngoingBaseCard {
+
+    public function isActive(): bool {
+        $isActive = $this->isActiveAtLeastOneMana();
+
+        $ownerId = $this->getOwnerId();
+        if ($isActive) {
+            $count = ManaCard::getHandCount($ownerId);
+            if ($count == 0) {
+                ManaCard::draw(2, $ownerId, "Lullaby");
+            }
+        }
+            
+        return $isActive;
+    }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'lullaby',
+            'active' => $this->isActive(),
+        ];
+    }
 
     public function isOngoingSpellActive(bool $value, int $player_id) {
-        // As long as there is mana on this spell, if you have 0 mana cards in your hand, gain 2 mana cards
-        Globals::setIsActiveLullaby($value, $player_id);
-        if ($value) {
-            self::check();
-        }
+        return $this->isActive();
     }
 
     public static function check() {
-        if (Globals::getIsActiveLullaby()) {
-            $count = ManaCard::getHandCount(Globals::getIsActiveLullabyPlayer());
-            if ($count == 0) {
-                ManaCard::draw(2, Globals::getIsActiveLullabyPlayer(), "Lullaby");
-            }
+
+        /** @var Lullaby $card */
+        $card = SpellCard::getInstanceOfCardFromClass(Lullaby::class);
+        
+        if ($card !== null) {
+            $card->isActive();
         }
+
     }
 }

@@ -8,6 +8,7 @@ use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 use WizardsGrimoireExt\Core\Stats;
 
 abstract class BaseCard {
@@ -22,9 +23,6 @@ abstract class BaseCard {
 
     public function castSpellInteraction($args) {
         throw new BgaSystemException('Not implemented : castSpellCallback of ' . get_class($this));
-    }
-
-    public function isOngoingSpellActive(bool $value, int $player_id) {
     }
 
     public function isDelayedSpellTrigger() {
@@ -102,12 +100,19 @@ abstract class BaseCard {
     protected function getCard() {
         $classParts = explode('\\', get_class($this));
         $class_name = array_pop($classParts);
-        $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
-            return array_key_exists('class', $card) && $card['class'] == $class_name;
-        });
-        $types = array_keys($card_types);
-        $type = array_shift($types);
-        $cards = Game::get()->deck_spells->getCardsOfType($type);
-        return array_shift($cards);
+        // $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
+        //     return array_key_exists('class', $card) && $card['class'] == $class_name;
+        // });
+        // $types = array_keys($card_types);
+        // $type = array_shift($types);
+        // $cards = Game::get()->deck_spells->getCardsOfType($type);
+        // return array_shift($cards);
+        return SpellCard::getInstanceOfCardFromClass($class_name);
+    }
+
+    public function getOwnerId() {
+        // $card = $this->getCard();
+        $card = SpellCard::get($this->id);
+        return SpellCard::getPlayerId($card);
     }
 }

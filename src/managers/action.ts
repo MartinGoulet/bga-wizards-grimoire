@@ -934,17 +934,6 @@ class ActionManager {
          descriptionmyturn: this.getCardName() + " : " + msg,
          args: {
             cancel: true,
-            skip: {
-               label: _("Ignore"),
-               action: () => {
-                  const ignore = () => {
-                     this.addArgument("0");
-                     this.activateNextAction();
-                  };
-                  const text = _("Are-you sure you want to ignore this effect?");
-                  this.game.confirmationDialog(text, ignore);
-               }
-            }
          },
       });
    }

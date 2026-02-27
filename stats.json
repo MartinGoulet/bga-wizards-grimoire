@@ -44,7 +44,7 @@
         },
         "nbr_draft_cost_1": {
             "id": 25,
-            "name": "Number of 1 cost spells drafted",
+            "name": "Number of 1 cost or less spells drafted",
             "type": "int"
         },
         "nbr_draft_cost_2": {
@@ -64,7 +64,7 @@
         },
         "nbr_draft_cost_5": {
             "id": 29,
-            "name": "Number of 5 cost spells drafted",
+            "name": "Number of 5 cost or more spells drafted",
             "type": "int"
         },
         "nbr_dmg_spells_2": {

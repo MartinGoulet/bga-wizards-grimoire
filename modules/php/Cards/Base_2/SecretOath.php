@@ -2,42 +2,56 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
-use Bga\Games\wizardsgrimoireext\Game;
-use WizardsGrimoireExt\Cards\BaseCard;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 
-class SecretOath extends BaseCard {
+class SecretOath extends OngoingBaseCard {
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        // As long as this spell has mana on it, if your opponent has a 4 power mana in their hand, they must give it to you immediately
-        Globals::setIsActiveSecretOath($value, $player_id);
-        
-        if ($value == true) {
-            Game::get()->undoSavepoint();
-        }
+    public function isActive(): bool {
+        return false; // card banned
+        // $isActive = $this->isActiveAtLeastOneMana();
+
+        // if($isActive) {
+        //     $opponent_id = Players::getOpponentIdOf($this->getOwnerId());
+        //     $cards = ManaCard::getHand($opponent_id);
+        //     $this->internalCheck($cards, $opponent_id);
+        // }
+
+        // return $isActive;
+    }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'secretoath',
+            'active' => false, // $this->isActive(),
+        ];
     }
 
     public static function check() {
-        if (Globals::getIsActiveSecretOath()) {
-            $opponent_id = Players::getOpponentIdOf(Globals::getIsActiveSecretOathPlayer());
-            $cards = ManaCard::getHand($opponent_id);
-            SecretOath::internalCheck($cards, $opponent_id);
-        }
-    }
+        // /** @var SecretOath $card */
+        // $card = SpellCard::getInstanceOfCardFromClass(SecretOath::class);
+        
+        // if ($card !== null) {
+        //     $card->isActive();
+        // }
 
-    private static function internalCheck($cards, $opponent_id) {
-        $mana_power_4 = array_filter($cards, function ($card) {
-            return ManaCard::getPower($card) == 4;
-        });
-        if (sizeof($mana_power_4) > 0) {
-            foreach ($mana_power_4 as $card_id => $card) {
-                ManaCard::addToHand($card['id'], Globals::getIsActiveSecretOathPlayer());
-            }
-            Notifications::moveManaCard($opponent_id, $mana_power_4, false);
-            Notifications::secretOath(Globals::getIsActiveSecretOathPlayer(), $mana_power_4);
-        }
+        // card banned
     }
+    
+    // private function internalCheck($cards, $opponent_id) {
+    //     $mana_power_4 = array_filter($cards, function ($card) {
+    //         return ManaCard::getPower($card) == 4;
+    //     });
+    //     if (sizeof($mana_power_4) > 0) {
+    //         foreach ($mana_power_4 as $card_id => $card) {
+    //             ManaCard::addToHand($card['id'], Globals::getIsActiveSecretOathPlayer());
+    //         }
+    //         Notifications::moveManaCard($opponent_id, $mana_power_4, false);
+    //         Notifications::secretOath(Globals::getIsActiveSecretOathPlayer(), $mana_power_4);
+    //     }
+    // }
 }

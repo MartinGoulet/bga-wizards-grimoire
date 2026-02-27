@@ -218,7 +218,9 @@
 }
 
 .wg-selected .front {
-   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5), inset 0 0 6px 5px #00ffff !important;
+   box-shadow:
+      1px 1px 2px 1px rgba(0, 0, 0, 0.5),
+      inset 0 0 6px 5px #00ffff !important;
 }
 
 .wg-deck-selected,
@@ -252,6 +254,17 @@
    }
 }
 
+.wg-mana-modifiers {
+   display: flex;
+   position: relative;
+   justify-content: space-between;
+   flex-direction: column;
+}
+
+.mana-cooldown .wg-mana-modifiers {
+   margin-top: 20px;
+}
+
 .wg-ongoing-spell-growth {
    .wg-mana-icon.wg-icon-growth {
       display: inline-flex;
@@ -273,7 +286,7 @@
    line-height: 30px;
    justify-content: center;
    color: white;
-   position: absolute;
+   // position: absolute;
    left: 3px;
    top: 3px;
 }

@@ -10,6 +10,16 @@ abstract class OngoingBaseCard extends BaseCard {
 
     abstract public function isActive(): bool;
 
+    /** @return {name: string, isActive: bool} */
+    public function getArguments(): array {
+        $card_type = SpellCard::getCardInfo(SpellCard::get($this->id));
+
+        return [
+            'name' => strtolower($card_type['class']),
+            'active' => $this->isActive()
+        ];
+    }
+
     protected function isActiveAtLeastOneMana(): bool {
         $spell = SpellCard::get($this->id);
         $position = SpellCard::getPositionInRepertoire($spell);

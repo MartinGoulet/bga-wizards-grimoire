@@ -20,7 +20,6 @@ class SeeingStone extends RelicCard {
 
     public function castSpellInteraction($args) {
         SpellCard::destroyRelic(SpellCard::get($this->id));
-        parent::castSpellInteraction($args);
     }
 
 }

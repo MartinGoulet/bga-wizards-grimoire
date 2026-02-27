@@ -63,6 +63,17 @@ class Notifications {
         ]);
     }
 
+    static function chooseSpellFromDiscard($player_id, $card) {
+        $msg = clienttranslate('${player_name} chooses ${card_name} from the discard pile');
+        self::notifyAll('onChooseSpell', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'card' => $card,
+            'card_name' => SpellCard::getName($card),
+            'i18n' => ['card_name'],
+        ]);
+    }
+
     static function crystalShard($player_id, $spell, $mana) {
         $msg = clienttranslate('${player_name} creates a ${mana_value} power mana');
         self::notifyAll('onCrystalShard', $msg, [

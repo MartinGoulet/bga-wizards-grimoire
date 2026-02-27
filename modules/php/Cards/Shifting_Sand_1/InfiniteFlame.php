@@ -14,6 +14,13 @@ class InfiniteFlame extends OngoingBaseCard {
         return $this->isActiveAtLeastOneMana();
     }
 
+    public function getArguments(): array {
+        return [
+            'name' => 'infiniteflame',
+            'active' => $this->isActive()
+        ];
+    }
+
     public function getPriority(): int {
         return 1;
     }
@@ -31,5 +38,4 @@ class InfiniteFlame extends OngoingBaseCard {
 
         return $damage + $count;
     }
-
 }

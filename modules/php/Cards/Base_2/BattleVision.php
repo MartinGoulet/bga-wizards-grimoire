@@ -2,13 +2,21 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
-use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 
-class BattleVision extends BaseCard {
+class BattleVision extends OngoingBaseCard {
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        // When your opponent basic attacks, you may discard a mana card of the same power from your hand to block the damage
-        Globals::setIsActiveBattleVision($value, $player_id);
+    public function isActive(): bool {
+        return $this->isActiveAtLeastOneMana() 
+            && SpellCard::isInRepertoireBool($this->id, Players::getPlayerId());
+    }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'battlevision',
+            'active' => $this->isActive(),
+        ];
     }
 }

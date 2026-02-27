@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt;
 
+use Bga\GameFramework\Actions\Debug;
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
 use WizardsGrimoireExt\Core\Globals;
@@ -51,6 +52,7 @@ trait DebugTrait {
         Game::get()->setGameStateInitialValue(WG_VAR_SWITCH_CARDS_COUNT, 1);
     }
 
+    #[Debug(reload: true)]
     public function debug_setupGameDebug() {
         $spell_deck = Game::get()->deck_spells;
         $mana_deck = Game::get()->deck_manas;
@@ -70,18 +72,23 @@ trait DebugTrait {
         Globals::setSpellCost(0);
         Globals::setSpellPlayed(0);
 
-        // $players_spell_cards = [
-        //     "2329673" => ["Crescendo", "SunkenSkull", "BlankSlate", "GlassShield", "SeeingStone"],
-        //     "2329672" => ["FeverDream", "SneakyDeal", "IceBlast", "Gloom", "DarkOffering"],
-        // ];
         $players_spell_cards = [
-            "2329672" => ["Bloodthirst", "EchoCard", "Glimmer", "HarnessEnergy", "Wasteland"],
-            "2329673" => ["FeverDream", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+        "2329673" => ["Crescendo", "SunkenSkull", "BlankSlate", "Transference", "SeeingStone", "SongOfShadows"],
+            "2329672" => ["Bloodthirst", "Glimmer", "HarnessEnergy", "Growth", "Quicksand", "ResurrectionScroll"],
         ];
+        // $players_spell_cards = [
+        //     "2329672" => ["ShadowAttack", "BlankSlate", "Glimmer", "HarnessEnergy", "Wasteland"],
+        //     "2329673" => ["FeverDream", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+        // ];
+        // $players_spell_cards = [
+        //     "2329672" => ["Lullaby", "PowerHungry", "Growth", "Hoodwink", "SneakyDeal", "SecondStrike"],
+        //     "2329673" => ["Puppetmaster", "BattleVision", "FalseFace", "CoerciveAgreement", "Fracture", "StoneCrush"],
+        // ];
 
-        $spells_pool = ['SavageStrike'];
+        // $spells_pool = ['SavageStrike'];
+        // $spells_pool = [];
         $spells_discard = [];
-        // $spells_pool = ['FeverDream'];
+        $spells_pool = ['FeverDream'];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
         // $players_spell_mana = [
@@ -89,7 +96,7 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329672" => [0, 0, 0, 0, 0, 0],
+            "2329672" => [0, 0, 0, 3, 0, 0],
             "2329673" => [0, 0, 0, 0, 0, 0],
         ];
 
@@ -152,12 +159,6 @@ trait DebugTrait {
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 
-        Globals::setIsActiveBattleVision(false, 0);
-        Globals::setIsActiveGrowth(false, 0);
-        Globals::setIsActiveLullaby(false, 0);
-        Globals::setIsActivePowerHungry(false, 0);
-        Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(false, 0);
         Game::get()->undoSavepoint();
     }
 

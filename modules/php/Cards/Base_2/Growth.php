@@ -2,18 +2,22 @@
 
 namespace WizardsGrimoireExt\Cards\Base_2;
 
-use Bga\Games\wizardsgrimoireext\Game;
-use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
+use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 
-class Growth extends BaseCard {
+class Growth extends OngoingBaseCard {
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        // During your turn, increase the power of all mana by 1
-        Globals::setIsActiveGrowth($value, $player_id);
-        
-        if ($value == true && Globals::getIsActiveSecretOath()) {
-            Game::get()->undoSavepoint();
-        }
+    public function isActive(): bool {
+        return $this->isActiveAtLeastOneMana() 
+            && SpellCard::isInRepertoireBool($this->id, Players::getPlayerId());
     }
+
+    public function getArguments(): array {
+        return [
+            'name' => 'growth',
+            'active' => $this->isActive(),
+        ];
+    }
+
 }

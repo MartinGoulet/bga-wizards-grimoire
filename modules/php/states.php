@@ -3,6 +3,7 @@
 namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
+use WizardsGrimoireExt\Cards\Base_1\PowerHungry;
 use WizardsGrimoireExt\Core\Notifications;
 
 trait StateTrait {
@@ -289,8 +290,10 @@ trait StateTrait {
             Notifications::revealManaCardHand(Players::getPlayerId(), [$cardSamePower]);
         }
 
-        if (Globals::getIsActivePowerHungry()) {
-            ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
+        /** @var PowerHungry $powerHungry */
+        $powerHungry = SpellCard::getInstanceOfCardFromClass(PowerHungry::class);
+        if ($powerHungry->isActive()) {
+            ManaCard::addToHand($card['id'], $powerHungry->getOwnerId());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
             Game::get()->undoSavepoint();
         } else if (ManaCard::isSpellCard($card)) {

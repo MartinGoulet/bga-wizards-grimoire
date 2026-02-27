@@ -1055,6 +1055,17 @@
     transform: perspective(20em) scale(1.6);
   }
 }
+.wg-mana-modifiers {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.mana-cooldown .wg-mana-modifiers {
+  margin-top: 20px;
+}
+
 .wg-ongoing-spell-growth .wg-mana-icon.wg-icon-growth {
   display: inline-flex;
 }
@@ -1072,7 +1083,6 @@
   line-height: 30px;
   justify-content: center;
   color: white;
-  position: absolute;
   left: 3px;
   top: 3px;
 }

@@ -4,6 +4,7 @@ namespace WizardsGrimoireExt\Core;
 
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
 
@@ -17,8 +18,11 @@ class SpellCard {
         return Game::get()->card_types[$card['type']];
     }
 
-    public static function getPlayerId($spell) {
+    public static function getPlayerId(array $spell) {
         $info = explode('_', $spell['location']);
+        if (count($info) == 1) {
+            return 0;
+        }
         return intval(array_pop($info));
     }
 
@@ -57,6 +61,19 @@ class SpellCard {
         $cardClass = new $className();
         $cardClass->id = intval($card['id']);
         return $cardClass;
+    }
+
+    public static function getInstanceOfCardFromClass(string $className) {
+        $classInfos = explode("\\", $className);
+        $className = array_pop($classInfos);
+        $card_types = array_filter(Game::get()->card_types, function ($card) use ($className) {
+            return array_key_exists('class', $card) && $card['class'] == $className;
+        });
+        $types = array_keys($card_types);
+        $type = array_shift($types);
+        $cards = Game::get()->deck_spells->getCardsOfType($type);
+        $card = array_shift($cards);
+        return self::getInstanceOfCard($card);
     }
 
     public static function getName(array $card) {
@@ -117,6 +134,15 @@ class SpellCard {
         }
 
         return $card;
+    }
+
+    public static function isInRepertoireBool(int $card_id, int $player_id = 0) {
+        try {
+            self::isInRepertoire($card_id, $player_id);
+            return true;
+        } catch (\BgaSystemException $e) {
+            return false;
+        }
     }
 
     public static function destroyRelic(array $spell, string $destination = "discard") {
@@ -202,10 +228,13 @@ class SpellCard {
         Game::get()->undoSavepoint();
     }
 
-    public static function addNewSpell($new_spell) {
+    public static function addNewSpell($new_spell, bool $replaceSpellPool = true) {
         $player_id = Players::getPlayerId();
 
         $position = self::getFirstAvailableSpellPosition($player_id);
+
+        $card = SpellCard::get($new_spell['id']);
+        $newSpellLocation = $card['location'];
 
         // Choose spell
         Game::get()->deck_spells->moveCard(
@@ -219,19 +248,25 @@ class SpellCard {
         Globals::setPlayedSpellIdsThisGame($player_id, $playedSpellsIds);
 
         $card = SpellCard::get($new_spell['id']);
-        Notifications::chooseSpell($player_id, $card);
+        if($newSpellLocation == CardLocation::SpellSlot()) {
+            Notifications::chooseSpell($player_id, $card);
+        } else {
+            Notifications::chooseSpellFromDiscard($player_id, $card);
+        }
         Stats::replaceSpell($player_id, $card);
 
         Game::get()->triggerOnAddSpellToRepertoire($new_spell);
         
-        $newSpell = Game::get()->deck_spells->pickCardForLocation(
-            CardLocation::Deck(),
-            CardLocation::SpellSlot(),
-            $new_spell['location_arg'],
-        );
-        Globals::setLastAddedSpell($newSpell['id']);
+        if($replaceSpellPool) {
+            $newSpell = Game::get()->deck_spells->pickCardForLocation(
+                CardLocation::Deck(),
+                CardLocation::SpellSlot(),
+                $new_spell['location_arg'],
+            );
+            Globals::setLastAddedSpell($newSpell['id']);
+            Notifications::refillSpell($player_id, $newSpell);
+        }
 
-        Notifications::refillSpell($player_id, $newSpell);
         Game::get()->undoSavepoint();
     }
 
@@ -253,6 +288,12 @@ class SpellCard {
             }
         }
         return false;
+    }
+
+    public static function isActiveOngoingSpell(string $className) : bool {
+        /** @var OngoingBaseCard $card */
+        $card = self::getInstanceOfCardFromClass($className);
+        return $card->isActive();
     }
 
     public static function getDiscard() : array {

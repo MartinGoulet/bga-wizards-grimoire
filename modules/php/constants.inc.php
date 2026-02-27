@@ -131,11 +131,13 @@ define('WG_STAT_NBR_DRAFT_ATTACK', 'nbr_draft_red');
 define('WG_STAT_NBR_DRAFT_UTILITY', 'nbr_draft_purple');
 define('WG_STAT_NBR_DRAFT_REGENERATION', 'nbr_draft_green');
 
+define('WG_STAT_NBR_DRAFT_COST_0', 'nbr_draft_cost_1');
 define('WG_STAT_NBR_DRAFT_COST_1', 'nbr_draft_cost_1');
 define('WG_STAT_NBR_DRAFT_COST_2', 'nbr_draft_cost_2');
 define('WG_STAT_NBR_DRAFT_COST_3', 'nbr_draft_cost_3');
 define('WG_STAT_NBR_DRAFT_COST_4', 'nbr_draft_cost_4');
 define('WG_STAT_NBR_DRAFT_COST_5', 'nbr_draft_cost_5');
+define('WG_STAT_NBR_DRAFT_COST_6', 'nbr_draft_cost_5');
 
 define('WG_STAT_NBR_MANA_DRAW', 'nbr_mana_draw');
 

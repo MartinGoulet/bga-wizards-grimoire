@@ -10,6 +10,13 @@ class FeverDream extends OngoingBaseCard {
         return $this->isActiveAtLeastOneMana();
     }
 
+    public function getArguments(): array {
+        return [
+            'name' => 'feverdream',
+            'active' => $this->isActive(),
+        ];
+    }
+
     public function onAddSpellToRepertoire(array $card) {
         $this->dealDamage(2);
     }

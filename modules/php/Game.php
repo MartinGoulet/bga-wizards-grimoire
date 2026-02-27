@@ -218,7 +218,7 @@ class Game extends \Bga\GameFramework\Table {
                 WG_STAT_NBR_DRAFT_ATTACK,
                 WG_STAT_NBR_DRAFT_UTILITY,
                 WG_STAT_NBR_DRAFT_REGENERATION,
-                // 25
+                // 24
                 WG_STAT_NBR_DRAFT_COST_1,
                 WG_STAT_NBR_DRAFT_COST_2,
                 WG_STAT_NBR_DRAFT_COST_3,

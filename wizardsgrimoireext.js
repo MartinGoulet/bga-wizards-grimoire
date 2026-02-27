@@ -2810,23 +2810,11 @@ var ActionManager = (function () {
         });
     };
     ActionManager.prototype.actionResurrectionScrollSpell = function () {
-        var _this = this;
         var msg = _("${you} must select a spell in the spell pool or the discard pile");
         this.game.setClientState(states.client.selectSpellPoolOrDiscard, {
             descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 cancel: true,
-                skip: {
-                    label: _("Ignore"),
-                    action: function () {
-                        var ignore = function () {
-                            _this.addArgument("0");
-                            _this.activateNextAction();
-                        };
-                        var text = _("Are-you sure you want to ignore this effect?");
-                        _this.game.confirmationDialog(text, ignore);
-                    }
-                }
             },
         });
     };
@@ -3418,7 +3406,7 @@ var ManaCardManager = (function (_super) {
                 div.classList.add("wg-card-mana-front");
                 var growthID = "".concat(_this.getId(card), "-growth-id");
                 if (!document.getElementById(growthID)) {
-                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>\n                   <div class=\"wg-mana-icon wg-icon-sunken-skull\">-1</div>"));
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-mana-modifiers\">\n                     <div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>\n                     <div class=\"wg-mana-icon wg-icon-sunken-skull\">-1</div>\n                  </div>"));
                 }
                 if (div.dataset.type == "5" && div.dataset.type_arg == "1") {
                     div.querySelectorAll(".wg-icon-crystal-shard").forEach(function (e) { return e.remove(); });
@@ -6003,7 +5991,7 @@ var SelectSpellPoolOrDiscardState = (function () {
             return;
         this.game.tableCenter.spellPool.setSelectionMode("single");
         this.game.tableCenter.spellPool.onSelectionChange = function (selection) {
-            _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+            _this.checkButtonEnable();
         };
         this.discardedSpells = __spreadArray([], this.game.tableCenter.spellDiscard.getCards(), true);
         var displaySpellRevealed = function () { return __awaiter(_this, void 0, void 0, function () {
@@ -6016,6 +6004,7 @@ var SelectSpellPoolOrDiscardState = (function () {
                         spells = this.discardedSpells.map(function (card) {
                             var newCard = __assign({}, card);
                             newCard.id = card.id + 100000;
+                            newCard.originalId = card.id;
                             return newCard;
                         });
                         return [4, spellRevealed.addCards(spells)];
@@ -6023,7 +6012,7 @@ var SelectSpellPoolOrDiscardState = (function () {
                         _a.sent();
                         spellRevealed.setSelectionMode("single");
                         spellRevealed.onSelectionChange = function (selection) {
-                            _this.game.toggleButtonEnable("btn_confirm", selection && selection.length === 1);
+                            _this.checkButtonEnable();
                         };
                         return [2];
                 }
@@ -6038,7 +6027,7 @@ var SelectSpellPoolOrDiscardState = (function () {
     SelectSpellPoolOrDiscardState.prototype.onUpdateActionButtons = function (args) {
         var _this = this;
         var handleConfirm = function () {
-            var spell = _this.game.tableCenter.spellPool.getSelection()[0];
+            var spell = _this.getSelection().pop();
             _this.game.actionManager.addArgument(spell.id.toString());
             _this.game.actionManager.activateNextAction();
         };
@@ -6052,6 +6041,17 @@ var SelectSpellPoolOrDiscardState = (function () {
     };
     SelectSpellPoolOrDiscardState.prototype.restoreGameState = function () {
         return new Promise(function (resolve) { return resolve(true); });
+    };
+    SelectSpellPoolOrDiscardState.prototype.checkButtonEnable = function () {
+        this.game.toggleButtonEnable("btn_confirm", this.getSelection().length === 1);
+    };
+    SelectSpellPoolOrDiscardState.prototype.getSelection = function () {
+        var selection1 = this.game.tableCenter.spellPool.getSelection();
+        var selection2 = this.game.tableCenter.spellRevealed.getSelection();
+        selection2.forEach(function (card) {
+            card.id = card.originalId;
+        });
+        return selection1.concat(selection2);
     };
     return SelectSpellPoolOrDiscardState;
 }());

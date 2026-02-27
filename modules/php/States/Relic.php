@@ -33,8 +33,12 @@ class Relic extends GameState
         $args["previous_spell_played"] = Globals::getPreviousSpellPlayed();
 
         $card_type = SpellCard::getCardInfo($args["spell"]);
-        $args['_no_notify'] = 
-            !isset($card_type["is_relic"]) || $card_type["is_relic"] !== true;
+        $args['_no_notify'] = true;
+
+        if (isset($card_type["is_relic"]) && $card_type["is_relic"] === true) {
+            $args['_no_notify'] = $card_type['class'] === 'ResurrectionScroll';
+        }
+        
         return $args;
     }
 

@@ -2,19 +2,36 @@
 
 namespace WizardsGrimoireExt\Cards\Forbidden_Scrolls;
 
-use BgaUserException;
+use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\RelicCard;
+use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\SpellCard;
+use WizardsGrimoireExt\Objects\CardLocation;
 
 class ResurrectionScroll extends RelicCard {
 
     public function castSpell($args) {
-        throw new BgaUserException("Resurrection Scroll cannot be cast as a spell.");
+        $manaId = intval(array_shift($args));
+        $spellId  = intval(array_shift($args));
+
+        if ($manaId > 0) {
+            ManaCard::addToHand($manaId);
+        }
+
+        Game::get()->globals->set("resurrection_scroll_spell_id", $spellId);
     }
 
-    public function onDestroyRelic()
-    {
+    public function onDestroyRelic() {
+        $newSpellId = Game::get()->globals->get("resurrection_scroll_spell_id");
+        $newSpell = SpellCard::get($newSpellId);
         SpellCard::destroyRelic(SpellCard::get($this->id));
-    }
+        
+        if ($newSpell['location'] == CardLocation::SpellSlot()) {
+            SpellCard::addNewSpell($newSpell);
+        } else {
+            SpellCard::addNewSpell($newSpell, false);
+        }
 
+        Game::get()->globals->set("resurrection_scroll_spell_id", 0);
+    }
 }
