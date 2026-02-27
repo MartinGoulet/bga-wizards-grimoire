@@ -413,12 +413,13 @@ trait ActionTrait {
     }
 
     public function actPass() {
-        if ($this->gamestate->state_id() == ST_BASIC_ATTACK) {
+        $self = Game::get();
+        if ($self->gamestate->getCurrentMainStateId() == ST_BASIC_ATTACK) {
             Globals::setPreviousBasicAttackPower(0);
             Globals::setLastBasicAttackDamage(0);
         }
 
-        $this->gamestate->nextState('pass');
+        $self->gamestate->nextState('pass');
     }
 
     function actUndo() {

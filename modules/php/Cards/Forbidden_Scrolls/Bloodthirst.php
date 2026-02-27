@@ -11,7 +11,7 @@ class Bloodthirst extends BaseCard {
 
     }
 
-    public function onAfterDiscardManaFromSpell() {
+    public function onAfterDiscardManaFromSpell(int $mana_id) {
         $hand = ManaCard::getHand();
         $highestPower = 0;
         foreach ($hand as $mana) {

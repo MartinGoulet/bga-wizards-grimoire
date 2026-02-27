@@ -29,10 +29,6 @@ class Lullaby extends OngoingBaseCard {
         ];
     }
 
-    public function isOngoingSpellActive(bool $value, int $player_id) {
-        return $this->isActive();
-    }
-
     public static function check() {
 
         /** @var Lullaby $card */

@@ -63,8 +63,10 @@ abstract class BaseCard {
             $damage,
             $life_remaining
         );
-
+            
+        
         Globals::setPreviousSpellDamage($damage);
+
         if($recordDamage) {
             Stats::damageWithSpell($damage, $opponent_id, $this->getCard());
         }
@@ -98,16 +100,17 @@ abstract class BaseCard {
     }
 
     protected function getCard() {
-        $classParts = explode('\\', get_class($this));
-        $class_name = array_pop($classParts);
-        // $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
-        //     return array_key_exists('class', $card) && $card['class'] == $class_name;
-        // });
-        // $types = array_keys($card_types);
-        // $type = array_shift($types);
-        // $cards = Game::get()->deck_spells->getCardsOfType($type);
-        // return array_shift($cards);
-        return SpellCard::getInstanceOfCardFromClass($class_name);
+        return SpellCard::get($this->id);
+        // $classParts = explode('\\', get_class($this));
+        // $class_name = array_pop($classParts);
+        // // $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
+        // //     return array_key_exists('class', $card) && $card['class'] == $class_name;
+        // // });
+        // // $types = array_keys($card_types);
+        // // $type = array_shift($types);
+        // // $cards = Game::get()->deck_spells->getCardsOfType($type);
+        // // return array_shift($cards);
+        // return SpellCard::getInstanceOfCardFromClass($class_name);
     }
 
     public function getOwnerId() {

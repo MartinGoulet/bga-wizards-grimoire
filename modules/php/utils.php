@@ -16,9 +16,9 @@ trait UtilsTrait {
         }
     }
 
-    public function triggerOnAfterDiscardManaFromSpell(BaseCard $instance) {
+    public function triggerOnAfterDiscardManaFromSpell(BaseCard $instance, int $mana_id) {
         if (method_exists($instance, 'onAfterDiscardManaFromSpell')) {
-            $instance->onAfterDiscardManaFromSpell();
+            $instance->onAfterDiscardManaFromSpell($mana_id);
         }
     }
 }

@@ -115,7 +115,8 @@ trait StateTrait {
                         $onAfterDiscardManaFromSpells[] = [
                             'instance' => $instance, 
                             'spell' => $spell, 
-                            'mana' => $mana_card
+                            'mana' => $mana_card,
+                            'mana_id' => $mana_card['id']
                         ];
                     } else {
                         if ($instance->isDelayedSpellTrigger()) {
@@ -133,7 +134,7 @@ trait StateTrait {
         }
 
         foreach ($onAfterDiscardManaFromSpells as $data) {
-            Game::get()->triggerOnAfterDiscardManaFromSpell($data['instance']);
+            Game::get()->triggerOnAfterDiscardManaFromSpell($data['instance'], $data['mana_id']);
         }
 
         if (sizeof($spell_delayed) > 0) {
@@ -175,8 +176,9 @@ trait StateTrait {
 
                 if ($spell_info['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
                     if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
+                        /** @var OngoingBaseCard $instance */
                         $instance = SpellCard::getInstanceOfCard($spell);
-                        $instance->isOngoingSpellActive(false, 0);
+                        $instance->isActive();
                     }
                     $cards[] = $mana_card;
                     ManaCard::addOnTopOfDiscard($mana_card['id']);

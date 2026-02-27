@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoireExt\Core;
 
+use Bga\GameFramework\SystemException;
 use Bga\Games\wizardsgrimoireext\Game;
 use BgaUserException;
 use WizardsGrimoireExt\Cards\OngoingBaseCard;
@@ -158,18 +159,20 @@ class SpellCard {
 
     public static function discardAllManaCardsOnSpell(array $spell, int $player_id = 0) {
         $position = SpellCard::getPositionInRepertoire($spell);
-        self::discardAllManaCardsInPosition($position, $player_id);
+        self::discardAllManaCardsInPosition($spell, $position, $player_id);
     }
 
-    public static function discardAllManaCardsInPosition(int $position, int $player_id = 0) {
+    public static function discardAllManaCardsInPosition(array $spell, int $position, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
 
         // Discard all mana on the relic
+        $instance = SpellCard::getInstanceOfCard($spell);
         $manas = ManaCard::getCardsOnManaCoolDown($position, $player_id);
         foreach ($manas as $mana_id => $mana) {
             ManaCard::addOnTopOfDiscard($mana_id);
+            Game::get()->triggerOnAfterDiscardManaFromSpell($instance, $mana_id);
         }
         if (count($manas) > 0) {
             Notifications::discardManaCards($player_id, $manas);

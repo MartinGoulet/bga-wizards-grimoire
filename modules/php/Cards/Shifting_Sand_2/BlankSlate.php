@@ -13,7 +13,7 @@ class BlankSlate extends BaseCard {
     public function castSpell($args) {
     }
 
-    public function onAfterDiscardManaFromSpell() {
+    public function onAfterDiscardManaFromSpell(int $mana_id) {
         $this->drawManaCards(3);
 
         $spell = SpellCard::get($this->id);

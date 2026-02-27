@@ -13,7 +13,7 @@ class Quicksand extends BaseCard {
 
     }
 
-    public function onAfterDiscardManaFromSpell() {
+    public function onAfterDiscardManaFromSpell(int $mana_id) {
         $opponentHand = ManaCard::getHand(Players::getOpponentId());
         $hasCardWithPower3 = false;
 

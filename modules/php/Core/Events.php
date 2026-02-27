@@ -5,6 +5,7 @@ namespace WizardsGrimoireExt\Core;
 use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\Base_2\SecretOath;
 use WizardsGrimoireExt\Cards\KickStarter_1\Lullaby;
+use WizardsGrimoireExt\Cards\OngoingBaseCard;
 
 /*
  * Events: handle events
@@ -32,7 +33,7 @@ class Events {
                 if ($instance->isDelayedSpellTrigger()) {
                     if ($card_type['activation_auto'] == true) {
                         $instance->castSpell($mana_card);
-                        Game::get()->triggerOnAfterDiscardManaFromSpell($instance);
+                        Game::get()->triggerOnAfterDiscardManaFromSpell($instance, $mana_card['id']);
                     } else {
                         $card_ids = Globals::getCoolDownDelayedSpellIds();
                         $card_ids[] = $spell['id'];
@@ -43,7 +44,7 @@ class Events {
                 // case WG_SPELL_ACTIVATION_ONGOING:
                 //     $instance = SpellCard::getInstanceOfCard($spell);
                 //     $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
-                //     $instance->isOngoingSpellActive($count > 0, $player_id);
+                //     $instance->isActive();
                 //     break;
         }
 
@@ -56,8 +57,9 @@ class Events {
         $spell = SpellCard::getFromRepertoire($position, $player_id);
         $card_type = SpellCard::getCardInfo($spell);
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+            /** @var OngoingBaseCard $instance */
             $instance = SpellCard::getInstanceOfCard($spell);
-            $instance->isOngoingSpellActive(true, $player_id);
+            $instance->isActive();
         }
     }
 
@@ -71,9 +73,9 @@ class Events {
         $card_type = SpellCard::getCardInfo($spell);
         switch ($card_type['activation']) {
             case WG_SPELL_ACTIVATION_ONGOING:
+                /** @var OngoingBaseCard $instance */
                 $instance = SpellCard::getInstanceOfCard($spell);
-                $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
-                $instance->isOngoingSpellActive($count > 0, $player_id);
+                $instance->isActive();
                 break;
         }
     }

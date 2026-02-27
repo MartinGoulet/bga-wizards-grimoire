@@ -73,7 +73,7 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329673" => ["MistOfPain", "SunkenSkull", "WizardsGambit", "Growth", "SeeingStone", "SongOfShadows"],
+            "2329673" => ["DeathSpiral", "Corruption", "WizardsGambit", "Growth", "SeeingStone", "SongOfShadows"],
             "2329672" => ["BattleVision", "Glimmer", "HarnessEnergy", "Transference", "Quicksand", "ResurrectionScroll"],
         ];
         // $players_spell_cards = [
@@ -96,7 +96,7 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [4, 0, 0, 0, 0, 0],
             "2329672" => [1, 0, 0, 0, 0, 0],
         ];
 
