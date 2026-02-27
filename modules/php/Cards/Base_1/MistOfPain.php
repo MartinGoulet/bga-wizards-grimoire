@@ -2,9 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\Base_1;
 
-use BgaSystemException;
+use Bga\GameFramework\SystemException;
 use WizardsGrimoireExt\Cards\BaseCard;
-use WizardsGrimoireExt\Core\Events;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Notifications;
@@ -24,10 +23,14 @@ class MistOfPain extends BaseCard {
     public function castSpellInteraction($args) {
         $count = 0;
 
-        if ($args != null && $args != "") {
-            $mana_ids = explode(",", array_shift($args));
+        $mana_ids = array_shift($args);
+
+        if (!empty($mana_ids)) {
+            $mana_ids = explode(",", $mana_ids);
+            $mana_ids =array_map(fn($id) => intval($id), $mana_ids);
+
             if (sizeof($mana_ids) > 4) {
-                throw new BgaSystemException("Too much cards");
+                throw new SystemException("Too much cards");
             }
             $count = sizeof($mana_ids);
             $opponent_id = Players::getOpponentId();

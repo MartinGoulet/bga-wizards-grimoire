@@ -73,7 +73,7 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-        "2329673" => ["Crescendo", "SunkenSkull", "BlankSlate", "Transference", "SeeingStone", "SongOfShadows"],
+            "2329673" => ["MistOfPain", "SunkenSkull", "BlankSlate", "Transference", "SeeingStone", "SongOfShadows"],
             "2329672" => ["Bloodthirst", "Glimmer", "HarnessEnergy", "Growth", "Quicksand", "ResurrectionScroll"],
         ];
         // $players_spell_cards = [
