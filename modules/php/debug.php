@@ -74,7 +74,7 @@ trait DebugTrait {
 
         $players_spell_cards = [
             "2329673" => ["DeathSpiral", "Corruption", "WizardsGambit", "Growth", "SeeingStone", "SongOfShadows"],
-            "2329672" => ["BattleVision", "Glimmer", "HarnessEnergy", "Transference", "Quicksand", "ResurrectionScroll"],
+            "2329672" => ["BattleVision", "Glimmer", "HarnessEnergy", "Transference", "Lullaby", "ResurrectionScroll"],
         ];
         // $players_spell_cards = [
         //     "2329672" => ["ShadowAttack", "BlankSlate", "Glimmer", "HarnessEnergy", "Wasteland"],
@@ -97,7 +97,7 @@ trait DebugTrait {
         // ];
         $players_spell_mana = [
             "2329673" => [4, 0, 0, 0, 0, 0],
-            "2329672" => [1, 0, 0, 0, 0, 0],
+            "2329672" => [1, 1, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -154,8 +154,8 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(3, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(3, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 

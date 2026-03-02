@@ -4,12 +4,13 @@ namespace WizardsGrimoireExt\Cards\Shifting_Sand_1;
 
 use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\Players;
+use WizardsGrimoireExt\Core\SpellCard;
 
 class Blossom extends OngoingBaseCard {
 
     public function isActive(): bool {
         return $this->isActiveExactMana(3)
-            && $this->getOwnerId() == Players::getPlayerId();
+            && SpellCard::isInRepertoireBool($this->id, Players::getPlayerId());
     }
 
     public function getArguments(): array {

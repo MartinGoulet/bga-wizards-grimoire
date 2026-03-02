@@ -124,6 +124,14 @@ class SpellCard {
         return $card;
     }
 
+    public static function isSpellInRepertoire(array $spell) {
+        $info = explode('_', $spell['location']);
+        if (count($info) < 2) {
+            return false;
+        }
+        return $info[0] == "spr";
+    }
+
     public static function isInRepertoire(int $card_id, int $player_id = 0) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();

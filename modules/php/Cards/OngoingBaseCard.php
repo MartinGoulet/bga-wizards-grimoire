@@ -22,6 +22,9 @@ abstract class OngoingBaseCard extends BaseCard {
 
     protected function isActiveAtLeastOneMana(): bool {
         $spell = SpellCard::get($this->id);
+        if(!SpellCard::isSpellInRepertoire($spell)) {
+            return false;
+        }
         $position = SpellCard::getPositionInRepertoire($spell);
         $player_id = SpellCard::getPlayerId($spell);
         $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
@@ -30,6 +33,9 @@ abstract class OngoingBaseCard extends BaseCard {
 
     protected function isActiveExactMana(int $nbr): bool {
         $spell = SpellCard::get($this->id);
+        if(!SpellCard::isSpellInRepertoire($spell)) {
+            return false;
+        }
         $position = SpellCard::getPositionInRepertoire($spell);
         $player_id = SpellCard::getPlayerId($spell);
         $count = ManaCard::countOnTopOfManaCoolDown($position, $player_id);
