@@ -5,6 +5,8 @@ namespace WizardsGrimoireExt\Cards\Forbidden_Scrolls;
 use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\RelicCard;
 use WizardsGrimoireExt\Core\ManaCard;
+use WizardsGrimoireExt\Core\Notifications;
+use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 use WizardsGrimoireExt\Objects\CardLocation;
 
@@ -16,6 +18,8 @@ class ResurrectionScroll extends RelicCard {
 
         if ($manaId > 0) {
             ManaCard::addToHand($manaId);
+            $card = ManaCard::get($manaId);
+            Notifications::moveManaCard(Players::getPlayerId(), [$card]);
         }
 
         Game::get()->globals->set("resurrection_scroll_spell_id", $spellId);

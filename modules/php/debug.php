@@ -63,6 +63,8 @@ trait DebugTrait {
         Game::get()->DbQuery($sql);
         $mana_deck->shuffle(CardLocation::Deck());
 
+        $mana_deck->pickCardsForLocation(10, CardLocation::Deck(), CardLocation::Discard());
+
 
         Globals::setSkipInteraction(false);
         Globals::setPreviousBasicAttackPower(2);
@@ -154,8 +156,8 @@ trait DebugTrait {
 
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(3, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(3, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 
