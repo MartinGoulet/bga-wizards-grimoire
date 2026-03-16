@@ -55,7 +55,8 @@ class Stats {
             6 => WG_STAT_DMG_WHEN_6_SPELLS,
         ];
 
-        Game::get()->incStat($damage, $stats[$spells_count], $player_id);
+        Game::get()->playerStats->inc($stats[$spells_count], intval($damage), $player_id);
+
     }
 
     static function damageWithBasicAttack($damage, $player_received_damage) {

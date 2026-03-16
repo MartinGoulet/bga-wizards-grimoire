@@ -224,6 +224,7 @@ class Game extends \Bga\GameFramework\Table {
                 WG_STAT_NBR_DRAFT_COST_4,
                 WG_STAT_NBR_DRAFT_COST_5,
                 // 30
+                WG_STAT_DMG_WHEN_2_SPELLS,
                 WG_STAT_DMG_WHEN_3_SPELLS,
                 WG_STAT_DMG_WHEN_4_SPELLS,
                 WG_STAT_DMG_WHEN_5_SPELLS,
@@ -233,9 +234,8 @@ class Game extends \Bga\GameFramework\Table {
                 WG_STAT_NBR_MANA_DRAW,
             ] as $name
         ) {
-            $this->initStat('player', $name, 0);
+            $this->playerStats->init($name, 0);
         }
-        $this->initStat('player', WG_STAT_DMG_WHEN_2_SPELLS, 0, $firstAttacker);
 
         $gameOptionDifficulty = intval(self::getGameStateValue(WG_GAME_OPTION_DIFFICULTY));
         $gameOptionKickStarter1 = intval(self::getGameStateValue(WG_GAME_OPTION_EXT_KICKSTARTER_1));
