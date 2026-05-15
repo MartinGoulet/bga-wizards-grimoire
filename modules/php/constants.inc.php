@@ -45,6 +45,7 @@ define('WG_VAR_IS_ACTIVE_SECRET_OATH', 'is_active_secret_oath');
 define('WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST', 'cons_attk_spell');
 define('WG_VAR_PREVIOUS_BASIC_ATTACK_POWER', 'prev_basic_attack');
 define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
+define('WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE', 'curr_basic_dmg');
 define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
 define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
 define('WG_VAR_PREVIOUS_SPELL_COST', 'prev_spell_cost');
@@ -103,6 +104,12 @@ define('ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT', 156);
 define('ST_CAST_SPELL_CD_OPPONENT_RETURN_CURRENT_PLAYER', 157);
 
 
+define('ST_DESTROY_ACTIVATE_DELAYED', 160);
+define('ST_DESTROY_SWITCH_OPPONENT', 161);
+define('ST_DESTROY_INTERACTION', 162);
+define('ST_DESTROY_RETURN_PLAYER', 163);
+
+
 define('ST_BASIC_ATTACK_START', 66);
 define('ST_BASIC_ATTACK', 6);
 define('ST_BASIC_ATTACK_DAMAGE', 61);
@@ -115,6 +122,8 @@ define('ST_NEXT_PLAYER', 7);
 
 const ST_SPELL_SEEING_STONE = 70;
 const ST_CAST_SPELL_END = 71;
+const ST_DESTROY_SPELL = 72;
+const ST_DESTROY_SPELL_REPLACE = 73;
 
 const ST_RELIC = 73;
 

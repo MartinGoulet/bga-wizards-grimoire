@@ -182,6 +182,14 @@ class Globals {
         Game::get()->setGameStateValue(WG_VAR_CURRENT_BASIC_ATTACK_POWER, $value);
     }
 
+    public static function getCurrentBasicAttackDamage() {
+        return intval(Game::get()->globals->get(WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE, 0));
+    }
+
+    public static function setCurrentBasicAttackDamage(int $value) {
+        Game::get()->globals->set(WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE, $value);
+    }
+
     public static function getPlayerTurn() {
         return intval(Game::get()->getGameStateValue(WG_VAR_PLAYER_TURN));
     }

@@ -5,6 +5,7 @@ namespace WizardsGrimoireExt\Cards\Shifting_Sand_2;
 use Bga\Games\wizardsgrimoireext\Game;
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\Globals;
+use WizardsGrimoireExt\Core\ManaCard;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 
@@ -12,7 +13,7 @@ class Transference extends BaseCard {
 
     public function castSpell($args) {
         $choice = intval(array_shift($args));
-        switch($choice) {
+        switch ($choice) {
             case 1:
                 $this->drawManaCards(6);
                 break;
@@ -21,7 +22,7 @@ class Transference extends BaseCard {
 
                 $choice = intval(array_shift($args));
                 $position = intval(array_shift($args));
-                switch($choice) {
+                switch ($choice) {
                     case 1:
                         $new_spell_id = intval(array_shift($args));
                         $this->destroyOwnSpellAndReplace($position, $new_spell_id);
@@ -38,26 +39,50 @@ class Transference extends BaseCard {
     }
 
     private function destroyOwnSpellAndReplace(int $position, int $new_spell_id) {
-        $player_id = Players::getPlayerId();
+        $spell = SpellCard::getFromRepertoire($position, Players::getPlayerId());
+        $manas = ManaCard::getCardsOnManaCoolDown($position, Players::getPlayerId());
 
-        $oldSpell = SpellCard::getFromRepertoire($position, $player_id);
-        if (!$oldSpell) {
-            throw new \BgaUserException("No spell found at position " . $position);
-        }
+        $globals = Game::get()->globals;
 
-        $newSpell = SpellCard::get($new_spell_id);
-        SpellCard::discardAllManaCardsOnSpell($oldSpell, Players::getPlayerId());
-        SpellCard::replaceSpell($oldSpell, $newSpell, "destroy");
+        $globals->set("destroy_mana_queue", array_keys($manas));
+        $globals->set("destroy_target_spell", $spell);
+        $globals->set("destroy_callback", "own");
+        $globals->set("destroy_new_spell_id", $new_spell_id);
+        $globals->set("interaction_player", Players::getPlayerId());
+        
+
+        Game::get()->gamestate->nextState("destroy");
+        return "stop";
+
+        // $player_id = Players::getPlayerId();
+
+        // $oldSpell = SpellCard::getFromRepertoire($position, $player_id);
+        // if (!$oldSpell) {
+        //     throw new \BgaUserException("No spell found at position " . $position);
+        // }
+
+        // $newSpell = SpellCard::get($new_spell_id);
+        // SpellCard::discardAllManaCardsOnSpell($oldSpell, Players::getPlayerId());
+        // SpellCard::replaceSpell($oldSpell, $newSpell, "destroy");
     }
 
     private function destroyOpponentSpellAndReplace(int $position) {
         $player_id = Players::getOpponentId();
 
         $oldSpell = SpellCard::getFromRepertoire($position, $player_id);
+        $manas = ManaCard::getCardsOnManaCoolDown($position, $player_id);
 
-        Game::get()->globals->set("transference_spell", $oldSpell);
+        $globals = Game::get()->globals;
+
+        $globals->set("destroy_mana_queue", array_keys($manas));
+        $globals->set("destroy_target_spell", $oldSpell);
+        $globals->set("destroy_callback", "opponent");
+        $globals->set("interaction_player", $player_id);
+        $globals->set("transference_spell", $oldSpell);
+        $globals->set("transference_spell_id", $this->id);
+
         Globals::setInteractionPlayer($player_id);
-        Game::get()->gamestate->nextState("opponent");
+        Game::get()->gamestate->nextState("destroy");
         return "stop";
     }
 
@@ -65,17 +90,21 @@ class Transference extends BaseCard {
         $args = [
             "transference_spell" => Game::get()->globals->get("transference_spell"),
         ];
-        return $args;   
+        return $args;
     }
 
-    public function castSpellInteraction($args)
-    {
+    public function castSpellInteraction($args) {
         $oldSpell = $this->getCastSpellInteractionArgs()["transference_spell"];
         $new_spell_id = intval(array_shift($args));
         $newSpell = SpellCard::get($new_spell_id);
-        
-        SpellCard::discardAllManaCardsOnSpell($oldSpell, Players::getOpponentId());
+
+        // $globals = Game::get()->globals;
+        // $globals->set("destroy_new_spell_id", $new_spell_id);
+
+        // Game::get()->gamestate->nextState("destroy");
+        // return 'stop';
+
+        // SpellCard::discardAllManaCardsOnSpell($oldSpell, Players::getOpponentId());
         SpellCard::replaceSpell($oldSpell, $newSpell, "destroy", Players::getOpponentId());
     }
-
 }

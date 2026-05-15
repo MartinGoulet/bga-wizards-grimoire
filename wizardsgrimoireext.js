@@ -2374,10 +2374,7 @@ var ActionManager = (function () {
     ActionManager.prototype.actionMirrorImage = function () {
         this.game.markCardAsSelected(this.getCurrentCard());
         var player_table = this.game.getCurrentPlayerTable();
-        var selectableSpell = player_table.spell_repertoire.getCards().filter(function (card) {
-            var manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
-            return manacount > 0;
-        });
+        var selectableSpell = player_table.spell_repertoire.getCards();
         var msg = _("${you} must select one of your spell");
         this.game.setClientState(states.client.selectSpell, {
             descriptionmyturn: this.getCardName() + " : " + msg,
@@ -2405,6 +2402,7 @@ var ActionManager = (function () {
             .getManaDeckWithSpellOver()
             .filter(function (deck) { return deck.isEmpty(); })
             .map(function (deck) { return deck.location; });
+        emptyDecks.push(Number(this.getCurrentCard().location_arg));
         var msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
         var args = {
             player_id: this.game.getPlayerId(),
@@ -3826,7 +3824,7 @@ var StateManager = (function () {
     StateManager.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
         var _a, _b, _c, _d, _e;
-        log("Entering state: " + stateName);
+        log("Entering state: " + stateName, args);
         var phase = (_c = (_a = args === null || args === void 0 ? void 0 : args.phase) !== null && _a !== void 0 ? _a : (_b = args === null || args === void 0 ? void 0 : args.args) === null || _b === void 0 ? void 0 : _b.phase) !== null && _c !== void 0 ? _c : null;
         if (phase) {
             this.game.gameOptions.setPhase(Number(phase));

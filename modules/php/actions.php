@@ -5,13 +5,12 @@ namespace WizardsGrimoireExt\Core;
 
 use Bga\GameFramework\Actions\Types\JsonParam;
 use Bga\GameFramework\Actions\Types\IntArrayParam;
+use Bga\GameFramework\UserException;
+use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\wizardsgrimoireext\Game;
-use BgaSystemException;
-use BgaUserException;
 use WizardsGrimoireExt\Cards\Base_2\BattleVision;
 use WizardsGrimoireExt\Cards\Base_2\Puppetmaster;
 use WizardsGrimoireExt\Cards\OngoingBaseCard;
-use WizardsGrimoireExt\Cards\RelicCard;
 use WizardsGrimoireExt\Objects\CardLocation;
 
 trait ActionTrait {
@@ -39,7 +38,11 @@ trait ActionTrait {
         $delayed_spells_ids = Globals::getCoolDownDelayedSpellIds();
         $is_authorize = in_array($spell['id'], $delayed_spells_ids);
         if (!$is_authorize) {
-            throw new BgaSystemException("Card not authorize");
+            var_dump([
+                "spell_id" => $spell['id'],
+                "delayed_spells_ids" => $delayed_spells_ids,
+            ]);
+            throw new VisibleSystemException("Card not authorize");
         }
 
         $filter = array_filter($delayed_spells_ids, function ($ids) use ($spell) {
@@ -69,7 +72,7 @@ trait ActionTrait {
     public function actDiscardMana(#[IntArrayParam()] array $card_ids) {
         $hand_count = ManaCard::getHandCount();
         if ($hand_count - sizeof($card_ids) !== 10) {
-            throw new BgaSystemException("Not enough mana discarded");
+            throw new VisibleSystemException("Not enough mana discarded");
         }
 
         $cards = [];
@@ -86,9 +89,9 @@ trait ActionTrait {
         $card = SpellCard::get($card_id);
 
         if ($card == null) {
-            throw new \BgaSystemException('Card is null');
+            throw new VisibleSystemException('Card is null');
         } else if ($card['location'] !== 'slot') {
-            throw new \BgaUserException('Card is not in the spell pool');
+            throw new UserException('Card is not in the spell pool');
         }
 
         $playerId = intval($this->getActivePlayerId());
@@ -97,7 +100,7 @@ trait ActionTrait {
         $nbr_spells = $this->deck_spells->countCardInLocation($cardDestination);
 
         if ($nbr_spells >= 6) {
-            throw new \BgaSystemException("Use replaceSpell action");
+            throw new VisibleSystemException("Use replaceSpell action");
         }
 
         SpellCard::addNewSpell($card);
@@ -117,9 +120,9 @@ trait ActionTrait {
         $spell_count = Game::get()->deck_spells->countCardInLocation(CardLocation::PlayerSpellRepertoire($player_id));
 
         if ($spell_count < 6) {
-            throw new BgaSystemException("Use chooseSpell action");
+            throw new VisibleSystemException("Use chooseSpell action");
         } elseif ($old_card == null || $new_card == null) {
-            throw new BgaSystemException("Cards not found");
+            throw new VisibleSystemException("Cards not found");
         }
 
         SpellCard::replaceSpell($old_card, $new_card);
@@ -142,7 +145,7 @@ trait ActionTrait {
         $spell = SpellCard::isInRepertoire($card_id, $player_id);
 
         if (ManaCard::countOnTopOfManaCoolDown(intval($spell['location_arg'])) > 0) {
-            throw new BgaUserException(self::_("There is already mana card on this spell"));
+            throw new UserException(self::_("There is already mana card on this spell"));
         }
 
         $mana_ids = array_shift($args);
@@ -185,7 +188,7 @@ trait ActionTrait {
         if ($cost == 0 && sizeof($mana_ids) == 1 && $mana_ids[0] == "") {
             // Free card
         } else if (sizeof($mana_ids) !== $cost) {
-            throw new BgaSystemException("Not the right amount of mana required " . sizeof($mana_ids) . " : " . $cost);
+            throw new VisibleSystemException("Not the right amount of mana required " . sizeof($mana_ids) . " : " . $cost);
         }
 
         if ($cost > 0) {
@@ -350,12 +353,14 @@ trait ActionTrait {
         /** @var Puppetmaster $pupperMaster */
         $pupperMaster = SpellCard::getInstanceOfCardFromClass(Puppetmaster::class);
         if ($pupperMaster->isActive() && Globals::getPreviousBasicAttackPower() != $damage) {
-            throw new BgaUserException("The power not match the previous attack");
+            throw new UserException("The power not match the previous attack");
         }
+
+        Globals::setCurrentBasicAttackPower($damage);
 
         $damage = $this->modifyBasicAttackDamage($damage);
 
-        Globals::setCurrentBasicAttackPower($damage);
+        Globals::setCurrentBasicAttackDamage($damage);
 
         Game::get()->deck_manas->moveCard($mana_id, CardLocation::BasicAttack());
         Notifications::basicAttackCard($player_id, $card);
@@ -408,7 +413,7 @@ trait ActionTrait {
 
             Game::get()->gamestate->nextState("block");
         } else {
-            throw new BgaUserException(_("Wrong Mana Power"));
+            throw new UserException(_("Wrong Mana Power"));
         }
     }
 

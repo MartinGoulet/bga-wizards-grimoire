@@ -2,9 +2,10 @@
 
 namespace WizardsGrimoireExt\Core;
 
-use Bga\GameFramework\SystemException;
+use Bga\GameFramework\UserException;
+use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\wizardsgrimoireext\Game;
-use BgaUserException;
+use Exception;
 use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;
@@ -79,7 +80,7 @@ class SpellCard {
 
     public static function getName(array $card) {
         if (empty($card)) {
-            throw new BgaUserException("Card not found");
+            throw new UserException("Card not found");
         }
         $card_type = Game::get()->card_types[$card['type']];
         return $card_type['name'];
@@ -118,7 +119,7 @@ class SpellCard {
         $card = SpellCard::get($spell_id);
 
         if ($card['location'] != CardLocation::SpellSlot()) {
-            throw new \BgaSystemException("The card is not in the spell pool (" . $spell_id . ")");
+            throw new VisibleSystemException("The card is not in the spell pool (" . $spell_id . ")");
         }
 
         return $card;
@@ -139,7 +140,7 @@ class SpellCard {
         $card = SpellCard::get($card_id);
 
         if ($card['location'] != CardLocation::PlayerSpellRepertoire($player_id)) {
-            throw new \BgaSystemException("You don't own the card " . $card_id);
+            throw new VisibleSystemException("You {" . $player_id . "} don't own the card " . $card_id);
         }
 
         return $card;
@@ -149,7 +150,7 @@ class SpellCard {
         try {
             self::isInRepertoire($card_id, $player_id);
             return true;
-        } catch (\BgaSystemException $e) {
+        } catch (VisibleSystemException $e) {
             return false;
         }
     }
@@ -204,7 +205,7 @@ class SpellCard {
                 Notifications::destroySpell($player_id, $discarded_card, 'discard');
                 break;
             default:
-                throw new BgaUserException("Invalid move");
+                throw new UserException("Invalid move");
         }
 
         // Choose spell
@@ -291,7 +292,8 @@ class SpellCard {
     }
 
     public static function isActiveGlassShield(int $player_id): bool {
-        $ongoingSpellActive = self::getOngoingSpells($player_id);
+        $opponentId = Players::getOpponentIdOf($player_id);
+        $ongoingSpellActive = self::getOngoingSpells($opponentId);
         foreach ($ongoingSpellActive as $spell) {
             $instance = self::getInstanceOfCard($spell);
             if ($instance instanceof \WizardsGrimoireExt\Cards\Shifting_Sand_1\GlassShield) {

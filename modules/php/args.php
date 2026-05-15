@@ -33,7 +33,7 @@ trait ArgsTrait {
 
     function argActivateDelayedSpell() {
         $args = $this->getArgsBase();
-        $args["spells"] = array_values(Globals::getCoolDownDelayedSpellIds(true));
+        $args["spells"] = array_values(Globals::getCoolDownDelayedSpellIds());
         return $args;
     }
 
@@ -100,7 +100,7 @@ trait ArgsTrait {
                 return ManaCard::getPower($card) == $value;
             });
         }
-        $isActiveGlassShield = SpellCard::isActiveGlassShield(Players::getOpponentId());
+        $isActiveGlassShield = SpellCard::isActiveGlassShield(Players::getPlayerId());
         if ($isActiveGlassShield) {
             $powers = [];
             foreach ($cards as $card) {

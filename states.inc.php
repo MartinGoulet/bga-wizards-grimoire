@@ -207,6 +207,7 @@ $castSpellsStates = [
             "delayed" => ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
             "delayed_opponent" => ST_CAST_SPELL_SWITCH_TO_OPPONENT,
             "seeing_stone" => ST_SPELL_SEEING_STONE,
+            "destroy" => ST_DESTROY_SPELL,
         ]
     ],
 
@@ -388,6 +389,15 @@ $stCastSpellActiveDeplayedOpponent = Game::getActiveDelayedSpellStates(
     ST_CAST_SPELL_SWITCH_TO_CURRENT_PLAYER
 );
 
+$stDestroySpellDelayed = Game::getActiveDelayedSpellStates(
+    4,
+    ST_DESTROY_ACTIVATE_DELAYED,
+    ST_DESTROY_SWITCH_OPPONENT,
+    ST_DESTROY_INTERACTION,         // castSpellInteraction déjà existant
+    ST_DESTROY_RETURN_PLAYER,
+    ST_DESTROY_SPELL,                // ← retour au loop après chaque delayed spell
+);
+
 $machinestates =
     $basicGameStates +
     $chooseSpellStates +
@@ -398,4 +408,5 @@ $machinestates =
 
     $stSpellCooldownActiveDeplayed +
     $stCastSpellActiveDeplayed +
-    $stCastSpellActiveDeplayedOpponent;
+    $stCastSpellActiveDeplayedOpponent +
+    $stDestroySpellDelayed;

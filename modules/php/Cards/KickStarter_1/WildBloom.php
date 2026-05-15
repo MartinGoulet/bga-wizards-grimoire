@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoireExt\Cards\KickStarter_1;
 
+use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\wizardsgrimoireext\Game;
-use BgaSystemException;
 use WizardsGrimoireExt\Cards\BaseCard;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
@@ -24,13 +24,13 @@ class WildBloom extends BaseCard {
         $spell = SpellCard::getFromRepertoire($spell_pos);
 
         if (ManaCard::countOnTopOfManaCoolDown($spell_pos) > 0) {
-            throw new BgaSystemException("Card has mana cooldown");
+            throw new VisibleSystemException("Card has mana cooldown");
         }
 
         $spell_info = SpellCard::getCardInfo($spell);
 
         if ($spell_info['activation'] !== WG_SPELL_ACTIVATION_INSTANT) {
-            throw new BgaSystemException("Card is not an instant");
+            throw new VisibleSystemException("Card is not an instant");
         }
 
         $card_name = SpellCard::getName($spell);

@@ -65,7 +65,7 @@ class StateManager {
    }
 
    onEnteringState(stateName: string, args: any): void {
-      log("Entering state: " + stateName);
+      log("Entering state: " + stateName, args);
 
       const phase = args?.phase ?? args?.args?.phase ?? null;
       if (phase) {

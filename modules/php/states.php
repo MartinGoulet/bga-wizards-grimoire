@@ -21,6 +21,7 @@ trait StateTrait {
         $player_id = intval($this->getActivePlayerId());
         Players::setPlayerId($player_id);
         Globals::setPlayerTurn($player_id);
+        Globals::setNumberOfCardDrawByCardEffectThisTurn([]);
 
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
@@ -264,7 +265,7 @@ trait StateTrait {
 
     function stBasicAttackDamage() {
         $opponent_id = Players::getOpponentId();
-        $damage = Globals::getCurrentBasicAttackPower();
+        $damage = Globals::getCurrentBasicAttackDamage();
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
@@ -284,7 +285,7 @@ trait StateTrait {
     function stBasicAttackEnd() {
         $card = ManaCard::getBasicAttack();
 
-        if (SpellCard::isActiveGlassShield(Players::getOpponentId())) {
+        if (SpellCard::isActiveGlassShield(Players::getPlayerId())) {
             $power = ManaCard::getPower($card);
             $hand = ManaCard::getHand();
             $cardsSamePower = array_filter($hand, fn($c) => $c['id'] != $card['id'] && ManaCard::getPower($c) === $power);

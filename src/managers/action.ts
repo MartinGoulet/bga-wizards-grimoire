@@ -432,10 +432,7 @@ class ActionManager {
       this.game.markCardAsSelected(this.getCurrentCard());
       const player_table = this.game.getCurrentPlayerTable();
 
-      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
-         const manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
-         return manacount > 0;
-      });
+      const selectableSpell = player_table.spell_repertoire.getCards();
 
       const msg = _("${you} must select one of your spell");
       this.game.setClientState(states.client.selectSpell, {
@@ -466,6 +463,8 @@ class ActionManager {
          .getManaDeckWithSpellOver()
          .filter((deck) => deck.isEmpty())
          .map((deck) => deck.location);
+
+      emptyDecks.push(Number(this.getCurrentCard().location_arg));
 
       const msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
 

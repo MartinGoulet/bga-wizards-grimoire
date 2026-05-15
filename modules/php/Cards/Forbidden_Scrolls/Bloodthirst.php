@@ -12,7 +12,8 @@ class Bloodthirst extends BaseCard {
     }
 
     public function onAfterDiscardManaFromSpell(int $mana_id) {
-        $hand = ManaCard::getHand();
+        $ownerId = $this->getOwnerId();
+        $hand = ManaCard::getHand($ownerId);
         $highestPower = 0;
         foreach ($hand as $mana) {
             if (ManaCard::getPower($mana) > $highestPower) {
