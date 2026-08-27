@@ -5,7 +5,6 @@ namespace WizardsGrimoireExt\Core;
 use Bga\GameFramework\UserException;
 use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\wizardsgrimoireext\Game;
-use Exception;
 use WizardsGrimoireExt\Cards\OngoingBaseCard;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Objects\CardLocation;

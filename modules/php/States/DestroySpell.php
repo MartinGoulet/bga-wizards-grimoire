@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Bga\Games\WizardsGrimoireExt\States;
 
-use Bga\GameFramework\GameResult\Player;
 use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
 use Bga\Games\WizardsGrimoireExt\Game;
+use WizardsGrimoireExt\Cards\Forbidden_Scrolls\SilencingAmulet;
 use WizardsGrimoireExt\Cards\KickStarter_1\WildBloom;
 use WizardsGrimoireExt\Core\Globals;
 use WizardsGrimoireExt\Core\ManaCard;
@@ -15,8 +15,10 @@ use WizardsGrimoireExt\Core\Notifications;
 use WizardsGrimoireExt\Core\Players;
 use WizardsGrimoireExt\Core\SpellCard;
 
-class DestroySpell extends GameState {
-    function __construct(protected Game $game) {
+class DestroySpell extends GameState
+{
+    function __construct(protected Game $game)
+    {
         parent::__construct(
             $game,
             id: ST_DESTROY_SPELL,
@@ -31,7 +33,8 @@ class DestroySpell extends GameState {
         );
     }
 
-    function onEnteringState(int $activePlayerId) {
+    function onEnteringState(int $activePlayerId)
+    {
 
         Globals::setCoolDownDelayedSpellIds([]);  // safety reset, should be already empty
 
@@ -44,15 +47,27 @@ class DestroySpell extends GameState {
             $spell = $this->globals->get("destroy_target_spell");
 
             if ($callback === "own") {
-                $newSpell = SpellCard::get($this->globals->get("destroy_new_spell_id"));
-                SpellCard::replaceSpell($spell, $newSpell, "destroy");
-                $this->gamestate->nextState("continue");
+                // $newSpell = SpellCard::get($this->globals->get("destroy_new_spell_id"));
+                // SpellCard::replaceSpell($spell, $newSpell, "destroy");
+
+                // $spellId = $this->globals->get("transference_spell_id");
+                // $spellPlayed = SpellCard::get($spellId);
+                // if (SpellCard::getInstanceOfCard($spellPlayed) instanceof SilencingAmulet) {
+                //     SpellCard::destroyRelic(SpellCard::get($spellId));
+                // }
+
+                // $this->gamestate->nextState("continue");
+
+                $spellId = intval($this->globals->get("transference_spell_id"));
+                Globals::setSpellPlayed($spellId);
+                Globals::setInteractionPlayer(0);
+                $this->gamestate->nextState("castSpellInteraction");
             } else {
                 // L'opponent doit choisir son nouveau spell
                 Players::setPlayerId(Players::getOpponentIdOf($interactionPlayer));
                 Globals::setInteractionPlayer(0);
-                $spellPlayedId = Globals::getSpellPlayed();
-                $spellPlayed = SpellCard::get($spellPlayedId);
+                // $spellPlayedId = Globals::getSpellPlayed();
+                // $spellPlayed = SpellCard::get($spellPlayedId);
                 // var_dump([
                 //     "interactionPlayer" => $interactionPlayer,
                 //     "currentPlayerId" => Players::getPlayerId(),
@@ -90,13 +105,19 @@ class DestroySpell extends GameState {
         Game::get()->triggerOnAfterDiscardManaFromSpell($instance, $mana_id);
         // + Notifications si besoin
 
-        if($instance instanceof WildBloom && !empty($queue)) {
-            $this->gamestate->nextState("destroy");          // self-loop → prochain mana
-            return;
+        if ($instance instanceof WildBloom) {
+            if (!empty($queue)) {
+                $this->gamestate->nextState("destroy");          // self-loop → prochain mana
+                return;
+            } else {
+                Globals::setCoolDownDelayedSpellIds([$spell['id']]);
+                $this->gamestate->nextState("delayed");   // → ST_DESTROY_ACTIVATE_DELAYED
+                return;
+            }
         }
 
-        if($cardInfo["activation"] == WG_SPELL_ACTIVATION_DELAYED && $instance->isDelayedSpellTrigger() && !method_exists($instance, "onAfterDiscardManaFromSpell")) {
-             // Si c'est un spell à activation différée qui a un trigger mais pas de méthode onDelayedSpellTrigger, on considère que le trigger doit être activé maintenant
+        if ($cardInfo["activation"] == WG_SPELL_ACTIVATION_DELAYED && $instance->isDelayedSpellTrigger() && !method_exists($instance, "onAfterDiscardManaFromSpell")) {
+            // Si c'est un spell à activation différée qui a un trigger mais pas de méthode onDelayedSpellTrigger, on considère que le trigger doit être activé maintenant
             $instance->castSpell(ManaCard::get($mana_id));
             $this->gamestate->nextState("destroy");          // self-loop → prochain mana
             return;

@@ -40,7 +40,9 @@ class SilencingAmulet extends BaseCard {
         $globals->set("destroy_callback", "own");
         $globals->set("destroy_new_spell_id", $new_spell_id);
         $globals->set("interaction_player", Players::getPlayerId());
+        $globals->set("transference_spell_id", $this->id);
         
+        // SpellCard::destroyRelic(SpellCard::get($this->id));
 
         Game::get()->gamestate->nextState("destroy");
         return "stop";
@@ -97,5 +99,6 @@ class SilencingAmulet extends BaseCard {
 
         // SpellCard::discardAllManaCardsOnSpell($oldSpell, Players::getOpponentId());
         SpellCard::replaceSpell($oldSpell, $newSpell, "destroy", Players::getOpponentId());
+        SpellCard::destroyRelic(SpellCard::get($this->id));
     }
 }

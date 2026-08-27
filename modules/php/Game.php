@@ -278,7 +278,8 @@ class Game extends \Bga\GameFramework\Table {
                         return false;
                 }
             } else if ($gameoptionSetAllCards) {
-                return !in_array($card_type['icon'], [WG_ICON_SET_SAND_1]);
+                return !in_array($card_type['icon'], [WG_ICON_SET_SAND_1])
+                    && !in_array($card_type['class'], ['SilencingAmulet', 'Transference']);
             } else {
                 return false;
             }

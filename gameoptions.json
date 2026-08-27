@@ -16,7 +16,7 @@
             "50": {
                 "name": "All cards",
                 "tmdisplay": "All cards",
-                "description": "Use all cards from both decks and expansions"
+                "description": "Use all cards from both decks and expansions (except Silencing Amulet and Transference)"
             }
         }
     },

@@ -49,6 +49,7 @@ class Transference extends BaseCard {
         $globals->set("destroy_callback", "own");
         $globals->set("destroy_new_spell_id", $new_spell_id);
         $globals->set("interaction_player", Players::getPlayerId());
+        $globals->set("transference_spell_id", $this->id);
         
 
         Game::get()->gamestate->nextState("destroy");
