@@ -252,7 +252,7 @@ class ManaCard {
         
         /** @var Growth $growth */
         $growth = SpellCard::getInstanceOfCardFromClass(Growth::class);
-        if ($growth->isActive()) {
+        if ($growth !== null && $growth->isActive()) {
             $power++;
         }
 
