@@ -352,7 +352,7 @@ trait ActionTrait {
         // Puppetmaster verification
         /** @var Puppetmaster $pupperMaster */
         $pupperMaster = SpellCard::getInstanceOfCardFromClass(Puppetmaster::class);
-        if ($pupperMaster->isActive() && Globals::getPreviousBasicAttackPower() != $damage) {
+        if ($pupperMaster !== null && $pupperMaster->isActive() && Globals::getPreviousBasicAttackPower() != $damage) {
             throw new UserException("The power not match the previous attack");
         }
 
@@ -368,7 +368,7 @@ trait ActionTrait {
 
         /** @var BattleVision $battleVision */
         $battleVision = SpellCard::getInstanceOfCardFromClass(BattleVision::class);
-        if ($battleVision->isActive()) {
+        if ($battleVision !== null && $battleVision->isActive()) {
             if (ManaCard::getHandCount(Players::getOpponentId()) > 0) {
                 Globals::setInteractionPlayer(Players::getOpponentId());
                 $this->gamestate->nextState("battle_vision");

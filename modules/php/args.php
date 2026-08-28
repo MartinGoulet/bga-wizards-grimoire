@@ -94,7 +94,7 @@ trait ArgsTrait {
 
         /** @var Puppetmaster $pupperMaster */
         $pupperMaster = SpellCard::getInstanceOfCardFromClass(Puppetmaster::class);
-        if ($pupperMaster->isActive()) {
+        if ($pupperMaster !== null && $pupperMaster->isActive()) {
             $value = Globals::getPreviousBasicAttackPower();
             $cards = array_filter($cards, function ($card) use ($value) {
                 return ManaCard::getPower($card) == $value;

@@ -308,7 +308,7 @@ class SpellCard {
     public static function isActiveOngoingSpell(string $className) : bool {
         /** @var OngoingBaseCard $card */
         $card = self::getInstanceOfCardFromClass($className);
-        return $card->isActive();
+        return $card !== null && $card->isActive();
     }
 
     public static function getDiscard() : array {

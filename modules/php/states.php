@@ -295,7 +295,7 @@ trait StateTrait {
 
         /** @var PowerHungry $powerHungry */
         $powerHungry = SpellCard::getInstanceOfCardFromClass(PowerHungry::class);
-        if ($powerHungry->isActive()) {
+        if ($powerHungry !== null && $powerHungry->isActive()) {
             ManaCard::addToHand($card['id'], $powerHungry->getOwnerId());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
             Game::get()->undoSavepoint();
