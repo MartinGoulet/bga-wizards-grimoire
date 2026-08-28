@@ -74,6 +74,9 @@ class SpellCard {
         $type = array_shift($types);
         $cards = Game::get()->deck_spells->getCardsOfType($type);
         $card = array_shift($cards);
+        if ($card === null) {
+            return null;
+        }
         return self::getInstanceOfCard($card);
     }
 
