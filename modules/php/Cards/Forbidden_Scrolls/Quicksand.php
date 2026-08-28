@@ -3,7 +3,6 @@
 namespace WizardsGrimoire\Cards\Forbidden_Scrolls;
 
 use Bga\Games\WizardsGrimoire\Game;
-use Exception;
 use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
@@ -12,7 +11,6 @@ use WizardsGrimoire\Core\SpellCard;
 class Quicksand extends BaseCard {
 
     public function castSpell($args) {
-        throw new Exception("Quicksand does not have a cast effect, it only has a trigger on mana discard.");
     }
 
     public function onAfterDiscardManaFromSpell(int $mana_id) {
