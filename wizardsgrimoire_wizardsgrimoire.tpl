@@ -19,6 +19,7 @@
                 <div id="mana-discard-display-wrapper" class="whiteblock"></div>
                 <div id="basic-attack-wrapper" class="whiteblock"></div>
                 <div id="mana-revealed-wrapper" class="whiteblock"></div>
+                <div id="spell-revealed-wrapper" class="whiteblock"></div>
             </div>
         </div>
         <div id="tables"></div>

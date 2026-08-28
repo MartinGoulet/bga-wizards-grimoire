@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Sand_1;
 
+use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -39,6 +39,9 @@ class EchoCard extends BaseCard {
         if($card_info['class'] === "Amnesia") {
             $this->dealDamage(Globals::getCardTimesPlayed(102));
         } else {
+            if(isset($card_info['is_relic']) && $card_info['is_relic']) {
+                Globals::setSkipInteraction(true);
+            }
             Game::get()->activateInstantSpell($spell, $args, _('Echo'));
             return "stop";
         }

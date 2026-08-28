@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
+use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 
 class VileLaughter extends BaseCard {

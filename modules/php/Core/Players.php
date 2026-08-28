@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Objects\CardLocation;
 
 /*
@@ -9,7 +10,7 @@ use WizardsGrimoire\Objects\CardLocation;
  *  a player is an instance of Player class
  */
 
-class Players extends \APP_DbObject {
+class Players {
 
     public static function getFirstPlayer() {
         return intval(Game::get()->getGameStateValue(WG_VAR_FIRST_PLAYER));
@@ -51,11 +52,11 @@ class Players extends \APP_DbObject {
 
     public static function getPlayerLife(int $player_id) {
         $sql = "SELECT player_score FROM player WHERE player_id = $player_id";
-        return intval(self::getUniqueValueFromDB($sql));
+        return intval(Game::get()->getUniqueValueFromDB($sql));
     }
 
     public static function setPlayerLife(int $player_id, int $life) {
-        self::DbQuery("UPDATE player SET player_score = $life WHERE player_id = $player_id");
+        Game::get()->DbQuery("UPDATE player SET player_score = $life WHERE player_id = $player_id");
     }
 
     public static function getPlayersInOrder($player_id = null) {
@@ -79,5 +80,18 @@ class Players extends \APP_DbObject {
         }
 
         return $result;
+    }
+
+    public static function discardHand(int $player_id) {
+        $cards = ManaCard::getHand($player_id);
+
+        foreach ($cards as $card_id => $card) {
+            ManaCard::addOnTopOfDiscard($card_id);
+        }
+
+        if(!empty($cards)) {
+            Notifications::discardManaCards($player_id, $cards);
+        }
+        
     }
 }

@@ -15,16 +15,7 @@ $gameinfos = array(
     // Name of the game in English (will serve as the basis for translation) 
     'game_name' => "Wizards of the Grimoire",
 
-    // Game designer (or game designers, separated by commas)
-    'designer' => 'Cole Banning, Joe Banning',
-
-    // Game artist (or game artists, separated by commas)
-    'artist' => 'Luciano Javier Carreira, Raqsonu Duhu, Pedro Krüger',
-
-    // Year of FIRST publication of this game. Can be negative.
-    'year' => 2022,
-
-    // Game publisher (use empty string if there is no publisher)
+     // Game publisher (use empty string if there is no publisher)
     'publisher' => 'Grimoire Games',
 
     // Url of game publisher website
@@ -76,9 +67,6 @@ $gameinfos = array(
     // Allow to rank solo games for games where it's the only available mode (ex: Thermopyles). Should be left to false for games where solo mode exists in addition to multiple players mode.
     'solo_mode_ranked' => false,
 
-    // Game is "beta". A game MUST set is_beta=1 when published on BGA for the first time, and must remains like this until all bugs are fixed.
-    'is_beta' => 1,
-
     // Is this game cooperative (all players wins together or loose together)
     'is_coop' => 0,
 
@@ -86,18 +74,6 @@ $gameinfos = array(
     // If an array of shortcode languages such as array( 1 => 'en', 2 => 'fr', 3 => 'it' ) then all players at the table must speak the same language, and this language must be one of the listed languages.
     // NB: the default will be the first language in this list spoken by the player, so you should list them by popularity/preference.
     'language_dependency' => false,
-
-    // Complexity of the game, from 0 (extremely simple) to 5 (extremely complex)
-    'complexity' => 2,
-
-    // Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-    'luck' => 2,
-
-    // Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-    'strategy' => 4,
-
-    // Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
-    'diplomacy' => 3,
 
     // Colors attributed to players
     'player_colors' => array("ff0000", "008000", "0000ff", "ffa500", "773300"),
@@ -127,27 +103,5 @@ $gameinfos = array(
         'max' => null
     ),
 
-    // Game presentation
-    // Short game presentation text that will appear on the game description page, structured as an array of paragraphs.
-    // Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
-    // A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
-    'presentation' => array(
-        totranslate("In this two player strategy card game, you must fulfill your destiny and become the Keeper of the Grimoire. Defeat your opponent by drafting new spells from the magical Grimoire, casting them, managing your cooldowns, and dealing massive damage."),
-        totranslate("Each turn, draft one new spell to be added to your spell repertoire. But be warned! Your opponent has access to the same spells as you do, so choose the spells you want before your opponent does! Continue updating your spell repertoire throughout the game to optimize your deck and counter your opponent.")
-        //    totranslate("This wonderful game is about geometric shapes!"),
-        //    totranslate("It was awarded best triangle game of the year in 2005 and nominated for the Spiel des Jahres."),
-        //    ...
-    ),
-
     'db_undo_support' => true,
-
-    //////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)
-
-    // simple : A plays, B plays, C plays, A plays, B plays, ...
-    // circuit : A plays and choose the next player C, C plays and choose the next player D, ...
-    // complex : A+B+C plays and says that the next player is A+B
-    'is_sandbox' => false,
-    'turnControl' => 'simple'
-
-    ////////
 );

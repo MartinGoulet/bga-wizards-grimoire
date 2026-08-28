@@ -1,3 +1,40 @@
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back,
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front {
+  background: url("img/mana-shifting-sand.jpg");
+  background-size: 500% 100%;
+}
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back {
+  background-position-x: -400%;
+}
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="1"] {
+  background-position-x: 0%;
+}
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="2"] {
+  background-position-x: -100%;
+}
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="3"] {
+  background-position-x: -200%;
+}
+#table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="4"] {
+  background-position-x: -300%;
+}
+
+#table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] {
+  background: url("img/shifting_sands-front.jpg");
+  background-size: 1000% 700%;
+  background-position: -200% -500%;
+}
+#table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] .wg-icon-crystal-shard {
+  position: absolute;
+  font-size: 40px;
+  top: 95px;
+  left: calc(50% - 11px);
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  font-weight: bold;
+  pointer-events: none;
+}
+
 .wg-card {
   width: var(--width);
   height: var(--height);
@@ -70,570 +107,856 @@
   background: url("img/spell-front.jpg");
   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 }
-.wg-card .wg-card-spell-front.base_game[data-type="1"],
-.wg-tooltip-card .wg-card .base_game[data-type="1"] {
+.wg-card .wg-card-spell-front.base_game[data-img="1"],
+.wg-tooltip-card .wg-card .base_game[data-img="1"] {
   background-position: 0% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="2"],
-.wg-tooltip-card .wg-card .base_game[data-type="2"] {
+.wg-card .wg-card-spell-front.base_game[data-img="2"],
+.wg-tooltip-card .wg-card .base_game[data-img="2"] {
   background-position: -100% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="3"],
-.wg-tooltip-card .wg-card .base_game[data-type="3"] {
+.wg-card .wg-card-spell-front.base_game[data-img="3"],
+.wg-tooltip-card .wg-card .base_game[data-img="3"] {
   background-position: -200% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="4"],
-.wg-tooltip-card .wg-card .base_game[data-type="4"] {
+.wg-card .wg-card-spell-front.base_game[data-img="4"],
+.wg-tooltip-card .wg-card .base_game[data-img="4"] {
   background-position: -300% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="5"],
-.wg-tooltip-card .wg-card .base_game[data-type="5"] {
+.wg-card .wg-card-spell-front.base_game[data-img="5"],
+.wg-tooltip-card .wg-card .base_game[data-img="5"] {
   background-position: -400% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="6"],
-.wg-tooltip-card .wg-card .base_game[data-type="6"] {
+.wg-card .wg-card-spell-front.base_game[data-img="6"],
+.wg-tooltip-card .wg-card .base_game[data-img="6"] {
   background-position: -500% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="7"],
-.wg-tooltip-card .wg-card .base_game[data-type="7"] {
+.wg-card .wg-card-spell-front.base_game[data-img="7"],
+.wg-tooltip-card .wg-card .base_game[data-img="7"] {
   background-position: -600% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="8"],
-.wg-tooltip-card .wg-card .base_game[data-type="8"] {
+.wg-card .wg-card-spell-front.base_game[data-img="8"],
+.wg-tooltip-card .wg-card .base_game[data-img="8"] {
   background-position: -700% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="9"],
-.wg-tooltip-card .wg-card .base_game[data-type="9"] {
+.wg-card .wg-card-spell-front.base_game[data-img="9"],
+.wg-tooltip-card .wg-card .base_game[data-img="9"] {
   background-position: -800% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="10"],
-.wg-tooltip-card .wg-card .base_game[data-type="10"] {
+.wg-card .wg-card-spell-front.base_game[data-img="10"],
+.wg-tooltip-card .wg-card .base_game[data-img="10"] {
   background-position: -900% 0%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="11"],
-.wg-tooltip-card .wg-card .base_game[data-type="11"] {
+.wg-card .wg-card-spell-front.base_game[data-img="11"],
+.wg-tooltip-card .wg-card .base_game[data-img="11"] {
   background-position: 0% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="12"],
-.wg-tooltip-card .wg-card .base_game[data-type="12"] {
+.wg-card .wg-card-spell-front.base_game[data-img="12"],
+.wg-tooltip-card .wg-card .base_game[data-img="12"] {
   background-position: -100% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="13"],
-.wg-tooltip-card .wg-card .base_game[data-type="13"] {
+.wg-card .wg-card-spell-front.base_game[data-img="13"],
+.wg-tooltip-card .wg-card .base_game[data-img="13"] {
   background-position: -200% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="14"],
-.wg-tooltip-card .wg-card .base_game[data-type="14"] {
+.wg-card .wg-card-spell-front.base_game[data-img="14"],
+.wg-tooltip-card .wg-card .base_game[data-img="14"] {
   background-position: -300% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="15"],
-.wg-tooltip-card .wg-card .base_game[data-type="15"] {
+.wg-card .wg-card-spell-front.base_game[data-img="15"],
+.wg-tooltip-card .wg-card .base_game[data-img="15"] {
   background-position: -400% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="16"],
-.wg-tooltip-card .wg-card .base_game[data-type="16"] {
+.wg-card .wg-card-spell-front.base_game[data-img="16"],
+.wg-tooltip-card .wg-card .base_game[data-img="16"] {
   background-position: -500% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="17"],
-.wg-tooltip-card .wg-card .base_game[data-type="17"] {
+.wg-card .wg-card-spell-front.base_game[data-img="17"],
+.wg-tooltip-card .wg-card .base_game[data-img="17"] {
   background-position: -600% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="18"],
-.wg-tooltip-card .wg-card .base_game[data-type="18"] {
+.wg-card .wg-card-spell-front.base_game[data-img="18"],
+.wg-tooltip-card .wg-card .base_game[data-img="18"] {
   background-position: -700% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="19"],
-.wg-tooltip-card .wg-card .base_game[data-type="19"] {
+.wg-card .wg-card-spell-front.base_game[data-img="19"],
+.wg-tooltip-card .wg-card .base_game[data-img="19"] {
   background-position: -800% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="20"],
-.wg-tooltip-card .wg-card .base_game[data-type="20"] {
+.wg-card .wg-card-spell-front.base_game[data-img="20"],
+.wg-tooltip-card .wg-card .base_game[data-img="20"] {
   background-position: -900% -100%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="21"],
-.wg-tooltip-card .wg-card .base_game[data-type="21"] {
+.wg-card .wg-card-spell-front.base_game[data-img="21"],
+.wg-tooltip-card .wg-card .base_game[data-img="21"] {
   background-position: 0% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="22"],
-.wg-tooltip-card .wg-card .base_game[data-type="22"] {
+.wg-card .wg-card-spell-front.base_game[data-img="22"],
+.wg-tooltip-card .wg-card .base_game[data-img="22"] {
   background-position: -100% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="23"],
-.wg-tooltip-card .wg-card .base_game[data-type="23"] {
+.wg-card .wg-card-spell-front.base_game[data-img="23"],
+.wg-tooltip-card .wg-card .base_game[data-img="23"] {
   background-position: -200% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="24"],
-.wg-tooltip-card .wg-card .base_game[data-type="24"] {
+.wg-card .wg-card-spell-front.base_game[data-img="24"],
+.wg-tooltip-card .wg-card .base_game[data-img="24"] {
   background-position: -300% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="25"],
-.wg-tooltip-card .wg-card .base_game[data-type="25"] {
+.wg-card .wg-card-spell-front.base_game[data-img="25"],
+.wg-tooltip-card .wg-card .base_game[data-img="25"] {
   background-position: -400% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="26"],
-.wg-tooltip-card .wg-card .base_game[data-type="26"] {
+.wg-card .wg-card-spell-front.base_game[data-img="26"],
+.wg-tooltip-card .wg-card .base_game[data-img="26"] {
   background-position: -500% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="27"],
-.wg-tooltip-card .wg-card .base_game[data-type="27"] {
+.wg-card .wg-card-spell-front.base_game[data-img="27"],
+.wg-tooltip-card .wg-card .base_game[data-img="27"] {
   background-position: -600% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="28"],
-.wg-tooltip-card .wg-card .base_game[data-type="28"] {
+.wg-card .wg-card-spell-front.base_game[data-img="28"],
+.wg-tooltip-card .wg-card .base_game[data-img="28"] {
   background-position: -700% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="29"],
-.wg-tooltip-card .wg-card .base_game[data-type="29"] {
+.wg-card .wg-card-spell-front.base_game[data-img="29"],
+.wg-tooltip-card .wg-card .base_game[data-img="29"] {
   background-position: -800% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="30"],
-.wg-tooltip-card .wg-card .base_game[data-type="30"] {
+.wg-card .wg-card-spell-front.base_game[data-img="30"],
+.wg-tooltip-card .wg-card .base_game[data-img="30"] {
   background-position: -900% -200%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="31"],
-.wg-tooltip-card .wg-card .base_game[data-type="31"] {
+.wg-card .wg-card-spell-front.base_game[data-img="31"],
+.wg-tooltip-card .wg-card .base_game[data-img="31"] {
   background-position: 0% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="32"],
-.wg-tooltip-card .wg-card .base_game[data-type="32"] {
+.wg-card .wg-card-spell-front.base_game[data-img="32"],
+.wg-tooltip-card .wg-card .base_game[data-img="32"] {
   background-position: -100% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="33"],
-.wg-tooltip-card .wg-card .base_game[data-type="33"] {
+.wg-card .wg-card-spell-front.base_game[data-img="33"],
+.wg-tooltip-card .wg-card .base_game[data-img="33"] {
   background-position: -200% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="34"],
-.wg-tooltip-card .wg-card .base_game[data-type="34"] {
+.wg-card .wg-card-spell-front.base_game[data-img="34"],
+.wg-tooltip-card .wg-card .base_game[data-img="34"] {
   background-position: -300% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="35"],
-.wg-tooltip-card .wg-card .base_game[data-type="35"] {
+.wg-card .wg-card-spell-front.base_game[data-img="35"],
+.wg-tooltip-card .wg-card .base_game[data-img="35"] {
   background-position: -400% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="36"],
-.wg-tooltip-card .wg-card .base_game[data-type="36"] {
+.wg-card .wg-card-spell-front.base_game[data-img="36"],
+.wg-tooltip-card .wg-card .base_game[data-img="36"] {
   background-position: -500% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="37"],
-.wg-tooltip-card .wg-card .base_game[data-type="37"] {
+.wg-card .wg-card-spell-front.base_game[data-img="37"],
+.wg-tooltip-card .wg-card .base_game[data-img="37"] {
   background-position: -600% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="38"],
-.wg-tooltip-card .wg-card .base_game[data-type="38"] {
+.wg-card .wg-card-spell-front.base_game[data-img="38"],
+.wg-tooltip-card .wg-card .base_game[data-img="38"] {
   background-position: -700% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="39"],
-.wg-tooltip-card .wg-card .base_game[data-type="39"] {
+.wg-card .wg-card-spell-front.base_game[data-img="39"],
+.wg-tooltip-card .wg-card .base_game[data-img="39"] {
   background-position: -800% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="40"],
-.wg-tooltip-card .wg-card .base_game[data-type="40"] {
+.wg-card .wg-card-spell-front.base_game[data-img="40"],
+.wg-tooltip-card .wg-card .base_game[data-img="40"] {
   background-position: -900% -300%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="41"],
-.wg-tooltip-card .wg-card .base_game[data-type="41"] {
+.wg-card .wg-card-spell-front.base_game[data-img="41"],
+.wg-tooltip-card .wg-card .base_game[data-img="41"] {
   background-position: 0% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="42"],
-.wg-tooltip-card .wg-card .base_game[data-type="42"] {
+.wg-card .wg-card-spell-front.base_game[data-img="42"],
+.wg-tooltip-card .wg-card .base_game[data-img="42"] {
   background-position: -100% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="43"],
-.wg-tooltip-card .wg-card .base_game[data-type="43"] {
+.wg-card .wg-card-spell-front.base_game[data-img="43"],
+.wg-tooltip-card .wg-card .base_game[data-img="43"] {
   background-position: -200% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="44"],
-.wg-tooltip-card .wg-card .base_game[data-type="44"] {
+.wg-card .wg-card-spell-front.base_game[data-img="44"],
+.wg-tooltip-card .wg-card .base_game[data-img="44"] {
   background-position: -300% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="45"],
-.wg-tooltip-card .wg-card .base_game[data-type="45"] {
+.wg-card .wg-card-spell-front.base_game[data-img="45"],
+.wg-tooltip-card .wg-card .base_game[data-img="45"] {
   background-position: -400% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="46"],
-.wg-tooltip-card .wg-card .base_game[data-type="46"] {
+.wg-card .wg-card-spell-front.base_game[data-img="46"],
+.wg-tooltip-card .wg-card .base_game[data-img="46"] {
   background-position: -500% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="47"],
-.wg-tooltip-card .wg-card .base_game[data-type="47"] {
+.wg-card .wg-card-spell-front.base_game[data-img="47"],
+.wg-tooltip-card .wg-card .base_game[data-img="47"] {
   background-position: -600% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="48"],
-.wg-tooltip-card .wg-card .base_game[data-type="48"] {
+.wg-card .wg-card-spell-front.base_game[data-img="48"],
+.wg-tooltip-card .wg-card .base_game[data-img="48"] {
   background-position: -700% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="49"],
-.wg-tooltip-card .wg-card .base_game[data-type="49"] {
+.wg-card .wg-card-spell-front.base_game[data-img="49"],
+.wg-tooltip-card .wg-card .base_game[data-img="49"] {
   background-position: -800% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="50"],
-.wg-tooltip-card .wg-card .base_game[data-type="50"] {
+.wg-card .wg-card-spell-front.base_game[data-img="50"],
+.wg-tooltip-card .wg-card .base_game[data-img="50"] {
   background-position: -900% -400%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="51"],
-.wg-tooltip-card .wg-card .base_game[data-type="51"] {
+.wg-card .wg-card-spell-front.base_game[data-img="51"],
+.wg-tooltip-card .wg-card .base_game[data-img="51"] {
   background-position: 0% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="52"],
-.wg-tooltip-card .wg-card .base_game[data-type="52"] {
+.wg-card .wg-card-spell-front.base_game[data-img="52"],
+.wg-tooltip-card .wg-card .base_game[data-img="52"] {
   background-position: -100% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="53"],
-.wg-tooltip-card .wg-card .base_game[data-type="53"] {
+.wg-card .wg-card-spell-front.base_game[data-img="53"],
+.wg-tooltip-card .wg-card .base_game[data-img="53"] {
   background-position: -200% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="54"],
-.wg-tooltip-card .wg-card .base_game[data-type="54"] {
+.wg-card .wg-card-spell-front.base_game[data-img="54"],
+.wg-tooltip-card .wg-card .base_game[data-img="54"] {
   background-position: -300% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="55"],
-.wg-tooltip-card .wg-card .base_game[data-type="55"] {
+.wg-card .wg-card-spell-front.base_game[data-img="55"],
+.wg-tooltip-card .wg-card .base_game[data-img="55"] {
   background-position: -400% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="56"],
-.wg-tooltip-card .wg-card .base_game[data-type="56"] {
+.wg-card .wg-card-spell-front.base_game[data-img="56"],
+.wg-tooltip-card .wg-card .base_game[data-img="56"] {
   background-position: -500% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="57"],
-.wg-tooltip-card .wg-card .base_game[data-type="57"] {
+.wg-card .wg-card-spell-front.base_game[data-img="57"],
+.wg-tooltip-card .wg-card .base_game[data-img="57"] {
   background-position: -600% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="58"],
-.wg-tooltip-card .wg-card .base_game[data-type="58"] {
+.wg-card .wg-card-spell-front.base_game[data-img="58"],
+.wg-tooltip-card .wg-card .base_game[data-img="58"] {
   background-position: -700% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="59"],
-.wg-tooltip-card .wg-card .base_game[data-type="59"] {
+.wg-card .wg-card-spell-front.base_game[data-img="59"],
+.wg-tooltip-card .wg-card .base_game[data-img="59"] {
   background-position: -800% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="60"],
-.wg-tooltip-card .wg-card .base_game[data-type="60"] {
+.wg-card .wg-card-spell-front.base_game[data-img="60"],
+.wg-tooltip-card .wg-card .base_game[data-img="60"] {
   background-position: -900% -500%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="61"],
-.wg-tooltip-card .wg-card .base_game[data-type="61"] {
+.wg-card .wg-card-spell-front.base_game[data-img="61"],
+.wg-tooltip-card .wg-card .base_game[data-img="61"] {
   background-position: 0% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="62"],
-.wg-tooltip-card .wg-card .base_game[data-type="62"] {
+.wg-card .wg-card-spell-front.base_game[data-img="62"],
+.wg-tooltip-card .wg-card .base_game[data-img="62"] {
   background-position: -100% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="63"],
-.wg-tooltip-card .wg-card .base_game[data-type="63"] {
+.wg-card .wg-card-spell-front.base_game[data-img="63"],
+.wg-tooltip-card .wg-card .base_game[data-img="63"] {
   background-position: -200% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="64"],
-.wg-tooltip-card .wg-card .base_game[data-type="64"] {
+.wg-card .wg-card-spell-front.base_game[data-img="64"],
+.wg-tooltip-card .wg-card .base_game[data-img="64"] {
   background-position: -300% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="65"],
-.wg-tooltip-card .wg-card .base_game[data-type="65"] {
+.wg-card .wg-card-spell-front.base_game[data-img="65"],
+.wg-tooltip-card .wg-card .base_game[data-img="65"] {
   background-position: -400% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="66"],
-.wg-tooltip-card .wg-card .base_game[data-type="66"] {
+.wg-card .wg-card-spell-front.base_game[data-img="66"],
+.wg-tooltip-card .wg-card .base_game[data-img="66"] {
   background-position: -500% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="67"],
-.wg-tooltip-card .wg-card .base_game[data-type="67"] {
+.wg-card .wg-card-spell-front.base_game[data-img="67"],
+.wg-tooltip-card .wg-card .base_game[data-img="67"] {
   background-position: -600% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="68"],
-.wg-tooltip-card .wg-card .base_game[data-type="68"] {
+.wg-card .wg-card-spell-front.base_game[data-img="68"],
+.wg-tooltip-card .wg-card .base_game[data-img="68"] {
   background-position: -700% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="69"],
-.wg-tooltip-card .wg-card .base_game[data-type="69"] {
+.wg-card .wg-card-spell-front.base_game[data-img="69"],
+.wg-tooltip-card .wg-card .base_game[data-img="69"] {
   background-position: -800% -600%;
 }
-.wg-card .wg-card-spell-front.base_game[data-type="70"],
-.wg-tooltip-card .wg-card .base_game[data-type="70"] {
+.wg-card .wg-card-spell-front.base_game[data-img="70"],
+.wg-tooltip-card .wg-card .base_game[data-img="70"] {
   background-position: -900% -600%;
 }
 
-.wg-card .wg-card-spell-front.shifting_sand,
-.wg-tooltip-card .wg-card .shifting_sand {
+.wg-card .wg-card-spell-front.promo_shifting_sand,
+.wg-tooltip-card .wg-card .promo_shifting_sand {
   background: url("img/spell-front-2.jpg");
   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="101"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="101"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="1"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="1"] {
   background-position: 0% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="102"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="102"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="2"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="2"] {
   background-position: -100% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="103"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="103"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="3"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="3"] {
   background-position: -200% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="104"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="104"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="4"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="4"] {
   background-position: -300% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="105"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="105"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="5"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="5"] {
   background-position: -400% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="106"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="106"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="6"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="6"] {
   background-position: -500% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="107"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="107"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="7"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="7"] {
   background-position: -600% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="108"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="108"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="8"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="8"] {
   background-position: -700% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="109"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="109"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="9"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="9"] {
   background-position: -800% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="110"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="110"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="10"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="10"] {
   background-position: -900% 0%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="111"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="111"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="11"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="11"] {
   background-position: 0% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="112"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="112"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="12"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="12"] {
   background-position: -100% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="113"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="113"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="13"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="13"] {
   background-position: -200% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="114"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="114"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="14"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="14"] {
   background-position: -300% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="115"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="115"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="15"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="15"] {
   background-position: -400% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="116"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="116"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="16"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="16"] {
   background-position: -500% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="117"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="117"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="17"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="17"] {
   background-position: -600% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="118"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="118"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="18"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="18"] {
   background-position: -700% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="119"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="119"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="19"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="19"] {
   background-position: -800% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="120"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="120"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="20"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="20"] {
   background-position: -900% -100%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="121"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="121"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="21"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="21"] {
   background-position: 0% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="122"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="122"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="22"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="22"] {
   background-position: -100% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="123"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="123"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="23"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="23"] {
   background-position: -200% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="124"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="124"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="24"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="24"] {
   background-position: -300% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="125"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="125"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="25"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="25"] {
   background-position: -400% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="126"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="126"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="26"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="26"] {
   background-position: -500% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="127"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="127"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="27"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="27"] {
   background-position: -600% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="128"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="128"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="28"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="28"] {
   background-position: -700% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="129"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="129"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="29"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="29"] {
   background-position: -800% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="130"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="130"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="30"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="30"] {
   background-position: -900% -200%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="131"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="131"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="31"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="31"] {
   background-position: 0% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="132"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="132"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="32"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="32"] {
   background-position: -100% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="133"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="133"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="33"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="33"] {
   background-position: -200% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="134"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="134"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="34"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="34"] {
   background-position: -300% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="135"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="135"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="35"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="35"] {
   background-position: -400% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="136"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="136"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="36"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="36"] {
   background-position: -500% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="137"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="137"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="37"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="37"] {
   background-position: -600% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="138"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="138"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="38"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="38"] {
   background-position: -700% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="139"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="139"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="39"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="39"] {
   background-position: -800% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="140"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="140"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="40"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="40"] {
   background-position: -900% -300%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="141"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="141"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="41"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="41"] {
   background-position: 0% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="142"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="142"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="42"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="42"] {
   background-position: -100% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="143"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="143"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="43"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="43"] {
   background-position: -200% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="144"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="144"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="44"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="44"] {
   background-position: -300% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="145"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="145"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="45"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="45"] {
   background-position: -400% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="146"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="146"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="46"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="46"] {
   background-position: -500% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="147"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="147"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="47"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="47"] {
   background-position: -600% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="148"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="148"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="48"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="48"] {
   background-position: -700% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="149"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="149"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="49"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="49"] {
   background-position: -800% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="150"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="150"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="50"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="50"] {
   background-position: -900% -400%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="151"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="151"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="51"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="51"] {
   background-position: 0% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="152"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="152"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="52"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="52"] {
   background-position: -100% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="153"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="153"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="53"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="53"] {
   background-position: -200% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="154"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="154"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="54"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="54"] {
   background-position: -300% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="155"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="155"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="55"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="55"] {
   background-position: -400% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="156"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="156"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="56"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="56"] {
   background-position: -500% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="157"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="157"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="57"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="57"] {
   background-position: -600% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="158"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="158"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="58"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="58"] {
   background-position: -700% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="159"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="159"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="59"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="59"] {
   background-position: -800% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="160"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="160"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="60"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="60"] {
   background-position: -900% -500%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="161"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="161"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="61"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="61"] {
   background-position: 0% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="162"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="162"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="62"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="62"] {
   background-position: -100% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="163"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="163"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="63"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="63"] {
   background-position: -200% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="164"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="164"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="64"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="64"] {
   background-position: -300% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="165"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="165"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="65"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="65"] {
   background-position: -400% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="166"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="166"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="66"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="66"] {
   background-position: -500% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="167"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="167"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="67"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="67"] {
   background-position: -600% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="168"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="168"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="68"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="68"] {
   background-position: -700% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="169"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="169"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="69"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="69"] {
   background-position: -800% -600%;
 }
-.wg-card .wg-card-spell-front.shifting_sand[data-type="170"],
-.wg-tooltip-card .wg-card .shifting_sand[data-type="170"] {
+.wg-card .wg-card-spell-front.promo_shifting_sand[data-img="70"],
+.wg-tooltip-card .wg-card .promo_shifting_sand[data-img="70"] {
+  background-position: -900% -600%;
+}
+
+.wg-card .wg-card-spell-front.shifting_sand_set,
+.wg-tooltip-card .wg-card .shifting_sand {
+  background: url("img/shifting_sands-front.jpg");
+  background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="1"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="1"] {
+  background-position: 0% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="2"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="2"] {
+  background-position: -100% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="3"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="3"] {
+  background-position: -200% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="4"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="4"] {
+  background-position: -300% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="5"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="5"] {
+  background-position: -400% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="6"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="6"] {
+  background-position: -500% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="7"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="7"] {
+  background-position: -600% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="8"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="8"] {
+  background-position: -700% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="9"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="9"] {
+  background-position: -800% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="10"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="10"] {
+  background-position: -900% 0%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="11"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="11"] {
+  background-position: 0% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="12"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="12"] {
+  background-position: -100% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="13"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="13"] {
+  background-position: -200% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="14"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="14"] {
+  background-position: -300% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="15"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="15"] {
+  background-position: -400% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="16"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="16"] {
+  background-position: -500% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="17"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="17"] {
+  background-position: -600% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="18"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="18"] {
+  background-position: -700% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="19"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="19"] {
+  background-position: -800% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="20"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="20"] {
+  background-position: -900% -100%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="21"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="21"] {
+  background-position: 0% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="22"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="22"] {
+  background-position: -100% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="23"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="23"] {
+  background-position: -200% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="24"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="24"] {
+  background-position: -300% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="25"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="25"] {
+  background-position: -400% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="26"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="26"] {
+  background-position: -500% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="27"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="27"] {
+  background-position: -600% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="28"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="28"] {
+  background-position: -700% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="29"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="29"] {
+  background-position: -800% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="30"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="30"] {
+  background-position: -900% -200%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="31"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="31"] {
+  background-position: 0% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="32"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="32"] {
+  background-position: -100% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="33"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="33"] {
+  background-position: -200% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="34"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="34"] {
+  background-position: -300% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="35"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="35"] {
+  background-position: -400% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="36"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="36"] {
+  background-position: -500% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="37"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="37"] {
+  background-position: -600% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="38"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="38"] {
+  background-position: -700% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="39"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="39"] {
+  background-position: -800% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="40"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="40"] {
+  background-position: -900% -300%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="41"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="41"] {
+  background-position: 0% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="42"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="42"] {
+  background-position: -100% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="43"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="43"] {
+  background-position: -200% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="44"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="44"] {
+  background-position: -300% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="45"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="45"] {
+  background-position: -400% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="46"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="46"] {
+  background-position: -500% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="47"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="47"] {
+  background-position: -600% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="48"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="48"] {
+  background-position: -700% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="49"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="49"] {
+  background-position: -800% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="50"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="50"] {
+  background-position: -900% -400%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="51"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="51"] {
+  background-position: 0% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="52"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="52"] {
+  background-position: -100% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="53"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="53"] {
+  background-position: -200% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="54"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="54"] {
+  background-position: -300% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="55"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="55"] {
+  background-position: -400% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="56"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="56"] {
+  background-position: -500% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="57"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="57"] {
+  background-position: -600% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="58"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="58"] {
+  background-position: -700% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="59"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="59"] {
+  background-position: -800% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="60"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="60"] {
+  background-position: -900% -500%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="61"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="61"] {
+  background-position: 0% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="62"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="62"] {
+  background-position: -100% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="63"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="63"] {
+  background-position: -200% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="64"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="64"] {
+  background-position: -300% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="65"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="65"] {
+  background-position: -400% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="66"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="66"] {
+  background-position: -500% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="67"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="67"] {
+  background-position: -600% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="68"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="68"] {
+  background-position: -700% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="69"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="69"] {
+  background-position: -800% -600%;
+}
+.wg-card .wg-card-spell-front.shifting_sand_set[data-img="70"],
+.wg-tooltip-card .wg-card .shifting_sand[data-img="70"] {
   background-position: -900% -600%;
 }
 
@@ -732,7 +1055,22 @@
     transform: perspective(20em) scale(1.6);
   }
 }
+.wg-mana-modifiers {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.mana-cooldown .wg-mana-modifiers {
+  margin-top: 20px;
+}
+
 .wg-ongoing-spell-growth .wg-mana-icon.wg-icon-growth {
+  display: inline-flex;
+}
+
+.wg-ongoing-spell-sunkenskull .wg-mana-icon.wg-icon-sunken-skull {
   display: inline-flex;
 }
 
@@ -745,7 +1083,6 @@
   line-height: 30px;
   justify-content: center;
   color: white;
-  position: absolute;
   left: 3px;
   top: 3px;
 }
@@ -1181,6 +1518,7 @@ body > .card {
 
 #basic-attack-wrapper,
 #mana-revealed-wrapper,
+#spell-revealed-wrapper,
 #mana-discard-display-wrapper {
   --color: black;
   padding-top: 25px;
@@ -1194,6 +1532,7 @@ body > .card {
 }
 #basic-attack-wrapper .wg-title,
 #mana-revealed-wrapper .wg-title,
+#spell-revealed-wrapper .wg-title,
 #mana-discard-display-wrapper .wg-title {
   top: 20px;
 }
@@ -1212,11 +1551,28 @@ body > .card {
   margin-top: 5px;
 }
 
+#spell-revealed-wrapper {
+  flex-grow: 1;
+  display: none;
+  --width: 110px;
+  --height: 154px;
+}
+#spell-revealed-wrapper #spell-revealed {
+  margin-top: 5px;
+}
+
 #mana-discard-display-wrapper {
   flex-basis: 100%;
 }
 #mana-discard-display-wrapper #mana-discard-display {
   margin-top: 5px;
+}
+
+.gamestate_spellSeeingStone #mana-revealed-wrapper, .gamestate_client_selectSpellPoolOrDiscard #mana-revealed-wrapper {
+  display: none;
+}
+.gamestate_spellSeeingStone #spell-revealed-wrapper, .gamestate_client_selectSpellPoolOrDiscard #spell-revealed-wrapper {
+  display: block;
 }
 
 .deck .discard {
@@ -1429,6 +1785,7 @@ body > .card {
   top: 0;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   height: 24px;
   z-index: 20;
 }
@@ -1544,7 +1901,32 @@ body > .card {
   background-position-y: -150px;
 }
 
+.wg-ongoing-spell-sunkenskull .sunkenskull_icon {
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -629px;
+  background-position-y: -451px;
+  background-image: url("img/shifting_sands-front.jpg");
+}
+
+.wg-ongoing-spell-blossom .blossom_icon {
+  background-image: url("img/shifting_sands-front.jpg");
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -645px;
+  background-position-y: -849px;
+}
+
+.wg-ongoing-spell-glassshield [data-glass_shield=false] .glassshield_icon {
+  background-image: url("img/shifting_sands-front.jpg");
+  display: flex;
+  border: 2px solid white;
+  background-position-x: -255px;
+  background-position-y: -170px;
+}
+
 [data-discount-next-attack="1"] .secondstrike_icon {
+  background-image: url("img/shifting_sands-front.jpg");
   display: flex;
   border: 2px solid white;
   background-position-x: -847px;
@@ -1674,15 +2056,19 @@ body > .card {
 html.mobile_version,
 .mobile_version .mode_3d #game_play_area_background {
   background: url("img/background-mobile.png");
-  background-size: 100% auto;
+  background-attachment: fixed;
   background-repeat: repeat;
+  background-size: 100% auto;
+  background-size: cover;
 }
 
 html.desktop_version,
 .desktop_version .mode_3d #game_play_area_background {
   background: url("img/background-desktop.png");
-  background-size: 100% auto;
+  background-attachment: fixed;
   background-repeat: repeat;
+  background-size: 100% auto;
+  background-size: cover;
 }
 
 #game_play_area #bga-zoom-wrapper {

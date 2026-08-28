@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards\KickStarter_1;
 
 use BgaSystemException;
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Cards\OngoingBaseCard;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Core\SpellCard;
@@ -40,8 +41,9 @@ class TwistOfFate extends BaseCard {
     private function checkOngoingSpell($spell, bool $is_active) {
         $card_type = SpellCard::getCardInfo($spell);
         if ($card_type['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
+            /** @var OngoingBaseCard $instance */
             $instance = SpellCard::getInstanceOfCard($spell);
-            $instance->isOngoingSpellActive($is_active, Players::getPlayerId());
+            $instance->isActive();
         }
     }
 }

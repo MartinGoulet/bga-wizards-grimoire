@@ -4,9 +4,9 @@ define([
     "dijit/Tooltip"
 ],
 function (dojo, declare, domGeometry, Tooltip) {
-    return declare("ebg.core.core_patch_tooltip_position", null, {
+    return declare("wg.core_patch_tooltip_position", null, {
         constructor: function(){
-            console.log('ebg.core.core_patch_tooltip_position constructor');
+            console.log('wg.core_patch_tooltip_position constructor');
             this._checkIfPosCorrNeeded();
         },
 

@@ -10,11 +10,8 @@
       "strict": false,
     },
     "compileOnSave": true,
-    "files": [
-        "node_modules/bga-studio-mg/index.d.ts",
-        "node_modules/bga-studio-mg/core.d.ts",
-        "node_modules/bga-studio-mg/stock.d.ts",
-        "node_modules/bga-studio-mg/counter.d.ts",
+    "files": [      
+        "bga-framework.d.ts",
 
         "node_modules/bga-zoom/src/zoom-manager.ts",
         "node_modules/bga-animations/src/animations.ts",
@@ -51,12 +48,14 @@
         "src/states/discard-mana.ts",
         "src/states/cast-spell.ts",
         "src/states/cast-spell-interaction.ts",
+        "src/states/relic.ts",
         "src/states/choose-new-spell.ts",
         "src/states/basic-attack.ts",
         "src/states/basic-attack-battle-vision.ts",
 
         "src/states/activate-delayed-spell.ts",
         "src/states/bad-fortune.ts",
+        "src/states/belch.ts",
         "src/states/cast-spell-with-mana.ts",
         "src/states/eclipse.ts",
         "src/states/question.ts",
@@ -69,6 +68,8 @@
         "src/states/select-mana-return-deck.ts",
         "src/states/select-spell.ts",
         "src/states/select-spell-pool.ts",
+        "src/states/spell-seeing-stone.ts",
+        "src/states/select-spell-pool-or-discard.ts",
 
         "src/types.ts",
         

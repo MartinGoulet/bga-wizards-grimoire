@@ -2,9 +2,9 @@
 
 namespace WizardsGrimoire\Cards\Base_1;
 
+use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Cards\BaseCard;
 use BgaSystemException;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;

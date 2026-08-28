@@ -2,20 +2,33 @@
 
 namespace WizardsGrimoire\Core;
 
+use Bga\Games\WizardsGrimoire\Game;
 use BgaSystemException;
-use WizardsGrimoire\Core\Game;
+use BgaUserException;
+use WizardsGrimoire\Cards\Base_2\Growth;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
 use WizardsGrimoire\Objects\CardLocation;
 
 class ManaCard {
 
+    public static function delete(int $card_id) {
+        $sql = "DELETE FROM manas WHERE card_id = $card_id";
+        Game::get()->DbQuery($sql);
+    }
+
     public static function addOnTopOfDeck($card_id) {
         Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Deck(), true);
     }
 
     public static function addOnTopOfDiscard($card_id) {
-        Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
+        $card = ManaCard::get($card_id);
+        if (self::isCrystalShard($card)) {
+            self::delete($card_id);
+            self::moveSpellCrystalShardToDiscard($card);
+        } else {
+            Game::get()->deck_manas->insertCardOnExtremePosition($card_id, CardLocation::Discard(), true);
+        }
     }
 
     public static function addCardsToHand($cards, $player_id = 0) {
@@ -47,14 +60,28 @@ class ManaCard {
         );
     }
 
-    public static function countOnTopOfManaCoolDown(int $position, int $player_id = 0) {
+    public static function countOnTopOfManaCoolDown(int $position, int $player_id = 0): int {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
-        return Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
+        return intval(Game::get()->deck_manas->countCardInLocation(CardLocation::PlayerManaCoolDown($player_id, $position)));
     }
 
-    public static function draw($count, $player_id = 0, string $card_name = null) {
+    public static function createCrystalShard(): array {
+        /** @var \Bga\GameFramework\Components\Deck $deck */
+        $deck = Game::get()->deck_manas;
+
+        $sql = "INSERT INTO manas (card_type, card_type_arg, card_location, card_location_arg)
+                VALUES (5, 1, 'temp', 0)";
+        Game::get()->DbQuery($sql);
+
+        $card = $deck->getCardOnTop('temp');
+
+        $deck->moveCard($card['id'], CardLocation::Hand(), Players::getPlayerId());
+        return $deck->getCard($card['id']);
+    }
+
+    public static function draw($count, $player_id = 0, string|null $card_name = null) {
         if ($player_id == 0) {
             $player_id = Players::getPlayerId();
         }
@@ -79,7 +106,7 @@ class ManaCard {
         }
 
         Game::get()->incStat($count, WG_STAT_NBR_MANA_DRAW, $player_id);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
 
         return $result;
     }
@@ -119,7 +146,7 @@ class ManaCard {
         $deck->insertCardOnExtremePosition($card['id'], CardLocation::PlayerManaCoolDown($player_id, $position), true);
         Notifications::dealFromDeckToManaCoolDown($player_id, $card, $position);
         Events::onAddManaUnderSpell($player_id, $position);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 
     public static function discardManaFromSpell(int $position, int $player_id = 0) {
@@ -133,11 +160,37 @@ class ManaCard {
         ManaCard::addOnTopOfDiscard($card['id']);
         Notifications::discardManaCardFromSpell(Players::getPlayerId(), $card, $position);
 
-        if($player_id == Players::getOpponentId()) {
-            Game::undoSavepoint();
+        if ($player_id == Players::getOpponentId()) {
+            Game::get()->undoSavepoint();
         }
 
         Events::onManaDiscarded($card, $position, $player_id);
+    }
+
+    public static function exchangeManaCoolDownBetweenPositions(int $position1, int $position2, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+
+        $manas1 = self::getCardsOnManaCoolDown($position1, $player_id);
+        $manas2 = self::getCardsOnManaCoolDown($position2, $player_id);
+
+        $manaIds1 = array_column($manas1, 'id');
+        $manaIds2 = array_column($manas2, 'id');
+
+        if(!empty($manaIds1)) {
+            $location = CardLocation::PlayerManaCoolDown($player_id, $position2);
+            $sql = "UPDATE manas SET card_location = '{$location}' WHERE card_id IN (" . implode(',', $manaIds1) . ")";
+            Game::get()->DbQuery($sql);
+            Notifications::moveManaCard($player_id, $manas1);
+        }
+
+        if(!empty($manaIds2)) {
+            $location = CardLocation::PlayerManaCoolDown($player_id, $position1);
+            $sql = "UPDATE manas SET card_location = '{$location}' WHERE card_id IN (" . implode(',', $manaIds2) . ")";
+            Game::get()->DbQuery($sql);
+            Notifications::moveManaCard($player_id, $manas2);
+        }
     }
 
     public static function get(int $card_id) {
@@ -183,15 +236,41 @@ class ManaCard {
         return Game::get()->deck_manas->getCardOnTop(CardLocation::PlayerManaCoolDown($player_id, $position));
     }
 
+    public static function getCardsOnManaCoolDown(int $position, int $player_id = 0) {
+        if ($player_id == 0) {
+            $player_id = Players::getPlayerId();
+        }
+        return Game::get()->deck_manas->getCardsInLocation(CardLocation::PlayerManaCoolDown($player_id, $position));
+    }
+
     public static function getOnTopOfDeck() {
         return Game::get()->deck_manas->getCardOnTop(CardLocation::Deck());
     }
 
     public static function getPower($card) {
         $power = intval($card['type']);
-        if (Globals::getIsActiveGrowth()) {
+        
+        /** @var Growth $growth */
+        $growth = SpellCard::getInstanceOfCardFromClass(Growth::class);
+        if ($growth->isActive()) {
             $power++;
         }
+
+        $player_id = Players::getPlayerId();
+        $isSunkenSkullActive = Globals::getSunkenSkullActivePlayer() == $player_id;
+        if ($isSunkenSkullActive) {
+            $power--;
+        }
+
+        $activeOngoingSpells = SpellCard::getOngoingActiveSpells($player_id);
+        foreach ($activeOngoingSpells as $spell) {
+            $instance = SpellCard::getInstanceOfCard($spell);
+            if (method_exists($instance, 'onModifyManaPower')) {
+                $power = $instance->onModifyManaPower($power);
+            }
+        }
+
+
         return $power;
     }
 
@@ -276,8 +355,8 @@ class ManaCard {
             $mana_cards = $deck->pickCardsForLocation($count, CardLocation::Deck(), CardLocation::ManaRevelead());
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before, false);
-            
-            Game::undoSavepoint();
+
+            Game::get()->undoSavepoint();
             return $mana_cards;
         } else {
             $cards_before = $deck->getCardsOnTop($count, CardLocation::Deck());
@@ -292,8 +371,39 @@ class ManaCard {
             Notifications::revealManaCard(Players::getPlayerId(), $mana_cards_2);
             Notifications::moveManaCard(Players::getPlayerId(), $cards_before,  false);
 
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
             return array_merge($mana_cards_1, $mana_cards_2);
         }
+    }
+
+    public static function isSpellCard($card): bool {
+        return isset($card['type_arg']) && intval($card['type_arg']) > 0;
+    }
+
+    public static function discardSpellCard($card) {
+        if (self::isCrystalShard($card)) {
+            // $deck = Game::get()->deck_manas;
+            // $deck->moveCard($card['id'], 'removed');
+            self::delete($card['id']);
+            self::moveSpellCrystalShardToDiscard($card);
+        } else {
+            throw new BgaSystemException("Only Crystal Shard spell cards can be discarded.");
+        }
+    }
+
+    private static function moveSpellCrystalShardToDiscard(array $mana) {
+        /** @var \Bga\GameFramework\Components\Deck $deckSpell */
+        $deckSpell = Game::get()->deck_spells;
+        $spell = $deckSpell->getCardOnTop('crystal');
+        if (empty($spell)) {
+            throw new BgaSystemException("No Crystal Shard spell card available to discard.");
+        }
+        $deckSpell->insertCardOnExtremePosition($spell['id'], CardLocation::Discard(), true);
+        $spell = $deckSpell->getCard($spell['id']);
+        Notifications::crystalShardDiscard(Players::getPlayerId(), $spell, $mana);
+    }
+
+    public static function isCrystalShard($card): bool {
+        return intval($card['type']) == 5 && intval($card['type_arg']) == 1;
     }
 }

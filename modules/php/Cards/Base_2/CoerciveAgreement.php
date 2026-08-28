@@ -2,8 +2,8 @@
 
 namespace WizardsGrimoire\Cards\Base_2;
 
+use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Cards\BaseCard;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -31,7 +31,7 @@ class CoerciveAgreement extends BaseCard {
             }, $random_cards);
             Game::get()->deck_manas->moveCards($ids, CardLocation::Hand(), Players::getPlayerId());
             Notifications::giveManaCards($opponent_id, $random_cards);
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         } else {
             $values = explode(',', array_shift($args));
 

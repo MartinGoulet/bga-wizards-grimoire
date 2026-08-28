@@ -15,6 +15,8 @@
  *
  */
 
+use Bga\Games\WizardsGrimoire\Game;
+
 /*
    Game state machine is a tool used to facilitate game developpement by doing common stuff that can be set up
    in a very easy way from this configuration file.
@@ -102,7 +104,7 @@ $chooseSpellStates = [
         "descriptionmyturn" => clienttranslate('${you} must discard to 10 mana cards'),
         "args" => "argBase",
         "type" => "activeplayer",
-        "possibleactions" => ["discardMana"],
+        "possibleactions" => ["actDiscardMana"],
         "transitions" => [
             "" => ST_CHOOSE_NEW_SPELL_START,
         ]
@@ -128,7 +130,7 @@ $chooseSpellStates = [
         "descriptionmyturnReplace" => clienttranslate('${you} may choose to replace a spell or pass'),
         "args" => "argBase",
         "type" => "activeplayer",
-        "possibleactions" => ["chooseSpell", "replaceSpell", "pass"],
+        "possibleactions" => ["actChooseSpell", "actReplaceSpell", "actPass"],
         "transitions" => [
             "next_player" => ST_NEXT_PLAYER,
             "pass" => ST_SPELL_COOL_DOWN,
@@ -194,9 +196,9 @@ $castSpellsStates = [
         "descriptionmyturn" => clienttranslate('${you} may cast a spell or pass'),
         "type" => "activeplayer",
         "args" => "argCastSpell",
-        "possibleactions" => ["castSpell", "pass", "undo"],
+        "possibleactions" => ["actCastSpell", "actPass", "actUndo"],
         "transitions" => [
-            "cast" => ST_CAST_SPELL_START,
+            "cast" => ST_RELIC,
             "undo" => ST_CAST_SPELL_START,
             "pass" => ST_BASIC_ATTACK_START,
             "player" => ST_CAST_SPELL_INTERACTION,
@@ -204,6 +206,8 @@ $castSpellsStates = [
             "dead" => ST_PRE_END_OF_GAME,
             "delayed" => ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
             "delayed_opponent" => ST_CAST_SPELL_SWITCH_TO_OPPONENT,
+            "seeing_stone" => ST_SPELL_SEEING_STONE,
+            "destroy" => ST_DESTROY_SPELL,
         ]
     ],
 
@@ -224,7 +228,7 @@ $castSpellsStates = [
         "descriptionmyturn" => clienttranslate('${you} must conclude the effect of the spell'),
         "type" => "activeplayer",
         "args" => "argCastSpellInteraction",
-        "possibleactions" => ["castSpellInteraction"],
+        "possibleactions" => ["actCastSpellInteraction"],
         "transitions" => [
             "return" => ST_CAST_SPELL_RETURN_CURRENT_PLAYER,
             "dead" => ST_PRE_END_OF_GAME,
@@ -237,7 +241,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stReturnToCurrentPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL_START,
+            "" => ST_RELIC,
         ]
     ],
 
@@ -257,7 +261,7 @@ $castSpellsStates = [
         "type" => "game",
         "action" => "stSwithPlayer",
         "transitions" => [
-            "" => ST_CAST_SPELL_START,
+            "" => ST_RELIC,
         ]
     ],
 ];
@@ -281,7 +285,7 @@ $basicAttackStates = [
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to deal damage'),
         "args" => "argBasicAttack",
         "type" => "activeplayer",
-        "possibleactions" => ["basicAttack", "pass", "undo"],
+        "possibleactions" => ["actBasicAttack", "actPass", "actUndo"],
         "transitions" => [
             "attack" => ST_BASIC_ATTACK_DAMAGE,
             "undo" => ST_CAST_SPELL_START,
@@ -307,7 +311,7 @@ $basicAttackStates = [
         "descriptionmyturn" => clienttranslate('${you} may discard a mana card to block the damage'),
         "args" => "argBattleVision",
         "type" => "activeplayer",
-        "possibleactions" => ["blockBasicAttack", "pass"],
+        "possibleactions" => ["actBlockBasicAttack", "actPass"],
         "transitions" => [
             "pass" => ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER,
             "block" => ST_BASIC_ATTACK_END,
@@ -358,7 +362,7 @@ $basicAttackStates = [
     ]
 ];
 
-$stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+$stSpellCooldownActiveDeplayed = Game::getActiveDelayedSpellStates(
     2,
     ST_SPELL_CD_ACTIVATE_DELAYED,
     ST_SPELL_CD_CAST_SPELL_SWITCH_OPPONENT,
@@ -367,7 +371,7 @@ $stSpellCooldownActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_SPELL_COOL_DOWN_ONGOING,
 );
 
-$stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayed = Game::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_SWITCH_OPPONENT,
@@ -376,13 +380,22 @@ $stCastSpellActiveDeplayed = WizardsGrimoire::getActiveDelayedSpellStates(
     ST_CAST_SPELL_START
 );
 
-$stCastSpellActiveDeplayedOpponent = WizardsGrimoire::getActiveDelayedSpellStates(
+$stCastSpellActiveDeplayedOpponent = Game::getActiveDelayedSpellStates(
     4,
     ST_CAST_SPELL_CD_OPPONENT_ACTIVATE_DELAYED,
     ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT,
     ST_CAST_SPELL_CD_OPPONENT_INTERACTION,
     ST_CAST_SPELL_CD_OPPONENT_RETURN_CURRENT_PLAYER,
     ST_CAST_SPELL_SWITCH_TO_CURRENT_PLAYER
+);
+
+$stDestroySpellDelayed = Game::getActiveDelayedSpellStates(
+    4,
+    ST_DESTROY_ACTIVATE_DELAYED,
+    ST_DESTROY_SWITCH_OPPONENT,
+    ST_DESTROY_INTERACTION,         // castSpellInteraction déjà existant
+    ST_DESTROY_RETURN_PLAYER,
+    ST_DESTROY_SPELL,                // ← retour au loop après chaque delayed spell
 );
 
 $machinestates =
@@ -395,4 +408,5 @@ $machinestates =
 
     $stSpellCooldownActiveDeplayed +
     $stCastSpellActiveDeplayed +
-    $stCastSpellActiveDeplayedOpponent;
+    $stCastSpellActiveDeplayedOpponent +
+    $stDestroySpellDelayed;

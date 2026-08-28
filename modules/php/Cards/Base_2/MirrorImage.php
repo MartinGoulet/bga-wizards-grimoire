@@ -4,6 +4,7 @@ namespace WizardsGrimoire\Cards\Base_2;
 
 use WizardsGrimoire\Cards\BaseCard;
 use WizardsGrimoire\Core\ManaCard;
+use WizardsGrimoire\Core\Notifications;
 
 class MirrorImage extends BaseCard {
 
@@ -11,6 +12,8 @@ class MirrorImage extends BaseCard {
         // Gain mana equal to the quantity of mana cards on 1 of your spells
         $position = intval(array_shift($args));
         $mana_cooldown_count = ManaCard::countOnTopOfManaCoolDown($position);
-        $this->drawManaCards($mana_cooldown_count);
+        if ($mana_cooldown_count > 0) {
+            $this->drawManaCards($mana_cooldown_count);
+        }
     }
 }

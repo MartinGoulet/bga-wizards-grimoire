@@ -2,8 +2,9 @@
 
 namespace WizardsGrimoire;
 
+use Bga\GameFramework\Actions\Debug;
+use Bga\Games\WizardsGrimoire\Game;
 use BgaUserException;
-use WizardsGrimoire\Core\Game;
 use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Players;
@@ -51,13 +52,19 @@ trait DebugTrait {
         Game::get()->setGameStateInitialValue(WG_VAR_SWITCH_CARDS_COUNT, 1);
     }
 
-    public function setupGameDebug() {
+    #[Debug(reload: true)]
+    public function debug_setupGameDebug() {
         $spell_deck = Game::get()->deck_spells;
         $mana_deck = Game::get()->deck_manas;
 
         $spell_deck->moveAllCardsInLocation(null, CardLocation::Deck());
         $mana_deck->moveAllCardsInLocation(null, CardLocation::Deck());
+        $sql = "DELETE FROM `manas` WHERE card_id > 60";
+        Game::get()->DbQuery($sql);
         $mana_deck->shuffle(CardLocation::Deck());
+
+        $mana_deck->pickCardsForLocation(10, CardLocation::Deck(), CardLocation::Discard());
+
 
         Globals::setSkipInteraction(false);
         Globals::setPreviousBasicAttackPower(2);
@@ -68,16 +75,31 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329672" => ["WildBloom", "EchoCard", "GuiltyBond", "Hoodwink", "SneakyDeal", "SecondStrike"],
-            "2329673" => ["FalseFace", "DanceOfPain", "Freeze", "CoerciveAgreement", "Fracture", "StoneCrush"],
+            "2329673" => ["WildBloom", "Corruption", "Transference", "SilencingAmulet", "Betrayal", "MirrorImage"],
+            "2329672" => ["SilentSupport", "DoomDrop", "HarnessEnergy", "WizardsGambit", "SeeingStone", "BattleVision"],
         ];
+        // $players_spell_cards = [
+        //     "2329672" => ["ShadowAttack", "BlankSlate", "Glimmer", "HarnessEnergy", "Wasteland"],
+        //     "2329673" => ["FeverDream", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+        // ];
+        // $players_spell_cards = [
+        //     "2329672" => ["Lullaby", "PowerHungry", "Growth", "Hoodwink", "SneakyDeal", "SecondStrike"],
+        //     "2329673" => ["Puppetmaster", "BattleVision", "FalseFace", "CoerciveAgreement", "Fracture", "StoneCrush"],
+        // ];
 
-        $spells_pool = [];
+        // $spells_pool = ['SavageStrike'];
+        // $spells_pool = [];
+        $spells_discard = [];
+        $spells_pool = ['FeverDream'];
         // $spells_pool = ["SecretOath", "SneakyDeal", "SecondStrike", "Symbiosis"];
 
+        // $players_spell_mana = [
+        //     "2329672" => [0, 0, 0, 0, 0, 0],
+        //     "2329673" => [0, 0, 0, 0, 0, 0],
+        // ];
         $players_spell_mana = [
-            "2329672" => [1, 0, 0, 0, 0, 0],
-            "2329673" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [2, 4, 0, 0, 0, 0],
+            "2329672" => [2, 3, 0, 0, 0, 2],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
@@ -123,20 +145,23 @@ trait DebugTrait {
             }
         }
 
+        foreach ($spells_discard as $name) {
+            $card = $this->getCardByClassName($name);
+            if ($card !== null) {
+                $spell_deck->insertCardOnExtremePosition($card['id'], CardLocation::Discard(), true);
+            } else {
+                throw new BgaUserException("Wrong card name : " . $name);
+            }
+        }
+
         $spell_deck->shuffle(CardLocation::Deck());
         
-        $mana_deck->pickCards(15, CardLocation::Deck(), "2329672");
-        $mana_deck->pickCards(5, CardLocation::Deck(), "2329673");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329672");
+        $mana_deck->pickCards(10, CardLocation::Deck(), "2329673");
         Players::setPlayerLife("2329672", 100);
         Players::setPlayerLife("2329673", 100);
 
-        Globals::setIsActiveBattleVision(false, 0);
-        Globals::setIsActiveGrowth(false, 0);
-        Globals::setIsActiveLullaby(false, 0);
-        Globals::setIsActivePowerHungry(false, 0);
-        Globals::setIsActivePuppetmaster(false, 0);
-        Globals::setIsActiveSecretOath(false, 0);
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
     }
 
     public function addManaDiscardPile() {
@@ -146,7 +171,7 @@ trait DebugTrait {
 
     private function getCardByClassName($class_name) {
         $card_types = array_filter(Game::get()->card_types, function ($card) use ($class_name) {
-            return array_key_exists('class', $card) && $card['class'] == $class_name;
+            return array_key_exists('class', $card) && $card['class'] == $class_name && $card['icon'] !== WG_ICON_SET_SAND_1;
         });
         $types = array_keys($card_types);
         $type = array_shift($types);

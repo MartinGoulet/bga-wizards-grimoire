@@ -2,7 +2,8 @@
 
 namespace WizardsGrimoire\Core;
 
-use WizardsGrimoire\Core\Game;
+use Bga\Games\WizardsGrimoire\Game;
+use WizardsGrimoire\Cards\Base_1\PowerHungry;
 use WizardsGrimoire\Core\Notifications;
 
 trait StateTrait {
@@ -20,6 +21,7 @@ trait StateTrait {
         $player_id = intval($this->getActivePlayerId());
         Players::setPlayerId($player_id);
         Globals::setPlayerTurn($player_id);
+        Globals::setNumberOfCardDrawByCardEffectThisTurn([]);
 
         $this->incStat(1, WG_STAT_TURN_NUMBER);
         $this->incStat(1, WG_STAT_TURN_NUMBER, $player_id);
@@ -27,7 +29,7 @@ trait StateTrait {
         Globals::resetOnNewTurn();
 
         Events::onCheckOngoingActiveSpell();
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
 
         $next_state = ManaCard::getHandCount() > 10 ? "discard" : "spell";
         $this->gamestate->nextState($next_state);
@@ -45,6 +47,13 @@ trait StateTrait {
     }
 
     function stSpellCoolDownInstantDelayed() {
+
+        for($i = 1; $i <= 6; $i++) {
+            $spell = SpellCard::getFromRepertoire($i);
+            if (empty($spell) && ManaCard::countOnTopOfManaCoolDown($i) > 0) {
+                SpellCard::discardAllManaCardsInPosition($i);
+            }
+        }
 
         $this->stSpellCoolDownInstant();
         $this->stSpellCoolDownDelayed();
@@ -89,6 +98,7 @@ trait StateTrait {
 
         $cards = [];
         $spell_delayed = [];
+        $onAfterDiscardManaFromSpells = [];
 
         for ($i = 1; $i <= 6; $i++) {
             $mana_card = ManaCard::getOnTopOnManaCoolDown($i);
@@ -103,6 +113,12 @@ trait StateTrait {
 
                     if ($spell_info['activation_auto'] == true) {
                         $instance->castSpell($mana_card);
+                        $onAfterDiscardManaFromSpells[] = [
+                            'instance' => $instance, 
+                            'spell' => $spell, 
+                            'mana' => $mana_card,
+                            'mana_id' => $mana_card['id']
+                        ];
                     } else {
                         if ($instance->isDelayedSpellTrigger()) {
                             $spell_delayed[] = $spell['id'];
@@ -116,6 +132,10 @@ trait StateTrait {
             Notifications::spellCooldownDelayed($cards);
             $player_id = intval($this->getActivePlayerId());
             Notifications::moveManaCard($player_id, $cards, false);
+        }
+
+        foreach ($onAfterDiscardManaFromSpells as $data) {
+            Game::get()->triggerOnAfterDiscardManaFromSpell($data['instance'], $data['mana_id']);
         }
 
         if (sizeof($spell_delayed) > 0) {
@@ -157,8 +177,9 @@ trait StateTrait {
 
                 if ($spell_info['activation'] == WG_SPELL_ACTIVATION_ONGOING) {
                     if (ManaCard::countOnTopOfManaCoolDown($i) == 1) {
+                        /** @var OngoingBaseCard $instance */
                         $instance = SpellCard::getInstanceOfCard($spell);
-                        $instance->isOngoingSpellActive(false, 0);
+                        $instance->isActive();
                     }
                     $cards[] = $mana_card;
                     ManaCard::addOnTopOfDiscard($mana_card['id']);
@@ -176,7 +197,12 @@ trait StateTrait {
     }
 
     function stGainMana() {
-        ManaCard::draw(3);
+        if(Globals::getFrozenGobletActive()) {
+            ManaCard::draw(1);
+            Globals::setFrozenGobletActive(false);
+        } else {
+            ManaCard::draw(3);
+        }
         $this->gamestate->nextState();
     }
 
@@ -199,7 +225,7 @@ trait StateTrait {
     function stReturnToCurrentPlayerDelayedSpell() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
         Globals::setInteractionPlayer(0);
         $next_state = sizeof(Globals::getCoolDownDelayedSpellIds()) > 0 ? "delayed" : "end";
@@ -209,14 +235,14 @@ trait StateTrait {
     function stReturnToCurrentPlayer() {
         if (Globals::getInteractionPlayer() != Players::getPlayerId()) {
             Game::get()->gamestate->changeActivePlayer(Players::getPlayerId());
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
         }
         Globals::setInteractionPlayer(0);
         Game::get()->gamestate->nextState();
     }
 
     function stSwithPlayer() {
-        Game::undoSavepoint();
+        Game::get()->undoSavepoint();
         $opponent_id = Players::getOpponentId();
         Players::setPlayerId($opponent_id);
         $this->giveExtraTime($opponent_id);
@@ -239,7 +265,7 @@ trait StateTrait {
 
     function stBasicAttackDamage() {
         $opponent_id = Players::getOpponentId();
-        $damage = Globals::getCurrentBasicAttackPower();
+        $damage = Globals::getCurrentBasicAttackDamage();
 
         $life_remaining = Players::dealDamage($damage, $opponent_id);
         Notifications::basicAttack($opponent_id, $damage, $life_remaining);
@@ -259,10 +285,22 @@ trait StateTrait {
     function stBasicAttackEnd() {
         $card = ManaCard::getBasicAttack();
 
-        if (Globals::getIsActivePowerHungry()) {
-            ManaCard::addToHand($card['id'], Globals::getIsActivePowerHungryPlayer());
+        if (SpellCard::isActiveGlassShield(Players::getPlayerId())) {
+            $power = ManaCard::getPower($card);
+            $hand = ManaCard::getHand();
+            $cardsSamePower = array_filter($hand, fn($c) => $c['id'] != $card['id'] && ManaCard::getPower($c) === $power);
+            $cardSamePower = array_shift($cardsSamePower);
+            Notifications::revealManaCardHand(Players::getPlayerId(), [$cardSamePower]);
+        }
+
+        /** @var PowerHungry $powerHungry */
+        $powerHungry = SpellCard::getInstanceOfCardFromClass(PowerHungry::class);
+        if ($powerHungry->isActive()) {
+            ManaCard::addToHand($card['id'], $powerHungry->getOwnerId());
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);
-            Game::undoSavepoint();
+            Game::get()->undoSavepoint();
+        } else if (ManaCard::isSpellCard($card)) {
+            ManaCard::discardSpellCard($card);
         } else {
             ManaCard::addOnTopOfDiscard($card['id']);
             Notifications::moveManaCard(Players::getPlayerId(), [$card], false);

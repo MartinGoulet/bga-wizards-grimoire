@@ -2,6 +2,7 @@
 
 namespace WizardsGrimoire\Core;
 
+use Bga\Games\WizardsGrimoire\Game;
 use BgaSystemException;
 
 /*
@@ -28,13 +29,14 @@ class Stats {
         $cost = intval($spell_info['cost']);
 
         $stats = [
+            0 => WG_STAT_NBR_DRAFT_COST_0,
             1 => WG_STAT_NBR_DRAFT_COST_1,
             2 => WG_STAT_NBR_DRAFT_COST_2,
             3 => WG_STAT_NBR_DRAFT_COST_3,
             4 => WG_STAT_NBR_DRAFT_COST_4,
             5 => WG_STAT_NBR_DRAFT_COST_5,
+            6 => WG_STAT_NBR_DRAFT_COST_5,
         ];
-
         Game::get()->incStat(1, $stats[$cost], $player_id);
     }
 
@@ -53,7 +55,8 @@ class Stats {
             6 => WG_STAT_DMG_WHEN_6_SPELLS,
         ];
 
-        Game::get()->incStat($damage, $stats[$spells_count], $player_id);
+        Game::get()->playerStats->inc($stats[$spells_count], intval($damage), $player_id);
+
     }
 
     static function damageWithBasicAttack($damage, $player_received_damage) {

@@ -2,6 +2,10 @@
 
 namespace WizardsGrimoire\Core;
 
+use Bga\Games\WizardsGrimoire\Game;
+use BgaUserException;
+use WizardsGrimoire\Objects\CardLocation;
+
 class Notifications {
 
     static function activateSpell($player_id, $card_name) {
@@ -20,6 +24,7 @@ class Notifications {
             'player_id' => intval($player_id),
             "player_name" => self::getPlayerName($player_id),
             "mana_values" => [ManaCard::getPower($mana_card)],
+            'card' => $mana_card,
         ]);
     }
 
@@ -58,12 +63,51 @@ class Notifications {
         ]);
     }
 
-    static function destroySpell($player_id, $card) {
-        self::notifyAll('onDiscardSpell', '${player_name} destroys ${card_name}', [
+    static function chooseSpellFromDiscard($player_id, $card) {
+        $msg = clienttranslate('${player_name} chooses ${card_name} from the discard pile');
+        self::notifyAll('onChooseSpell', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'card' => $card,
+            'card_name' => SpellCard::getName($card),
+            'i18n' => ['card_name'],
+        ]);
+    }
+
+    static function crystalShard($player_id, $spell, $mana) {
+        $msg = clienttranslate('${player_name} creates a ${mana_value} power mana');
+        self::notifyAll('onCrystalShard', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'mana_value' => 5,
+            'spell' => $spell,
+            'mana' => $mana,
+            'preserve' => ['mana', 'spell'],
+        ]);
+    }
+
+    static function crystalShardDiscard(int $player_id, array $spell, array $mana) {
+        
+        $msg = clienttranslate('${player_name} discards ${card_name} to the discard');
+        self::notifyAll('onCrystalShardDiscard', $msg, [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'card_name' => SpellCard::getName($spell),
+            'spell' => $spell,
+            'mana' => $mana,
+            'preserve' => ['mana', 'spell'],
+            'i18n' => ['card_name'],
+        ]);
+    }
+
+    static function destroySpell($player_id, $card, $destination) {
+        self::notifyAll('onDestroySpell', '${player_name} destroys ${card_name}', [
             'player_id' => intval($player_id),
             'player_name' => self::getPlayerName(intval($player_id)),
             'card' => $card,
             'card_name' => SpellCard::getName($card),
+            'destination' => $destination,
+            'preserve' => ['destination'],
             'i18n' => ['card_name'],
         ]);
     }
@@ -129,6 +173,15 @@ class Notifications {
             'card_name' => clienttranslate("Echo"),
             'card_name2' => SpellCard::getName($spell),
             'i18n' => ['card_name', 'card_name2'],
+        ]);
+    }
+
+    static function exchangeManaHands(int $player_id) {
+        $msg = clienttranslate('${player_name} exchanges mana hands with ${player_name2}');
+        self::message($msg, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
         ]);
     }
 
@@ -245,6 +298,26 @@ class Notifications {
         self::moveManaCard($player_id, [$card], false);
     }
 
+    static function moveOpponentManaCard($player_id, $card, $position_from, $position_to) {
+        $args = [
+            'player_id' => intval($player_id),
+            'player_name' => self::getPlayerName($player_id),
+            'player_name2' => self::getPlayerName(Players::getOpponentIdOf($player_id)),
+            'card_name' => SpellCard::getName(SpellCard::getFromRepertoire($position_from, $player_id)),
+            'card_name2' => SpellCard::getName(SpellCard::getFromRepertoire($position_to, $player_id)),
+            'i18n' => ['card_name', 'card_name2'],
+        ];
+        
+        $message = clienttranslate('${player_name} transfers a mana card from ${card_name} to ${card_name2}');
+        self::message($message, $args, $player_id);
+
+        $message = clienttranslate('${player_name} transfers ${mana_values} from ${card_name} to ${card_name2}');
+        $args['mana_values'] = self::getPowerValues([$card]);
+        self::messageTo($player_id, $message, $args);
+
+        self::moveManaCard($player_id, [$card], true);
+    }
+
     static function moveManaCard($player_id, $cards_before, $anonimyze = true) {
         $args = [
             'player_id' => intval($player_id),
@@ -254,6 +327,11 @@ class Notifications {
             return ManaCard::get($card['id']);
         }, $cards_before));
 
+        $cards = array_filter($cards, function ($card) {
+            $exclude = ManaCard::isCrystalShard($card) && $card['location'] == CardLocation::Discard();
+            return !$exclude;
+        });
+
         $args['cards_after'] = array_values($cards);
         self::notify($player_id, 'onMoveManaCards', '', $args);
 
@@ -261,6 +339,20 @@ class Notifications {
             $args['cards_after'] = array_values(Game::anonynizeCards($cards));
         }
         self::notifyAll('onMoveManaCards', '', $args, $player_id);
+    }
+
+    public static function healFromCard(string $card_name, int $player_id, int $heal, int $life_remaining) {
+        $message = clienttranslate('${player_name} heals ${heal} from ${card_name}');
+
+        self::notifyAll('onHealthChanged', $message, [
+            'player_id' => intval($player_id),
+            "player_name" => self::getPlayerName($player_id),
+            "life_remaining" => $life_remaining,
+            "heal" => $heal,
+            "nbr_heal" => $heal,
+            "card_name" => $card_name,
+            "i18n" => ["card_name"],
+        ]);
     }
 
     public static function receiveDamageFromCard(string $card_name, int $player_id, int $damage, int $life_remaining) {

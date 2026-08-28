@@ -1,13 +1,13 @@
 <?php
 /**
  * This script generates (updates) material.inc.php from CSV like file (pipe separated) defining game element problems.
- * File material.inc.php must have special mark up to identify insertion points (see example below). 
+ * File material.inc.php must have special mark up to identify insertion points (see example below).
  * You need to install php cli to run it.
- * 
+ *
  * usage: php genmap.php material.csv [<path to material.inc.php>]
- * 
+ *
  * Sample input file
- * 
+ *
  id|type|name|tooltip|tooltip_action|php
  train|token|Locomotive|The number of a locomotive indicates the number of spaces it can reach on a railroad:
  factory|token|Factory|
@@ -18,7 +18,7 @@
  $this->token_types = array(
  // --- gen php begin ---
 
- // --- gen php end --- 
+ // --- gen php end ---
  );
 
  * After running script
@@ -39,14 +39,14 @@
  'name' => clienttranslate("2 Black Track Advancements"),
  'tooltip' => clienttranslate("This action gives you two advancements of black track. You cannot use this action if you cannot complete all advancements."),
  'o'=>"1,0,1,bb",
- ),       
- // --- gen php end --- 
+ ),
+ // --- gen php end ---
  );
 
  * If file is not called material.csv, if called foo.csv use  // --- gen php begin foo ---
  * This way can generate multiple sections
 
- Special columns: 
+ Special columns:
  id - the id of object (string or number)
  variant - special field appended to string as as @xxx  - used to have versions of material file depending on game variants
  -con - way to use php constant to alias an numeric id, defines are currently not injected but dumped on console
@@ -61,9 +61,9 @@ $g_field_names = null;
 $g_field_extra = [ ];
 $g_index = 1;
 $g_trans = [ 'name','tooltip','tooltip_action','gametext', 'description' ];
-$g_separator = ';';
+$g_separator = '|';
 $g_separator_sub = '';
-$g_noquotes = [ 'type', 'activation', 'icon', "activation_auto", "banned" ];
+$g_noquotes = [ 'type', 'activation', 'icon', "activation_auto", "banned", "artifact", "is_relic" ];
 
 function handle_header($fields) {
     global $g_field_names;
@@ -114,8 +114,8 @@ function genbody($incsv) {
                         $g_separator = $value; #field separator
                         break;
                     case '_sub' :
-                        // use another character insped of sepator if separttor is needed, 
-                        // i.e. if sepator is | and you need this in string, you can define / as replacement so / will be replace to | in the string 
+                        // use another character insped of sepator if separttor is needed,
+                        // i.e. if sepator is | and you need this in string, you can define / as replacement so / will be replace to | in the string
                         $g_separator_sub = $value;
                         break;
                     case '_tr' :
@@ -183,7 +183,7 @@ function genbody($incsv) {
         $fullid = $id;
         $variant = get_field('variant', $fields);
         if ($variant)
-            $fullid = "${id}@" . $fields ['variant'];
+            $fullid = "{$id}@" . $fields ['variant'];
         $con = get_field('-con', $fields);
         $concomment = "";
         if ($con) {
@@ -194,7 +194,7 @@ function genbody($incsv) {
             fwrite($out, " $fullid");
         else
             fwrite($out, " '$fullid'");
-        fwrite($out, " => [ ${concomment}\n");
+        fwrite($out, " => [ {$concomment}\n");
         $map = array_merge($g_field_extra, $fields);
         foreach ( $fields as $key => $value ) {
             if ($value === null && array_key_exists($key, $g_field_extra)) {
@@ -231,7 +231,7 @@ function genbody($incsv) {
             } else {
                 $exp = "\"$value\"";
             }
-            fwrite($out, "  \"$key\" => $exp,\n");
+            fwrite($out, "  '$key' => $exp,\n");
         }
         fwrite($out, "],\n");
     }
@@ -277,7 +277,7 @@ echo "Reading $incsv\n";
 if (isset($argv [2])) {
     $infile = $argv [2];
 } else {
-    $infile = dirname("$incsv") . "/../material.inc.php";
+    $infile = dirname("$incsv") . "/../modules/php/material.inc.php";
 }
 echo "Writing $infile\n";
 $in = fopen($infile, "r") or die("Unable to open file! $in");

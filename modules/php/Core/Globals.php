@@ -2,13 +2,13 @@
 
 namespace WizardsGrimoire\Core;
 
-use APP_DbObject;
+use Bga\Games\WizardsGrimoire\Game;
 
 /*
  * Globals: Access to global variables
  */
 
-class Globals extends APP_DbObject {
+class Globals {
 
     public static function resetOnNewTurn() {
         Globals::setDiscountAttackSpell(0);
@@ -23,6 +23,17 @@ class Globals extends APP_DbObject {
         Globals::setInteractionPlayer(0);
         Globals::setCoolDownDelayedSpellIds([]);
         Globals::setCardsTimesPlayed([]);
+        Globals::setCursedMindIncreaseCost(0);
+        Globals::setCrescendoIncreaseCost(0);
+        Globals::setDiscountPremonition(0);
+        Globals::setPlayedSpellsThisTurn([]);
+
+        $player_id = Players::getPlayerId();
+        $sunken_skull_player = Globals::getSunkenSkullActivePlayer();
+        // Reset when the player with Sunken Skull ends their turn
+        if ($sunken_skull_player > 0 && $sunken_skull_player != $player_id) {
+            Globals::setSunkenSkullActivePlayer(0);
+        }
     }
 
     public static function getCardsTimesPlayed() {
@@ -79,6 +90,14 @@ class Globals extends APP_DbObject {
         return Globals::set(WG_GV_COOLDOWN_ONGOING_SPELLS, $spell_delayed_ids);
     }
 
+    public static function getConsecutivelyAttackSpellCountBefore() {
+        return Game::get()->globals->get('consecutively_attack_spell_cast_before', 0);
+    }
+
+    public static function setConsecutivelyAttackSpellCountBefore(int $value) {
+        Game::get()->globals->set('consecutively_attack_spell_cast_before', $value);
+    }
+
     public static function getConsecutivelyAttackSpellCount() {
         return intval(Game::get()->getGameStateValue(WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST));
     }
@@ -99,6 +118,38 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_DISCOUNT_ATTACK_SPELL, $value);
     }
 
+    public static function getCursedMindIncreaseCost() {
+        return Game::get()->globals->get('cursed_mind_increase_cost', 0);
+    }
+
+    public static function setCursedMindIncreaseCost(int $value) {
+        Game::get()->globals->set('cursed_mind_increase_cost', $value);
+    }
+
+    public static function setCrescendoIncreaseCost(int $value) {
+        Game::get()->globals->set('crescendo_increase_cost', $value);
+    }
+
+    public static function getCrescendoIncreaseCost() {
+        return Game::get()->globals->get('crescendo_increase_cost', 0);
+    }
+
+    public static function setTimeWalkDecreaseCost(int $value) {
+        Game::get()->globals->set('time_walk_decrease_cost', $value);
+    }
+    
+    public static function getTimeWalkDecreaseCost() {
+        return Game::get()->globals->get('time_walk_decrease_cost', 0);
+    }
+
+    public static function getDiscountPremonition() {
+        return intval(Game::get()->globals->get('discount_premonition', 0));
+    }
+
+    public static function setDiscountPremonition(int $value) {
+        Game::get()->globals->set('discount_premonition', $value);
+    }
+
     public static function getDiscountNextSpell() {
         return intval(Game::get()->getGameStateValue(WG_VAR_DISCOUNT_NEXT_SPELL));
     }
@@ -115,76 +166,6 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_INTERACTION_PLAYER, $player_id);
     }
 
-    public static function getIsActiveBattleVision() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION)) == Players::getOpponentId();
-    }
-
-    public static function setIsActiveBattleVision(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_BATTLE_VISION, $value);
-    }
-
-    public static function getIsActiveGrowth() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH)) == Players::getPlayerId();
-    }
-
-    public static function getIsActiveGrowthPlayer() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_GROWTH));
-    }
-
-    public static function setIsActiveGrowth(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_GROWTH, $value);
-    }
-
-    public static function getIsActiveLullaby() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_LULLABY)) > 0;
-    }
-
-    public static function getIsActiveLullabyPlayer() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_LULLABY));
-    }
-
-    public static function setIsActiveLullaby(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_LULLABY, $value);
-    }
-
-    public static function getIsActivePowerHungry() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY)) > 0;
-    }
-
-    public static function getIsActivePowerHungryPlayer() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY));
-    }
-
-    public static function setIsActivePowerHungry(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_POWER_HUNGRY, $value);
-    }
-
-    public static function getIsActivePuppetmaster() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER)) == Players::getOpponentId();
-    }
-
-    public static function setIsActivePuppetmaster(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_PUPPETMASTER, $value);
-    }
-
-    public static function getIsActiveSecretOath() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH)) > 0;
-    }
-
-    public static function getIsActiveSecretOathPlayer() {
-        return intval(Game::get()->getGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH));
-    }
-
-    public static function setIsActiveSecretOath(bool $isActive, int $player_id) {
-        $value = $isActive ? $player_id : 0;
-        Game::get()->setGameStateValue(WG_VAR_IS_ACTIVE_SECRET_OATH, $value);
-    }
-
     public static function getLastAddedSpell() {
         return intval(Game::get()->getGameStateValue(WG_VAR_LAST_ADDED_SPELL));
     }
@@ -199,6 +180,14 @@ class Globals extends APP_DbObject {
 
     public static function setCurrentBasicAttackPower(int $value) {
         Game::get()->setGameStateValue(WG_VAR_CURRENT_BASIC_ATTACK_POWER, $value);
+    }
+
+    public static function getCurrentBasicAttackDamage() {
+        return intval(Game::get()->globals->get(WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE, 0));
+    }
+
+    public static function setCurrentBasicAttackDamage(int $value) {
+        Game::get()->globals->set(WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE, $value);
     }
 
     public static function getPlayerTurn() {
@@ -279,18 +268,58 @@ class Globals extends APP_DbObject {
         Game::get()->setGameStateValue(WG_VAR_SPELL_PLAYED, $card_id);
     }
 
+    public static function getFrozenGobletActive() {
+        return Game::get()->globals->get('frozen_goblet_active', false);
+    }
+
+    public static function setFrozenGobletActive(bool $active) {
+        Game::get()->globals->set('frozen_goblet_active', $active);
+    }
+
+    public static function getSunkenSkullActivePlayer() {
+        return Game::get()->globals->get('sunken_skull_active_player', 0);
+    }
+
+    public static function setSunkenSkullActivePlayer(int $player_id) {
+        Game::get()->globals->set('sunken_skull_active_player', $player_id);
+    }
+
+    public static function getPlayedSpellsThisTurn() {
+        return Game::get()->globals->get('played_spells_this_turn', []);
+    }
+
+    public static function setPlayedSpellsThisTurn(array $spells) {
+        Game::get()->globals->set('played_spells_this_turn', $spells);
+    }
+
+    public static function getNumberOfCardDrawByCardEffectThisTurn() {
+        return Game::get()->globals->get('number_of_card_draw_by_card_effect_this_turn', []);
+    }
+
+    public static function setNumberOfCardDrawByCardEffectThisTurn(array $values) {
+        Game::get()->globals->set('number_of_card_draw_by_card_effect_this_turn', $values);
+    }
+
+    public static function getPlayedSpellIdsThisGame(int $player_id) {
+        return Game::get()->globals->get('played_spell_ids_this_game_' . $player_id, []);
+    }
+
+    public static function setPlayedSpellIdsThisGame(int $player_id, array $spell_ids) {
+        Game::get()->globals->set('played_spell_ids_this_game_' . $player_id, $spell_ids);
+    }
+
     /*************************
      **** GENERIC METHODS ****
      *************************/
 
     private static function set(string $name, /*object|array*/ $obj) {
         $jsonObj = json_encode($obj);
-        self::DbQuery("INSERT INTO `global_variables`(`name`, `value`)  VALUES ('$name', '$jsonObj') ON DUPLICATE KEY UPDATE `value` = '$jsonObj'");
+        Game::get()->DbQuery("INSERT INTO `global_variables`(`name`, `value`)  VALUES ('$name', '$jsonObj') ON DUPLICATE KEY UPDATE `value` = '$jsonObj'");
     }
 
     private static function get(string $name, $asArray = null) {
         /** @var string */
-        $json_obj = self::getUniqueValueFromDB("SELECT `value` FROM `global_variables` where `name` = '$name'");
+        $json_obj = Game::get()->getUniqueValueFromDB("SELECT `value` FROM `global_variables` where `name` = '$name'");
         if ($json_obj) {
             $object = json_decode($json_obj, $asArray);
             return $object;

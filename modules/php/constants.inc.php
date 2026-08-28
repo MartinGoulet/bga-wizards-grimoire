@@ -17,6 +17,11 @@ define('WG_GAME_OPTION_EXT_KICKSTARTER_1', 'gameOptionKickStarter1');
 define('WG_GAME_OPTION_SHIFT_SAND_PROMO_ID', 102);
 define('WG_GAME_OPTION_SHIFT_SAND_PROMO', 'gameOptionShiftingSandPromo');
 
+const WG_GAME_OPTION_SET = 'gameOptionSet';
+const WG_GAME_OPTION_SET_ID = 103;
+const WG_GAME_OPTION_SET_BASE = 1;
+const WG_GAME_OPTION_SET_SHIFTING_SAND = 2;
+const WG_GAME_OPTION_SET_ALL = 50;
 
 /*
  * Game variables
@@ -40,6 +45,7 @@ define('WG_VAR_IS_ACTIVE_SECRET_OATH', 'is_active_secret_oath');
 define('WG_VAR_CONSECUTIVELY_ATTACK_SPELL_CAST', 'cons_attk_spell');
 define('WG_VAR_PREVIOUS_BASIC_ATTACK_POWER', 'prev_basic_attack');
 define('WG_VAR_CURRENT_BASIC_ATTACK_POWER', 'curr_basic_attack');
+define('WG_VAR_CURRENT_BASIC_ATTACK_DAMAGE', 'curr_basic_dmg');
 define('WG_VAR_PREVIOUS_SPELL_PLAYED', 'prev_spell_played');
 define('WG_VAR_PREVIOUS_SPELL_DAMAGE', 'prev_spell_damage');
 define('WG_VAR_PREVIOUS_SPELL_COST', 'prev_spell_cost');
@@ -98,6 +104,12 @@ define('ST_CAST_SPELL_CD_OPPONENT_SWITCH_OPPONENT', 156);
 define('ST_CAST_SPELL_CD_OPPONENT_RETURN_CURRENT_PLAYER', 157);
 
 
+define('ST_DESTROY_ACTIVATE_DELAYED', 160);
+define('ST_DESTROY_SWITCH_OPPONENT', 161);
+define('ST_DESTROY_INTERACTION', 162);
+define('ST_DESTROY_RETURN_PLAYER', 163);
+
+
 define('ST_BASIC_ATTACK_START', 66);
 define('ST_BASIC_ATTACK', 6);
 define('ST_BASIC_ATTACK_DAMAGE', 61);
@@ -107,6 +119,13 @@ define('ST_BASIC_ATTACK_RETURN_CURRENT_PLAYER', 64);
 define('ST_BASIC_ATTACK_END', 65);
 
 define('ST_NEXT_PLAYER', 7);
+
+const ST_SPELL_SEEING_STONE = 70;
+const ST_CAST_SPELL_END = 71;
+const ST_DESTROY_SPELL = 72;
+const ST_DESTROY_SPELL_REPLACE = 73;
+
+const ST_RELIC = 73;
 
 
 /*
@@ -121,11 +140,13 @@ define('WG_STAT_NBR_DRAFT_ATTACK', 'nbr_draft_red');
 define('WG_STAT_NBR_DRAFT_UTILITY', 'nbr_draft_purple');
 define('WG_STAT_NBR_DRAFT_REGENERATION', 'nbr_draft_green');
 
+define('WG_STAT_NBR_DRAFT_COST_0', 'nbr_draft_cost_1');
 define('WG_STAT_NBR_DRAFT_COST_1', 'nbr_draft_cost_1');
 define('WG_STAT_NBR_DRAFT_COST_2', 'nbr_draft_cost_2');
 define('WG_STAT_NBR_DRAFT_COST_3', 'nbr_draft_cost_3');
 define('WG_STAT_NBR_DRAFT_COST_4', 'nbr_draft_cost_4');
 define('WG_STAT_NBR_DRAFT_COST_5', 'nbr_draft_cost_5');
+define('WG_STAT_NBR_DRAFT_COST_6', 'nbr_draft_cost_5');
 
 define('WG_STAT_NBR_MANA_DRAW', 'nbr_mana_draw');
 
@@ -157,3 +178,6 @@ define('WG_ICON_SET_BASE_1', 'Base_1');
 define('WG_ICON_SET_BASE_2', 'Base_2');
 define('WG_ICON_SET_KICKSTARTER_1', 'KickStarter_1');
 define('WG_ICON_SET_SAND_1', 'Sand_1');
+const WG_ICON_SET_SHIFTING_SAND_1 = 'Shifting_Sand_1';
+const WG_ICON_SET_SHIFTING_SAND_2 = 'Shifting_Sand_2';
+const WG_ICON_SET_FORBIDDEN_SCROLLS = 'Forbidden_Scrolls';
