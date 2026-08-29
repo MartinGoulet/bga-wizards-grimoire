@@ -74,6 +74,7 @@
   top: 140px;
   left: 16px;
   gap: 1px;
+  color: black;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-title {
   font-family: RoughAntiquaAllCaps;
@@ -1676,6 +1677,9 @@ body > .card {
   font-style: italic;
   font-weight: 600;
 }
+.player_small_board .icon-wrapper > div.text-info {
+  color: black;
+}
 .player_small_board .icon-wrapper > div .wg-icon-log {
   cursor: pointer;
   min-width: 24px;
@@ -1748,6 +1752,7 @@ body > .card {
   background-color: white;
   display: flex;
   gap: 5px;
+  color: black;
 }
 .player-table .wg-health .wg-health-icon {
   width: 18px;

@@ -32,11 +32,11 @@ class PlayerPanel {
 
       const smallBoardHtml = `<div id="player_small_board_${player.id}" class="player_small_board">
             <div id="hand-icon-wrapper-${player.id}" class="icon-wrapper">
-                <div>
-                <div id="player_small_board_${player.id}_hand_value" class="text"></div>
-                <div id="player_small_board_${player.id}_hand_icon" class="icon hand"></div>
+                <div class="text-info">
+                    <div id="player_small_board_${player.id}_hand_value" class="text"></div>
+                    <div id="player_small_board_${player.id}_hand_icon" class="icon hand"></div>
                 </div>
-                <div>
+                <div class="text-info">
                     <div class="text">${_("Turn")} </div>  
                     <div id="player_small_board_${player.id}_turn_value" class="text"></div>
                 </div>
