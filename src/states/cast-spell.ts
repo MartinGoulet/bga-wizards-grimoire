@@ -1,7 +1,8 @@
 class CastSpellStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellArgs): void {
+      log("Entering CastSpell state", args);
       this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
       const player_table = this.game.getCurrentPlayerTable();
@@ -11,6 +12,11 @@ class CastSpellStates implements StateHandler {
       player_table.setDiscountNextSpell(args.discount_next_spell);
       player_table.setPreviousSpellPlayed(args.previous_spell_played);
       player_table.setPreviousSpellCost(args.previous_spell_cost);
+      player_table.setCursedMindIncreaseCost(args.cursed_mind);
+      player_table.setTimeWalkDecreaseCost(args.time_walk);
+      player_table.setCrescendoIncreaseCost(args.crescendo);
+      player_table.setPremonitionDiscount(args['premonition_discount']);
+      player_table.spell_discount = args.spell_discount;
 
       const selectableCards = repertoire
          .getCards()
@@ -28,7 +34,7 @@ class CastSpellStates implements StateHandler {
                const repertoire = this.game.getCurrentPlayerTable().spell_repertoire;
                const selectedSpell: SpellCard = repertoire.getSelection()[0];
                this.game.markCardAsSelected(selectedSpell);
-               this.game.actionManager.setup("castSpell", "actionCastMana");
+               this.game.actionManager.setup("actCastSpell", "actionCastMana");
                this.game.actionManager.addAction(selectedSpell);
                this.game.actionManager.activateNextAction();
             }, 10);
@@ -43,10 +49,15 @@ class CastSpellStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: CastSpellArgs): void {
-      const handleCastSpell = () => {};
+      const handleCastSpell = async () => {
+         const selectedSpell = this.game.getCurrentPlayerTable().spell_repertoire.getSelection()[0];
+         if (selectedSpell != null) {
+            await this.game.bgaPerformAction("actCastSpell", { id: selectedSpell.id });
+         }
+      };
 
-      const handlePass = () => {
-         this.game.takeAction("pass");
+      const handlePass = async () => {
+         await this.game.bgaPerformAction("actPass");
       };
 
       if (this.hasSpellAvailable()) {
@@ -80,5 +91,9 @@ interface CastSpellArgs {
    discount_next_spell: number;
    previous_spell_played: number;
    previous_spell_cost: number;
+   cursed_mind: number;
+   time_walk: number;
+   crescendo: number;
    undo: boolean;
+   spell_discount: Record<number, number>;
 }

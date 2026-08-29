@@ -1,4 +1,4 @@
-type TakeActionType = "castSpell" | "castSpellInteraction" | "activateDelayedSpell" | "replaceSpell";
+type TakeActionType = "actCastSpell" | "actCastSpellInteraction" | "actActivateDelayedSpell" | "actReplaceSpell";
 
 class ActionManager {
    private actions: string[] = [];
@@ -6,9 +6,9 @@ class ActionManager {
    private current_card: SpellCard[];
    private take_action: TakeActionType;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
-   public setup(takeAction: TakeActionType = "castSpell", newAction?: string) {
+   public setup(takeAction: TakeActionType = "actCastSpell", newAction?: string) {
       log("actionmanager.reset");
 
       this.reset();
@@ -54,6 +54,14 @@ class ActionManager {
       return this;
    }
 
+   public addActionRelic(card: SpellCard) {
+      this.current_card.push(card);
+      const card_type = this.game.getCardType(card);
+      log("actionmanager.addActionRelic", card, card_type);
+      this.addActionPriv("actionReplaceRelic");
+      return this;
+   }
+
    private addActionPriv(actions?: string[] | string) {
       if (!actions) {
          log("actionmanager.addActionPriv no actions");
@@ -72,7 +80,7 @@ class ActionManager {
       return this;
    }
 
-   public activateNextAction() {
+   public async activateNextAction() {
       log("activateNextAction");
       log(this.actions_args);
       if (this.actions.length > 0) {
@@ -89,12 +97,16 @@ class ActionManager {
          is_error ? this.game.restoreGameState() : this.game.clearSelection();
       };
 
+      const values = { values: this.actions_args };
+
       const data = {
          card_id: this.current_card[0].id,
-         args: this.actions_args.join(";"),
+         args: JSON.stringify(values),
       };
 
-      this.game.takeAction(this.take_action, data, null, handleError);
+      console.log("Data to send:", data);
+
+      await this.game.bgaPerformAction(this.take_action, data).catch(handleError);
    }
 
    public getCurrentCard(): SpellCard {
@@ -122,9 +134,9 @@ class ActionManager {
       const args: SelectSpellPoolStatesArgs = {
          skip: {
             label: "Pass",
-            action: () => {
+            action: async () => {
                this.actions.splice(0);
-               this.game.takeAction("pass");
+               await this.game.bgaPerformAction("actPass");
             },
          },
          cancel: false,
@@ -162,7 +174,7 @@ class ActionManager {
       });
    }
 
-   private actionCastSpell_Submit() {
+   private async actionCastSpell_Submit() {
       const new_spell_id = Number(this.actions_args[0]);
       const old_spell_pos = Number(this.actions_args[1]);
 
@@ -175,15 +187,12 @@ class ActionManager {
          is_error ? this.game.restoreGameState() : this.game.clearSelection();
       };
 
-      this.game.takeAction(
-         "replaceSpell",
-         {
+      await this.game
+         .bgaPerformAction("actReplaceSpell", {
             new_spell_id,
             old_spell_id,
-         },
-         null,
-         handleError,
-      );
+         })
+         .catch(handleError);
    }
 
    /////////////////////////////////////////////////////////////
@@ -243,12 +252,18 @@ class ActionManager {
 
    private actionFriendlyTruce() {
       const msg = _("${you} may give ${nbr} cards from your hand or pass");
-      this.selectManaHand(3, msg, true, { canCancel: false, skip: { label: "Pass" } });
+      this.selectManaHand(3, msg, true, {
+         canCancel: false,
+         skip: { label: "Pass" },
+      });
    }
 
    private actionGuiltyBond() {
       const msg = _("${you} may select ${nbr} mana card(s) from your hand");
-      this.selectManaHand(1, msg, true, { canCancel: true, skip: { label: "Pass" } });
+      this.selectManaHand(1, msg, true, {
+         canCancel: true,
+         skip: { label: "Pass" },
+      });
    }
 
    private actionMistOfPain() {
@@ -330,7 +345,7 @@ class ActionManager {
 
    private actionTimeDistortion() {
       const msg = _("${you} may select up to ${nbr} mana card(s)");
-      this.selectMana(2, msg, false);
+      this.selectManaDeck(2, msg, false);
    }
 
    private actionToxicGift() {
@@ -417,10 +432,7 @@ class ActionManager {
       this.game.markCardAsSelected(this.getCurrentCard());
       const player_table = this.game.getCurrentPlayerTable();
 
-      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
-         const manacount = player_table.mana_cooldown[Number(card.location_arg)].getCards().length;
-         return manacount > 0;
-      });
+      const selectableSpell = player_table.spell_repertoire.getCards();
 
       const msg = _("${you} must select one of your spell");
       this.game.setClientState(states.client.selectSpell, {
@@ -451,6 +463,8 @@ class ActionManager {
          .getManaDeckWithSpellOver()
          .filter((deck) => deck.isEmpty())
          .map((deck) => deck.location);
+
+      emptyDecks.push(Number(this.getCurrentCard().location_arg));
 
       const msg = _("${you} must select ${nbr} mana card(s)").replace("${nbr}", "1");
 
@@ -506,8 +520,7 @@ class ActionManager {
    }
 
    private actionFatalFlaw() {
-      const canIgnore =
-         this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
+      const canIgnore = this.game.getPlayerTable(this.game.getOpponentId()).getSpellSlotAvailables().length == 6;
       this.actionSelectManaCoolDownOpponent(canIgnore);
    }
 
@@ -626,6 +639,528 @@ class ActionManager {
    }
 
    ///////////////////////////////////////////////////////////////////////////////////
+   //    _____ _     _  __ _   _                _____                 _       __
+   //   / ____| |   (_)/ _| | (_)              / ____|               | |     /_ |
+   //  | (___ | |__  _| |_| |_ _ _ __   __ _  | (___   __ _ _ __   __| |___   | |
+   //   \___ \| '_ \| |  _| __| | '_ \ / _` |  \___ \ / _` | '_ \ / _` / __|  | |
+   //   ____) | | | | | | | |_| | | | | (_| |  ____) | (_| | | | | (_| \__ \  | |
+   //  |_____/|_| |_|_|_|  \__|_|_| |_|\__, | |_____/ \__,_|_| |_|\__,_|___/  |_|
+   //                                   __/ |
+   //                                  |___/
+   ///////////////////////////////////////////////////////////////////////////////////
+
+   private actionAnimalAmbush() {
+      const msg = _("${you} may select an opponent's spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getOpponentId(),
+            cancel: true,
+            pass: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionBelch() {
+      const msg = _("${you} must move all revealed mana cards");
+      this.game.setClientState(states.client.belch, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
+   private actionCorruption() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must select one of your spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            pass: false,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionCyclone() {
+      this.actions.push("actionSelectManaFrom", "actionSelectManaTo");
+      this.activateNextAction();
+   }
+
+   private actionDanceOfAgony() {
+      const player_table = this.game.getCurrentPlayerTable();
+      if (player_table.hand.getCards().length <= 4) {
+         this.activateNextAction();
+         return;
+      }
+
+      const count = player_table.hand.getCards().length - 4;
+      this.selectManaHand(count, _("${you} must select ${nbr} mana card(s) to discard"), true);
+   }
+
+   private actionDarkOffering() {
+      this.actions.push("actionSelectManaFrom");
+      this.activateNextAction();
+   }
+
+   private actionDevotion() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Draw 2 cards"),
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: _("Discard a mana card off 1 of your other spells"),
+               action: () => {
+                  this.actions.push("actionSelectManaFrom");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionExchangeLife() {
+      const args: QuestionArgs = {
+         cancel: true,
+         options: [
+            {
+               label: _("Yes"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("No"),
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+               color: "alert",
+            },
+         ],
+      };
+
+      this.game.setClientState(states.client.question, {
+         descriptionmyturn: `${this.getCardName()} : ${_("Do you want to exchange hands with your opponent?")}`,
+         args,
+      });
+   }
+
+   private actionGloom() {
+      this.actions.push("actionGloomDiscard", "actionGloomSpell");
+      this.activateNextAction();
+   }
+
+   private actionGloomDiscard() {
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+            ignore: () => {
+               this.actions.shift();
+               this.activateNextAction();
+            },
+         } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionGloomSpell() {
+      const msg = _("${you} must select one of your other spell");
+      const player_table = this.game.getCurrentPlayerTable();
+      
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== this.getCurrentCard().id;
+      });
+
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionIceBlast() {
+      const label1 = _("Discard your hand and deal 5 damage");
+      const label2 = _("Place a mana card from the mana deck on one of your opponent's spells");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: label2,
+               action: () => this.actionSelectSpellOpponent(),
+            },
+         ],
+      });
+   }
+
+   private actionImagination() {
+      const label1 = _("Draw 2 cards");
+      const label2 = _("Gain mana until you have the same quantity of mana cards as your opponent");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionMirage() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionPlague() {
+      const label1 = _("Deal 2 damage to yourself and draw 4 cards");
+      const label2 = _("Ignore");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => this.activateNextAction(),
+               color: "alert",
+            },
+         ],
+      });
+   }
+
+   private actionPsychicPain() {
+      const msg = _("${you} may select ${nbr} mana card(s) to place on top of Mana Deck");
+      this.selectManaHand(1, msg, false, {
+         skip: {
+            label: _("Pass"),
+            message: _("Are you sure that you don't want to place a mana card on top of the Mana Deck?"),
+         },
+      });
+   }
+
+   private actionRaiseTheDead() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must choose a spell to not place a mana card on");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionReplaceRelic() {
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: false,
+         },
+      });
+   }
+
+   private actionResurrectionScroll() {
+      this.actions.push("actionResurrectionScrollMana", "actionResurrectionScrollSpell");
+      this.activateNextAction();
+   }
+
+   private actionResurrectionScrollMana() {
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+            ignore: () => {
+               this.addArgument("0");
+               this.activateNextAction();
+            }
+         } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionResurrectionScrollSpell() {
+      const msg = _("${you} must select a spell in the spell pool or the discard pile");
+      this.game.setClientState(states.client.selectSpellPoolOrDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
+   private actionRevelation() {
+      const msg = _("${you} may select up to ${nbr} mana card(s)");
+      const exclude: number[] = [];
+
+      const args = {
+         player_id: this.game.getPlayerId(),
+         card: this.getCurrentCard(),
+         count: 1,
+         exact: true,
+         exclude,
+         nbr: 1,
+      };
+
+      this.game.setClientState(states.client.selectManaDeck, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args,
+      });
+   }
+
+   private actionRigmarole() {
+      const msg = _("${you} may give ${nbr} cards from your hand or pass");
+      this.selectManaHand(1, msg, true, {
+         canCancel: false,
+         skip: { label: "Pass" },
+      });
+   }
+
+   private actionSecondLifePick() {
+      this.actionSelectManaFrom();
+   }
+
+   private actionSongOfShadows() {
+      if (this.game.tableCenter.manaDiscard.getCards().length == 0) {
+         this.activateNextAction();
+         return;
+      }
+      const msg = _("${you} may select ${nbr} mana card(s) from the discard").replace("${nbr}", "1");
+      this.game.setClientState(states.client.selectManaDiscard, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            count: 1,
+            exact: true,
+         } as SelectManaDiscardArgs,
+      });
+   }
+
+   private actionSpiritDance() {
+      this.actions.push("actionOpponentSelectManaFrom", "actionOpponentSelectManaTo");
+      this.activateNextAction();
+   }
+
+   private actionSplitSoul() {
+      const label1 = _("Draw 4 cards");
+      const label2 = _("Discard a mana card off 2 of your other spells");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => this.activateNextAction(),
+            },
+            {
+               label: label2,
+               action: () => this.selectManaDeck(2, _("${you} may select up to ${nbr} mana card(s)"), false),
+            },
+         ],
+      });
+   }
+
+   private actionTimeWalk() {
+
+      const options = [
+         {label: _("Draw 5"), value: "5"},
+         {label: _("Draw 4"), value: "4"},
+         {label: _("Draw 3"), value: "3"},
+         {label: _("Draw 2"), value: "2"},
+         {label: _("Draw 1"), value: "1"},
+         {label: _("Draw 0"), value: "0"},
+      ];
+
+      this.question({
+         cancel: true,
+         options: options.map((opt) => ({
+            label: opt.label,
+            action: () => {
+               this.addArgument(opt.value);
+               this.activateNextAction();
+            },
+         })),
+      });
+   }
+
+   private actionTransference() {
+      const label1 = _("Draw 6 cards");
+      const label2 = _("Draw 2 cards and destroy a spell card");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.addActionPriv("actionTransferenceSelectPlayer");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTransferenceSelectPlayer() {
+      const label1 = _("Select yourself");
+      const label2 = _("Select your opponent");
+
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: label1,
+               action: () => {
+                  this.addArgument("1");
+                  this.addActionPriv(["actionTransferenceSelectSpell", "actionTransfigure_Pool"]);
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: label2,
+               action: () => {
+                  this.addArgument("2");
+                  this.addActionPriv("actionSelectSpellOpponent");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   private actionTransferenceSelectSpell() {
+      const player_table = this.game.getCurrentPlayerTable();
+      const current_card = this.getCurrentCard();
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== current_card.id;
+      });
+
+      const msg = _("${you} must select one of your other spell");
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionTransferenceOpponent() {
+      const state = this.game.stateManager.states[states.server.castSpellInteraction] as CastSpellInteractionStates;
+      const { transference_spell } = state.args as any as { transference_spell: Card };
+
+      this.game.markCardAsSelected(transference_spell);
+
+      const msg = _("${you} must select a spell in the spell pool");
+      this.game.setClientState(states.client.selectSpellPool, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            cancel: true,
+         },
+      });
+   }
+
+   private actionWizardsGambit() {
+      const msg = _("${you} must select one of your other spell");
+      const player_table = this.game.getCurrentPlayerTable();
+      
+      const selectableSpell = player_table.spell_repertoire.getCards().filter((card) => {
+         return card.id !== this.getCurrentCard().id;
+      });
+
+      this.game.setClientState(states.client.selectSpell, {
+         descriptionmyturn: this.getCardName() + " : " + msg,
+         args: {
+            player_id: this.game.getPlayerId(),
+            selection: selectableSpell,
+            cancel: true,
+            ignore: () => {
+               this.activateNextAction();
+            },
+         } as SelectSpellArgs,
+      });
+   }
+
+   private actionUnchained() {
+      this.question({
+         cancel: true,
+         options: [
+            {
+               label: _("Deal 5 damage"),
+               action: () => {
+                  this.addArgument("1");
+                  this.activateNextAction();
+               },
+            },
+            {
+               label: _("Gain 5 health"),
+               action: () => {
+                  this.addArgument("2");
+                  this.activateNextAction();
+               },
+            },
+         ],
+      });
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////
    //     _____                      _                         _   _
    //    / ____|                    (_)              /\       | | (_)
    //   | |  __  ___ _ __   ___ _ __ _  ___ ___     /  \   ___| |_ _  ___  _ __  ___
@@ -719,8 +1254,10 @@ class ActionManager {
       });
    }
 
-   private actionSelectManaFrom() {
-      const player_table = this.game.getCurrentPlayerTable();
+   private actionSelectManaFrom(player_id: number = 0) {
+      if (player_id == 0) player_id = this.game.getPlayerId();
+
+      const player_table = this.game.getPlayerTable(player_id);
 
       const emptyDecks = player_table
          .getManaDeckWithSpellOver()
@@ -730,9 +1267,10 @@ class ActionManager {
       const argsSuppl = {
          exclude: emptyDecks,
          ignore: null,
+         player_id: player_id,
       };
 
-      if (this.actions.length > 0 && this.actions[0] == "actionSelectManaTo") {
+      if (this.actions.length > 0 && ["actionSelectManaTo", "actionOpponentSelectManaTo"].includes(this.actions[0])) {
          argsSuppl.ignore = () => {
             // Remove the actionSelectManaTo
             this.actions.shift();
@@ -747,17 +1285,28 @@ class ActionManager {
       this.selectManaDeck(1, msgFrom, true, argsSuppl);
    }
 
-   private actionSelectManaTo() {
+   private actionSelectManaTo(player_id: number = 0) {
+      if (player_id == 0) player_id = this.game.getPlayerId();
+
       const manaDeckPosition: number = Number(this.actions_args[this.actions_args.length - 1]);
-      const player_table = this.game.getCurrentPlayerTable();
+      const player_table = this.game.getPlayerTable(player_id);
       player_table.mana_cooldown[manaDeckPosition].forceSelected();
 
       const argsSuppl = {
          exclude: [manaDeckPosition],
+         player_id: player_id,
       };
 
       const msg = _("${you} must select ${nbr} mana cool down pile for the destination");
       this.selectManaDeck(1, msg, true, argsSuppl);
+   }
+
+   private actionOpponentSelectManaTo() {
+      this.actionSelectManaTo(this.game.getOpponentId());
+   }
+
+   private actionOpponentSelectManaFrom() {
+      this.actionSelectManaFrom(this.game.getOpponentId());
    }
 
    private actionSelectTwoManaCardFromDiscard() {
@@ -800,7 +1349,7 @@ class ActionManager {
       if (previous_spell_id > 0 && previous_spell_cost <= 1) {
          const spell = this.game.spellsManager.getCardById(previous_spell_id);
          const card_type = this.game.getCardType(spell);
-         if (spell.type !== SpellType.Echo) {
+         if (![SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(spell.type)) {
             this.addActionPriv(card_type.js_actions);
          }
       }
@@ -962,7 +1511,12 @@ class ActionManager {
    private returnManaCardToDeck(msg: string, count: number, canCancel: boolean, canPass: boolean = false) {
       msg = msg.replace("${nbr}", count.toString());
 
-      const args = { count, canCancel, exact: true, canPass } as SelectManaReturnDeckStatesArgs;
+      const args = {
+         count,
+         canCancel,
+         exact: true,
+         canPass,
+      } as SelectManaReturnDeckStatesArgs;
 
       this.game.setClientState(states.client.selectManaReturnDeck, {
          descriptionmyturn: this.getCardName() + " : " + msg,

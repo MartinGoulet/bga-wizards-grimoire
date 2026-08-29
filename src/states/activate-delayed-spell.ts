@@ -1,7 +1,7 @@
 class ActivateDelayedSpellStates implements StateHandler {
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
    onEnteringState(args: ActivateDelayedSpellArgs): void {
       this.game.clearSelection();
       if (!this.game.isCurrentPlayerActive()) return;
@@ -30,7 +30,7 @@ class ActivateDelayedSpellStates implements StateHandler {
    onUpdateActionButtons(args: ActivateDelayedSpellArgs): void {
       const handleConfirm = () => {
          const selection = this.player_table.spell_repertoire.getSelection()[0];
-         this.game.actionManager.setup("activateDelayedSpell");
+         this.game.actionManager.setup("actActivateDelayedSpell");
          this.game.actionManager.addActionDelayed(selection);
          this.game.actionManager.activateNextAction();
       };

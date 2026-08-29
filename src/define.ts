@@ -1,5 +1,3 @@
-declare const define;
-
 define([
    "dojo",
    "dojo/_base/declare",
@@ -10,7 +8,7 @@ define([
 ], function (dojo, declare) {
    return declare(
       "bgagame.wizardsgrimoire",
-      [ebg.core.gamegui, ebg.core.core_patch_tooltip_position],
-      new WizardsGrimoire(),
+      [ebg.core.gamegui, wg.core_patch_tooltip_position],
+      new Game(),
    );
 });

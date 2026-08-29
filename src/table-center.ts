@@ -37,22 +37,26 @@ class TableCenter {
 
    public manaDiscardDisplay: LineStock<ManaCard>;
    public manaRevealed: LineStock<ManaCard>;
+   public spellRevealed: LineStock<SpellCard>;
    public basicAttack: LineStock<ManaCard>;
 
-   public mana_counter: { [number: number]: ebg.counter } = {};
+   public mana_counter: { [number: number]: Counter } = {};
 
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       this.place(`<span class="wg-title">${_("Basic Attack")}</span>`, "basic-attack-wrapper");
       this.place(`<div id="basic-attack"></div>`, "basic-attack-wrapper");
       this.place(`<span class="wg-title">${_("Revealed Mana")}</span>`, "mana-revealed-wrapper");
       this.place(`<div id="mana-revealed"></div>`, "mana-revealed-wrapper");
       this.place(`<span class="wg-title">${_("Discard")}</span>`, "mana-discard-display-wrapper");
       this.place(`<div id="mana-discard-display"></div>`, "mana-discard-display-wrapper");
+      this.place(`<span class="wg-title">${_("Revealed Spell")}</span>`, "spell-revealed-wrapper");
+      this.place(`<div id="spell-revealed"></div>`, "spell-revealed-wrapper");
 
       this.spellDeck = new HiddenDeck(game.spellsManager, document.getElementById("spell-deck"));
       this.manaDeck = new HiddenDeck(game.manasManager, document.getElementById("mana-deck"));
       this.spellDiscard = new VisibleDeck(game.spellsManager, document.getElementById("spell-discard"));
       this.manaDiscard = new DiscardPile(game.manasManager, document.getElementById("mana-discard"));
+      this.spellRevealed = new LineStock(game.spellsManager, document.getElementById("spell-revealed"));
 
       this.spellPool = new SlotStock(game.spellsManager, document.getElementById("spell-pool"), {
          slotsIds: game.gamedatas.slot_count == 8 ? EIGHT_CARDS_SLOT : TEN_CARDS_SLOT,
@@ -153,10 +157,10 @@ class TableCenter {
       this.manaDiscardDisplay.setSelectionMode(toDisplay ? "multiple" : "none");
    }
 
-   public onRefillSpell(card: SpellCard) {
+   public async onRefillSpell(card: SpellCard) {
       const topHiddenCard = { ...card, isHidden: true };
       this.spellDeck.setCardNumber(this.spellDeck.getCardNumber(), topHiddenCard);
-      this.spellPool.addCard(card);
+      await this.spellPool.addCard(card);
    }
 
    private place(html: string, element: string) {

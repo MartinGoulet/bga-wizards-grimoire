@@ -1,5 +1,5 @@
 class GameOptions {
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       const display = document.getElementById("game-phases");
       if (display) {
          display.parentElement.removeChild(display);

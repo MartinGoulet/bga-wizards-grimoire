@@ -7,7 +7,7 @@ class BadFortuneStates implements StateHandler {
 
    private mana_count: number = 0;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: BadFortuneArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;

@@ -1,76 +1,13 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 var DEFAULT_ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-function throttle(callback, delay) {
-    var last;
-    var timer;
-    return function () {
-        var context = this;
-        var now = +new Date();
-        var args = arguments;
-        if (last && now < last + delay) {
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                last = now;
-                callback.apply(context, args);
-            }, delay);
-        }
-        else {
-            last = now;
-            callback.apply(context, args);
-        }
-    };
-}
-var advThrottle = function (func, delay, options) {
-    if (options === void 0) { options = { leading: true, trailing: false }; }
-    var timer = null, lastRan = null, trailingArgs = null;
-    return function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (timer) {
-            lastRan = this;
-            trailingArgs = args;
-            return;
-        }
-        if (options.leading) {
-            func.call.apply(func, __spreadArray([this], args, false));
-        }
-        else {
-            lastRan = this;
-            trailingArgs = args;
-        }
-        var coolDownPeriodComplete = function () {
-            if (options.trailing && trailingArgs) {
-                func.call.apply(func, __spreadArray([lastRan], trailingArgs, false));
-                lastRan = null;
-                trailingArgs = null;
-                timer = setTimeout(coolDownPeriodComplete, delay);
-            }
-            else {
-                timer = null;
-            }
-        };
-        timer = setTimeout(coolDownPeriodComplete, delay);
-    };
-};
 var ZoomManager = (function () {
     function ZoomManager(settings) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         this.settings = settings;
         if (!settings.element) {
             throw new DOMException('You need to set the element to wrap in the zoom element');
         }
-        this._zoomLevels = (_a = settings.zoomLevels) !== null && _a !== void 0 ? _a : DEFAULT_ZOOM_LEVELS;
+        this.zoomLevels = (_a = settings.zoomLevels) !== null && _a !== void 0 ? _a : DEFAULT_ZOOM_LEVELS;
         this._zoom = this.settings.defaultZoom || 1;
         if (this.settings.localStorageZoomKey) {
             var zoomStr = localStorage.getItem(this.settings.localStorageZoomKey);
@@ -85,7 +22,7 @@ var ZoomManager = (function () {
         settings.element.classList.add('bga-zoom-inner');
         if ((_b = settings.smooth) !== null && _b !== void 0 ? _b : true) {
             settings.element.dataset.smooth = 'true';
-            settings.element.addEventListener('transitionend', advThrottle(function () { return _this.zoomOrDimensionChanged(); }, this.throttleTime, { leading: true, trailing: true, }));
+            settings.element.addEventListener('transitionend', function () { return _this.zoomOrDimensionChanged(); });
         }
         if ((_d = (_c = settings.zoomControls) === null || _c === void 0 ? void 0 : _c.visible) !== null && _d !== void 0 ? _d : true) {
             this.initZoomControls(settings);
@@ -93,31 +30,23 @@ var ZoomManager = (function () {
         if (this._zoom !== 1) {
             this.setZoom(this._zoom);
         }
-        this.throttleTime = (_e = settings.throttleTime) !== null && _e !== void 0 ? _e : 100;
-        window.addEventListener('resize', advThrottle(function () {
+        window.addEventListener('resize', function () {
             var _a;
             _this.zoomOrDimensionChanged();
             if ((_a = _this.settings.autoZoom) === null || _a === void 0 ? void 0 : _a.expectedWidth) {
                 _this.setAutoZoom();
             }
-        }, this.throttleTime, { leading: true, trailing: true, }));
+        });
         if (window.ResizeObserver) {
-            new ResizeObserver(advThrottle(function () { return _this.zoomOrDimensionChanged(); }, this.throttleTime, { leading: true, trailing: true, })).observe(settings.element);
+            new ResizeObserver(function () { return _this.zoomOrDimensionChanged(); }).observe(settings.element);
         }
-        if ((_f = this.settings.autoZoom) === null || _f === void 0 ? void 0 : _f.expectedWidth) {
+        if ((_e = this.settings.autoZoom) === null || _e === void 0 ? void 0 : _e.expectedWidth) {
             this.setAutoZoom();
         }
     }
     Object.defineProperty(ZoomManager.prototype, "zoom", {
         get: function () {
             return this._zoom;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(ZoomManager.prototype, "zoomLevels", {
-        get: function () {
-            return this._zoomLevels;
         },
         enumerable: false,
         configurable: true
@@ -132,8 +61,8 @@ var ZoomManager = (function () {
         }
         var expectedWidth = (_a = this.settings.autoZoom) === null || _a === void 0 ? void 0 : _a.expectedWidth;
         var newZoom = this.zoom;
-        while (newZoom > this._zoomLevels[0] && newZoom > ((_c = (_b = this.settings.autoZoom) === null || _b === void 0 ? void 0 : _b.minZoomLevel) !== null && _c !== void 0 ? _c : 0) && zoomWrapperWidth / newZoom < expectedWidth) {
-            newZoom = this._zoomLevels[this._zoomLevels.indexOf(newZoom) - 1];
+        while (newZoom > this.zoomLevels[0] && newZoom > ((_c = (_b = this.settings.autoZoom) === null || _b === void 0 ? void 0 : _b.minZoomLevel) !== null && _c !== void 0 ? _c : 0) && zoomWrapperWidth / newZoom < expectedWidth) {
+            newZoom = this.zoomLevels[this.zoomLevels.indexOf(newZoom) - 1];
         }
         if (this._zoom == newZoom) {
             if (this.settings.localStorageZoomKey) {
@@ -144,14 +73,6 @@ var ZoomManager = (function () {
             this.setZoom(newZoom);
         }
     };
-    ZoomManager.prototype.setZoomLevels = function (zoomLevels, newZoom) {
-        if (!zoomLevels || zoomLevels.length <= 0) {
-            return;
-        }
-        this._zoomLevels = zoomLevels;
-        var zoomIndex = newZoom && zoomLevels.includes(newZoom) ? this._zoomLevels.indexOf(newZoom) : this._zoomLevels.length - 1;
-        this.setZoom(this._zoomLevels[zoomIndex]);
-    };
     ZoomManager.prototype.setZoom = function (zoom) {
         var _a, _b, _c, _d;
         if (zoom === void 0) { zoom = 1; }
@@ -159,8 +80,8 @@ var ZoomManager = (function () {
         if (this.settings.localStorageZoomKey) {
             localStorage.setItem(this.settings.localStorageZoomKey, '' + this._zoom);
         }
-        var newIndex = this._zoomLevels.indexOf(this._zoom);
-        (_a = this.zoomInButton) === null || _a === void 0 ? void 0 : _a.classList.toggle('disabled', newIndex === this._zoomLevels.length - 1);
+        var newIndex = this.zoomLevels.indexOf(this._zoom);
+        (_a = this.zoomInButton) === null || _a === void 0 ? void 0 : _a.classList.toggle('disabled', newIndex === this.zoomLevels.length - 1);
         (_b = this.zoomOutButton) === null || _b === void 0 ? void 0 : _b.classList.toggle('disabled', newIndex === 0);
         this.settings.element.style.transform = zoom === 1 ? '' : "scale(".concat(zoom, ")");
         (_d = (_c = this.settings).onZoomChange) === null || _d === void 0 ? void 0 : _d.call(_c, this._zoom);
@@ -173,23 +94,23 @@ var ZoomManager = (function () {
     };
     ZoomManager.prototype.zoomOrDimensionChanged = function () {
         var _a, _b;
-        this.settings.element.style.width = "".concat(this.wrapper.offsetWidth / this._zoom, "px");
-        this.wrapper.style.height = "".concat(this.settings.element.offsetHeight * this._zoom, "px");
+        this.settings.element.style.width = "".concat(this.wrapper.getBoundingClientRect().width / this._zoom, "px");
+        this.wrapper.style.height = "".concat(this.settings.element.getBoundingClientRect().height, "px");
         (_b = (_a = this.settings).onDimensionsChange) === null || _b === void 0 ? void 0 : _b.call(_a, this._zoom);
     };
     ZoomManager.prototype.zoomIn = function () {
-        if (this._zoom === this._zoomLevels[this._zoomLevels.length - 1]) {
+        if (this._zoom === this.zoomLevels[this.zoomLevels.length - 1]) {
             return;
         }
-        var newIndex = this._zoomLevels.indexOf(this._zoom) + 1;
-        this.setZoom(newIndex === -1 ? 1 : this._zoomLevels[newIndex]);
+        var newIndex = this.zoomLevels.indexOf(this._zoom) + 1;
+        this.setZoom(newIndex === -1 ? 1 : this.zoomLevels[newIndex]);
     };
     ZoomManager.prototype.zoomOut = function () {
-        if (this._zoom === this._zoomLevels[0]) {
+        if (this._zoom === this.zoomLevels[0]) {
             return;
         }
-        var newIndex = this._zoomLevels.indexOf(this._zoom) - 1;
-        this.setZoom(newIndex === -1 ? 1 : this._zoomLevels[newIndex]);
+        var newIndex = this.zoomLevels.indexOf(this._zoom) - 1;
+        this.setZoom(newIndex === -1 ? 1 : this.zoomLevels[newIndex]);
     };
     ZoomManager.prototype.setZoomControlsColor = function (color) {
         if (this.zoomControls) {
@@ -448,8 +369,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -474,6 +395,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var AnimationManager = (function () {
     function AnimationManager(game, settings) {
         this.game = game;
@@ -496,24 +426,24 @@ var AnimationManager = (function () {
         return document.visibilityState !== 'hidden' && !this.game.instantaneousMode;
     };
     AnimationManager.prototype.play = function (animation) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         return __awaiter(this, void 0, void 0, function () {
-            var settings, _a;
-            var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+            var settings, _m;
             return __generator(this, function (_o) {
                 switch (_o.label) {
                     case 0:
                         animation.played = animation.playWhenNoAnimation || this.animationsActive();
                         if (!animation.played) return [3, 2];
                         settings = animation.settings;
-                        (_b = settings.animationStart) === null || _b === void 0 ? void 0 : _b.call(settings, animation);
-                        (_c = settings.element) === null || _c === void 0 ? void 0 : _c.classList.add((_d = settings.animationClass) !== null && _d !== void 0 ? _d : 'bga-animations_animated');
-                        animation.settings = __assign(__assign({}, animation.settings), { duration: (_f = (_e = this.settings) === null || _e === void 0 ? void 0 : _e.duration) !== null && _f !== void 0 ? _f : 500, scale: (_h = (_g = this.zoomManager) === null || _g === void 0 ? void 0 : _g.zoom) !== null && _h !== void 0 ? _h : undefined });
-                        _a = animation;
+                        (_a = settings.animationStart) === null || _a === void 0 ? void 0 : _a.call(settings, animation);
+                        (_b = settings.element) === null || _b === void 0 ? void 0 : _b.classList.add((_c = settings.animationClass) !== null && _c !== void 0 ? _c : 'bga-animations_animated');
+                        animation.settings = __assign(__assign({}, animation.settings), { duration: (_e = (_d = this.settings) === null || _d === void 0 ? void 0 : _d.duration) !== null && _e !== void 0 ? _e : 500, scale: (_g = (_f = this.zoomManager) === null || _f === void 0 ? void 0 : _f.zoom) !== null && _g !== void 0 ? _g : undefined });
+                        _m = animation;
                         return [4, animation.animationFunction(this, animation)];
                     case 1:
-                        _a.result = _o.sent();
-                        (_k = (_j = animation.settings).animationEnd) === null || _k === void 0 ? void 0 : _k.call(_j, animation);
-                        (_l = settings.element) === null || _l === void 0 ? void 0 : _l.classList.remove((_m = settings.animationClass) !== null && _m !== void 0 ? _m : 'bga-animations_animated');
+                        _m.result = _o.sent();
+                        (_j = (_h = animation.settings).animationEnd) === null || _j === void 0 ? void 0 : _j.call(_h, animation);
+                        (_k = settings.element) === null || _k === void 0 ? void 0 : _k.classList.remove((_l = settings.animationClass) !== null && _l !== void 0 ? _l : 'bga-animations_animated');
                         return [3, 3];
                     case 2: return [2, Promise.resolve(animation)];
                     case 3: return [2];
@@ -736,11 +666,11 @@ var CardStock = (function () {
         }
         return promise;
     };
-    CardStock.prototype.addCards = function (cards_1, animation_1, settings_1) {
-        return __awaiter(this, arguments, void 0, function (cards, animation, settings, shift) {
+    CardStock.prototype.addCards = function (cards, animation, settings, shift) {
+        if (shift === void 0) { shift = false; }
+        return __awaiter(this, void 0, void 0, function () {
             var promises, result, others, _loop_2, i, results;
             var _this = this;
-            if (shift === void 0) { shift = false; }
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -935,9 +865,9 @@ var CardStock = (function () {
         (_a = this.onCardClick) === null || _a === void 0 ? void 0 : _a.call(this, card);
     };
     CardStock.prototype.animationFromElement = function (element, fromRect, settings) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var side, cardSides_1, animation, result;
-            var _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -1017,8 +947,9 @@ var SlideAndBackAnimation = (function (_super) {
 var Deck = (function (_super) {
     __extends(Deck, _super);
     function Deck(manager, element, settings) {
+        var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-        var _this = _super.call(this, manager, element) || this;
+        _this = _super.call(this, manager, element) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('deck');
@@ -1117,11 +1048,11 @@ var Deck = (function (_super) {
         var cards = this.getCards();
         return cards.length ? cards[cards.length - 1] : null;
     };
-    Deck.prototype.shuffle = function () {
-        return __awaiter(this, arguments, void 0, function (animatedCardsMax, fakeCardSetter) {
+    Deck.prototype.shuffle = function (animatedCardsMax, fakeCardSetter) {
+        if (animatedCardsMax === void 0) { animatedCardsMax = 10; }
+        return __awaiter(this, void 0, void 0, function () {
             var animatedCards, elements, i, newCard, newElement;
             var _this = this;
-            if (animatedCardsMax === void 0) { animatedCardsMax = 10; }
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1158,8 +1089,9 @@ var Deck = (function (_super) {
 var LineStock = (function (_super) {
     __extends(LineStock, _super);
     function LineStock(manager, element, settings) {
+        var _this = this;
         var _a, _b, _c, _d;
-        var _this = _super.call(this, manager, element, settings) || this;
+        _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('line-stock');
@@ -1174,8 +1106,9 @@ var LineStock = (function (_super) {
 var SlotStock = (function (_super) {
     __extends(SlotStock, _super);
     function SlotStock(manager, element, settings) {
+        var _this = this;
         var _a, _b;
-        var _this = _super.call(this, manager, element, settings) || this;
+        _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         _this.slotsIds = [];
@@ -1271,8 +1204,9 @@ var SlotStock = (function (_super) {
 var HandStock = (function (_super) {
     __extends(HandStock, _super);
     function HandStock(manager, element, settings) {
+        var _this = this;
         var _a, _b, _c, _d;
-        var _this = _super.call(this, manager, element, settings) || this;
+        _this = _super.call(this, manager, element, settings) || this;
         _this.manager = manager;
         _this.element = element;
         element.classList.add('hand-stock');

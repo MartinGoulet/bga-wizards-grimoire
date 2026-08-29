@@ -162,6 +162,9 @@ class SpellRepertoire extends SlotStock<SpellCard> {
          case "SecretOath":
             element.dataset.secret_oath = "" + value;
             break;
+         case "GlassShield":
+            element.dataset.glass_shield = "" + value;
+            break;
       }
    }
 }
@@ -172,7 +175,7 @@ class Hand extends HandStock<ManaCard> {
       manager: CardManager<ManaCard>,
       element: HTMLElement,
       protected current_player: boolean,
-      protected hand_counter: ebg.counter,
+      protected hand_counter: Counter,
    ) {
       super(manager, element, {
          // center: true,

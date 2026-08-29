@@ -1,4 +1,9 @@
 const SpellType = {
-   Echo: "102",
-   DeathSpiral: "105",
+   Sand1: {
+      DeathSpiral: "105",
+      Echo: "102",
+   },
+   ForbiddenScrolls: {
+      Echo: "264",
+   }
 };

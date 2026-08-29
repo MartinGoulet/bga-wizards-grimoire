@@ -6,6 +6,7 @@ namespace Bga\Games\WizardsGrimoire\States;
 
 use Bga\GameFramework\StateType;
 use Bga\GameFramework\States\GameState;
+use Bga\GameFramework\VisibleSystemException;
 use Bga\Games\WizardsGrimoire\Game;
 use WizardsGrimoire\Cards\Forbidden_Scrolls\SilencingAmulet;
 use WizardsGrimoire\Cards\KickStarter_1\WildBloom;
@@ -47,21 +48,21 @@ class DestroySpell extends GameState
             $spell = $this->globals->get("destroy_target_spell");
 
             if ($callback === "own") {
-                // $newSpell = SpellCard::get($this->globals->get("destroy_new_spell_id"));
-                // SpellCard::replaceSpell($spell, $newSpell, "destroy");
+                $newSpell = SpellCard::get($this->globals->get("destroy_new_spell_id"));
+                SpellCard::replaceSpell($spell, $newSpell, "destroy");
 
-                // $spellId = $this->globals->get("transference_spell_id");
-                // $spellPlayed = SpellCard::get($spellId);
-                // if (SpellCard::getInstanceOfCard($spellPlayed) instanceof SilencingAmulet) {
-                //     SpellCard::destroyRelic(SpellCard::get($spellId));
-                // }
+                $spellId = $this->globals->get("transference_spell_id");
+                $spellPlayed = SpellCard::get($spellId);
+                if (SpellCard::getInstanceOfCard($spellPlayed) instanceof SilencingAmulet) {
+                    SpellCard::destroyRelic(SpellCard::get($spellId));
+                }
 
-                // $this->gamestate->nextState("continue");
+                $this->gamestate->nextState("continue");
 
-                $spellId = intval($this->globals->get("transference_spell_id"));
-                Globals::setSpellPlayed($spellId);
-                Globals::setInteractionPlayer(0);
-                $this->gamestate->nextState("castSpellInteraction");
+                // $spellId = intval($this->globals->get("transference_spell_id"));
+                // Globals::setSpellPlayed($spellId);
+                // Globals::setInteractionPlayer(0);
+                // $this->gamestate->nextState("castSpellInteraction");
             } else {
                 // L'opponent doit choisir son nouveau spell
                 Players::setPlayerId(Players::getOpponentIdOf($interactionPlayer));
@@ -129,7 +130,7 @@ class DestroySpell extends GameState
         }
 
         // Vérifier si un trigger a demandé une interaction
-        if (Globals::getInteractionPlayer() > 0) {
+        if (Globals::getInteractionPlayer() > 0 && $cardInfo["activation"] == WG_SPELL_ACTIVATION_DELAYED) {
             Globals::setCoolDownDelayedSpellIds([$spell['id']]);
             Players::setPlayerId(Globals::getInteractionPlayer());
             Globals::setInteractionPlayer(0);

@@ -103,6 +103,7 @@
       top: 0;
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       height: 24px;
       z-index: 20;
 
@@ -154,7 +155,7 @@
 
       &[data-count="14"],
       &[data-count="15"],
-      &[data-count="16"]{
+      &[data-count="16"] {
          --card-overlap: 60px !important;
          --card-shift: 3px !important;
          --card-inclination: 3deg !important;
@@ -168,7 +169,6 @@
          --card-shift: 2px !important;
          --card-inclination: 2deg !important;
       }
-
    }
 }
 
@@ -257,11 +257,44 @@
    }
 }
 
-[data-discount-next-attack="1"] {
-   .secondstrike_icon {
+.wg-ongoing-spell-sunkenskull {
+   .sunkenskull_icon {
       display: flex;
       border: 2px solid white;
-      background-position-x: -847px;;
+      background-position-x: -629px;
+      background-position-y: -451px;
+      background-image: url("img/shifting_sands-front.jpg");
+   }
+}
+
+.wg-ongoing-spell-blossom {
+   .blossom_icon {
+      background-image: url("img/shifting_sands-front.jpg");
+      display: flex;
+      border: 2px solid white;
+      background-position-x: -645px;
+      background-position-y: -849px;
+   }
+}
+
+.wg-ongoing-spell-glassshield {
+   [data-glass_shield="false"] {
+      .glassshield_icon {
+         background-image: url("img/shifting_sands-front.jpg");
+         display: flex;
+         border: 2px solid white;
+         background-position-x: -255px;
+         background-position-y: -170px;
+      }
+   }
+}
+
+[data-discount-next-attack="1"] {
+   .secondstrike_icon {
+      background-image: url("img/shifting_sands-front.jpg");
+      display: flex;
+      border: 2px solid white;
+      background-position-x: -847px;
       background-position-y: -296px;
    }
 }

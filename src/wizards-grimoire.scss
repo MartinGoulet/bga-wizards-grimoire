@@ -1,11 +1,11 @@
-@import "cards";
-@import "../node_modules/bga-zoom/bga-zoom";
-@import "../node_modules/bga-cards/bga-cards";
-@import "modal";
-@import "table-center";
-@import "player-panel";
-@import "player-table";
-@import "game-options";
+@use "cards";
+@use "../node_modules/bga-zoom/bga-zoom";
+@use "../node_modules/bga-cards/bga-cards";
+@use "modal";
+@use "table-center";
+@use "player-panel";
+@use "player-table";
+@use "game-options";
 
 @font-face {
    font-family: "BrushSerifEdward";
@@ -20,15 +20,19 @@
 html.mobile_version,
 .mobile_version .mode_3d #game_play_area_background {
    background: url("img/background-mobile.png");
-   background-size: 100% auto;
+   background-attachment: fixed;
    background-repeat: repeat;
+   background-size: 100% auto;
+   background-size: cover;
 }
 
 html.desktop_version,
 .desktop_version .mode_3d #game_play_area_background {
    background: url("img/background-desktop.png");
-   background-size: 100% auto;
+   background-attachment: fixed;
    background-repeat: repeat;
+   background-size: 100% auto;
+   background-size: cover;
 }
 
 #game_play_area {

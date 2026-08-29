@@ -1,14 +1,16 @@
 class PlayerTable {
    public player_id: number;
 
+   public spell_discount: Record<number, number> = {};
+
    public spell_repertoire: SpellRepertoire;
    public mana_cooldown: { [pos: number]: ManaDeck } = {};
    public hand: Hand;
-   public health: ebg.counter;
+   public health: Counter;
 
    private current_player: boolean;
 
-   constructor(public game: WizardsGrimoire, player: WizardsGrimoirePlayerData) {
+   constructor(public game: Game, player: WizardsGrimoirePlayerData) {
       this.player_id = Number(player.id);
       this.current_player = this.player_id == this.game.getPlayerId();
 
@@ -20,10 +22,14 @@ class PlayerTable {
          `data-current-player="${pCurrent}"`,
          `data-discount-next-spell="0"`,
          `data-discount-next-attack="0"`,
+         `data-cursed-mind="0"`,
+         `data-crescendo="0"`,
          `data-battle_vision="false"`,
          `data-lullaby="false"`,
          `data-puppetmaster="false"`,
          `data-secret_oath="false"`,
+         `data-glass_shield="false"`,
+         `data-sunken_skull="false"`,
       ];
 
       const html = `
@@ -71,6 +77,8 @@ class PlayerTable {
          this.setupSecretOath();
          this.setupGrowth();
          this.setupPowerHungry();
+         this.setupSunkenSkull();
+         this.setupGlassShield();
       }
 
       this.spell_repertoire = new SpellRepertoire(
@@ -232,6 +240,38 @@ class PlayerTable {
       this.getPlayerTableDiv().dataset.discountNextSpell = amount.toString();
    }
 
+   setCursedMindIncreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.cursedMind = amount.toString();
+   }
+
+   getCursedMindIncreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.cursedMind);
+   }
+
+   getCrescendoIncreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.crescendo);
+   }
+
+   setCrescendoIncreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.crescendo = amount.toString();
+   }
+
+   getTimeWalkDecreaseCost() {
+      return Number(this.getPlayerTableDiv().dataset.timeWalk);
+   }
+
+   setTimeWalkDecreaseCost(amount: number) {
+      this.getPlayerTableDiv().dataset.timeWalk = amount.toString();
+   }
+
+   setPremonitionDiscount(amount: number) {
+      this.getPlayerTableDiv().dataset.premonitionDiscount = amount.toString();
+   }
+   
+   getPremonitionDiscount() {
+      return Number(this.getPlayerTableDiv().dataset.premonitionDiscount);
+   }
+
    getPreviousSpellCost() {
       return Number(this.getPlayerTableDiv().dataset.previousSpellCost);
    }
@@ -332,6 +372,30 @@ class PlayerTable {
          gametext: _(
             "If you have a 4 power mana in your hand, you must give it to your opponent immediately",
          ),
+      });
+   }
+
+   private setupSunkenSkull() {
+      this.setupIcon({
+         id: "sunkenskull",
+         title: _("Sunken skull"),
+         gametext: _("All your mana cards have -1 power"),
+      });
+   }
+
+   private setupBlossom() {
+      this.setupIcon({
+         id: "blossom",
+         title: _("Blossom"),
+         gametext: _("Increase the power of all mana by 2 during your turn"),
+      });
+   }
+
+   private setupGlassShield() {
+      this.setupIcon({
+         id: "glassshield",
+         title: _("Glass shield"),
+         gametext: _("For your basic attack, you must reveal a card of the same power in order to deal damage"),
       });
    }
 

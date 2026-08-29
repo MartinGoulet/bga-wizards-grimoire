@@ -1,5 +1,5 @@
 class PlayerNewTurnStates implements StateHandler {
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: PlayerNewTurnArgs): PlayerNewTurnArgs {
       console.log("Player new turn: ", args);

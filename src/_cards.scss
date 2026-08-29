@@ -2,6 +2,41 @@
 //    outline: 3px dashed red;
 // }
 
+#table[data-card-set="shifting_sand"] .wg-card {
+   .wg-card-mana-back,
+   .wg-card-mana-front {
+      background: url("img/mana-shifting-sand.jpg");
+      background-size: 500% 100%;
+   }
+   .wg-card-mana-back {
+      background-position-x: -400%;
+   }
+   .wg-card-mana-front {
+      @for $col from 0 through 3 {
+         &[data-type="#{($col + 1)}"] {
+            background-position-x: ($col * -100%);
+         }
+      }
+   }
+}
+
+#table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] {
+   background: url("img/shifting_sands-front.jpg");
+   background-size: 1000% 700%;
+   background-position: -200% -500%;
+
+   .wg-icon-crystal-shard {
+      position: absolute;
+      font-size: 40px;
+      top: 95px;
+      left: calc(50% - 11px);
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      font-weight: bold;
+      pointer-events: none;
+   }
+}
+
 .wg-card {
    width: var(--width);
    height: var(--height);
@@ -78,21 +113,35 @@
 
    @for $row from 0 through 6 {
       @for $col from 0 through 9 {
-         &[data-type="#{($row * 10) + ($col + 1)}"] {
+         &[data-img="#{($row * 10) + ($col + 1)}"] {
             background-position: ($col * -100%) ($row * -100%);
          }
       }
    }
 }
 
-.wg-card .wg-card-spell-front.shifting_sand,
-.wg-tooltip-card .wg-card .shifting_sand {
+.wg-card .wg-card-spell-front.promo_shifting_sand,
+.wg-tooltip-card .wg-card .promo_shifting_sand {
    background: url("img/spell-front-2.jpg");
    background-size: calc(var(--width) * 10) calc(var(--height) * 7);
 
    @for $row from 0 through 6 {
       @for $col from 0 through 9 {
-         &[data-type="#{($row * 10) + ($col + 1) + 100}"] {
+         &[data-img="#{($row * 10) + ($col + 1)}"] {
+            background-position: ($col * -100%) ($row * -100%);
+         }
+      }
+   }
+}
+
+.wg-card .wg-card-spell-front.shifting_sand_set,
+.wg-tooltip-card .wg-card .shifting_sand {
+   background: url("img/shifting_sands-front.jpg");
+   background-size: calc(var(--width) * 10) calc(var(--height) * 7);
+
+   @for $row from 0 through 6 {
+      @for $col from 0 through 9 {
+         &[data-img="#{($row * 10) + ($col + 1)}"] {
             background-position: ($col * -100%) ($row * -100%);
          }
       }
@@ -169,7 +218,9 @@
 }
 
 .wg-selected .front {
-   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5), inset 0 0 6px 5px #00ffff !important;
+   box-shadow:
+      1px 1px 2px 1px rgba(0, 0, 0, 0.5),
+      inset 0 0 6px 5px #00ffff !important;
 }
 
 .wg-deck-selected,
@@ -203,8 +254,25 @@
    }
 }
 
+.wg-mana-modifiers {
+   display: flex;
+   position: relative;
+   justify-content: space-between;
+   flex-direction: column;
+}
+
+.mana-cooldown .wg-mana-modifiers {
+   margin-top: 20px;
+}
+
 .wg-ongoing-spell-growth {
    .wg-mana-icon.wg-icon-growth {
+      display: inline-flex;
+   }
+}
+
+.wg-ongoing-spell-sunkenskull {
+   .wg-mana-icon.wg-icon-sunken-skull {
       display: inline-flex;
    }
 }
@@ -218,7 +286,7 @@
    line-height: 30px;
    justify-content: center;
    color: white;
-   position: absolute;
+   // position: absolute;
    left: 3px;
    top: 3px;
 }

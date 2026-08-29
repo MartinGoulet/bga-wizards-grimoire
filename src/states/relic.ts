@@ -1,18 +1,14 @@
-class CastSpellInteractionStates implements StateHandler {
-   public args: CastSpellInteractionArgs
+class RelicStates implements StateHandler {
+   public args: RelicArgs
    constructor(private game: Game) {}
 
-   onEnteringState(args: CastSpellInteractionArgs): void {
+   onEnteringState(args: RelicArgs): void {
       this.args = args;
       this.game.markCardAsSelected(args.spell);
       if (!this.game.isCurrentPlayerActive()) return;
 
       this.game.actionManager.setup("actCastSpellInteraction");
-      this.game.actionManager.addActionInteraction(args.spell);
-      if ([SpellType.Sand1.Echo, SpellType.ForbiddenScrolls.Echo].includes(args.spell.type)) {
-         // Echo
-         this.game.actionManager.addArgument(args.previous_spell_played.toString());
-      }
+      this.game.actionManager.addActionRelic(args.spell);
       setTimeout(() => {
          this.game.actionManager.activateNextAction();
       }, 10);
@@ -22,14 +18,14 @@ class CastSpellInteractionStates implements StateHandler {
       this.args = undefined;
    }
 
-   onUpdateActionButtons(args: CastSpellInteractionArgs): void {}
+   onUpdateActionButtons(args: RelicArgs): void {}
 
    restoreGameState() {
       return new Promise<boolean>((resolve) => resolve(true));
    }
 }
 
-interface CastSpellInteractionArgs {
+interface RelicArgs {
    spell: SpellCard;
    previous_spell_played: number;
 }

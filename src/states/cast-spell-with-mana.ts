@@ -4,7 +4,7 @@ class CastSpellWithManaStates implements StateHandler {
    private mana_deck: Deck<ManaCard>;
    private player_table: PlayerTable;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: CastSpellWithManaArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;

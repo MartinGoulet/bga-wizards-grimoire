@@ -2,6 +2,7 @@ const states = {
    client: {
       arcaneTactics: "client_arcaneTactics",
       badFortune: "client_badFortune",
+      belch: "client_belch",
       castSpellWithMana: "client_castSpellWithMana",
       eclipse: "client_eclipse",
       question: "client_question",
@@ -13,6 +14,7 @@ const states = {
       selectManaReturnDeck: "client_selectManaReturnDeck",
       selectSpell: "client_selectSpell",
       selectSpellPool: "client_selectSpellPool",
+      selectSpellPoolOrDiscard: "client_selectSpellPoolOrDiscard",
    },
    server: {
       discardMana: "discardMana",
@@ -23,16 +25,19 @@ const states = {
       basicAttackBattleVision: "basicAttackBattleVision",
       activateDelayedSpell: "activateDelayedSpell",
       playerNewTurn: "playerNewTurn",
+      spellSeeingStone: "spellSeeingStone",
+      relic: "relic",
    },
 };
 
 class StateManager {
-   private readonly states: { [statename: string]: StateHandler };
+   public readonly states: { [statename: string]: StateHandler };
    private readonly client_states: StateHandler[] = [];
 
-   constructor(private game: WizardsGrimoire) {
+   constructor(private game: Game) {
       this.states = {
          [states.client.badFortune]: new BadFortuneStates(game),
+         [states.client.belch]: new BelchStates(game),
          [states.client.castSpellWithMana]: new CastSpellWithManaStates(game),
          [states.client.eclipse]: new EclipseStates(game),
          [states.client.question]: new QuestionStates(game),
@@ -44,6 +49,7 @@ class StateManager {
          [states.client.selectManaReturnDeck]: new SelectManaReturnDeckStates(game),
          [states.client.selectSpell]: new SelectSpellStates(game),
          [states.client.selectSpellPool]: new SelectSpellPoolStates(game),
+         [states.client.selectSpellPoolOrDiscard]: new SelectSpellPoolOrDiscardState(game),
 
          [states.server.activateDelayedSpell]: new ActivateDelayedSpellStates(game),
          [states.server.discardMana]: new DiscardManaStates(game),
@@ -51,16 +57,19 @@ class StateManager {
          [states.server.basicAttackBattleVision]: new BasicAttackBattleVisionStates(game),
          [states.server.castSpell]: new CastSpellStates(game),
          [states.server.castSpellInteraction]: new CastSpellInteractionStates(game),
+         [states.server.relic]: new RelicStates(game),
          [states.server.chooseNewSpell]: new ChooseNewSpellStates(game),
          [states.server.playerNewTurn]: new PlayerNewTurnStates(game),
+         [states.server.spellSeeingStone]: new SpellSeeingStoneState(game),
       };
    }
 
    onEnteringState(stateName: string, args: any): void {
-      log("Entering state: " + stateName);
+      log("Entering state: " + stateName, args);
 
-      if (args.phase) {
-         this.game.gameOptions.setPhase(Number(args.phase));
+      const phase = args?.phase ?? args?.args?.phase ?? null;
+      if (phase) {
+         this.game.gameOptions.setPhase(Number(phase));
       } else {
          this.game.gameOptions.setPhase(99);
       }
@@ -68,6 +77,7 @@ class StateManager {
       if (args.args?.ongoing_spells) {
          const { ongoing_spells, players, last_added_spell } = args.args;
 
+         log("ongoing_spells", ongoing_spells);
          ongoing_spells.forEach((value) => {
             if (value.active) log(value);
             this.game.toggleOngoingSpell(value);

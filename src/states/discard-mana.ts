@@ -2,7 +2,7 @@ class DiscardManaStates implements StateHandler {
    private player_table: PlayerTable;
    private nbr_cards_to_discard: number;
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: any): void {
       if (!this.game.isCurrentPlayerActive()) return;
@@ -28,11 +28,11 @@ class DiscardManaStates implements StateHandler {
    }
 
    onUpdateActionButtons(args: SelectManaDeckArgs): void {
-      const handleConfirm = () => {
+      const handleConfirm = async () => {
          const selected_card_ids = this.player_table.hand.getSelection().map((x) => x.id);
          if (selected_card_ids.length == this.nbr_cards_to_discard) {
-            this.game.takeAction("discardMana", {
-               args: selected_card_ids.join(";"),
+            await this.game.bgaPerformAction("actDiscardMana", {
+               card_ids: selected_card_ids.join(","),
             });
          }
       };

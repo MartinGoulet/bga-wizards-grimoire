@@ -3,7 +3,7 @@ class EclipseStates implements StateHandler {
    private player_ids: number[] = [];
    private mana_cooldown_position: number[] = [];
 
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState(args: EclipseArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;

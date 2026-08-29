@@ -1,6 +1,6 @@
 class ReplaceSpellStates implements StateHandler {
    private player_table: PlayerTable;
-   constructor(private game: WizardsGrimoire) {}
+   constructor(private game: Game) {}
 
    onEnteringState({ exclude }: ReplaceSpellArgs): void {
       if (!this.game.isCurrentPlayerActive()) return;
