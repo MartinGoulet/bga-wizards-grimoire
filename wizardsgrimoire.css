@@ -2083,6 +2083,7 @@ html.desktop_version,
 #table {
   display: flex;
   justify-content: center;
+  padding-top: 20px;
 }
 
 #bga-zoom-wrapper {
@@ -2115,6 +2116,7 @@ html.desktop_version,
   padding: 3px 10px;
   font-weight: 600;
   background-color: white;
+  color: black;
 }
 
 .deck[data-empty=true] {

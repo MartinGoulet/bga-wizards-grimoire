@@ -73,14 +73,17 @@ class Game implements Game {
 
       document.getElementById("table").dataset.cardSet = gamedatas.card_set;
 
-      this.zoomManager = new ZoomManager({
+      this.zoomManager = new BgaZoom.Manager({
          element: document.getElementById("table"),
          smooth: false,
          zoomControls: {
             color: "white",
          },
          localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
-         zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
+         autoZoom: {
+            expectedWidth: 740,
+            minZoomLevel: 0.25,
+         },
       });
 
       this.addTooltipHtmlToClass("hand-icon-wrapper", _("Number of cards in hand"), 0);

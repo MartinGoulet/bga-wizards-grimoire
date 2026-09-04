@@ -1428,14 +1428,17 @@ var Game = (function () {
         this.createPlayerPanels(gamedatas);
         this.createPlayerTables(gamedatas);
         document.getElementById("table").dataset.cardSet = gamedatas.card_set;
-        this.zoomManager = new ZoomManager({
+        this.zoomManager = new BgaZoom.Manager({
             element: document.getElementById("table"),
             smooth: false,
             zoomControls: {
                 color: "white",
             },
             localStorageZoomKey: LOCAL_STORAGE_ZOOM_KEY,
-            zoomLevels: [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.25, 1.5, 1.75, 2],
+            autoZoom: {
+                expectedWidth: 740,
+                minZoomLevel: 0.25,
+            },
         });
         this.addTooltipHtmlToClass("hand-icon-wrapper", _("Number of cards in hand"), 0);
         this.setupNotifications();
@@ -5996,13 +5999,16 @@ var SpellType = {
         Echo: "264",
     }
 };
+var BgaZoom;
 define([
     "dojo",
     "dojo/_base/declare",
+    getLibUrl('bga-zoom', '1.x'),
     "ebg/core/gamegui",
     "ebg/counter",
     "ebg/stock",
     g_gamethemeurl + "modules/js/core_patch_tooltip_position.js",
-], function (dojo, declare) {
+], function (dojo, declare, BgaZoom1) {
+    BgaZoom = BgaZoom1;
     return declare("bgagame.wizardsgrimoire", [ebg.core.gamegui, wg.core_patch_tooltip_position], new Game());
 });
