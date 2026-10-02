@@ -2488,13 +2488,17 @@ var ActionManager = (function () {
         this.activateNextAction();
     };
     ActionManager.prototype.actionAnimalAmbush = function () {
+        var _this = this;
         var msg = _("${you} may select an opponent's spell");
         this.game.setClientState(states.client.selectSpell, {
             descriptionmyturn: this.getCardName() + " : " + msg,
             args: {
                 player_id: this.game.getOpponentId(),
                 cancel: true,
-                pass: true,
+                skip: {
+                    label: "Pass",
+                    action: function () { return _this.activateNextAction(); },
+                },
             },
         });
     };
@@ -5785,6 +5789,9 @@ var SelectSpellStates = (function () {
         this.game.addActionButton("btn_confirm", _("Confirm"), handleConfirm);
         if (args.cancel) {
             this.game.addActionButtonClientCancel();
+        }
+        if (args.skip) {
+            this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
         }
         if (args.pass) {
             this.game.addActionButtonPass();

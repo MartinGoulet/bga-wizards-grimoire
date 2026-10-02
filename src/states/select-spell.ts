@@ -42,6 +42,9 @@ class SelectSpellStates implements StateHandler {
       if (args.cancel) {
          this.game.addActionButtonClientCancel();
       }
+      if (args.skip) {
+         this.game.addActionButtonRed("btn_skip", _(args.skip.label), args.skip.action);
+      }
       if (args.pass) {
          this.game.addActionButtonPass();
       }
@@ -60,6 +63,10 @@ interface SelectSpellArgs {
    player_id: number;
    selection?: SpellCard[];
    cancel: boolean;
+   skip?: {
+      label: string;
+      action: () => void;
+   };
    pass?: boolean;
    ignore?: () => void;
 }

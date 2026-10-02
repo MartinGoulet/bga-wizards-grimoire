@@ -656,7 +656,10 @@ class ActionManager {
          args: {
             player_id: this.game.getOpponentId(),
             cancel: true,
-            pass: true,
+            skip: {
+               label: "Pass",
+               action: () => this.activateNextAction(),
+            },
          } as SelectSpellArgs,
       });
    }
