@@ -75,7 +75,7 @@ trait DebugTrait {
         Globals::setSpellPlayed(0);
 
         $players_spell_cards = [
-            "2329673" => ["WildBloom", "Corruption", "Transference", "SilencingAmulet", "Betrayal", "MirrorImage"],
+            "2329673" => ["Blossom", "Corruption", "SneakyDeal", "Growth", "Betrayal", "MirrorImage"],
             "2329672" => ["SilentSupport", "DoomDrop", "HarnessEnergy", "WizardsGambit", "SeeingStone", "BattleVision"],
         ];
         // $players_spell_cards = [
@@ -98,7 +98,7 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329673" => [2, 4, 0, 0, 0, 0],
+            "2329673" => [3, 4, 0, 2, 0, 0],
             "2329672" => [2, 3, 0, 0, 0, 2],
         ];
 

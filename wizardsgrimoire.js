@@ -3341,7 +3341,7 @@ var ManaCardManager = (function (_super) {
                 div.classList.add("wg-card-mana-front");
                 var growthID = "".concat(_this.getId(card), "-growth-id");
                 if (!document.getElementById(growthID)) {
-                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-mana-modifiers\">\n                     <div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>\n                     <div class=\"wg-mana-icon wg-icon-sunken-skull\">-1</div>\n                  </div>"));
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-mana-modifiers\">\n                     <div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>\n                     <div class=\"wg-mana-icon wg-icon-blossom\">+2</div>\n                     <div class=\"wg-mana-icon wg-icon-sunken-skull\">-1</div>\n                  </div>"));
                 }
                 if (div.dataset.type == "5" && div.dataset.type_arg == "1") {
                     div.querySelectorAll(".wg-icon-crystal-shard").forEach(function (e) { return e.remove(); });
@@ -3437,7 +3437,7 @@ var ManaDiscardManager = (function (_super) {
                 div.classList.add("wg-card-mana-front");
                 var growthID = "".concat(_this.getId(card), "-growth-id");
                 if (!document.getElementById(growthID)) {
-                    div.insertAdjacentHTML("afterbegin", "<div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>"));
+                    div.insertAdjacentHTML("afterbegin", "<div class=\"wg-mana-modifiers\">\n                     <div id=\"".concat(growthID, "\" class=\"wg-mana-icon wg-icon-growth\">+1</div>\n                     <div class=\"wg-mana-icon wg-icon-blossom\">+2</div>\n                  </div>"));
                 }
             },
             setupBackDiv: function (card, div) { },
