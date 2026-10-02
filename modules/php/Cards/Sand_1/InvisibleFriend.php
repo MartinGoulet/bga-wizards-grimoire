@@ -3,6 +3,7 @@
 namespace WizardsGrimoire\Cards\Sand_1;
 
 use WizardsGrimoire\Cards\BaseCard;
+use WizardsGrimoire\Core\Globals;
 use WizardsGrimoire\Core\ManaCard;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -19,6 +20,9 @@ class InvisibleFriend extends BaseCard {
 
         $topCard = array_shift($cards);
         ManaCard::addCardsToHand($cards);
+        $info = Globals::getNumberOfCardDrawByCardEffectThisTurn();
+        $info[$this->id] = ($info[$this->id] ?? 0) + count($cards);
+        Globals::setNumberOfCardDrawByCardEffectThisTurn($info);
 
         ManaCard::addOnTopOfDeck($topCard['id']);
         Notifications::moveManaCard(Players::getPlayerId(), [$topCard]);
