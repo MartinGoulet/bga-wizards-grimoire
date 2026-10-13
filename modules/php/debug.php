@@ -79,8 +79,8 @@ trait DebugTrait {
         //     "2329672" => ["SilentSupport", "DoomDrop", "TimeWalk", "WizardsGambit", "SeeingStone", "BattleVision"],
         // ];
         $players_spell_cards = [
-            "2329672" => ["Transference", "Glimmer", "HarnessEnergy", "Wasteland"],
-            "2329673" => ["BlankSlate", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+            "2329672" => ["SongOfShadows", "Glimmer", "HarnessEnergy", "Wasteland"],
+            "2329673" => ["BlankSlate", "SilencingAmulet", "TimeWalk", "PoisonApple"],
         ];
         // $players_spell_cards = [
         //     "2329672" => ["Lullaby", "PowerHungry", "Growth", "Hoodwink", "SneakyDeal", "SecondStrike"],

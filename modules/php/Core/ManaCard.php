@@ -2,9 +2,8 @@
 
 namespace WizardsGrimoire\Core;
 
+use Bga\GameFramework\UserException;
 use Bga\Games\WizardsGrimoire\Game;
-use BgaSystemException;
-use BgaUserException;
 use WizardsGrimoire\Cards\Base_2\Growth;
 use WizardsGrimoire\Core\Notifications;
 use WizardsGrimoire\Core\Players;
@@ -155,7 +154,7 @@ class ManaCard {
         }
         $card = ManaCard::getOnTopOnManaCoolDown($position);
         if ($card == null) {
-            throw new BgaSystemException("No card found under that spell");
+            throw new UserException("No card found under that spell");
         }
         ManaCard::addOnTopOfDiscard($card['id']);
         Notifications::discardManaCardFromSpell(Players::getPlayerId(), $card, $position);
@@ -285,7 +284,7 @@ class ManaCard {
         $card = ManaCard::getOnTopOnManaCoolDown($deck_position, $player_id);
 
         if ($card == null) {
-            throw new BgaSystemException("Mana card not found under the spell at position " . $deck_position);
+            throw new UserException("Mana card not found under the spell at position " . $deck_position);
         }
 
         return $card;
@@ -296,7 +295,7 @@ class ManaCard {
         if ($card['location'] != CardLocation::Discard()) {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];
-            throw new \BgaSystemException("The card $card_id doesn't belong to discard. Card info : $card_loc, $card_loc_arg");
+            throw new UserException("The card $card_id doesn't belong to discard. Card info : $card_loc, $card_loc_arg");
         }
 
         return $card;
@@ -311,7 +310,7 @@ class ManaCard {
         if ($card['location'] != CardLocation::Hand() || intval($card['location_arg']) != $player_id) {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];
-            throw new \BgaSystemException("The card $card_id doesn't belong to $player_id. Card info : $card_loc, $card_loc_arg");
+            throw new UserException("The card $card_id doesn't belong to $player_id. Card info : $card_loc, $card_loc_arg");
         }
 
         return $card;
@@ -323,7 +322,7 @@ class ManaCard {
         if ($card['location'] != CardLocation::ManaRevelead()) {
             $card_loc = $card['location'];
             $card_loc_arg = $card['location_arg'];
-            throw new \BgaSystemException("The card $card_id doesn't belong to revealed mana. Card info : $card_loc, $card_loc_arg");
+            throw new UserException("The card $card_id doesn't belong to revealed mana. Card info : $card_loc, $card_loc_arg");
         }
 
         return $card;
@@ -342,7 +341,7 @@ class ManaCard {
             }
         }
 
-        throw new \BgaSystemException("Mana card not under a spell card in the repertoire " . $card['id']);
+        throw new UserException("Mana card not under a spell card in the repertoire " . $card['id']);
     }
 
     public static function revealFromDeck($count) {
@@ -387,7 +386,7 @@ class ManaCard {
             self::delete($card['id']);
             self::moveSpellCrystalShardToDiscard($card);
         } else {
-            throw new BgaSystemException("Only Crystal Shard spell cards can be discarded.");
+            throw new UserException("Only Crystal Shard spell cards can be discarded.");
         }
     }
 
@@ -396,7 +395,7 @@ class ManaCard {
         $deckSpell = Game::get()->deck_spells;
         $spell = $deckSpell->getCardOnTop('crystal');
         if (empty($spell)) {
-            throw new BgaSystemException("No Crystal Shard spell card available to discard.");
+            throw new UserException("No Crystal Shard spell card available to discard.");
         }
         $deckSpell->insertCardOnExtremePosition($spell['id'], CardLocation::Discard(), true);
         $spell = $deckSpell->getCard($spell['id']);
