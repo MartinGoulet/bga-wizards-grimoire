@@ -2,6 +2,7 @@
 //    outline: 3px dashed red;
 // }
 
+html.mana_cards_shifting_sand #table .wg-card,
 #table[data-card-set="shifting_sand"] .wg-card {
    .wg-card-mana-back,
    .wg-card-mana-front {
@@ -15,6 +16,24 @@
       @for $col from 0 through 3 {
          &[data-type="#{($col + 1)}"] {
             background-position-x: ($col * -100%);
+         }
+      }
+   }
+}
+
+html.mana_cards_base #table .wg-card {
+   .wg-card-mana-back {
+      background: url("img/mana-back.jpg");
+      background-size: var(--width) var(--height);
+      background-position: 100% 0%;
+   }
+   .wg-card-mana-front {
+      background: url("img/mana-front.jpg");
+      background-size: calc(var(--width) * 4) var(--height);
+
+      @for $col from 0 through 3 {
+         &[data-type="#{($col + 1)}"] {
+            background-position: ($col * -100%) (0%);
          }
       }
    }

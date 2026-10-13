@@ -1,22 +1,51 @@
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-back,
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-front,
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back,
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front {
   background: url("img/mana-shifting-sand.jpg");
   background-size: 500% 100%;
 }
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-back,
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-back {
   background-position-x: -400%;
 }
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-front[data-type="1"],
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="1"] {
   background-position-x: 0%;
 }
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-front[data-type="2"],
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="2"] {
   background-position-x: -100%;
 }
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-front[data-type="3"],
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="3"] {
   background-position-x: -200%;
 }
+html.mana_cards_shifting_sand #table .wg-card .wg-card-mana-front[data-type="4"],
 #table[data-card-set=shifting_sand] .wg-card .wg-card-mana-front[data-type="4"] {
   background-position-x: -300%;
+}
+
+html.mana_cards_base #table .wg-card .wg-card-mana-back {
+  background: url("img/mana-back.jpg");
+  background-size: var(--width) var(--height);
+  background-position: 100% 0%;
+}
+html.mana_cards_base #table .wg-card .wg-card-mana-front {
+  background: url("img/mana-front.jpg");
+  background-size: calc(var(--width) * 4) var(--height);
+}
+html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="1"] {
+  background-position: 0% 0%;
+}
+html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="2"] {
+  background-position: -100% 0%;
+}
+html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="3"] {
+  background-position: -200% 0%;
+}
+html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="4"] {
+  background-position: -300% 0%;
 }
 
 #table .wg-card .wg-card-mana-front[data-type="5"][data-type_arg="1"] {

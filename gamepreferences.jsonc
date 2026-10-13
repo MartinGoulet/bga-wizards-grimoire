@@ -1,0 +1,22 @@
+{
+  // user preferences ids should be between 100 and 199
+  // See https://en.doc.boardgamearena.com/Options_and_preferences:_gameoptions.json,_gamepreferences.json for more details
+  "100": {
+    "name": "Mana cards",
+    "values": {
+      "1": {
+        "name": "By game variant",
+        "cssPref": "mana_cards_by_variant"
+      },
+      "2": {
+        "name": "Base Game",
+        "cssPref": "mana_cards_base"
+      },
+      "3": {
+        "name": "Shifting Sand",
+        "cssPref": "mana_cards_shifting_sand"
+      }
+    },
+    "default": 1
+  }
+}
