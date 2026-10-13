@@ -106,7 +106,7 @@ html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="4"] {
   color: black;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-title {
-  font-family: RoughAntiquaAllCaps;
+  font-family: "Rough Antiqua All Caps";
   font-size: 7px;
   line-height: 8px;
   text-align: center;
@@ -118,7 +118,7 @@ html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="4"] {
   width: 53px;
 }
 .wg-card .wg-card-gametext .wg-card-gametext-text {
-  font-family: BrushSerifEdward;
+  font-family: "Brush Serif Edward";
   font-size: 6px;
   line-height: 7px;
   text-align: center;
@@ -1019,7 +1019,7 @@ html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="4"] {
   gap: 5px;
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-header {
-  font-family: RoughAntiquaAllCaps;
+  font-family: "Rough Antiqua All Caps";
   font-size: 16px;
   border-bottom: 2px solid black;
   text-align: center;
@@ -1027,13 +1027,13 @@ html.mana_cards_base #table .wg-card .wg-card-mana-front[data-type="4"] {
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-cost {
   font-size: 14px;
-  font-family: BrushSerifEdward;
+  font-family: "Brush Serif Edward";
 }
 .wg-tooltip-card .wg-tooltip-left .wg-tooltip-gametext {
   padding: 0 3px;
   border-radius: 5px;
   text-align: center;
-  font-family: BrushSerifEdward;
+  font-family: "Brush Serif Edward";
 }
 
 .bga-cards_selected-card .front {
@@ -2083,14 +2083,6 @@ body > .card {
   color: darkblue;
 }
 
-@font-face {
-  font-family: "BrushSerifEdward";
-  src: url("img/Brush_Serif_-_Edward.otf") format("opentype");
-}
-@font-face {
-  font-family: "RoughAntiquaAllCaps";
-  src: url("img/RoughAntiquaAllCaps.otf") format("opentype");
-}
 html.mobile_version,
 .mobile_version .mode_3d #game_play_area_background {
   background: url("img/background-mobile.png");

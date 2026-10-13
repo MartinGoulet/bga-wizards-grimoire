@@ -95,7 +95,7 @@ html.mana_cards_base #table .wg-card {
       color: black;
 
       .wg-card-gametext-title {
-         font-family: RoughAntiquaAllCaps;
+         font-family: 'Rough Antiqua All Caps';
          font-size: 7px;
          line-height: 8px;
          text-align: center;
@@ -109,7 +109,7 @@ html.mana_cards_base #table .wg-card {
       }
 
       .wg-card-gametext-text {
-         font-family: BrushSerifEdward;
+         font-family: 'Brush Serif Edward';
          font-size: 6px;
          line-height: 7px;
          text-align: center;
@@ -197,7 +197,7 @@ html.mana_cards_base #table .wg-card {
       gap: 5px;
 
       .wg-tooltip-header {
-         font-family: RoughAntiquaAllCaps;
+         font-family: 'Rough Antiqua All Caps';
          font-size: 16px;
          border-bottom: 2px solid black;
          text-align: center;
@@ -206,14 +206,14 @@ html.mana_cards_base #table .wg-card {
 
       .wg-tooltip-cost {
          font-size: 14px;
-         font-family: BrushSerifEdward;
+         font-family: 'Brush Serif Edward';
       }
 
       .wg-tooltip-gametext {
          padding: 0 3px;
          border-radius: 5px;
          text-align: center;
-         font-family: BrushSerifEdward;
+         font-family: 'Brush Serif Edward';
       }
    }
 }

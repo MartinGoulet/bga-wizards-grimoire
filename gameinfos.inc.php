@@ -104,4 +104,6 @@ $gameinfos = array(
     ),
 
     'db_undo_support' => true,
+
+    'exception_on_warning' => true,
 );
