@@ -74,14 +74,14 @@ trait DebugTrait {
         Globals::setSpellCost(0);
         Globals::setSpellPlayed(0);
 
-        $players_spell_cards = [
-            "2329673" => ["Blossom", "Corruption", "InvisibleFriend", "Growth", "HarnessEnergy", "MirrorImage"],
-            "2329672" => ["SilentSupport", "DoomDrop", "TimeWalk", "WizardsGambit", "SeeingStone", "BattleVision"],
-        ];
         // $players_spell_cards = [
-        //     "2329672" => ["ShadowAttack", "BlankSlate", "Glimmer", "HarnessEnergy", "Wasteland"],
-        //     "2329673" => ["FeverDream", "ResurrectionScroll", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+        //     "2329673" => ["Blossom", "Corruption", "InvisibleFriend", "Growth", "HarnessEnergy", "MirrorImage"],
+        //     "2329672" => ["SilentSupport", "DoomDrop", "TimeWalk", "WizardsGambit", "SeeingStone", "BattleVision"],
         // ];
+        $players_spell_cards = [
+            "2329672" => ["Transference", "Glimmer", "HarnessEnergy", "Wasteland"],
+            "2329673" => ["BlankSlate", "SilencingAmulet", "TimeWalk", "PoisonApple", "SongOfShadows"],
+        ];
         // $players_spell_cards = [
         //     "2329672" => ["Lullaby", "PowerHungry", "Growth", "Hoodwink", "SneakyDeal", "SecondStrike"],
         //     "2329673" => ["Puppetmaster", "BattleVision", "FalseFace", "CoerciveAgreement", "Fracture", "StoneCrush"],
@@ -98,8 +98,8 @@ trait DebugTrait {
         //     "2329673" => [0, 0, 0, 0, 0, 0],
         // ];
         $players_spell_mana = [
-            "2329673" => [3, 4, 0, 2, 0, 0],
-            "2329672" => [2, 3, 0, 0, 0, 2],
+            "2329672" => [0, 0, 0, 0, 0, 0],
+            "2329673" => [2, 0, 0, 0, 0, 0],
         ];
 
         foreach ($players_spell_cards as $player_id => $cards) {
