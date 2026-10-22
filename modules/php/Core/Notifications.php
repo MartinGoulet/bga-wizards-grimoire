@@ -328,6 +328,9 @@ class Notifications {
         }, $cards_before));
 
         $cards = array_filter($cards, function ($card) {
+            if ($card === null) {
+                return false;
+            }
             $exclude = ManaCard::isCrystalShard($card) && $card['location'] == CardLocation::Discard();
             return !$exclude;
         });

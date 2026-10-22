@@ -403,6 +403,6 @@ class ManaCard {
     }
 
     public static function isCrystalShard($card): bool {
-        return intval($card['type']) == 5 && intval($card['type_arg']) == 1;
+        return is_array($card) && intval($card['type']) == 5 && intval($card['type_arg']) == 1;
     }
 }
